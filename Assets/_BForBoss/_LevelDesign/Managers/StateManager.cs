@@ -9,8 +9,14 @@ namespace BForBoss
         Pause,
         Death,
     }
+
+    public interface IStateManager
+    {
+        State GetState();
+        void SetState(State newState);
+    }
     
-    public class StateManager
+    public class StateManager : IStateManager
     {
         private static readonly StateManager _instance = new StateManager();
         private State _currentState = State.PreGame;

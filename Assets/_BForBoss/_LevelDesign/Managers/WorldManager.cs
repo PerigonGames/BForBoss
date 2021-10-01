@@ -4,7 +4,7 @@ namespace BForBoss
 {
     public class WorldManager : MonoBehaviour
     {
-        private StateManager _stateManagerInstance = StateManager.Instance;
+        private StateManager _stateManager = StateManager.Instance;
 
         public void CleanUp()
         {
@@ -18,12 +18,12 @@ namespace BForBoss
         
         private void Awake()
         {
-            _stateManagerInstance.OnStateChanged += HandleStateChange;
+            _stateManager.OnStateChanged += HandleStateChange;
         }
         
         private void OnDestroy()
         {
-            _stateManagerInstance.OnStateChanged -= HandleStateChange;
+            _stateManager.OnStateChanged -= HandleStateChange;
         }
 
 
@@ -34,7 +34,7 @@ namespace BForBoss
                 case State.PreGame:
                 {
                     CleanUp();
-                    _stateManagerInstance.SetState(State.Play);
+                    _stateManager.SetState(State.Play);
                     break;
                 }
                 case State.Play:
@@ -49,7 +49,7 @@ namespace BForBoss
                 case State.Death:
                 {
                     //Handle Death
-                    _stateManagerInstance.SetState(State.PreGame);
+                    _stateManager.SetState(State.PreGame);
                     break;
                 }
             }
