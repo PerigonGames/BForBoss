@@ -7,9 +7,17 @@ namespace BForBoss
 {
     public class SavePlayerInput : MonoBehaviour
     {
-        public InputField UsernameField;
-        public InputField TimerField;
-        public Dropdown InputSelectField;
+        [SerializeField] private InputField UsernameField;
+        [SerializeField] private Button UploadButton;
+
+        private void Awake()
+        {
+            UsernameField.text = PlayerPrefs.GetString("name");
+            UploadButton.onClick.AddListener(()=>
+            {
+                clickUpload();
+            });
+        }
 
         public void clickUpload()
         {
