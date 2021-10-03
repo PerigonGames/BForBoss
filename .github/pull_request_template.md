@@ -1,5 +1,5 @@
 **JIRA Ticket**
-https://perigongames.atlassian.net/browse/BFB- *[TICKET NUMBER]*
+https://perigongames.atlassian.net/browse/BFB-[TICKET NUMBER]
 
 **Description**
 *[insert here]*
