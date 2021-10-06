@@ -14,11 +14,13 @@ namespace BForBoss
         public void Reset()
         {
             Debug.Log("Resetting");
+            TimeManager.Instance.StartTimer();
         }
         
         private void Awake()
         {
             _stateManager.OnStateChanged += HandleStateChange;
+            _stateManager.SetState(State.PreGame);
         }
         
         private void OnDestroy()
@@ -49,6 +51,8 @@ namespace BForBoss
                 case State.Death:
                 {
                     //Handle Death
+                    TimeManager.Instance.StopTimer();
+                    Debug.Log($"The time taken is {TimeManager.Instance.CurrentGameTime} seconds");
                     _stateManager.SetState(State.PreGame);
                     break;
                 }
