@@ -10,6 +10,11 @@ namespace BForBoss
         [SerializeField] private InputField UsernameField;
         [SerializeField] private Button UploadButton;
 
+        private string Username;
+        private int Timer;
+        [SerializeField] private Text InputFieldUsername;
+        [SerializeField] private Text InputFieldTimer;
+
         private void Awake()
         {
             UsernameField.text = PlayerPrefs.GetString("name");
@@ -22,7 +27,12 @@ namespace BForBoss
         public void clickUpload()
         {
             PlayerPrefs.SetString("name", UsernameField.text);
-            Debug.Log("Your name is " + PlayerPrefs.GetString("name"));
+        }
+
+        public void StoreInput()
+        {
+            Username = InputFieldUsername.text;
+            Timer = int.Parse(InputFieldTimer.text);
         }
     }
 }
