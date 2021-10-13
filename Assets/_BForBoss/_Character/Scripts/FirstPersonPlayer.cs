@@ -1,6 +1,8 @@
 using ECM2.Characters;
+using ECM2.Components;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace BForBoss
 {
@@ -23,14 +25,20 @@ namespace BForBoss
         protected override void OnStart()
         {
             base.OnStart();
-            _dashBehaviour.Initialize(this);
+            if (_dashBehaviour != null)
+            {
+                _dashBehaviour.Initialize(this, base.GetMovementInput);
+            }
         }
 
         protected override void SetupPlayerInput()
         {
             base.SetupPlayerInput();
-            var dashAction = actions.FindAction("Dash");
-            _dashBehaviour.SetupPlayerInput(dashAction);
+            if (_dashBehaviour != null)
+            {
+                InputAction dashInputAction = actions.FindAction("Dash");
+                _dashBehaviour.SetupPlayerInput(dashInputAction);
+            }
         }
 
         protected override void AnimateEye()
@@ -55,13 +63,28 @@ namespace BForBoss
         protected override void OnMove()
         {
             base.OnMove();
-            _dashBehaviour.OnDashing();
+            if (_dashBehaviour != null)
+            {
+                _dashBehaviour.OnDashing();
+            }
+        }
+
+        protected override void OnMovementHit(ref MovementHit movementHit)
+        {
+            base.OnMovementHit(ref movementHit);
+            if (_dashBehaviour != null)
+            {
+                _dashBehaviour.OnMovementHit(movementHit);
+            }
         }
 
         protected override void HandleInput()
         {
             base.HandleInput();
-            _dashBehaviour.HandleInput();
+            if (_dashBehaviour != null)
+            {
+                _dashBehaviour.HandleInput();
+            }
         }
     }
 }

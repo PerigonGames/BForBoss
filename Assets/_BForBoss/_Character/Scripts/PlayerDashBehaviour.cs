@@ -1,4 +1,6 @@
+using System;
 using ECM2.Characters;
+using ECM2.Components;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,18 +14,33 @@ namespace BForBoss
         private float _dashElapsedTime = 0;
         private bool _isDashing = false;
         private Vector3 _dashingDirection = Vector3.zero;
+        private Func<Vector2> _characterInputMovement = null;
 
         private Character _baseCharacter = null;
         
-        public void Initialize(Character baseCharacter)
+        public void Initialize(Character baseCharacter, Func<Vector2> characterMovement)
         {
             _baseCharacter = baseCharacter;
+            _characterInputMovement = characterMovement;
         }
         
         public void SetupPlayerInput(InputAction dashAction)
         {
             dashAction.started += OnDash;
             dashAction.canceled += OnDash;
+            dashAction.Enable();
+        }
+
+        public void OnMovementHit(MovementHit movementHitResult)
+        {
+            if (_isDashing && !movementHitResult.isWalkable)
+            {
+                StopDashing();
+                var characterVelocity = _baseCharacter.IsOnWalkableGround()
+                    ? Vector3.zero
+                    : GetDashVelocity();
+                _baseCharacter.SetVelocity(characterVelocity);
+            }
         }
 
         public void HandleInput()
@@ -43,10 +60,7 @@ namespace BForBoss
 
             if (_baseCharacter.IsFalling())
             {
-                var characterVelocity = _baseCharacter.GetVelocity();
-                var characterUpVector = _baseCharacter.GetUpVector();
-                var dashVelocity = Vector3.ProjectOnPlane(characterVelocity, characterUpVector);
-                _baseCharacter.SetVelocity(dashVelocity);
+                _baseCharacter.SetVelocity(GetDashVelocity());
             }
 
             _dashElapsedTime += Time.deltaTime;
@@ -55,13 +69,19 @@ namespace BForBoss
                 StopDashing();
             }
         }
+
+        private Vector3 GetDashVelocity()
+        {
+            var characterVelocity = _baseCharacter.GetVelocity();
+            var characterUpVector = _baseCharacter.GetUpVector();
+            return Vector3.ProjectOnPlane(characterVelocity, characterUpVector);
+        }
         
         private void OnDash(InputAction.CallbackContext context)
         {
             if (context.started)
             {
-                var movement = context.ReadValue<Vector2>();
-                Dash(movement);
+                Dash();
             }
             else if (context.canceled)
             {
@@ -69,15 +89,14 @@ namespace BForBoss
             }
         }
 
-        private void Dash(Vector2 movementInput)
+        private void Dash()
         {
             _isDashing = true;
-
+            
             _baseCharacter.brakingFriction = 0.0f;
             _baseCharacter.useSeparateBrakingFriction = true;
-            
-            _dashingDirection = movementInput.sqrMagnitude > 0 ? _baseCharacter.GetMovementDirection() : _baseCharacter.GetForwardVector(); 
 
+            _dashingDirection = _characterInputMovement().sqrMagnitude > 0 ? _baseCharacter.GetMovementDirection() : _baseCharacter.GetForwardVector();
             _baseCharacter.LaunchCharacter(_dashingDirection * _dashImpulse, true, true);
         }
 
@@ -87,5 +106,6 @@ namespace BForBoss
             _isDashing = false;
             _baseCharacter.useSeparateBrakingFriction = false;
         }
+        
     }
 }
