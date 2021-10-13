@@ -86,5 +86,18 @@ namespace BForBoss
                 _dashBehaviour.HandleInput();
             }
         }
+
+        protected override void OnOnDisable()
+        {
+            base.OnOnDisable();
+            _dashBehaviour.OnOnDisable();
+        }
+        
+        
+        protected override void OnOnEnable()
+        {
+            base.OnOnEnable();
+            _dashBehaviour.OnOnEnable();
+        }
     }
 }

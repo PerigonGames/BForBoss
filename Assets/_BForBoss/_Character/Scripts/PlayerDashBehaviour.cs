@@ -19,6 +19,7 @@ namespace BForBoss
         private Func<Vector2> _characterInputMovement = null;
 
         private Character _baseCharacter = null;
+        private InputAction _dashInputAction = null;
 
         private bool IsCoolDownOver => _dashCoolDownElapsedTime <= 0;
         
@@ -30,9 +31,9 @@ namespace BForBoss
         
         public void SetupPlayerInput(InputAction dashAction)
         {
-            dashAction.started += OnDash;
-            dashAction.canceled += OnDash;
-            dashAction.Enable();
+            _dashInputAction = dashAction;
+            _dashInputAction.started += OnDash;
+            _dashInputAction.canceled += OnDash;
         }
 
         public void OnMovementHit(MovementHit movementHitResult)
@@ -142,6 +143,16 @@ namespace BForBoss
             {
                 _dashCoolDownElapsedTime -= Time.deltaTime;
             }
+        }
+
+        public void OnOnEnable()
+        {
+            _dashInputAction.Enable();
+        }
+        
+        public void OnOnDisable()
+        {
+            _dashInputAction.Disable();
         }
 
         #endregion
