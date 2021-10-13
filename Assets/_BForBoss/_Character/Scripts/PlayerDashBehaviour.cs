@@ -111,11 +111,12 @@ namespace BForBoss
 
         private void StopDashing()
         {
-            if (_isDashing)
+            if (!_isDashing)
             {
-                _dashCoolDownElapsedTime = _dashCoolDown;
+                return;
             }
             
+            _dashCoolDownElapsedTime = _dashCoolDown;
             _dashElapsedTime = 0f;
             _isDashing = false;
             _baseCharacter.useSeparateBrakingFriction = false;
