@@ -10,13 +10,17 @@ namespace BForBoss
     {
         [SerializeField] private float _dashImpulse = 20.0f;
         [SerializeField] private float _dashDuration = 0.2f;
+        [SerializeField] private float _dashCoolDown = 0.5f;
 
         private float _dashElapsedTime = 0;
+        private float _dashCoolDownElapsedTime = 0;
         private bool _isDashing = false;
         private Vector3 _dashingDirection = Vector3.zero;
         private Func<Vector2> _characterInputMovement = null;
 
         private Character _baseCharacter = null;
+
+        private bool IsCoolDownOver => _dashCoolDownElapsedTime <= 0;
         
         public void Initialize(Character baseCharacter, Func<Vector2> characterMovement)
         {
@@ -79,7 +83,7 @@ namespace BForBoss
         
         private void OnDash(InputAction.CallbackContext context)
         {
-            if (context.started)
+            if (context.started && IsCoolDownOver)
             {
                 Dash();
             }
@@ -102,10 +106,26 @@ namespace BForBoss
 
         private void StopDashing()
         {
-            _dashDuration = 0f;
+            if (_isDashing)
+            {
+                _dashCoolDownElapsedTime = _dashCoolDown;
+            }
+            
+            _dashElapsedTime = 0f;
             _isDashing = false;
             _baseCharacter.useSeparateBrakingFriction = false;
         }
         
+        #region Mono
+
+        private void Update()
+        {
+            if (_dashCoolDownElapsedTime > 0)
+            {
+                _dashCoolDownElapsedTime -= Time.deltaTime;
+            }
+        }
+
+        #endregion
     }
 }
