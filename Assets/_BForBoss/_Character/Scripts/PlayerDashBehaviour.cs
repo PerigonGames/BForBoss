@@ -95,6 +95,11 @@ namespace BForBoss
 
         private void Dash()
         {
+            if (!CanDash())
+            {
+                return;
+            }
+            
             _isDashing = true;
             
             _baseCharacter.brakingFriction = 0.0f;
@@ -114,6 +119,18 @@ namespace BForBoss
             _dashElapsedTime = 0f;
             _isDashing = false;
             _baseCharacter.useSeparateBrakingFriction = false;
+        }
+        
+        private bool CanDash()
+        {
+            // Do not allow to dash if crouched
+
+            if (_baseCharacter.IsCrouching())
+                return false;
+
+            // Only allow to dash if IsWalking or IsFalling (Eg: in air)
+
+            return _baseCharacter.IsWalking() || _baseCharacter.IsFalling();
         }
         
         #region Mono
