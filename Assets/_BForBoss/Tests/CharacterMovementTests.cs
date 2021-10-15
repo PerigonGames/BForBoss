@@ -114,7 +114,7 @@ namespace Tests.Character
             Press(_keyboard.spaceKey);
             yield return new WaitForSeconds(0.5f);
             
-            Assert.Greater(character.transform.position.y, startingPosition.y, "Character walked to the right, should be higher x value");
+            Assert.Greater(character.transform.position.y, startingPosition.y, "Character jumped, y value should be higher");
         }
     }
 }
