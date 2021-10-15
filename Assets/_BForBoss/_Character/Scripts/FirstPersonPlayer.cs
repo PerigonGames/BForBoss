@@ -55,17 +55,32 @@ namespace BForBoss
 
         public override float GetBrakingDeceleration()
         {
-            return _slideBehaviour.IsSliding ? _slideBehaviour.brakingDecelerationSliding : base.GetBrakingDeceleration();
+            if (_slideBehaviour != null && _slideBehaviour.IsSliding)
+            {
+                return _slideBehaviour.brakingDecelerationSliding;
+            }
+            
+            return base.GetBrakingDeceleration();
         }
 
         public override float GetMaxSpeed()
         {
-            return _slideBehaviour.IsSliding ? _slideBehaviour.MaxWalkSpeedSliding : base.GetMaxSpeed();
+            if (_slideBehaviour != null && _slideBehaviour.IsSliding)
+            {
+                return _slideBehaviour.MaxWalkSpeedSliding;
+            }
+
+            return base.GetMaxSpeed();
         }
 
         protected override Vector3 CalcDesiredVelocity()
         {
-            return _slideBehaviour.IsSliding ? Vector3.zero : base.CalcDesiredVelocity();
+            if (_slideBehaviour != null && _slideBehaviour.IsSliding)
+            {
+                return Vector3.zero;
+            }
+
+            return base.CalcDesiredVelocity();
         }
 
         protected override void OnCrouched()
@@ -112,7 +127,7 @@ namespace BForBoss
                 _dashBehaviour.OnMovementHit(movementHit);
             }
 
-            if (_slideBehaviour.IsSliding && !movementHit.isWalkable)
+            if (_slideBehaviour != null && _slideBehaviour.IsSliding && !movementHit.isWalkable)
             {
                 _slideBehaviour.StopSliding();
             }
