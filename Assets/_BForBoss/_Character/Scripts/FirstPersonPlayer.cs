@@ -145,14 +145,20 @@ namespace BForBoss
         protected override void OnOnDisable()
         {
             base.OnOnDisable();
-            _dashBehaviour.OnOnDisable();
+            if (_dashBehaviour != null)
+            {
+                _dashBehaviour.OnOnDisable();
+            }
         }
         
         
         protected override void OnOnEnable()
         {
             base.OnOnEnable();
-            _dashBehaviour.OnOnEnable();
+            if (_dashBehaviour != null)
+            {
+                _dashBehaviour.OnOnEnable();
+            }
         }
     }
 }
