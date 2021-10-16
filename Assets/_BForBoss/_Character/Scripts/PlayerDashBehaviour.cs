@@ -1,8 +1,11 @@
 using System;
+using DG.Tweening;
 using ECM2.Characters;
 using ECM2.Components;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 namespace BForBoss
 {
@@ -12,7 +15,8 @@ namespace BForBoss
         [SerializeField] private float _dashImpulse = 20.0f;
         [SerializeField] private float _dashDuration = 0.2f;
         [SerializeField] private float _dashCoolDown = 0.5f;
-
+        private LensDistortionTool _lensDistortionTool = null;
+        
         private float _dashElapsedTime = 0;
         private float _dashCoolDownElapsedTime = 0;
         private bool _isDashing = false;
@@ -118,7 +122,8 @@ namespace BForBoss
             {
                 return;
             }
-            
+
+            _lensDistortionTool?.Revert();
             _dashCoolDownElapsedTime = _dashCoolDown;
             _dashElapsedTime = 0f;
             _isDashing = false;
@@ -143,9 +148,25 @@ namespace BForBoss
             {
                 _dashVisualEffects.Play();
             }
+
+            _lensDistortionTool?.Distort();
         }
         
         #region Mono
+
+        private void Awake()
+        {
+            SetupMotionBlur();
+        }
+
+        private void SetupMotionBlur()
+        {
+            var volume = FindObjectOfType<Volume>();
+            if (volume.sharedProfile.TryGet<LensDistortion>(out var lenDistortion))
+            {
+                _lensDistortionTool = new LensDistortionTool(lenDistortion, _dashDuration);
+            }
+        }
 
         private void Update()
         {
@@ -166,5 +187,29 @@ namespace BForBoss
         }
 
         #endregion
+    }
+
+    public class LensDistortionTool
+    {
+        private const float Distortion_Amount = 0.3f;
+        private readonly LensDistortion _lens = null;
+        private readonly float _duration = 0;
+        
+        public LensDistortionTool(LensDistortion lens, float duration)
+        {
+            _lens = lens;
+            _duration = duration;
+            _lens.intensity.value = 0;
+        }
+
+        public void Distort()
+        {
+            DOTween.To(intensity => _lens.intensity.value = intensity, 0, Distortion_Amount, _duration);
+        }
+
+        public void Revert()
+        {
+            DOTween.To(intensity => _lens.intensity.value = intensity, Distortion_Amount, 0, _duration * 2);
+        }
     }
 }
