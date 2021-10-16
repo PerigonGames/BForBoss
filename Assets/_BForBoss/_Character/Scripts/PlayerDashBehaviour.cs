@@ -8,6 +8,7 @@ namespace BForBoss
 {
     public class PlayerDashBehaviour : MonoBehaviour
     {
+        [SerializeField] private ParticleSystem _dashVisualEffects = null;
         [SerializeField] private float _dashImpulse = 20.0f;
         [SerializeField] private float _dashDuration = 0.2f;
         [SerializeField] private float _dashCoolDown = 0.5f;
@@ -100,7 +101,8 @@ namespace BForBoss
             {
                 return;
             }
-            
+
+            PlayerDashVisuals();
             _isDashing = true;
             
             _baseCharacter.brakingFriction = 0.0f;
@@ -133,6 +135,14 @@ namespace BForBoss
             // Only allow to dash if IsWalking or IsFalling (Eg: in air)
 
             return _baseCharacter.IsWalking() || _baseCharacter.IsFalling();
+        }
+
+        private void PlayerDashVisuals()
+        {
+            if (_dashVisualEffects != null)
+            {
+                _dashVisualEffects.Play();
+            }
         }
         
         #region Mono
