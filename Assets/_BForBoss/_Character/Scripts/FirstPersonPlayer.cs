@@ -6,16 +6,15 @@ using UnityEngine.InputSystem;
 
 namespace BForBoss
 {
-    public class FirstPersonPlayer : FirstPersonCharacter
+    public partial class FirstPersonPlayer : FirstPersonCharacter
     {
-
         [Header("Cinemachine")]
         public GameObject cmWalkingCamera;
         public GameObject cmCrouchedCamera;
 
         [Title("Optional Behaviour")]
         private PlayerDashBehaviour _dashBehaviour = null;
-
+        
         protected override void OnAwake()
         {            
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();
@@ -99,5 +98,10 @@ namespace BForBoss
             base.OnOnEnable();
             _dashBehaviour.OnOnEnable();
         }
+    }
+
+    public partial class FirstPersonPlayer : ICharacterSpeed
+    {
+        public float Speed => GetVelocity().magnitude;
     }
 }
