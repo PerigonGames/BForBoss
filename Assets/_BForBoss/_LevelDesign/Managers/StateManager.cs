@@ -7,6 +7,7 @@ namespace BForBoss
         PreGame,
         Play,
         Pause,
+        EndRace,
         Death,
     }
 
