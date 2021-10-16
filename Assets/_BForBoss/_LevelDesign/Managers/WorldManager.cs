@@ -4,6 +4,7 @@ namespace BForBoss
 {
     public class WorldManager : MonoBehaviour
     {
+        [SerializeField] private TimeManager _timeManager;
         private StateManager _stateManager = StateManager.Instance;
 
         public void CleanUp()
@@ -14,7 +15,7 @@ namespace BForBoss
         public void Reset()
         {
             Debug.Log("Resetting");
-            TimeManager.Instance.StartTimer();
+            _timeManager.Reset();
         }
         
         private void Awake()
@@ -28,7 +29,6 @@ namespace BForBoss
             _stateManager.OnStateChanged -= HandleStateChange;
         }
 
-
         private void HandleStateChange(State newState)
         {
             switch (newState)
@@ -36,23 +36,28 @@ namespace BForBoss
                 case State.PreGame:
                 {
                     CleanUp();
+                    Reset();
                     _stateManager.SetState(State.Play);
                     break;
                 }
                 case State.Play:
                 {
-                    Reset();
+                    _timeManager.StartTimer();
                     break;
                 }
                 case State.Pause:
                 {
                     break;
                 }
+                case State.EndRace:
+                {
+                    _timeManager.StopTimer();
+                    Debug.Log($"The time taken was {_timeManager.CurrentGameTime} seconds");
+                    break;
+                }
                 case State.Death:
                 {
                     //Handle Death
-                    TimeManager.Instance.StopTimer();
-                    Debug.Log($"The time taken is {TimeManager.Instance.CurrentGameTime} seconds");
                     _stateManager.SetState(State.PreGame);
                     break;
                 }
