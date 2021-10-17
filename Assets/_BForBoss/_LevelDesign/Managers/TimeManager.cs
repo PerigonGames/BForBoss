@@ -8,6 +8,7 @@ namespace BForBoss
         private bool _isTimerTracking = false;
 
         public float CurrentGameTime => _currentGameTime;
+        public bool IsTimerTracking => _isTimerTracking;
 
         public void Reset()
         {
