@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace BForBoss
 {
@@ -26,6 +27,16 @@ namespace BForBoss
             _stateManager.SetState(State.PreGame);
         }
         
+        //Temporary way to check if Checkpoint system works - Todo: Remove when death plane is in place
+        private void Update()
+        {
+            if (Keyboard.current[Key.R].wasPressedThisFrame)
+            {
+                GameObject player = GameObject.FindWithTag(Tags.Player);
+                player.transform.position = _checkpointManager.CurrentCheckpoint;
+            }
+        }
+
         private void OnDestroy()
         {
             _stateManager.OnStateChanged -= HandleStateChange;

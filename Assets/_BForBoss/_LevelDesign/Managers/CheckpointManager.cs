@@ -8,8 +8,7 @@ namespace BForBoss
         [SerializeField] private Checkpoint[] _checkpoints;
         private Checkpoint _activeCheckpoint = null;
         private Vector3 _initialCheckpointPosition =  Vector3.zero;
-
-
+        
         public Vector3 CurrentCheckpoint => _activeCheckpoint == null ? _initialCheckpointPosition : _activeCheckpoint.transform.position;
 
         //Todo: Pass Player position (as starting Checkpoint) when player Manager is finalized
@@ -52,17 +51,7 @@ namespace BForBoss
             _activeCheckpoint = checkpoint;
             _activeCheckpoint.SetCheckpoint();
         }
-
-
-        private void Update()
-        {
-            if (UnityEngine.InputSystem.Keyboard.current[UnityEngine.InputSystem.Key.Space].wasPressedThisFrame)
-            {
-                Debug.Log($"Current Checkpoint Position : {CurrentCheckpoint}");
-            }
-        }
-
-
+        
         private void OnDestroy()
         {
             foreach (Checkpoint checkpoint in _checkpoints)

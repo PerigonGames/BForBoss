@@ -25,7 +25,6 @@ namespace BForBoss
             if (!_hasBeenActivated && other.CompareTag(Tags.Player))
             {
                 OnCheckpointActivation?.Invoke(this);
-                Debug.Log("Checkpoint has been set up");
             }
         }
     }
