@@ -12,6 +12,7 @@ namespace BForBoss
 
         public Vector3 CurrentCheckpoint => _activeCheckpoint == null ? _initialCheckpointPosition : _activeCheckpoint.transform.position;
 
+        //Todo: Pass Player position (as starting Checkpoint) when player Manager is finalized
         public void Initialize()
         {
             if (_checkpoints.IsNullOrEmpty())
@@ -33,8 +34,7 @@ namespace BForBoss
                 if (i == 0)
                 {
                     _activeCheckpoint = checkpoint;
-                    _activeCheckpoint.IsActiveCheckpoint = true;
-                    _initialCheckpointPosition = _activeCheckpoint.transform.position;
+                    _activeCheckpoint.SetCheckpoint();
                 }
             }
         }
@@ -49,9 +49,17 @@ namespace BForBoss
 
         private void SetNewCheckpoint(Checkpoint checkpoint)
         {
-            _activeCheckpoint.IsActiveCheckpoint = false;
             _activeCheckpoint = checkpoint;
-            _activeCheckpoint.IsActiveCheckpoint = true;
+            _activeCheckpoint.SetCheckpoint();
+        }
+
+
+        private void Update()
+        {
+            if (UnityEngine.InputSystem.Keyboard.current[UnityEngine.InputSystem.Key.Space].wasPressedThisFrame)
+            {
+                Debug.Log($"Current Checkpoint Position : {CurrentCheckpoint}");
+            }
         }
 
 

@@ -15,7 +15,6 @@ namespace BForBoss
         
         public void Reset()
         {
-            Debug.Log("Resetting");
             _timeManager.Reset();
             _checkpointManager.Reset();
         }
