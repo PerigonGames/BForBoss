@@ -14,18 +14,6 @@ namespace BForBoss
         [SerializeField] private TMP_Text Time;
         [SerializeField] private TMP_Text Input;
 
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
-
         public void SetField(LeaderboardScore score)
         {
             Rank.text = "//";
