@@ -15,10 +15,12 @@ namespace BForBoss
 
         [Title("Optional Behaviour")]
         private PlayerDashBehaviour _dashBehaviour = null;
+        private PlayerWallRunBehaviour _wallRunBehaviour = null;
 
         protected override void OnAwake()
         {            
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();
+            _wallRunBehaviour = GetComponent<PlayerWallRunBehaviour>();
             base.OnAwake();
         }
 
@@ -29,6 +31,7 @@ namespace BForBoss
             {
                 _dashBehaviour.Initialize(this, base.GetMovementInput);
             }
+            _wallRunBehaviour?.Initialize(this);
         }
 
         protected override void SetupPlayerInput()
@@ -60,6 +63,31 @@ namespace BForBoss
             cmWalkingCamera.SetActive(true);
         }
 
+        protected override void Falling(Vector3 desiredVelocity)
+        {
+            base.Falling(desiredVelocity);
+            _wallRunBehaviour?.Falling(desiredVelocity);
+        }
+
+        public override bool CanJump()
+        {
+            if (_wallRunBehaviour != null)
+                return _wallRunBehaviour.CanJump() || base.CanJump();
+            return base.CanJump();
+        }
+
+        protected override void OnJumped()
+        {
+            base.OnJumped();
+            _wallRunBehaviour?.OnJumped(ref _jumpCount);
+        }
+
+        protected override Vector3 CalcJumpVelocity()
+        {
+            if (_wallRunBehaviour != null && _wallRunBehaviour.CalcJumpVelocity(out Vector3 velocity)) return velocity;
+            return base.CalcJumpVelocity();
+        }
+
         protected override void OnMove()
         {
             base.OnMove();
@@ -67,6 +95,13 @@ namespace BForBoss
             {
                 _dashBehaviour.OnDashing();
             }
+            _wallRunBehaviour?.OnWallRunning();
+        }
+
+        protected override void OnLanded()
+        {
+            base.OnLanded();
+            _wallRunBehaviour?.OnLanded();
         }
 
         protected override void OnMovementHit(ref MovementHit movementHit)
@@ -90,14 +125,14 @@ namespace BForBoss
         protected override void OnOnDisable()
         {
             base.OnOnDisable();
-            _dashBehaviour.OnOnDisable();
+            _dashBehaviour?.OnOnDisable();
         }
         
         
         protected override void OnOnEnable()
         {
             base.OnOnEnable();
-            _dashBehaviour.OnOnEnable();
+            _dashBehaviour?.OnOnEnable();
         }
     }
 }
