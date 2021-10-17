@@ -32,8 +32,7 @@ namespace BForBoss
         {
             if (Keyboard.current[Key.R].wasPressedThisFrame)
             {
-                GameObject player = GameObject.FindWithTag(Tags.Player);
-                player.transform.position = _checkpointManager.CurrentCheckpoint;
+                _stateManager.SetState(State.Death);
             }
         }
 
@@ -55,7 +54,11 @@ namespace BForBoss
                 }
                 case State.Play:
                 {
-                    _timeManager.StartTimer();
+                    if (!_timeManager.IsTimerTracking)
+                    {
+                        _timeManager.StartTimer();
+                    }
+                    
                     break;
                 }
                 case State.Pause:
@@ -70,8 +73,9 @@ namespace BForBoss
                 }
                 case State.Death:
                 {
-                    //Handle Death
-                    _stateManager.SetState(State.PreGame);
+                    GameObject player = GameObject.FindWithTag(Tags.Player);
+                    player.transform.position = _checkpointManager.CurrentCheckpoint;
+                    _stateManager.SetState(State.Play);
                     break;
                 }
             }
