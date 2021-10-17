@@ -8,13 +8,15 @@ namespace BForBoss
 {
     public partial class FirstPersonPlayer : FirstPersonCharacter
     {
-        [Header("Cinemachine")] public GameObject cmWalkingCamera;
+        [Header("Cinemachine")]
+        public GameObject cmWalkingCamera;
         public GameObject cmCrouchedCamera;
 
-        [Title("Optional Behaviour")] private PlayerDashBehaviour _dashBehaviour = null;
+        [Title("Optional Behaviour")]
+        private PlayerDashBehaviour _dashBehaviour = null;
 
         protected override void OnAwake()
-        {
+        {            
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();
             base.OnAwake();
         }
@@ -92,8 +94,7 @@ namespace BForBoss
                 _dashBehaviour.OnOnDisable();
             }
         }
-
-
+        
         protected override void OnOnEnable()
         {
             base.OnOnEnable();
