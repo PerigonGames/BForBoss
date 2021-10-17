@@ -28,7 +28,6 @@ namespace Tests.Character
         public override void TearDown()
         {
             base.TearDown();
-            EditorSceneManager.UnloadSceneAsync("CharacterDashTest");
             _keyboard = null;
         }
 
