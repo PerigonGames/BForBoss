@@ -59,7 +59,7 @@ namespace Tests.Character
             var expectedHeight = character.transform.position.y;
             
             Press(_keyboard.wKey);
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0);
             Press(_keyboard.leftShiftKey);
             yield return new WaitForSeconds(1.0f);
             
@@ -82,7 +82,7 @@ namespace Tests.Character
             var expectedHeight = character.transform.position.y;
             
             Press(_keyboard.sKey);
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0);
             Press(_keyboard.leftShiftKey);
             yield return new WaitForSeconds(1.0f);
 
@@ -105,7 +105,7 @@ namespace Tests.Character
             var expectedHeight = character.transform.position.y;
             
             Press(_keyboard.aKey);
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0);
             Press(_keyboard.leftShiftKey);
             yield return new WaitForSeconds(1.0f);
 
@@ -128,7 +128,7 @@ namespace Tests.Character
             var expectedHeight = character.transform.position.y;
             
             Press(_keyboard.dKey);
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0);
             Press(_keyboard.leftShiftKey);
             yield return new WaitForSeconds(1.0f);
 
