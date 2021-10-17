@@ -104,6 +104,12 @@ namespace BForBoss
             _wallRunBehaviour?.OnLanded();
         }
 
+        protected override void OnLateUpdate()
+        {
+            base.OnLateUpdate();
+            _wallRunBehaviour?.OnLateUpdate();
+        }
+
         protected override void OnMovementHit(ref MovementHit movementHit)
         {
             base.OnMovementHit(ref movementHit);
