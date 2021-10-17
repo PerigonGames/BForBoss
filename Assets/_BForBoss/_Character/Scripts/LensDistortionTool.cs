@@ -12,24 +12,26 @@ namespace BForBoss
     {
         private const float Distortion_Amount = 0.3f;
         private readonly LensDistortion _lens = null;
-        private readonly float _duration = 0;
+        private readonly float _distortDuration = 0;
+        private readonly float _revertDuration = 0;
 
         public LensDistortionTool(LensDistortion lens, float duration)
         {
             _lens = lens;
             _lens.active = true;            
             _lens.intensity.value = 0;
-            _duration = duration;
+            _distortDuration = duration;
+            _revertDuration = duration * 2;
         }
 
         public void Distort()
         {
-            DOTween.To(intensity => _lens.intensity.value = intensity, 0, Distortion_Amount, _duration);
+            DOTween.To(intensity => _lens.intensity.value = intensity, 0, Distortion_Amount, _distortDuration);
         }
 
         public void Revert()
         {
-            DOTween.To(intensity => _lens.intensity.value = intensity, Distortion_Amount, 0, _duration * 2);
+            DOTween.To(intensity => _lens.intensity.value = intensity, Distortion_Amount, 0, _revertDuration);
         }
     }
 }
