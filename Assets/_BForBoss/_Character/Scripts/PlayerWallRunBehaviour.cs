@@ -20,7 +20,7 @@ namespace BForBoss
         private float _wallMaxDistance;
         [SerializeField]
         private float _wallGravityDownForce = 0f;
-        [SerializeField, Range(0f, 3f)]
+        [SerializeField, Range(0f, 3f), Tooltip("Only allow for a wall run if jump is longer than this")]
         private float _minJumpDuration = 0.3f;
 
         [SerializeField]
@@ -40,30 +40,50 @@ namespace BForBoss
         private bool _isWallRunning = false;
         private Character _baseCharacter = null;
         private FirstPersonCharacter _fpsCharacter = null;
-        private Transform _childTransform;
         private RaycastHit[] _hits;
         private LayerMask _mask;
         private Vector3 _lastWallRunPosition;
         private Vector3 _lastWallRunNormal;
         private float _baseMaxSpeed;
+        private Func<Vector2> _movementInput;
 
         private float _currentJumpDuration = 0f;
         private float _timeSinceWallAttach = 0f;
         private float _timeSinceWallDetach = 0f;
 
-        public void Initialize(Character baseCharacter)
+        private Transform ChildTransform
+        {
+            get
+            {
+                return _fpsCharacter != null ? _fpsCharacter.rootPivot : transform;
+            }
+        }
+
+        public void Initialize(Character baseCharacter, Func<Vector2> getMovementInput)
         {
             _baseCharacter = baseCharacter;
             _fpsCharacter = baseCharacter as FirstPersonCharacter;
-            _childTransform = _baseCharacter.transform.GetChild(0);
+            _movementInput = getMovementInput;
             _mask = LayerMask.GetMask("ParkourWall");
         }
 
         public void Falling(Vector3 _)
         {
             if (!CanWallRun()) return;
-            DoRaycasts();
-            
+            _hits = new RaycastHit[directions.Length];
+            for (int i = 0; i < directions.Length; i++)
+            {
+                Vector3 dir = ChildTransform.TransformDirection(directions[i]); //convert directions to relative to player
+                Physics.Raycast(ChildTransform.position, dir, out _hits[i], _wallMaxDistance, _mask);
+                if (_hits[i].collider != null) Debug.DrawRay(ChildTransform.position, dir * _hits[i].distance, Color.green);
+                else Debug.DrawRay(ChildTransform.position, dir * _wallMaxDistance, Color.red);
+            }
+
+            if (GetSmallestRaycastHit(_hits, out RaycastHit hit))
+            {
+                WallRun(hit);
+            }
+            else if (_isWallRunning) StopWallRunning();
         }
 
         public void OnJumped(ref int _jumpCount)
@@ -98,12 +118,26 @@ namespace BForBoss
                 return;
             }
 
+            if (_movementInput().sqrMagnitude <= 0)
+            {
+                return;
+            }
             _timeSinceWallAttach += Time.deltaTime;
             var velocity = _baseCharacter.GetVelocity();
-            var alongWall = _childTransform.TransformDirection(Vector3.forward).normalized;
+            var alongWall = ChildTransform.TransformDirection(Vector3.forward).normalized;
             velocity = velocity.dot(alongWall) * alongWall;
             velocity += Vector3.down * _wallGravityDownForce * Time.deltaTime;
             _baseCharacter.SetVelocity(velocity);
+        }
+
+        public bool CalcJumpVelocity(out Vector3 velocity)
+        {
+            velocity = Vector3.zero;
+            if (_isWallRunning)
+            {
+                velocity = _lastWallRunNormal * _baseCharacter.jumpImpulse + Vector3.up;
+            }
+            return _isWallRunning;
         }
 
         private void HandleEyePivotRotation()
@@ -111,11 +145,6 @@ namespace BForBoss
             var rotation = _fpsCharacter.eyePivot.localEulerAngles;
             rotation.z = GetCameraRoll();
             _fpsCharacter.eyePivot.localEulerAngles = rotation;
-        }
-
-        private void LateUpdate()
-        {
-            if(_fpsCharacter != null) HandleEyePivotRotation();
         }
 
         private void WallRun(RaycastHit wall)
@@ -142,7 +171,7 @@ namespace BForBoss
                 if (_currentJumpDuration < _minJumpDuration) return false;
             }
 
-            return !Physics.Raycast(_childTransform.position, Vector3.down, _minHeight);
+            return !Physics.Raycast(ChildTransform.position, Vector3.down, _minHeight);
         }
 
         private void StopWallRunning()
@@ -154,23 +183,13 @@ namespace BForBoss
             _timeSinceWallDetach = 0f;
         }
 
-        public bool CalcJumpVelocity(out Vector3 velocity)
-        {
-            velocity = Vector3.zero;
-            if (_isWallRunning)
-            {
-                velocity = _lastWallRunNormal * _baseCharacter.jumpImpulse + Vector3.up;
-            }
-            return _isWallRunning;
-        }
-
-        float CalculateSide()
+        private float CalculateSide()
         {
             if (_isWallRunning)
             {
                 Vector3 heading = _lastWallRunPosition - transform.position;
-                Vector3 perp = Vector3.Cross(transform.forward, heading);
-                float dir = Vector3.Dot(perp, transform.up);
+                Vector3 perp = Vector3.Cross(ChildTransform.forward, heading);
+                float dir = Vector3.Dot(perp, ChildTransform.up);
                 return dir;
             }
             return 0;
@@ -188,24 +207,6 @@ namespace BForBoss
             return Mathf.LerpAngle(cameraAngle, targetAngle, Mathf.Max(_timeSinceWallAttach, _timeSinceWallDetach) / _cameraRotateDuration);
         }
 
-        private void DoRaycasts()
-        {
-            _hits = new RaycastHit[directions.Length];
-            for (int i = 0; i < directions.Length; i++)
-            {
-                Vector3 dir = _childTransform.TransformDirection(directions[i]); //convert directions to relative to player
-                Physics.Raycast(_childTransform.position, dir, out _hits[i], _wallMaxDistance, _mask);
-                if (_hits[i].collider != null) Debug.DrawRay(_childTransform.position, dir * _hits[i].distance, Color.green);
-                else Debug.DrawRay(_childTransform.position, dir * _wallMaxDistance, Color.red);
-            }
-
-            if (GetSmallestRaycastHit(_hits, out RaycastHit hit))
-            {
-                WallRun(hit);
-            }
-            else if (_isWallRunning) StopWallRunning();
-        }
-
         private static bool GetSmallestRaycastHit(RaycastHit[] array, out RaycastHit smallest)
         {
             bool validRaycast = false;
@@ -221,6 +222,11 @@ namespace BForBoss
                 }
             }
             return validRaycast;
+        }
+
+        private void LateUpdate()
+        {
+            if (_fpsCharacter != null) HandleEyePivotRotation();
         }
     }
 }

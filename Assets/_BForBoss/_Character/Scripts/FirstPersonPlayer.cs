@@ -31,7 +31,7 @@ namespace BForBoss
             {
                 _dashBehaviour.Initialize(this, base.GetMovementInput);
             }
-            _wallRunBehaviour?.Initialize(this);
+            _wallRunBehaviour?.Initialize(this, base.GetMovementInput);
         }
 
         protected override void SetupPlayerInput()
