@@ -1,5 +1,4 @@
 using System;
-using DG.Tweening;
 using ECM2.Characters;
 using ECM2.Components;
 using UnityEngine;
@@ -156,15 +155,19 @@ namespace BForBoss
 
         private void Awake()
         {
-            SetupMotionBlur();
+            SetupVisualEffects();
         }
 
-        private void SetupMotionBlur()
+        private void SetupVisualEffects()
         {
             var volume = FindObjectOfType<Volume>();
-            if (volume.sharedProfile.TryGet<LensDistortion>(out var lenDistortion))
+            if (volume != null && volume.sharedProfile.TryGet<LensDistortion>(out var lensDistortion))
             {
-                _lensDistortionTool = new LensDistortionTool(lenDistortion, _dashDuration);
+                _lensDistortionTool = new LensDistortionTool(lensDistortion, _dashDuration);
+            }
+            else
+            {
+                Debug.LogWarning("There was an issue finding PostProcessing LensDistortion");
             }
         }
 
@@ -187,29 +190,5 @@ namespace BForBoss
         }
 
         #endregion
-    }
-
-    public class LensDistortionTool
-    {
-        private const float Distortion_Amount = 0.3f;
-        private readonly LensDistortion _lens = null;
-        private readonly float _duration = 0;
-        
-        public LensDistortionTool(LensDistortion lens, float duration)
-        {
-            _lens = lens;
-            _duration = duration;
-            _lens.intensity.value = 0;
-        }
-
-        public void Distort()
-        {
-            DOTween.To(intensity => _lens.intensity.value = intensity, 0, Distortion_Amount, _duration);
-        }
-
-        public void Revert()
-        {
-            DOTween.To(intensity => _lens.intensity.value = intensity, Distortion_Amount, 0, _duration * 2);
-        }
     }
 }
