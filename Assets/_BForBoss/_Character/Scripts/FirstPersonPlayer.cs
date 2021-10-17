@@ -17,6 +17,16 @@ namespace BForBoss
         private PlayerDashBehaviour _dashBehaviour = null;
         private PlayerSlideBehaviour _slideBehaviour = null;
         
+        public override float GetBrakingDeceleration()
+        {
+            return IsSliding() ? _slideBehaviour.brakingDecelerationSliding : base.GetBrakingDeceleration();
+        }
+
+        public override float GetMaxSpeed()
+        {
+            return IsSliding() ? _slideBehaviour.MaxWalkSpeedSliding : base.GetMaxSpeed();
+        }
+        
         protected override void OnAwake()
         {            
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();
@@ -53,34 +63,9 @@ namespace BForBoss
             // Base class animates the camera for crouching here, cinemachine handles that
         }
 
-        public override float GetBrakingDeceleration()
-        {
-            if (_slideBehaviour != null && _slideBehaviour.IsSliding)
-            {
-                return _slideBehaviour.brakingDecelerationSliding;
-            }
-            
-            return base.GetBrakingDeceleration();
-        }
-
-        public override float GetMaxSpeed()
-        {
-            if (_slideBehaviour != null && _slideBehaviour.IsSliding)
-            {
-                return _slideBehaviour.MaxWalkSpeedSliding;
-            }
-
-            return base.GetMaxSpeed();
-        }
-
         protected override Vector3 CalcDesiredVelocity()
         {
-            if (_slideBehaviour != null && _slideBehaviour.IsSliding)
-            {
-                return Vector3.zero;
-            }
-
-            return base.CalcDesiredVelocity();
+            return IsSliding() ? Vector3.zero : base.CalcDesiredVelocity();
         }
 
         protected override void OnCrouched()
@@ -160,5 +145,14 @@ namespace BForBoss
                 _dashBehaviour.OnOnEnable();
             }
         }
+
+        #region Helper
+
+        private bool IsSliding()
+        {
+            return _slideBehaviour != null && _slideBehaviour.IsSliding;
+        }
+
+        #endregion
     }
 }
