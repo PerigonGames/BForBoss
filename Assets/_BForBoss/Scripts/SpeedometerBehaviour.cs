@@ -1,28 +1,25 @@
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace BForBoss
 {
-    public interface ICharacterSpeed
-    {
-        float Speed { get; }
-    }
-    
     public class SpeedometerBehaviour : MonoBehaviour
     {
         [SerializeField] private Image _meter = null;
         [SerializeField] private TMP_Text _speedLabel = null;
+        [Title("Properties")]
+        [MinValue(1)]
+        [SerializeField] private float _maxSpeed = 50f;
         
         private ICharacterSpeed _characterSpeed = null;
-        private float _maxSpeed = 50f;
         
         public void Initialize(ICharacterSpeed characterSpeed)
         {
             _characterSpeed = characterSpeed;
         }
-
-
+        
         // Placeholder
         private void Awake()
         {
