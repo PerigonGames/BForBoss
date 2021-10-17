@@ -23,14 +23,7 @@ namespace Tests.Character
             EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/_BForBoss/Tests/Scenes/CharacterDashTest.unity", new LoadSceneParameters(LoadSceneMode.Single));
             _keyboard = InputSystem.AddDevice<Keyboard>();
         }
-
-        [TearDown]
-        public override void TearDown()
-        {
-            base.TearDown();
-            _keyboard = null;
-        }
-
+        
         [UnityTest]
         public IEnumerator Character_Dash_StayingStill()
         {
