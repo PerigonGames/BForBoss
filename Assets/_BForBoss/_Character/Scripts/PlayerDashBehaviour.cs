@@ -155,6 +155,13 @@ namespace BForBoss
             _dashInputAction.Disable();
         }
 
+        public void OnOnDestroy()
+        {
+            _dashInputAction.started -= OnDash;
+            _dashInputAction.canceled -= OnDash;
+            _dashInputAction = null;
+        }
+
         #endregion
     }
 }
