@@ -17,6 +17,13 @@ namespace BForBoss
         private PlayerDashBehaviour _dashBehaviour = null;
         private PlayerWallRunBehaviour _wallRunBehaviour = null;
 
+        public override bool CanJump()
+        {
+            if (_wallRunBehaviour != null)
+                return _wallRunBehaviour.CanJump() || base.CanJump();
+            return base.CanJump();
+        }
+
         protected override void OnAwake()
         {            
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();
@@ -67,13 +74,6 @@ namespace BForBoss
         {
             base.Falling(desiredVelocity);
             _wallRunBehaviour?.Falling(desiredVelocity);
-        }
-
-        public override bool CanJump()
-        {
-            if (_wallRunBehaviour != null)
-                return _wallRunBehaviour.CanJump() || base.CanJump();
-            return base.CanJump();
         }
 
         protected override void OnJumped()
@@ -130,7 +130,6 @@ namespace BForBoss
                 _dashBehaviour.OnOnDisable();
             }
         }
-        
         
         protected override void OnOnEnable()
         {
