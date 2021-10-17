@@ -5,6 +5,7 @@ namespace BForBoss
     public class WorldManager : MonoBehaviour
     {
         [SerializeField] private TimeManager _timeManager;
+        [SerializeField] private CheckpointManager _checkpointManager;
         private StateManager _stateManager = StateManager.Instance;
 
         public void CleanUp()
@@ -16,10 +17,12 @@ namespace BForBoss
         {
             Debug.Log("Resetting");
             _timeManager.Reset();
+            _checkpointManager.Reset();
         }
         
         private void Awake()
         {
+            _checkpointManager.Initialize();
             _stateManager.OnStateChanged += HandleStateChange;
             _stateManager.SetState(State.PreGame);
         }

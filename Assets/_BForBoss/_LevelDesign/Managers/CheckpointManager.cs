@@ -12,7 +12,7 @@ namespace BForBoss
 
         public Vector3 CurrentCheckpoint => _activeCheckpoint == null ? _initialCheckpointPosition : _activeCheckpoint.transform.position;
 
-        private void Awake()
+        public void Initialize()
         {
             if (_checkpoints.IsNullOrEmpty())
             {
@@ -36,6 +36,14 @@ namespace BForBoss
                     _activeCheckpoint.IsActiveCheckpoint = true;
                     _initialCheckpointPosition = _activeCheckpoint.transform.position;
                 }
+            }
+        }
+
+        public void Reset()
+        {
+            foreach (Checkpoint checkpoint in _checkpoints)
+            {
+                checkpoint.Reset();
             }
         }
 

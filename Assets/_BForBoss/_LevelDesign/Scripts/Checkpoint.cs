@@ -16,13 +16,18 @@ namespace BForBoss
             set => _isActiveCheckpoint = value;
         }
 
+        public void Reset()
+        {
+            _isActiveCheckpoint = false;
+            _hasAlreadyBeenActivated = false;
+        }
+
         private void OnTriggerEnter(Collider other)
         {
-            if (!_isActiveCheckpoint && !_hasAlreadyBeenActivated && other.CompareTag("Player"))
+            if (!_isActiveCheckpoint && !_hasAlreadyBeenActivated && other.CompareTag(Tags.Player))
             {
                 OnCheckpointActivation?.Invoke(this);
-                //Since only needs to trigger once
-                OnCheckpointActivation = null;
+                _hasAlreadyBeenActivated = true;
             }
         }
     }
