@@ -6,9 +6,8 @@ using UnityEngine.InputSystem;
 
 namespace BForBoss
 {
-    public class FirstPersonPlayer : FirstPersonCharacter
+    public partial class FirstPersonPlayer : FirstPersonCharacter
     {
-
         [Header("Cinemachine")]
         public GameObject cmWalkingCamera;
         public GameObject cmCrouchedCamera;
@@ -135,7 +134,6 @@ namespace BForBoss
                 _dashBehaviour.OnOnDisable();
             }
         }
-        
         
         protected override void OnOnEnable()
         {
