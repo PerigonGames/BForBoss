@@ -1,20 +1,24 @@
 using System;
 using ECM2.Characters;
 using ECM2.Components;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 
 namespace BForBoss
 {
     public class PlayerDashBehaviour : MonoBehaviour
     {
+        [Title("Visual Effects")]
         [SerializeField] private ParticleSystem _dashVisualEffects = null;
+        [SerializeField] private Volume _dashPostProcessingEffects = null;        
+        
+        [Title("Properties")]
         [SerializeField] private float _dashImpulse = 20.0f;
         [SerializeField] private float _dashDuration = 0.2f;
         [SerializeField] private float _dashCoolDown = 0.5f;
-        private LensDistortionTool _lensDistortionTool = null;
+        private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
         
         private float _dashElapsedTime = 0;
         private float _dashCoolDownElapsedTime = 0;
@@ -122,7 +126,7 @@ namespace BForBoss
                 return;
             }
 
-            _lensDistortionTool?.Revert();
+            _postProcessingVolumeWeightTool?.Revert();
             _dashCoolDownElapsedTime = _dashCoolDown;
             _dashElapsedTime = 0f;
             _isDashing = false;
@@ -148,7 +152,7 @@ namespace BForBoss
                 _dashVisualEffects.Play();
             }
 
-            _lensDistortionTool?.Distort();
+            _postProcessingVolumeWeightTool?.Distort();
         }
         
         #region Mono
@@ -160,10 +164,9 @@ namespace BForBoss
 
         private void SetupVisualEffects()
         {
-            var volume = FindObjectOfType<Volume>();
-            if (volume != null && volume.sharedProfile.TryGet<LensDistortion>(out var lensDistortion))
+            if (_dashPostProcessingEffects != null)
             {
-                _lensDistortionTool = new LensDistortionTool(lensDistortion, _dashDuration);
+                _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_dashPostProcessingEffects, _dashDuration);
             }
             else
             {
