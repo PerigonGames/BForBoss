@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace BForBoss
 {
@@ -12,8 +13,8 @@ namespace BForBoss
 
         private string Username;
         private int Timer;
-        [SerializeField] private Text InputFieldUsername;
-        [SerializeField] private Text InputFieldTimer;
+        [SerializeField] private TMP_Text InputFieldUsername;
+        [SerializeField] private TMP_Text InputFieldTimer;
 
         private void Awake()
         {
