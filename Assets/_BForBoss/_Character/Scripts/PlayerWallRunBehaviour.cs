@@ -7,6 +7,7 @@ namespace BForBoss
 {
     public class PlayerWallRunBehaviour : MonoBehaviour
     {
+        #region SERIALIZED_FIELDS
         [SerializeField] 
         private float _speedMultiplier = 1f;
         [SerializeField, Tooltip("Don't allow a wall run if the player is too close to the ground")] 
@@ -17,15 +18,16 @@ namespace BForBoss
         private float _wallGravityDownForce = 0f;
         [SerializeField, Range(0f, 3f), Tooltip("Only allow for a wall run if jump is longer than this")]
         private float _minJumpDuration = 0.3f;
+        [SerializeField]
+        private float _wallBounciness = 6f;
 
         [SerializeField]
         private float _maxCameraAngleRoll = 30f;
         [SerializeField]
         private float _cameraRotateDuration = 1f;
+        #endregion
 
-        [SerializeField]
-        private float _wallBounciness = 6f;
-
+        #region PRIVATE_FIELDS
         private readonly Vector3[] directions = new Vector3[]
         {
             Vector3.right, 
@@ -47,15 +49,16 @@ namespace BForBoss
         private float _currentJumpDuration = 0f;
         private float _timeSinceWallAttach = 0f;
         private float _timeSinceWallDetach = 0f;
+#endregion
 
+        #region PROPERTIES
         private Transform ChildTransform
         {
-            get
-            {
-                return _fpsCharacter != null ? _fpsCharacter.rootPivot : transform;
-            }
+            get => _fpsCharacter != null ? _fpsCharacter.rootPivot : transform;
         }
+        #endregion
 
+        #region PUBLIC_METHODS
         public void Initialize(Character baseCharacter, Func<Vector2> getMovementInput)
         {
             _baseCharacter = baseCharacter;
@@ -129,8 +132,8 @@ namespace BForBoss
             var velocity = _baseCharacter.GetVelocity();
             var alongWall = ChildTransform.TransformDirection(Vector3.forward).normalized;
             velocity = velocity.dot(alongWall) * alongWall;
-            velocity += Vector3.down * _wallGravityDownForce * Time.fixedDeltaTime;
-            _baseCharacter.SetVelocity(velocity);
+            var downwardForce = Vector3.down * _wallGravityDownForce * Time.fixedDeltaTime;
+            _baseCharacter.SetVelocity(velocity + downwardForce);
         }
 
         public bool CalcJumpVelocity(out Vector3 velocity)
@@ -147,7 +150,9 @@ namespace BForBoss
         {
             if (_fpsCharacter != null) HandleEyePivotRotation();
         }
+#endregion
 
+        #region PRIVATE_METHODS
         private void WallRun(RaycastHit wall)
         {
             _lastWallRunNormal = wall.normal;
@@ -187,7 +192,6 @@ namespace BForBoss
         }
 
         #region CAMERA_ROLL
-
         private float CalculateWallSideRelativeToPlayer()
         {
             if (_isWallRunning)
@@ -236,5 +240,6 @@ namespace BForBoss
             }
             return validRaycast;
         }
+        #endregion
     }
 }
