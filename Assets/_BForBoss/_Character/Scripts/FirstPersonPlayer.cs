@@ -33,7 +33,12 @@ namespace BForBoss
         {
             return IsSliding() ? _slideBehaviour.MaxWalkSpeedSliding : base.GetMaxSpeed();
         }
-        
+
+        public override float GetMaxAcceleration()
+        {
+            return IsWallRunning() ? _wallRunBehaviour.GetMaxAcceleration() : base.GetMaxAcceleration();
+        }
+
         protected override void OnAwake()
         {            
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();
@@ -112,8 +117,7 @@ namespace BForBoss
 
         protected override Vector3 CalcJumpVelocity()
         {
-            if (_wallRunBehaviour != null && _wallRunBehaviour.CalcJumpVelocity(out Vector3 velocity)) return velocity;
-            return base.CalcJumpVelocity();
+            return IsWallRunning() ? _wallRunBehaviour.CalcJumpVelocity() : base.CalcJumpVelocity();
         }
 
         protected override void OnMove()
@@ -198,6 +202,11 @@ namespace BForBoss
         private bool IsSliding()
         {
             return _slideBehaviour != null && _slideBehaviour.IsSliding;
+        }
+
+        private bool IsWallRunning()
+        {
+            return _wallRunBehaviour != null && _wallRunBehaviour.IsWallRunning;
         }
 
         #endregion
