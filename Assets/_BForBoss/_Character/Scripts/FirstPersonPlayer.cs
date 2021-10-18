@@ -14,7 +14,15 @@ namespace BForBoss
 
         [Title("Optional Behaviour")]
         private PlayerDashBehaviour _dashBehaviour = null;
+        private PlayerWallRunBehaviour _wallRunBehaviour = null;
         private PlayerSlideBehaviour _slideBehaviour = null;
+
+        public override bool CanJump()
+        {
+            if (_wallRunBehaviour != null)
+                return _wallRunBehaviour.CanJump() || base.CanJump();
+            return base.CanJump();
+        }
         
         public override float GetBrakingDeceleration()
         {
@@ -29,6 +37,7 @@ namespace BForBoss
         protected override void OnAwake()
         {            
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();
+            _wallRunBehaviour = GetComponent<PlayerWallRunBehaviour>();
             _slideBehaviour = GetComponent<PlayerSlideBehaviour>();
             base.OnAwake();
         }
@@ -40,11 +49,11 @@ namespace BForBoss
             {
                 _dashBehaviour.Initialize(this, base.GetMovementInput);
             }
-
             if (_slideBehaviour != null)
             {
-                _slideBehaviour.Initialize(this);   
+                _slideBehaviour.Initialize(this);
             }
+            _wallRunBehaviour?.Initialize(this, base.GetMovementInput);
         }
 
         protected override void SetupPlayerInput()
@@ -89,6 +98,24 @@ namespace BForBoss
             cmWalkingCamera.SetActive(true);
         }
 
+        protected override void Falling(Vector3 desiredVelocity)
+        {
+            base.Falling(desiredVelocity);
+            _wallRunBehaviour?.Falling(desiredVelocity);
+        }
+
+        protected override void OnJumped()
+        {
+            base.OnJumped();
+            _wallRunBehaviour?.OnJumped(ref _jumpCount);
+        }
+
+        protected override Vector3 CalcJumpVelocity()
+        {
+            if (_wallRunBehaviour != null && _wallRunBehaviour.CalcJumpVelocity(out Vector3 velocity)) return velocity;
+            return base.CalcJumpVelocity();
+        }
+
         protected override void OnMove()
         {
             base.OnMove();
@@ -96,11 +123,23 @@ namespace BForBoss
             {
                 _dashBehaviour.OnDashing();
             }
-
             if (_slideBehaviour != null)
             {
                 _slideBehaviour.Sliding();
             }
+            _wallRunBehaviour?.OnWallRunning();
+        }
+
+        protected override void OnLanded()
+        {
+            base.OnLanded();
+            _wallRunBehaviour?.OnLanded();
+        }
+
+        protected override void OnLateUpdate()
+        {
+            base.OnLateUpdate();
+            _wallRunBehaviour?.OnLateUpdate();
         }
 
         protected override void OnMovementHit(ref MovementHit movementHit)
