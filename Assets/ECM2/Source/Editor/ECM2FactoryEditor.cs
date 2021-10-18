@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
-namespace ECM2.Editor
+namespace BForBoss.ECM2.Source.Editor
 {
     public static class ECM2FactoryEditor
     {
