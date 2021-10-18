@@ -1425,28 +1425,6 @@ LightingSettings:
   m_PVRFilteringAtrousPositionSigmaDirect: 0.5
   m_PVRFilteringAtrousPositionSigmaIndirect: 2
   m_PVRFilteringAtrousPositionSigmaAO: 1
---- !u!1 &910638771 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 616281459798487496, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
-  m_PrefabInstance: {fileID: 2217804276623157995}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &910638773
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 910638771}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e85f6c41ec36c9d4e8cce5c2b68c6a07, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _speedMultiplier: 1.2
-  _minHeight: 0.5
-  _wallMaxDistance: 1
-  debugText: {fileID: 1720913097}
-  _minJumpDuration: 0.3
 --- !u!43 &1037370811
 Mesh:
   m_ObjectHideFlags: 0
@@ -2169,10 +2147,10 @@ MonoBehaviour:
     <b>SPACE</b>
     to  jump
 
-    <b>Left Shift</b> (hold) to sprint
+    <b>Left Shift</b> to dash
 
-    <b>Left Control / C</b>
-    (hold) to crouch'
+    <b>Left Control / C</b> (hold) to
+    crouch / slide if moving'
 --- !u!222 &1514376010
 CanvasRenderer:
   m_ObjectHideFlags: 0
