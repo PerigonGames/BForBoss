@@ -15,7 +15,7 @@ namespace BForBoss
         [SerializeField, Tooltip("Don't allow a wall run if the player is too close to the ground")] 
         private float _minHeight = 1f;
         [SerializeField]
-        private float _wallMaxDistance;
+        private float _wallMaxDistance = 1f;
         [SerializeField]
         private float _wallGravityDownForce = 0f;
         [SerializeField, Range(0f, 3f), Tooltip("Only allow for a wall run if jump is longer than this")]
@@ -151,7 +151,7 @@ namespace BForBoss
             var velocity = _baseCharacter.GetVelocity();
             if (_isWallRunning)
             {
-                velocity += _lastWallRunNormal * _wallBounciness + Vector3.up * _baseCharacter.jumpImpulse;
+                velocity += _lastWallRunNormal * _wallBounciness + Vector3.up * _baseCharacter.jumpImpulse * _jumpHeightMultiplier;
             }
             return velocity;
         }
