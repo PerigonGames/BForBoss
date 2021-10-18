@@ -187,6 +187,16 @@ namespace BForBoss
             }
         }
 
+        protected override void OnOnDestroy()
+        {
+            base.OnOnDestroy();
+            if (_dashBehaviour != null)
+            {
+                _dashBehaviour.OnOnDestroy();
+            }
+        }
+
+
         #region Helper
 
         private bool IsSliding()
