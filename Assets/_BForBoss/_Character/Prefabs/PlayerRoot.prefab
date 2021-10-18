@@ -94,7 +94,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 616281459798487496}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.25, y: 0, z: -4.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 616281458356855404}
@@ -194,10 +194,10 @@ MonoBehaviour:
   _rotationMode: 0
   _maxWalkSpeed: 6
   _minAnalogWalkSpeed: 0
-  _maxAcceleration: 20
-  _brakingDecelerationWalking: 20
+  _maxAcceleration: 40
+  _brakingDecelerationWalking: 40
   _groundFriction: 8
-  _sprintSpeedMultiplier: 1.5
+  _sprintSpeedMultiplier: 1
   _sprintAccelerationMultiplier: 1
   _maxWalkSpeedCrouched: 3
   _crouchedHeight: 1
@@ -205,21 +205,21 @@ MonoBehaviour:
   _maxFallSpeed: 40
   _brakingDecelerationFalling: 0
   _fallingLateralFriction: 0.3
-  _airControl: 0.8
+  _airControl: 0.2
   _jumpMaxCount: 2
   _jumpImpulse: 6
   _jumpMaxHoldTime: 0.35
-  _jumpPreGroundedTime: 0.15
-  _jumpPostGroundedTime: 0.15
+  _jumpPreGroundedTime: 0
+  _jumpPostGroundedTime: 0
   _gravity: {x: 0, y: -30, z: 0}
-  _canSwim: 1
-  _maxSwimSpeed: 3
+  _canSwim: 0
+  _maxSwimSpeed: 0
   _brakingDecelerationSwimming: 0
-  _swimmingFriction: 0.5
+  _swimmingFriction: 0
   _buoyancy: 1
-  _maxFlySpeed: 6
+  _maxFlySpeed: 0
   _brakingDecelerationFlying: 0
-  _flyingFriction: 0.3
+  _flyingFriction: 0
   _mass: 1
   _impartExternalVelocity: 0
   _impartPlatformVelocity: 0
@@ -253,16 +253,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85f6c41ec36c9d4e8cce5c2b68c6a07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speedMultiplier: 1.2
-  _maxWallRunAcceleration: 20
+  _speedMultiplier: 2
+  _maxWallRunAcceleration: 40
   _minHeight: 0.5
   _wallMaxDistance: 1.3
-  _wallGravityDownForce: 1
-  _minJumpDuration: 0.3
+  _wallGravityDownForce: 200
+  _minJumpDuration: 0.5
   _gravityTimerDuration: 2
-  _wallBounciness: 6
+  _wallBounciness: 10
   _jumpHeightMultiplier: 1.5
-  _maxCameraAngleRoll: 30
+  _maxCameraAngleRoll: 20
   _cameraRotateDuration: 2
 --- !u!114 &910638779
 MonoBehaviour:
@@ -531,7 +531,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7120097269958552081}
   m_LocalRotation: {x: 0.18977648, y: -0.62123454, z: 0.15857098, w: 0.74357766}
-  m_LocalPosition: {x: 5.25, y: 1.6, z: -4.5}
+  m_LocalPosition: {x: 0, y: 1.5999999, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7120097271046645274}

@@ -136,6 +136,7 @@ namespace BForBoss
             {
                 return;
             }
+
             _timeSinceWallAttach += Time.fixedDeltaTime;
             var velocity = _baseCharacter.GetVelocity();
             var alongWall = ChildTransform.TransformDirection(Vector3.forward).normalized;
