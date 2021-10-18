@@ -6,9 +6,8 @@ using UnityEngine.InputSystem;
 
 namespace BForBoss
 {
-    public class FirstPersonPlayer : FirstPersonCharacter
+    public partial class FirstPersonPlayer : FirstPersonCharacter
     {
-
         [Header("Cinemachine")]
         public GameObject cmWalkingCamera;
         public GameObject cmCrouchedCamera;
@@ -16,6 +15,7 @@ namespace BForBoss
         [Title("Optional Behaviour")]
         private PlayerDashBehaviour _dashBehaviour = null;
         private PlayerWallRunBehaviour _wallRunBehaviour = null;
+        private PlayerSlideBehaviour _slideBehaviour = null;
 
         public override bool CanJump()
         {
@@ -23,11 +23,22 @@ namespace BForBoss
                 return _wallRunBehaviour.CanJump() || base.CanJump();
             return base.CanJump();
         }
+        
+        public override float GetBrakingDeceleration()
+        {
+            return IsSliding() ? _slideBehaviour.brakingDecelerationSliding : base.GetBrakingDeceleration();
+        }
 
+        public override float GetMaxSpeed()
+        {
+            return IsSliding() ? _slideBehaviour.MaxWalkSpeedSliding : base.GetMaxSpeed();
+        }
+        
         protected override void OnAwake()
         {            
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();
             _wallRunBehaviour = GetComponent<PlayerWallRunBehaviour>();
+            _slideBehaviour = GetComponent<PlayerSlideBehaviour>();
             base.OnAwake();
         }
 
@@ -37,6 +48,10 @@ namespace BForBoss
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.Initialize(this, base.GetMovementInput);
+            }
+            if (_slideBehaviour != null)
+            {
+                _slideBehaviour.Initialize(this);
             }
             _wallRunBehaviour?.Initialize(this, base.GetMovementInput);
         }
@@ -56,9 +71,18 @@ namespace BForBoss
             // Base class animates the camera for crouching here, cinemachine handles that
         }
 
+        protected override Vector3 CalcDesiredVelocity()
+        {
+            return IsSliding() ? Vector3.zero : base.CalcDesiredVelocity();
+        }
+
         protected override void OnCrouched()
         {
             base.OnCrouched();
+            if (_slideBehaviour != null)
+            {
+                _slideBehaviour.Slide();
+            }
             cmWalkingCamera.SetActive(false);
             cmCrouchedCamera.SetActive(true);
         }
@@ -66,6 +90,10 @@ namespace BForBoss
         protected override void OnUncrouched()
         {
             base.OnUncrouched();
+            if (_slideBehaviour != null)
+            {
+                _slideBehaviour.StopSliding();
+            }
             cmCrouchedCamera.SetActive(false);
             cmWalkingCamera.SetActive(true);
         }
@@ -95,6 +123,10 @@ namespace BForBoss
             {
                 _dashBehaviour.OnDashing();
             }
+            if (_slideBehaviour != null)
+            {
+                _slideBehaviour.Sliding();
+            }
             _wallRunBehaviour?.OnWallRunning();
         }
 
@@ -116,6 +148,11 @@ namespace BForBoss
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.OnMovementHit(movementHit);
+            }
+
+            if (_slideBehaviour != null && _slideBehaviour.IsSliding && !movementHit.isWalkable)
+            {
+                _slideBehaviour.StopSliding();
             }
         }
 
@@ -145,5 +182,14 @@ namespace BForBoss
                 _dashBehaviour.OnOnEnable();
             }
         }
+
+        #region Helper
+
+        private bool IsSliding()
+        {
+            return _slideBehaviour != null && _slideBehaviour.IsSliding;
+        }
+
+        #endregion
     }
 }

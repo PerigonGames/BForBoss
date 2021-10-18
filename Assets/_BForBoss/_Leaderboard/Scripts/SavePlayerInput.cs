@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace BForBoss
 {
@@ -9,6 +10,11 @@ namespace BForBoss
     {
         [SerializeField] private InputField UsernameField;
         [SerializeField] private Button UploadButton;
+
+        private string Username;
+        private int Timer;
+        [SerializeField] private TMP_Text InputFieldUsername;
+        [SerializeField] private TMP_Text InputFieldTimer;
 
         private void Awake()
         {
@@ -22,7 +28,12 @@ namespace BForBoss
         public void clickUpload()
         {
             PlayerPrefs.SetString("name", UsernameField.text);
-            Debug.Log("Your name is " + PlayerPrefs.GetString("name"));
+        }
+
+        public void StoreInput()
+        {
+            Username = InputFieldUsername.text;
+            Timer = int.Parse(InputFieldTimer.text);
         }
     }
 }
