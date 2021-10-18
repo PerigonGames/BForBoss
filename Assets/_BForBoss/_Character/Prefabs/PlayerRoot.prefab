@@ -254,13 +254,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speedMultiplier: 1.2
+  _maxWallRunAcceleration: 20
   _minHeight: 0.5
-  _wallMaxDistance: 1
-  _wallGravityDownForce: 0
+  _wallMaxDistance: 1.3
+  _wallGravityDownForce: 1
   _minJumpDuration: 0.3
+  _gravityTimerDuration: 2
   _wallBounciness: 6
+  _jumpHeightMultiplier: 1.5
   _maxCameraAngleRoll: 30
-  _cameraRotateDuration: 1
+  _cameraRotateDuration: 2
 --- !u!114 &910638779
 MonoBehaviour:
   m_ObjectHideFlags: 0

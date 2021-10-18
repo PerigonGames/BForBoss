@@ -10,16 +10,22 @@ namespace BForBoss
         #region SERIALIZED_FIELDS
         [SerializeField] 
         private float _speedMultiplier = 1f;
+        [SerializeField]
+        private float _maxWallRunAcceleration = 20f;
         [SerializeField, Tooltip("Don't allow a wall run if the player is too close to the ground")] 
         private float _minHeight = 1f;
         [SerializeField]
-        private float _wallMaxDistance;
+        private float _wallMaxDistance = 1f;
         [SerializeField]
         private float _wallGravityDownForce = 0f;
         [SerializeField, Range(0f, 3f), Tooltip("Only allow for a wall run if jump is longer than this")]
         private float _minJumpDuration = 0.3f;
+        [SerializeField, Tooltip("Gravity won't apply until after this many seconds")]
+        private float _gravityTimerDuration = 1f;
         [SerializeField]
         private float _wallBounciness = 6f;
+        [SerializeField]
+        private float _jumpHeightMultiplier = 1f;
 
         [SerializeField]
         private float _maxCameraAngleRoll = 30f;
@@ -56,6 +62,8 @@ namespace BForBoss
         {
             get => _fpsCharacter != null ? _fpsCharacter.rootPivot : transform;
         }
+
+        public bool IsWallRunning => _isWallRunning;
         #endregion
 
         #region PUBLIC_METHODS
@@ -132,24 +140,32 @@ namespace BForBoss
             var velocity = _baseCharacter.GetVelocity();
             var alongWall = ChildTransform.TransformDirection(Vector3.forward).normalized;
             velocity = velocity.dot(alongWall) * alongWall;
-            var downwardForce = Vector3.down * _wallGravityDownForce * Time.fixedDeltaTime;
+            var downwardForce = _timeSinceWallAttach >= _gravityTimerDuration ? 
+                Vector3.down * _wallGravityDownForce * Time.fixedDeltaTime
+                : Vector3.zero;
             _baseCharacter.SetVelocity(velocity + downwardForce);
         }
 
-        public bool CalcJumpVelocity(out Vector3 velocity)
+        public Vector3 CalcJumpVelocity()
         {
-            velocity = Vector3.zero;
+            var velocity = _baseCharacter.GetVelocity();
             if (_isWallRunning)
             {
-                velocity = _lastWallRunNormal * _wallBounciness + Vector3.up * _baseCharacter.jumpImpulse;
+                velocity += _lastWallRunNormal * _wallBounciness + Vector3.up * _baseCharacter.jumpImpulse * _jumpHeightMultiplier;
             }
-            return _isWallRunning;
+            return velocity;
+        }
+
+        public float GetMaxAcceleration()
+        {
+            return _maxWallRunAcceleration;
         }
 
         public void OnLateUpdate()
         {
             if (_fpsCharacter != null) HandleEyePivotRotation();
         }
+
 #endregion
 
         #region PRIVATE_METHODS
