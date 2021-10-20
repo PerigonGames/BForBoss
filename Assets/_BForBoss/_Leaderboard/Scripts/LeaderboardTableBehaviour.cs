@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 namespace BForBoss
@@ -11,6 +10,17 @@ namespace BForBoss
         private DreamloGetLeaderboardEndPoint LeaderboardEndpoint = new DreamloGetLeaderboardEndPoint();
 
         // Start is called before the first frame update
+
+        private void Awake()
+        {
+            LeaderboardEndpoint.OnSuccess += HandleOnSuccess;
+        }
+
+        private void HandleOnSuccess(LeaderboardScore[] scores)
+        {
+            Debug.Log("I finished getting data from the internet");
+        }
+
         void Start()
         {
             var score_1 = new LeaderboardScore("Apple", 123, "MKB", new System.DateTime());
