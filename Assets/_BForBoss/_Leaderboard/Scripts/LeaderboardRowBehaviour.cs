@@ -14,12 +14,20 @@ namespace BForBoss
         [SerializeField] private TMP_Text Time;
         [SerializeField] private TMP_Text Input;
 
-        public void SetField(LeaderboardScore score)
+        public void SetField(int rank, LeaderboardScore score)
         {
-            Rank.text = "//";
+            Rank.text = rank.ToString();
             Username.text = score.Username;
             Time.text = score.Time.ToString();
             Input.text = score.Input;
+        }
+
+        public void SetFieldEmpty()
+        {
+            Rank.text = "--";
+            Username.text = "--";
+            Time.text = "--";
+            Input.text = "--";
         }
     }
 }
