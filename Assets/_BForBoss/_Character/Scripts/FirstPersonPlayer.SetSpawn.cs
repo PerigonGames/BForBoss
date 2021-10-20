@@ -13,7 +13,7 @@ namespace BForBoss
         {
             SetVelocity(Vector3.zero);
             SetPosition(position);
-            SetRotation(facing);
+            // TODO rotation of camera??
         }
     }
 }
