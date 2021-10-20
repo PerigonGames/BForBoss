@@ -7,8 +7,12 @@ namespace BForBoss
         [SerializeField] private TimeManager _timeManager = null;
         [SerializeField] private CheckpointManager _checkpointManager = null;
         [SerializeField] private FirstPersonPlayer _player = null;
+        [SerializeField] private TimerViewBehaviour _timerView = null;
+        
         private StateManager _stateManager = StateManager.Instance;
-
+        private TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
+        private ICharacterSpawn _character = null;
+        
         private void CleanUp()
         {
             Debug.Log("Cleaning Up");
@@ -19,16 +23,21 @@ namespace BForBoss
             _timeManager.Reset();
             _checkpointManager.Reset();
             _stateManager.SetState(State.Play);
+            _timerView.Reset();
+            _character.SpawnAt(_checkpointManager.CheckpointPosition, _checkpointManager.CheckpointRotation);
         }
 
         private void Awake()
         {
             _stateManager.OnStateChanged += HandleStateChange;
+            _character = _player;
         }
 
         private void Start()
         {
             _checkpointManager.Initialize();
+            _timeManager.Initialize(_timeManagerViewModel);
+            _timerView.Initialize(_timeManagerViewModel);
             _stateManager.SetState(State.PreGame);
         }
 
@@ -49,11 +58,6 @@ namespace BForBoss
                 }
                 case State.Play:
                 {
-                    if (!_timeManager.IsTimerTracking)
-                    {
-                        _timeManager.StartTimer();
-                    }
-                    
                     break;
                 }
                 case State.Pause:
@@ -62,13 +66,12 @@ namespace BForBoss
                 }
                 case State.EndRace:
                 {
-                    _timeManager.StopTimer();
-                    Debug.Log($"The time taken was {_timeManager.CurrentGameTime} seconds");
+                    _timeManagerViewModel.StopTimer();
                     break;
                 }
                 case State.Death:
                 {
-                    _player.transform.position = _checkpointManager.CurrentCheckpoint;
+                    _character.SpawnAt(_checkpointManager.CheckpointPosition, _checkpointManager.CheckpointRotation);
                     _stateManager.SetState(State.Play);
                     break;
                 }

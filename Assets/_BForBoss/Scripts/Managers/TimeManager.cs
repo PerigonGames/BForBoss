@@ -1,35 +1,92 @@
+using System;
 using UnityEngine;
 
 namespace BForBoss
 {
     public class TimeManager : MonoBehaviour
     {
-        private float _currentGameTime = 0.0f;
-        private bool _isTimerTracking = false;
+        [SerializeField] private Checkpoint _startingCheckpoint = null;
+        [SerializeField] private Checkpoint _endingCheckpoint = null;
+        private TimeManagerViewModel _timeManagerViewModel = null;
 
-        public float CurrentGameTime => _currentGameTime;
-        public bool IsTimerTracking => _isTimerTracking;
+        public void Initialize(TimeManagerViewModel viewModel)
+        {
+            _timeManagerViewModel = viewModel;
+        }
 
         public void Reset()
         {
-            _currentGameTime = 0.0f;
+            _timeManagerViewModel?.Reset();
         }
 
+        #region Mono
+        private void Awake()
+        {
+            _startingCheckpoint.OnEnterArea += HandleOnEnterStartingCheckpoint;
+            _endingCheckpoint.OnEnterArea += HandleOnEnterEndingCheckpoint;
+        }
+
+        private void HandleOnEnterStartingCheckpoint(Checkpoint _)
+        {
+            _timeManagerViewModel.StartTimer();
+        }
+
+        private void HandleOnEnterEndingCheckpoint(Checkpoint _)
+        {
+            _timeManagerViewModel.StopTimer();
+        }
+
+        private void OnDestroy()
+        {
+            _startingCheckpoint.OnEnterArea -= HandleOnEnterStartingCheckpoint;
+            _endingCheckpoint.OnEnterArea -= HandleOnEnterEndingCheckpoint;
+        }
+
+        private void Update()
+        {
+            _timeManagerViewModel?.Update(Time.deltaTime);
+        }
+        #endregion
+    }
+
+    public class TimeManagerViewModel
+    {
+        private float _currentGameTime = 0.0f;
+        private bool _isTimerTracking = false;
+
+        public float CurrentGameTime
+        {
+            get => _currentGameTime;
+            set
+            {
+                _currentGameTime = value;
+                OnTimeChanged?.Invoke(value);
+            }
+        }
+
+        public event Action<float> OnTimeChanged;
+
+        public void Reset()
+        {
+            _currentGameTime = 0f;
+            _isTimerTracking = false;
+        }
+        
         public void StartTimer()
         {
             _isTimerTracking = true;
         }
-
+        
         public void StopTimer()
         {
             _isTimerTracking = false;
         }
-        
-        private void FixedUpdate()
+
+        public void Update(float time)
         {
             if (_isTimerTracking)
             {
-                _currentGameTime += Time.fixedDeltaTime;
+                CurrentGameTime += time;
             }
         }
     }

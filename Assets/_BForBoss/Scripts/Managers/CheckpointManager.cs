@@ -5,11 +5,12 @@ namespace BForBoss
 {
     public class CheckpointManager : MonoBehaviour
     {
+        [SerializeField] private Checkpoint _spawnPoint;
         [SerializeField] private Checkpoint[] _checkpoints;
         private Checkpoint _activeCheckpoint = null;
-        private Vector3 _initialCheckpointPosition =  Vector3.zero;
         
-        public Vector3 CurrentCheckpoint => _activeCheckpoint == null ? _initialCheckpointPosition : _activeCheckpoint.transform.position;
+        public Vector3 CheckpointPosition => _activeCheckpoint == null ? _spawnPoint.transform.position : _activeCheckpoint.transform.position;
+        public Quaternion CheckpointRotation => _activeCheckpoint == null ? _spawnPoint.transform.rotation : _activeCheckpoint.transform.rotation;
 
         public void Initialize()
         {
@@ -27,13 +28,7 @@ namespace BForBoss
                     Debug.LogError("There are null Checkpoints associated with the CheckpointManager");
                 }
 
-                checkpoint.OnCheckpointActivation += SetNewCheckpoint;
-
-                if (i == 0)
-                {
-                    _activeCheckpoint = checkpoint;
-                    _activeCheckpoint.SetCheckpoint();
-                }
+                checkpoint.OnEnterArea += SetNewCheckpoint;
             }
         }
 
@@ -43,6 +38,8 @@ namespace BForBoss
             {
                 checkpoint.Reset();
             }
+
+            _activeCheckpoint = null;
         }
 
         private void SetNewCheckpoint(Checkpoint checkpoint)
@@ -55,7 +52,7 @@ namespace BForBoss
         {
             foreach (Checkpoint checkpoint in _checkpoints)
             {
-                checkpoint.OnCheckpointActivation -= SetNewCheckpoint;
+                checkpoint.OnEnterArea -= SetNewCheckpoint;
             }
         }
     }

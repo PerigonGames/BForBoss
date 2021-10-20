@@ -14,7 +14,7 @@ namespace BForBoss
         [SerializeField]
         private Color _boxColor = Color.cyan;
         
-        public event Action<Checkpoint> OnCheckpointActivation;
+        public event Action<Checkpoint> OnEnterArea;
         
         private bool _hasBeenActivated = false;
         
@@ -32,7 +32,7 @@ namespace BForBoss
         {
             if (!_hasBeenActivated && other.CompareTag(Tags.Player))
             {
-                OnCheckpointActivation?.Invoke(this);
+                OnEnterArea?.Invoke(this);
             }
         }
 
