@@ -13,7 +13,8 @@ namespace BForBoss
         {
             SetVelocity(Vector3.zero);
             SetPosition(position);
-            // TODO rotation of camera??
+            rootPivot.rotation = facing;
+            eyePivot.rotation = facing;
         }
     }
 }
