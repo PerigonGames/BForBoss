@@ -8,6 +8,8 @@ namespace BForBoss
     {
         [SerializeField] private LeaderboardRowBehaviour[] LeaderboardRows;
 
+        private DreamloGetLeaderboardEndPoint LeaderboardEndpoint = new DreamloGetLeaderboardEndPoint();
+
         // Start is called before the first frame update
         void Start()
         {
@@ -40,6 +42,11 @@ namespace BForBoss
                 LeaderboardRows[i].SetField(array[i]);
             }
             
+        }
+
+        private void OnEnable()
+        {
+            LeaderboardEndpoint.GetLeaderboard(); //Starts getting scores from database
         }
     }
 }
