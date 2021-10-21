@@ -318,6 +318,33 @@ namespace Tests.Character
             Assert.Less(character.transform.position.z, blockadeBackward.transform.position.z, "Sliding backward left should have went under and beyond the forward blockade");
             Assert.Less(character.transform.position.x, blockadeLeft.transform.position.x, "Sliding backward left should have went under and beyond the left blockade");
         }
+        
+        /*
+         THIS IS CURRENTLY BUGGED
+        [UnityTest]
+        public IEnumerator Character_SlideBackwardRight_BeyondDiagonalBackwardRightBlockade()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+            
+            var originalPosition = Vector3.zero;
+            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var blockadeBackward = GameObject.Find("Blockade_Backward");
+            var blockadeRight = GameObject.Find("Blockade_Right");
+            character.transform.position = originalPosition;
+            
+            Press(_keyboard.sKey);
+            Press(_keyboard.dKey);
+            yield return  new WaitForSeconds(0);
+            Press(_keyboard.cKey);
+            yield return new WaitForSeconds(1.0f);
+            
+            Assert.Less(character.transform.position.z, blockadeBackward.transform.position.z, "Sliding backward right should have went under and beyond the forward blockade");
+            Assert.Greater(character.transform.position.x, blockadeRight.transform.position.x, "Sliding backward right should have went under and beyond the right blockade");
+        }
+        */
     }
 }
 
