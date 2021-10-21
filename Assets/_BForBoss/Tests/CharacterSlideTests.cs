@@ -45,6 +45,30 @@ namespace Tests.Character
         }
         
         [UnityTest]
+        public IEnumerator Character_JumpCrouch_StayingStill()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+            
+            var originalPosition = Vector3.zero;
+            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            character.transform.position = originalPosition;
+            
+            Press(_keyboard.spaceKey);
+            yield return new WaitForSeconds(0.25f);
+            Press(_keyboard.cKey);
+            yield return new WaitForSeconds(1.0f);
+
+            var withinBoundsXPosition = TestUtilities.WithinBounds(character.transform.position.x, 0);
+            var withinBoundsYPosition = TestUtilities.WithinBounds(character.transform.position.z, 0);
+
+            Assert.IsTrue(withinBoundsXPosition, "Crouching should not have moved player when standing still");
+            Assert.IsTrue(withinBoundsYPosition, "Crouching should not have moved player when standing still");
+        }
+        
+        [UnityTest]
         public IEnumerator Character_CrouchLeft_BeyondLeftBlockade()
         {
             for (int i = 0; i < 5; i++)
