@@ -14,10 +14,13 @@ namespace BForBoss
         [Title("Effects")] 
         [SerializeField] private Volume _deathVolume = null;
         
+        // This probably best placed inside its own utility section
         private StateManager _stateManager = StateManager.Instance;
+        // This is probably best kept within its own utility section
+        private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
+        
         private TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
         private ICharacterSpawn _character = null;
-        private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
         
         private void CleanUp()
         {
