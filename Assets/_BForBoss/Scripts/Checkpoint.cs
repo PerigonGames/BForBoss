@@ -38,12 +38,25 @@ namespace BForBoss
 
         private void Awake()
         {
-            if (_showDebugBox && Debug.isDebugBuild)
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (_showDebugBox)
             {
                 var cuboid = gameObject.AddComponent<Cuboid>();
                 cuboid.Size = GetComponent<BoxCollider>().size;
                 cuboid.Color = _boxColor;
             }
+            #endif
         }
+        
+        #if UNITY_EDITOR
+        private void OnDrawGizmosSelected()
+        {
+            if (_showDebugBox)
+            {
+                Gizmos.color = _boxColor;
+                Gizmos.DrawCube(transform.position, GetComponent<BoxCollider>().size);
+            }
+        }
+        #endif
     }
 }
