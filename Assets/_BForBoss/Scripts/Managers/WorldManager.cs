@@ -1,4 +1,6 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace BForBoss
 {
@@ -8,10 +10,14 @@ namespace BForBoss
         [SerializeField] private CheckpointManager _checkpointManager = null;
         [SerializeField] private FirstPersonPlayer _player = null;
         [SerializeField] private TimerViewBehaviour _timerView = null;
+
+        [Title("Effects")] 
+        [SerializeField] private Volume _deathVolume = null;
         
         private StateManager _stateManager = StateManager.Instance;
         private TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
         private ICharacterSpawn _character = null;
+        private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
         
         private void CleanUp()
         {
@@ -31,6 +37,7 @@ namespace BForBoss
         {
             _stateManager.OnStateChanged += HandleStateChange;
             _character = _player;
+            _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_deathVolume, 0.1f, 0f, 0.1f);
         }
 
         private void Start()
@@ -71,6 +78,7 @@ namespace BForBoss
                 }
                 case State.Death:
                 {
+                    _postProcessingVolumeWeightTool.InstantDistortAndRevert();
                     _character.SpawnAt(_checkpointManager.CheckpointPosition, _checkpointManager.CheckpointRotation);
                     _stateManager.SetState(State.Play);
                     break;

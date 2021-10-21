@@ -14,23 +14,35 @@ namespace BForBoss
         private readonly Volume _postProcessingVolume = null;
         private readonly float _distortDuration = 0;
         private readonly float _revertDuration = 0;
+        private readonly float _startValue = 0f;
+        private readonly float _endValue = 0f;
 
-        public PostProcessingVolumeWeightTool(Volume volume, float duration)
+        public PostProcessingVolumeWeightTool(Volume volume, float duration = 0.25f, float startValue = 0f, float endValue = 1f)
         {
             _postProcessingVolume = volume;
             _postProcessingVolume.weight = 0;
             _distortDuration = duration;
             _revertDuration = duration * 2;
+            _startValue = startValue;
+            _endValue = endValue;
         }
 
-        public void Distort()
+        public Tweener Distort()
         {
-            DOTween.To(intensity => _postProcessingVolume.weight = intensity, 0, 1, _distortDuration);
+            return DOTween.To(intensity => _postProcessingVolume.weight = intensity, _startValue, _endValue, _distortDuration);
         }
 
-        public void Revert()
+        public Tweener Revert()
         {
-            DOTween.To(intensity => _postProcessingVolume.weight = intensity, 1, 0, _revertDuration);
+            return DOTween.To(intensity => _postProcessingVolume.weight = intensity, _endValue, _startValue, _revertDuration);
         }
+
+        public void InstantDistortAndRevert()
+        {
+            var sequence = DOTween.Sequence();
+            sequence.Append(Distort());
+            sequence.Append(Revert());
+        }
+        
     }
 }
