@@ -22,7 +22,7 @@ namespace BForBoss
             Input.text = score.Input;
         }
 
-        public void SetFieldEmpty()
+        private void OnEnable()
         {
             Rank.text = "--";
             Username.text = "--";

@@ -16,6 +16,5 @@ namespace BForBoss
         // Milliseconds
         public float seconds;
         public string text;
-        public DateTime date;
     }
 }

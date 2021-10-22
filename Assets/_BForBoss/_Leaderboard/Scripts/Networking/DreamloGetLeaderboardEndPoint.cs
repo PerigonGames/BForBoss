@@ -48,7 +48,6 @@ namespace BForBoss
                 score.Username = scoreDTO.name;
                 score.Time = scoreDTO.seconds / 1000;
                 score.Input = scoreDTO.text;
-                score.Date = scoreDTO.date;
                 listOfScore.Add(score);
             }
 
