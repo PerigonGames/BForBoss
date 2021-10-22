@@ -1,5 +1,8 @@
+using DG.Tweening;
+using PerigonGames;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace BForBoss
@@ -23,6 +26,7 @@ namespace BForBoss
         public void Initialize(InputSettingsViewModel viewModel)
         {
             _viewModel = viewModel;
+            transform.localScale = Vector3.zero;
             SetupSliders();
             BindSliders();
 
@@ -41,6 +45,12 @@ namespace BForBoss
                     _controllerVerticalSlider.SliderValue,
                     _toggle.isOn);
                 _applyButton.interactable = false;
+            });
+            
+            _backButton.onClick.AddListener(() =>
+            {
+                transform.DOScale(Vector3.zero, 0.5f);
+                _viewModel.SetMouseLock(true);
             });
         }
 
@@ -81,6 +91,15 @@ namespace BForBoss
             _toggle.isOn = _viewModel.GetIsInverted;
             _applyButton.interactable = false;
         }
+
+        private void Update()
+        {
+            if (Keyboard.current.digit0Key.wasPressedThisFrame)
+            {
+                _viewModel.SetMouseLock(false);
+                transform.ResetScale();
+            }
+        }
     }
 
     public class InputSettingsViewModel
@@ -101,6 +120,11 @@ namespace BForBoss
         public void RevertSettings()
         {
             _settings.RevertAllSettings();
+        }
+
+        public void SetMouseLock(bool isLocked)
+        {
+            _settings.SetMouseLock(isLocked);
         }
 
         public void ApplySettings(float horizontalMouse, float verticalMouse, float horizontalController, float verticalController, bool isInverted)
