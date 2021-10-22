@@ -38,9 +38,9 @@ namespace Tests.Character
             var expectedHeight = character.transform.position.y;
             
             Press(_keyboard.leftShiftKey);
-            yield return new WaitForSeconds(1.0f); 
-            
-            var withinBounds = Math.Abs(expectedHeight - character.transform.position.y) < 0.1f;
+            yield return new WaitForSeconds(1.0f);
+
+            var withinBounds = TestUtilities.WithinBounds(expectedHeight, character.transform.position.y);
             Assert.IsTrue(withinBounds, "The height should have stayed the same after dashing over the hole");
             Assert.Greater(character.transform.position.z, originalPosition.z, "Character should have Dashed forward in Positive Z direction");
         }
@@ -62,8 +62,8 @@ namespace Tests.Character
             yield return new WaitForSeconds(0);
             Press(_keyboard.leftShiftKey);
             yield return new WaitForSeconds(1.0f);
-            
-            var withinBounds = Math.Abs(expectedHeight - character.transform.position.y) < 0.1f;
+
+            var withinBounds = TestUtilities.WithinBounds(expectedHeight, character.transform.position.y);
             Assert.IsTrue(withinBounds, "The height should have stayed the same after dashing over the hole");
             Assert.Greater(character.transform.position.z, originalPosition.z, "Character should have Dashed forward in Positive Z direction");
         }
@@ -86,7 +86,7 @@ namespace Tests.Character
             Press(_keyboard.leftShiftKey);
             yield return new WaitForSeconds(1.0f);
 
-            var withinBounds = Math.Abs(expectedHeight - character.transform.position.y) < 0.1f;
+            var withinBounds = TestUtilities.WithinBounds(expectedHeight, character.transform.position.y);
             Assert.IsTrue(withinBounds, "The height should have stayed the same after dashing over the hole");
             Assert.Less(character.transform.position.z, originalPosition.z, "Character should have Dashed backwards in Negative Z direction");
         }
@@ -109,7 +109,7 @@ namespace Tests.Character
             Press(_keyboard.leftShiftKey);
             yield return new WaitForSeconds(1.0f);
 
-            var withinBounds = Math.Abs(expectedHeight - character.transform.position.y) < 0.1f;
+            var withinBounds = TestUtilities.WithinBounds(expectedHeight, character.transform.position.y);
             Assert.IsTrue(withinBounds, "The height should have stayed the same after dashing over the hole");
             Assert.Less(character.transform.position.x, originalPosition.x, "Character should have Dashed Left in Negative X direction");
         }
@@ -132,7 +132,7 @@ namespace Tests.Character
             Press(_keyboard.leftShiftKey);
             yield return new WaitForSeconds(1.0f);
 
-            var withinBounds = Math.Abs(expectedHeight - character.transform.position.y) < 0.1f;
+            var withinBounds = TestUtilities.WithinBounds(expectedHeight, character.transform.position.y);
             Assert.IsTrue(withinBounds, "The height should have stayed the same after dashing over the hole");
             Assert.Greater(character.transform.position.x, originalPosition.x, "Character should have Dashed Right in Positive X direction");
         }
