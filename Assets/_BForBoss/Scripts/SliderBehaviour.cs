@@ -1,3 +1,4 @@
+using System;
 using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
@@ -7,6 +8,7 @@ namespace BForBoss
 {
     public class SliderBehaviour : MonoBehaviour
     {
+        private const float MappedSensitivityMultiplier = 10f;
         private Slider _customSlider = null;
         private TMP_InputField _inputField = null;
 
@@ -38,10 +40,12 @@ namespace BForBoss
 
         public float SliderValue
         {
-             get=> CustomSlider.value;
+             get=> CustomSlider.value / MappedSensitivityMultiplier;
              
-             set => CustomSlider.value = value;
+             set => CustomSlider.value = value * MappedSensitivityMultiplier;
         }
+
+        public Action OnValueChangedAction;
 
         private void Awake()
         {
@@ -58,6 +62,7 @@ namespace BForBoss
         private void HandleOnSliderValueChanged(float value)
         {
             CustomInputField.text = value.ToString("F");
+            OnValueChangedAction?.Invoke();
         }
 
         private void HandleOnInputFieldEnded(string value)
@@ -69,6 +74,7 @@ namespace BForBoss
             else
             {
                 CustomSlider.value = float.Parse(value);
+                OnValueChangedAction?.Invoke();
             }
         }
     }

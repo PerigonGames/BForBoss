@@ -1,4 +1,3 @@
-using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,6 +24,7 @@ namespace BForBoss
         {
             _viewModel = viewModel;
             SetupSliders();
+            BindSliders();
 
             _revertButton.onClick.AddListener(() =>
             {
@@ -40,6 +40,35 @@ namespace BForBoss
                     _controllerHorizontalSlider.SliderValue,
                     _controllerVerticalSlider.SliderValue,
                     _toggle.isOn);
+                _applyButton.interactable = false;
+            });
+        }
+
+        private void BindSliders()
+        {
+            _mouseHorizontalSlider.OnValueChangedAction = () =>
+            {
+                _applyButton.interactable = true;
+            };
+            
+            _mouseVerticalSlider.OnValueChangedAction = () =>
+            {
+                _applyButton.interactable = true;
+            };
+            
+            _controllerHorizontalSlider.OnValueChangedAction = () =>
+            {
+                _applyButton.interactable = true;
+            };
+            
+            _controllerVerticalSlider.OnValueChangedAction = () =>
+            {
+                _applyButton.interactable = true;
+            };
+            
+            _toggle.onValueChanged.AddListener((_) =>
+            {
+                _applyButton.interactable = true;
             });
         }
 
@@ -50,6 +79,7 @@ namespace BForBoss
             _controllerHorizontalSlider.SliderValue = _viewModel.GetControllerHorizontal;
             _controllerVerticalSlider.SliderValue = _viewModel.GetControllerVeritcal;
             _toggle.isOn = _viewModel.GetIsInverted;
+            _applyButton.interactable = false;
         }
     }
 
