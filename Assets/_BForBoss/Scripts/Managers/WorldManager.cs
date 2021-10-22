@@ -45,6 +45,7 @@ namespace BForBoss
 
         private void Start()
         {
+            _player.Initialize();
             _checkpointManager.Initialize();
             _timeManager.Initialize(_timeManagerViewModel);
             _timerView.Initialize(_timeManagerViewModel);
