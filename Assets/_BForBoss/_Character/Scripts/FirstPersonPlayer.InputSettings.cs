@@ -22,7 +22,7 @@ namespace BForBoss {
             public const string Controller_Vertical_Sensitivity = "controller_vertical_sensitivity";
         }
         
-        private const int Default_Is_Inverted = 0;
+        private const int Default_Is_Inverted = 1;
         private const float Default_Mouse_Sensitivity = 0.3f;
         private const float Default_Controller_Sensitivity = 0.3f;
         

@@ -24,17 +24,12 @@ namespace BForBoss
         public void Initialize(InputSettingsViewModel viewModel)
         {
             _viewModel = viewModel;
+            SetupSliders();
 
-            _mouseHorizontalSlider.SliderValue = viewModel.GetMouseHorizontal;
-            _mouseVerticalSlider.SliderValue = viewModel.GetMouseVertical;
-            _controllerHorizontalSlider.SliderValue = viewModel.GetControllerHorizontal;
-            _controllerVerticalSlider.SliderValue = viewModel.GetControllerVeritcal;
-            _toggle.isOn = viewModel.GetIsInverted;
-            
-            
             _revertButton.onClick.AddListener(() =>
             {
                 _viewModel.RevertSettings();
+                SetupSliders();
             });
             
             _applyButton.onClick.AddListener(() =>
@@ -46,6 +41,15 @@ namespace BForBoss
                     _controllerVerticalSlider.SliderValue,
                     _toggle.isOn);
             });
+        }
+
+        private void SetupSliders()
+        {
+            _mouseHorizontalSlider.SliderValue = _viewModel.GetMouseHorizontal;
+            _mouseVerticalSlider.SliderValue = _viewModel.GetMouseVertical;
+            _controllerHorizontalSlider.SliderValue = _viewModel.GetControllerHorizontal;
+            _controllerVerticalSlider.SliderValue = _viewModel.GetControllerVeritcal;
+            _toggle.isOn = _viewModel.GetIsInverted;
         }
     }
 

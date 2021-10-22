@@ -1,4 +1,6 @@
 using System;
+using Sirenix.Utilities;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,8 +8,8 @@ namespace BForBoss
 {
     public class SliderBehaviour : MonoBehaviour
     {
-        private Action<float> _action = null;
         private Slider _customSlider = null;
+        private TMP_InputField _inputField = null;
 
         private Slider CustomSlider
         {
@@ -22,6 +24,19 @@ namespace BForBoss
             }
         }
 
+        private TMP_InputField CustomInputField
+        {
+            get
+            {
+                if (_inputField == null)
+                {
+                    _inputField = GetComponentInChildren<TMP_InputField>();
+                }
+
+                return _inputField;
+            }
+        }
+
         public float SliderValue
         {
              get=> CustomSlider.value;
@@ -29,24 +44,33 @@ namespace BForBoss
              set => CustomSlider.value = value;
         }
 
-        public void OnValueChanged(Action<float> action)
-        {
-            _action= action;
-        }
-
         private void Awake()
         {
-            CustomSlider.onValueChanged.AddListener(HandleOnValueChanged);
+            CustomSlider.onValueChanged.AddListener(HandleOnSliderValueChanged);
+            CustomInputField.onEndEdit.AddListener(HandleOnInputFieldEnded);
         }
 
         private void OnDestroy()
         {
-            CustomSlider.onValueChanged.RemoveListener(HandleOnValueChanged);
+            CustomSlider.onValueChanged.RemoveListener(HandleOnSliderValueChanged);
+            CustomInputField.onEndEdit.RemoveListener(HandleOnInputFieldEnded);
         }
 
-        private void HandleOnValueChanged(float value)
+        private void HandleOnSliderValueChanged(float value)
         {
-            _action?.Invoke(value);
+            CustomInputField.text = value.ToString("F");
+        }
+
+        private void HandleOnInputFieldEnded(string value)
+        {
+            if (value.IsNullOrWhitespace())
+            {
+                CustomInputField.text = CustomSlider.value.ToString("F");
+            }
+            else
+            {
+                CustomSlider.value = float.Parse(value);
+            }
         }
     }
 }
