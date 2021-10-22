@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.mixpanel.unity": {
+      "version": "https://github.com/mixpanel/mixpanel-unity.git#v3.0.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "d358d040656fb42888bc0af2252f889c036cb000"
+    },
     "com.perigongames.perigon-tools": {
       "version": "https://github.com/PerigonGames/PerigonTools.git",
       "depth": 0,
@@ -146,6 +153,16 @@
         "com.unity.ext.nunit": "1.0.6",
         "com.unity.modules.imgui": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.testtools.codecoverage": {
+      "version": "1.1.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.test-framework": "1.0.16",
+        "com.unity.settings-manager": "1.0.1"
       },
       "url": "https://packages.unity.com"
     },
