@@ -1,0 +1,81 @@
+using System;
+using Sirenix.OdinInspector;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace BForBoss
+{
+    public class InputSettingsViewBehaviour : MonoBehaviour
+    {
+        [Title("Settings")]
+        [SerializeField] private SliderBehaviour _mouseHorizontalSlider = null;
+        [SerializeField] private SliderBehaviour _mouseVerticalSlider = null;
+        [SerializeField] private SliderBehaviour _controllerHorizontalSlider = null;
+        [SerializeField] private SliderBehaviour _controllerVerticalSlider = null;
+        [SerializeField] private Toggle _toggle = null;
+
+        [Title("Button")] 
+        [SerializeField] private Button _applyButton = null;
+        [SerializeField] private Button _revertButton = null;
+        [SerializeField] private Button _backButton = null;
+
+        private InputSettingsViewModel _viewModel = null;
+        
+        public void Initialize(InputSettingsViewModel viewModel)
+        {
+            _viewModel = viewModel;
+
+            _mouseHorizontalSlider.SliderValue = viewModel.GetMouseHorizontal;
+            _mouseVerticalSlider.SliderValue = viewModel.GetMouseVertical;
+            _controllerHorizontalSlider.SliderValue = viewModel.GetControllerHorizontal;
+            _controllerVerticalSlider.SliderValue = viewModel.GetControllerVeritcal;
+            _toggle.isOn = viewModel.GetIsInverted;
+            
+            
+            _revertButton.onClick.AddListener(() =>
+            {
+                _viewModel.RevertSettings();
+            });
+            
+            _applyButton.onClick.AddListener(() =>
+            {
+                _viewModel.ApplySettings(
+                    _mouseHorizontalSlider.SliderValue, 
+                    _mouseVerticalSlider.SliderValue,
+                    _controllerHorizontalSlider.SliderValue,
+                    _controllerVerticalSlider.SliderValue,
+                    _toggle.isOn);
+            });
+        }
+    }
+
+    public class InputSettingsViewModel
+    {
+        private readonly IInputSettings _settings = null;
+        
+        public float GetMouseHorizontal => _settings.MouseHorizontalSensitivity;
+        public float GetMouseVertical => _settings.MouseVerticalSensitivity;
+        public float GetControllerHorizontal => _settings.ControllerHorizontalSensitivity;
+        public float GetControllerVeritcal => _settings.ControllerVerticalSensitivity;
+        public bool GetIsInverted => _settings.IsInverted;
+        
+        public InputSettingsViewModel(IInputSettings settings)
+        {
+            _settings = settings;
+        }
+
+        public void RevertSettings()
+        {
+            _settings.RevertAllSettings();
+        }
+
+        public void ApplySettings(float horizontalMouse, float verticalMouse, float horizontalController, float verticalController, bool isInverted)
+        {
+            _settings.MouseHorizontalSensitivity = horizontalMouse;
+            _settings.MouseVerticalSensitivity = verticalMouse;
+            _settings.ControllerHorizontalSensitivity = horizontalController;
+            _settings.ControllerVerticalSensitivity = verticalController;
+            _settings.IsInverted = isInverted;
+        }
+    }
+}

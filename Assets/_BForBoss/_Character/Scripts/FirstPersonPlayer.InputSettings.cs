@@ -3,11 +3,11 @@ using UnityEngine;
 namespace BForBoss {
     public interface IInputSettings
     {
-        void SetInverted(bool isInverted);
-        void SetMouseHorizontalSensitivity(float sensitivity);
-        void SetMouseVerticalSensitivity(float sensitivity);
-        void SetControllerHorizontalSensitivity(float sensitivity);
-        void SetControllerVerticalSensitivity(float sensitivity);
+        bool IsInverted { get; set; }
+        float MouseHorizontalSensitivity { get; set; }
+        float MouseVerticalSensitivity { get; set; }
+        float ControllerHorizontalSensitivity { get; set; }
+        float ControllerVerticalSensitivity { get; set; }
         void RevertAllSettings();
     }
 
@@ -23,66 +23,81 @@ namespace BForBoss {
         }
         
         private const int Default_Is_Inverted = 0;
-        private const float Default_Mouse_Sensitivity = 0.5f;
-        private const float Default_Controller_Sensitivity = 0.5f;
+        private const float Default_Mouse_Sensitivity = 0.3f;
+        private const float Default_Controller_Sensitivity = 0.3f;
         
             
         private void SetupInput()
         {
-            var inverted = PlayerPrefs.GetInt(PlayerPrefKey.Is_Inverted, Default_Is_Inverted);
-            SetInverted(inverted == 1);
-            
-            var mouseHorizontal = PlayerPrefs.GetFloat(PlayerPrefKey.Mouse_Horizontal_Sensitivity, Default_Mouse_Sensitivity);
-            SetMouseHorizontalSensitivity(mouseHorizontal);
-            var mouseVertical = PlayerPrefs.GetFloat(PlayerPrefKey.Mouse_Vertical_Sensitivity, Default_Mouse_Sensitivity);
-            SetMouseVerticalSensitivity(mouseVertical);
-
-            var controllerHorizontal =
-                PlayerPrefs.GetFloat(PlayerPrefKey.Controller_Horizontal_Sensitivity, Default_Controller_Sensitivity);
-            SetControllerHorizontalSensitivity(controllerHorizontal);
-            var controllerVertical =
-                PlayerPrefs.GetFloat(PlayerPrefKey.Controller_Vertical_Sensitivity, Default_Controller_Sensitivity);
-            SetControllerVerticalSensitivity(controllerVertical);
+            IsInverted = PlayerPrefs.GetInt(PlayerPrefKey.Is_Inverted, Default_Is_Inverted) == 1;
+            MouseHorizontalSensitivity = PlayerPrefs.GetFloat(PlayerPrefKey.Mouse_Horizontal_Sensitivity, Default_Mouse_Sensitivity);
+            MouseVerticalSensitivity = PlayerPrefs.GetFloat(PlayerPrefKey.Mouse_Vertical_Sensitivity, Default_Mouse_Sensitivity);
+            ControllerHorizontalSensitivity = PlayerPrefs.GetFloat(PlayerPrefKey.Controller_Horizontal_Sensitivity, Default_Controller_Sensitivity);
+            ControllerVerticalSensitivity = PlayerPrefs.GetFloat(PlayerPrefKey.Controller_Vertical_Sensitivity,
+                Default_Controller_Sensitivity);
         }
         
-        public void SetInverted(bool isInverted)
+        public bool IsInverted
         {
-            var value = isInverted ? 1 : 0;
-            PlayerPrefs.SetInt(PlayerPrefKey.Is_Inverted, value);
-            GetCharacterLook().invertLook = isInverted;
+            get => GetCharacterLook().invertLook;
+
+            set
+            {
+                var isInverted = value ? 1 : 0;
+                PlayerPrefs.SetInt(PlayerPrefKey.Is_Inverted, isInverted);
+                GetCharacterLook().invertLook = value;
+            }
         }
 
-        public void SetMouseHorizontalSensitivity(float sensitivity)
+        public float MouseHorizontalSensitivity
         {
-            PlayerPrefs.SetFloat(PlayerPrefKey.Mouse_Horizontal_Sensitivity, sensitivity);
-            GetCharacterLook().mouseHorizontalSensitivity = sensitivity;
+            get => GetCharacterLook().mouseHorizontalSensitivity;
+
+            set
+            {
+                PlayerPrefs.SetFloat(PlayerPrefKey.Mouse_Horizontal_Sensitivity, value);
+                GetCharacterLook().mouseHorizontalSensitivity = value;
+            }
         }
 
-        public void SetMouseVerticalSensitivity(float sensitivity)
+        public float MouseVerticalSensitivity
         {
-            PlayerPrefs.SetFloat(PlayerPrefKey.Mouse_Vertical_Sensitivity, sensitivity);
-            GetCharacterLook().mouseVerticalSensitivity = sensitivity;
+            get => GetCharacterLook().mouseVerticalSensitivity;
+
+            set
+            {
+                PlayerPrefs.SetFloat(PlayerPrefKey.Mouse_Vertical_Sensitivity, value);
+                GetCharacterLook().mouseVerticalSensitivity = value;
+            }
         }
 
-        public void SetControllerHorizontalSensitivity(float sensitivity)
+        public float ControllerHorizontalSensitivity
         {
-            PlayerPrefs.SetFloat(PlayerPrefKey.Controller_Horizontal_Sensitivity, sensitivity);
-            GetCharacterLook().controllerHorizontalSensitivity = sensitivity;        
+            get => GetCharacterLook().controllerHorizontalSensitivity;
+            set
+            {
+                PlayerPrefs.SetFloat(PlayerPrefKey.Controller_Horizontal_Sensitivity, value);
+                GetCharacterLook().controllerHorizontalSensitivity = value;   
+            }     
         }
-
-        public void SetControllerVerticalSensitivity(float sensitivity)
+        
+        public float ControllerVerticalSensitivity
         {
-            PlayerPrefs.SetFloat(PlayerPrefKey.Controller_Vertical_Sensitivity, sensitivity);
-            GetCharacterLook().controllerVerticalSensitivity = sensitivity;     
+            get => GetCharacterLook().controllerVerticalSensitivity;
+            set
+            {
+                PlayerPrefs.SetFloat(PlayerPrefKey.Controller_Vertical_Sensitivity, value);
+                GetCharacterLook().controllerVerticalSensitivity = value;   
+            }  
         }
 
         public void RevertAllSettings()
         {
-            SetInverted(Default_Is_Inverted == 1);
-            SetMouseHorizontalSensitivity(Default_Mouse_Sensitivity);
-            SetMouseVerticalSensitivity(Default_Mouse_Sensitivity);
-            SetControllerHorizontalSensitivity(Default_Controller_Sensitivity);
-            SetControllerVerticalSensitivity(Default_Controller_Sensitivity);
+            IsInverted = Default_Is_Inverted == 1;
+            MouseHorizontalSensitivity = Default_Mouse_Sensitivity;
+            MouseVerticalSensitivity = Default_Mouse_Sensitivity;
+            ControllerHorizontalSensitivity = Default_Controller_Sensitivity;
+            ControllerVerticalSensitivity = Default_Controller_Sensitivity;
         }
     }
 }

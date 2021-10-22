@@ -20,6 +20,7 @@ namespace BForBoss
         public void Initialize()
         {
             SetupInput();
+            GetCharacterLook().lockCursor = false;
         }
 
         public override bool CanJump()

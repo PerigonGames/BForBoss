@@ -6,11 +6,15 @@ namespace BForBoss
 {
     public class WorldManager : MonoBehaviour
     {
+        [Title("Component")]
         [SerializeField] private TimeManager _timeManager = null;
         [SerializeField] private CheckpointManager _checkpointManager = null;
         [SerializeField] private FirstPersonPlayer _player = null;
+        
+        [Title("User Interface")]
         [SerializeField] private TimerViewBehaviour _timerView = null;
-
+        [SerializeField] private InputSettingsViewBehaviour _inputSettingsView = null;
+        
         [Title("Effects")] 
         [SerializeField] private Volume _deathVolume = null;
         
@@ -20,6 +24,7 @@ namespace BForBoss
         private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
         
         private TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
+        private InputSettingsViewModel _inputSettingsViewModel = null;
         private ICharacterSpawn _character = null;
         
         private void CleanUp()
@@ -41,6 +46,7 @@ namespace BForBoss
             _stateManager.OnStateChanged += HandleStateChange;
             _character = _player;
             _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_deathVolume, 0.1f, 0f, 0.1f);
+            _inputSettingsViewModel = new InputSettingsViewModel(_player);
         }
 
         private void Start()
@@ -50,6 +56,7 @@ namespace BForBoss
             _timeManager.Initialize(_timeManagerViewModel);
             _timerView.Initialize(_timeManagerViewModel);
             _stateManager.SetState(State.PreGame);
+            _inputSettingsView.Initialize(_inputSettingsViewModel);
         }
 
         private void OnDestroy()
