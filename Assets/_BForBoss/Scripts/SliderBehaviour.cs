@@ -1,4 +1,3 @@
-using System;
 using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
