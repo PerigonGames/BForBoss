@@ -9,6 +9,7 @@ namespace ECM2.Editor
 {
     public static class ECM2FactoryEditor
     {
+        #if UNITY_EDITOR
         private static void InitCharacter(GameObject go)
         {
             Rigidbody rb = go.GetComponent<Rigidbody>();
@@ -132,5 +133,6 @@ namespace ECM2.Editor
             Selection.activeGameObject = go;
             SceneView.FrameLastActiveSceneView();
         }
+        #endif
     }
 }

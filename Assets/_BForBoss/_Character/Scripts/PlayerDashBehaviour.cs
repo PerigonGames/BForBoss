@@ -1,17 +1,25 @@
 using System;
 using ECM2.Characters;
 using ECM2.Components;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 namespace BForBoss
 {
     public class PlayerDashBehaviour : MonoBehaviour
     {
+        [Title("Visual Effects")]
+        [SerializeField] private ParticleSystem _dashVisualEffects = null;
+        [SerializeField] private Volume _dashPostProcessingEffects = null;        
+        
+        [Title("Properties")]
         [SerializeField] private float _dashImpulse = 20.0f;
         [SerializeField] private float _dashDuration = 0.2f;
         [SerializeField] private float _dashCoolDown = 0.5f;
-
+        private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
+        
         private float _dashElapsedTime = 0;
         private float _dashCoolDownElapsedTime = 0;
         private bool _isDashing = false;
@@ -100,7 +108,8 @@ namespace BForBoss
             {
                 return;
             }
-            
+
+            PlayerDashVisuals();
             _isDashing = true;
             
             _baseCharacter.brakingFriction = 0.0f;
@@ -116,7 +125,8 @@ namespace BForBoss
             {
                 return;
             }
-            
+
+            _postProcessingVolumeWeightTool?.Revert();
             _dashCoolDownElapsedTime = _dashCoolDown;
             _dashElapsedTime = 0f;
             _isDashing = false;
@@ -134,8 +144,35 @@ namespace BForBoss
 
             return _baseCharacter.IsWalking() || _baseCharacter.IsFalling();
         }
+
+        private void PlayerDashVisuals()
+        {
+            if (_dashVisualEffects != null)
+            {
+                _dashVisualEffects.Play();
+            }
+
+            _postProcessingVolumeWeightTool?.Distort();
+        }
         
         #region Mono
+
+        private void Awake()
+        {
+            SetupVisualEffects();
+        }
+
+        private void SetupVisualEffects()
+        {
+            if (_dashPostProcessingEffects != null)
+            {
+                _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_dashPostProcessingEffects, _dashDuration);
+            }
+            else
+            {
+                Debug.LogWarning("There was an issue finding PostProcessing LensDistortion");
+            }
+        }
 
         private void Update()
         {
@@ -153,6 +190,13 @@ namespace BForBoss
         public void OnOnDisable()
         {
             _dashInputAction.Disable();
+        }
+
+        public void OnOnDestroy()
+        {
+            _dashInputAction.started -= OnDash;
+            _dashInputAction.canceled -= OnDash;
+            _dashInputAction = null;
         }
 
         #endregion
