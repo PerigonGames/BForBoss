@@ -10,11 +10,11 @@ namespace BForBoss
         [SerializeField] private CheckpointManager _checkpointManager = null;
         [SerializeField] private FirstPersonPlayer _player = null;
 
-        [Title("User Interface")] [SerializeField]
-        private TimerViewBehaviour _timerView = null;
-
+        [Title("User Interface")] 
+        [SerializeField] private TimerViewBehaviour _timerView = null;
         [SerializeField] private InputSettingsViewBehaviour _inputSettingsView = null;
         [SerializeField] private InputUsernameViewBehaviour _uploadView = null;
+        [SerializeField] private LeaderboardPanelBehaviour _leaderboardPanel = null;
 
         [Title("Effects")] [SerializeField] private Volume _deathVolume = null;
 
@@ -27,7 +27,7 @@ namespace BForBoss
         private readonly TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
         private InputSettingsViewModel _inputSettingsViewModel = null;
         private ICharacterSpawn _character = null;
-        private readonly UploadPlayerScores _uploadPlayerScores = new UploadPlayerScores();
+        private UploadPlayerScoreDataSource _uploadPlayerScoreDataSource = null;
 
         private void CleanUp()
         {
@@ -48,18 +48,24 @@ namespace BForBoss
             _stateManager.OnStateChanged += HandleStateChange;
             _character = _player;
             _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_deathVolume, 0.1f, 0f, 0.1f);
-
             _inputSettingsViewModel = new InputSettingsViewModel(_player);
+            _uploadPlayerScoreDataSource = new UploadPlayerScoreDataSource();
         }
 
         private void Start()
         {
             _player.Initialize();
             _checkpointManager.Initialize();
-            _uploadView.Initialize(new InputUsernameViewModel(new LockMouseUtility(_player)));
             _timeManager.Initialize(_timeManagerViewModel);
-            _timerView.Initialize(_timeManagerViewModel);
             _stateManager.SetState(State.PreGame);
+            SetupLeaderboardViews();
+        }
+
+        private void SetupLeaderboardViews()
+        {
+            _leaderboardPanel.Initialize(_uploadPlayerScoreDataSource);
+            _uploadView.Initialize(new InputUsernameViewModel(new LockMouseUtility(_player)));
+            _timerView.Initialize(_timeManagerViewModel);
             _inputSettingsView.Initialize(_inputSettingsViewModel);
         }
 
@@ -88,9 +94,7 @@ namespace BForBoss
                 }
                 case State.EndRace:
                 {
-                    _timeManagerViewModel.StopTimer();
-                    _uploadPlayerScores.SetTime(_timeManagerViewModel.CurrentGameTime);
-                    _uploadPlayerScores.SetInput("Controller");
+                    HandleOnEndOfRace();
                     break;
                 }
                 case State.Death:
@@ -101,6 +105,16 @@ namespace BForBoss
                     break;
                 }
             }
+        }
+
+        private void HandleOnEndOfRace()
+        {
+            _timeManagerViewModel.StopTimer();
+            var gameTime = _timeManagerViewModel.CurrentGameTime;
+            var input = "Controller";
+            _uploadPlayerScoreDataSource.UploadScoreIfPossible(gameTime, input);
+            _leaderboardPanel.SetUserTime(gameTime, input);
+            _leaderboardPanel.ShowPanel();
         }
     }
 }

@@ -13,14 +13,30 @@ namespace BForBoss
         
         private DreamloGetLeaderboardEndPoint _leaderboardEndpoint = new DreamloGetLeaderboardEndPoint();
         
-        private void Initialize(UploadPlayerScores uploadPlayerScore)
+        public void Initialize(UploadPlayerScoreDataSource uploadPlayerScoreDataSource)
         {
+            uploadPlayerScoreDataSource.StopLoading += Reload;
         }
         
         private void Awake()
         {
             _leaderboardEndpoint.OnSuccess += HandleOnSuccess;
             _leaderboardEndpoint.OnFail += HandleOnFail;
+        }
+
+        public void SetUserTime(float time, string input)
+        {
+            var score = new LeaderboardScore();
+            score.Input = input;
+            score.Time = time;
+            score.Username = PlayerPrefs.GetString(UploadPlayerScoreDataSource.PlayerPrefKey.UserName);
+            _currentUserScores.SetField(-1, score);
+        }
+
+        public void ShowPanel()
+        {
+            Reload();
+            transform.DOScale(Vector3.one, 0.5f);
         }
 
         private void HandleOnSuccess(LeaderboardScore[] scores)
@@ -34,11 +50,6 @@ namespace BForBoss
         {
             _loading.DOPause();
             _loading.text = "Connection Failed";
-        }
-
-        private void OnEnable()
-        {
-            Reload();
         }
 
         private void Reload()

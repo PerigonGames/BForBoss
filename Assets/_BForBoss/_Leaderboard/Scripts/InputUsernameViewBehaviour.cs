@@ -90,14 +90,14 @@ namespace BForBoss
         
         public bool IsUsernameAlreadySet()
         {
-            return PlayerPrefs.HasKey(UploadPlayerScores.PlayerPrefKey.UserName);
+            return PlayerPrefs.HasKey(UploadPlayerScoreDataSource.PlayerPrefKey.UserName);
         }
 
         public void SetUserName(string username)
         {
             if (CanUseThisUsername(username))
             {
-                PlayerPrefs.SetString(UploadPlayerScores.PlayerPrefKey.UserName, username);
+                PlayerPrefs.SetString(UploadPlayerScoreDataSource.PlayerPrefKey.UserName, username);
                 _input.LockMouse();
                 OnSuccess?.Invoke();
             }

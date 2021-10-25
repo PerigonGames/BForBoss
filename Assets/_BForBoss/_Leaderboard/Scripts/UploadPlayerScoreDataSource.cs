@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BForBoss
 {
-    public class UploadPlayerScores
+    public class UploadPlayerScoreDataSource
     {
         public struct PlayerPrefKey
         {
@@ -25,19 +25,7 @@ namespace BForBoss
         public event Action StartUploading;
         public event Action StopLoading;
 
-        public event Action<float> OnTimeChanged;
-        public event Action<string> OnInputChanged;
-
-        public string UserName
-        {
-            get => _username;
-
-            set
-            {
-                PlayerPrefs.SetString(PlayerPrefKey.UserName, value);
-                _username = value;
-            }
-        }
+        public string UserName => _username;
 
         public float Time
         {
@@ -46,7 +34,6 @@ namespace BForBoss
             {
                 PlayerPrefs.SetFloat(PlayerPrefKey.Timer, value);
                 _time = value;
-                OnTimeChanged?.Invoke(_time);
             }
         }
 
@@ -57,13 +44,13 @@ namespace BForBoss
             {
                 PlayerPrefs.SetString(PlayerPrefKey.Input, value);
                 _input = value;
-                OnInputChanged?.Invoke(value);
             }
         }
         private bool ShouldUploadScores => PlayerPrefs.GetInt(PlayerPrefKey.ShouldUpload, 0) == 1;
 
-        public UploadPlayerScores(ILeaderboardPostEndPoint endpoint = null)
+        public UploadPlayerScoreDataSource(ILeaderboardPostEndPoint endpoint = null)
         {
+            SetupProperties();
             _endpoint = endpoint ?? new DreamloSendScoreEndPoint();
             _endpoint.OnSuccess += HandleEndPointOnSuccess;
             _endpoint.OnFail += HandleEndPointOnFail;
@@ -71,23 +58,21 @@ namespace BForBoss
             UploadIfPossible();
         }
 
-        public void UploadIfPossible()
+        public void UploadScoreIfPossible(float time, string input)
+        {
+            Time = Mathf.Min(time, Time);
+            Input = input;
+            UploadIfPossible();
+        }
+        
+        
+        private void UploadIfPossible()
         {
             if (CanUpload())
             {
                 Upload();
                 StartUploading?.Invoke();
             }
-        }
-
-        public void SetTime(float time)
-        {
-            Time = Mathf.Min(time, Time);
-        }
-
-        public void SetInput(string input)
-        {
-            Input = input;
         }
 
         private void SetupProperties()
@@ -136,11 +121,5 @@ namespace BForBoss
                 StopLoading?.Invoke();
             }
         }
-
-        private void Awake()
-        {
-            SetupProperties();
-        }
-
     }
 }
