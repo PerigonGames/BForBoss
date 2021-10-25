@@ -17,6 +17,11 @@ namespace BForBoss
         private PlayerWallRunBehaviour _wallRunBehaviour = null;
         private PlayerSlideBehaviour _slideBehaviour = null;
 
+        public void Initialize()
+        {
+            SetupInput();
+        }
+
         public override bool CanJump()
         {
             if (_wallRunBehaviour != null)

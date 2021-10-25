@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -9,10 +8,10 @@ namespace BForBoss
         [SerializeField] private TMP_Text _timeLabel = null;
         public void Initialize(TimeManagerViewModel timeManagerViewModel)
         {
-            timeManagerViewModel.OnTimeChanged += HandleOnOnTimeChanged;
+            timeManagerViewModel.OnTimeChanged += HandleOnTimeChanged;
         }
 
-        private void HandleOnOnTimeChanged(float time)
+        private void HandleOnTimeChanged(float time)
         {
             _timeLabel.text = time.ToString("F");
         }
