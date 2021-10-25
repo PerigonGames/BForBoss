@@ -9,9 +9,14 @@ namespace BForBoss
     {
         [SerializeField] private LeaderboardTableBehaviour _table = null;
         [SerializeField] private TMP_Text _loading = null;
-
+        [SerializeField] private LeaderboardRowBehaviour _currentUserScores = null;
+        
         private DreamloGetLeaderboardEndPoint _leaderboardEndpoint = new DreamloGetLeaderboardEndPoint();
-
+        
+        private void Initialize(UploadPlayerScores uploadPlayerScore)
+        {
+        }
+        
         private void Awake()
         {
             _leaderboardEndpoint.OnSuccess += HandleOnSuccess;
@@ -32,6 +37,11 @@ namespace BForBoss
         }
 
         private void OnEnable()
+        {
+            Reload();
+        }
+
+        private void Reload()
         {
             _table.gameObject.transform.localScale = Vector3.zero;
             _leaderboardEndpoint.GetLeaderboard();

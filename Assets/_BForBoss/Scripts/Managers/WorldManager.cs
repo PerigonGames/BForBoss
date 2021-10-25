@@ -9,7 +9,10 @@ namespace BForBoss
         [SerializeField] private TimeManager _timeManager = null;
         [SerializeField] private CheckpointManager _checkpointManager = null;
         [SerializeField] private FirstPersonPlayer _player = null;
+        
+        [Title("User Interface")]
         [SerializeField] private TimerViewBehaviour _timerView = null;
+        [SerializeField] private InputUsernameViewBehaviour _uploadView = null;
 
         [Title("Effects")] 
         [SerializeField] private Volume _deathVolume = null;
@@ -18,9 +21,10 @@ namespace BForBoss
         private StateManager _stateManager = StateManager.Instance;
         // This is probably best kept within its own utility section
         private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
-        
-        private TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
         private ICharacterSpawn _character = null;
+
+        private TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
+        private UploadPlayerScores _uploadPlayerScores = new UploadPlayerScores();
         
         private void CleanUp()
         {
@@ -46,6 +50,7 @@ namespace BForBoss
         private void Start()
         {
             _checkpointManager.Initialize();
+            //_uploadView.Initialize(_uploadPlayerScoresViewModel);
             _timeManager.Initialize(_timeManagerViewModel);
             _timerView.Initialize(_timeManagerViewModel);
             _stateManager.SetState(State.PreGame);
@@ -77,6 +82,8 @@ namespace BForBoss
                 case State.EndRace:
                 {
                     _timeManagerViewModel.StopTimer();
+                    _uploadPlayerScores.SetTime(_timeManagerViewModel.CurrentGameTime);
+                    _uploadPlayerScores.SetInput("Controller");
                     break;
                 }
                 case State.Death:
