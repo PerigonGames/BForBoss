@@ -9,24 +9,31 @@ namespace BForBoss
     public class PlayerWallRunBehaviour : MonoBehaviour
     {
         #region SERIALIZED_FIELDS
+        [Header("Wall Run Movement properties")]
         [SerializeField] 
         private float _speedMultiplier = 1f;
         [SerializeField]
         private float _maxWallRunAcceleration = 20f;
+        [SerializeField]
+        private float _wallGravityDownForce = 0f;
+
+        [Header("Wall Run Conditions")]
         [SerializeField, Tooltip("Stop a wall run if speed dips below this")]
         private float _minSpeed = 0.9f;
         [SerializeField, Tooltip("Don't allow a wall run if the player is too close to the ground")] 
         private float _minHeight = 1f;
         [SerializeField]
         private float _wallMaxDistance = 1f;
-        [SerializeField]
-        private float _wallGravityDownForce = 0f;
         [SerializeField, Range(0f, 3f), Tooltip("Only allow for a wall run if jump is longer than this")]
         private float _minJumpDuration = 0.3f;
+
+        [Header("Timers")]
         [SerializeField, Tooltip("Gravity won't apply until after this many seconds")]
         private float _gravityTimerDuration = 1f;
         [SerializeField, Tooltip("Wall runs on the same wall are only allowed after this long")]
         private float _wallResetTimer = 2f;
+
+        [Header("Wall Run jump properties")]
         [SerializeField]
         private float _wallBounciness = 6f;
         [SerializeField]
@@ -34,6 +41,7 @@ namespace BForBoss
         [SerializeField, Range(0f, 2f)]
         private float _jumpForwardVelocityMultiplier = .75f;
 
+        [Header("Camera Settings")]
         [SerializeField]
         private float _maxCameraAngleRoll = 30f;
         [SerializeField]
