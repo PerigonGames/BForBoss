@@ -58,7 +58,7 @@ namespace BForBoss
             {
                 _slideBehaviour.Initialize(this);
             }
-            _wallRunBehaviour?.Initialize(this, base.GetMovementInput);
+            _wallRunBehaviour?.Initialize(this, base.GetMovementInput, ResetJumpCount);
         }
 
         protected override void SetupPlayerInput()
@@ -176,10 +176,6 @@ namespace BForBoss
             {
                 _dashBehaviour.OnOnDisable();
             }
-            if (_wallRunBehaviour != null)
-            {
-                _wallRunBehaviour.OnWallRunFinished -= ResetJumpCount;
-            }
         }
         
         protected override void OnOnEnable()
@@ -189,11 +185,6 @@ namespace BForBoss
             {
                 _dashBehaviour.OnOnEnable();
             }
-            if (_wallRunBehaviour != null)
-            {
-                _wallRunBehaviour.OnWallRunFinished += ResetJumpCount;
-            }
-
         }
 
         protected override void OnOnDestroy()
