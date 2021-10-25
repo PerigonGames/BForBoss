@@ -6,26 +6,28 @@ namespace BForBoss
 {
     public class WorldManager : MonoBehaviour
     {
-        [Title("Component")]
-        [SerializeField] private TimeManager _timeManager = null;
+        [Title("Component")] [SerializeField] private TimeManager _timeManager = null;
         [SerializeField] private CheckpointManager _checkpointManager = null;
         [SerializeField] private FirstPersonPlayer _player = null;
 
-        [Title("User Interface")]
-        [SerializeField] private TimerViewBehaviour _timerView = null;
+        [Title("User Interface")] [SerializeField]
+        private TimerViewBehaviour _timerView = null;
+
+        [SerializeField] private InputSettingsViewBehaviour _inputSettingsView = null;
         [SerializeField] private InputUsernameViewBehaviour _uploadView = null;
 
-        [Title("Effects")]
-        [SerializeField] private Volume _deathVolume = null;
+        [Title("Effects")] [SerializeField] private Volume _deathVolume = null;
 
         // This probably best placed inside its own utility section
         private StateManager _stateManager = StateManager.Instance;
+
         // This is probably best kept within its own utility section
         private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
-        private ICharacterSpawn _character = null;
 
-        private TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
-        private UploadPlayerScores _uploadPlayerScores = new UploadPlayerScores();
+        private readonly TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
+        private InputSettingsViewModel _inputSettingsViewModel = null;
+        private ICharacterSpawn _character = null;
+        private readonly UploadPlayerScores _uploadPlayerScores = new UploadPlayerScores();
 
         private void CleanUp()
         {
@@ -46,6 +48,7 @@ namespace BForBoss
             _stateManager.OnStateChanged += HandleStateChange;
             _character = _player;
             _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_deathVolume, 0.1f, 0f, 0.1f);
+
             _inputSettingsViewModel = new InputSettingsViewModel(_player);
         }
 
@@ -53,7 +56,7 @@ namespace BForBoss
         {
             _player.Initialize();
             _checkpointManager.Initialize();
-            //_uploadView.Initialize(_uploadPlayerScoresViewModel);
+            _uploadView.Initialize(new InputUsernameViewModel(new LockMouseUtility(_player)));
             _timeManager.Initialize(_timeManagerViewModel);
             _timerView.Initialize(_timeManagerViewModel);
             _stateManager.SetState(State.PreGame);
@@ -99,6 +102,5 @@ namespace BForBoss
                 }
             }
         }
-
     }
 }

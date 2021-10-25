@@ -64,7 +64,6 @@ namespace BForBoss
 
         public UploadPlayerScores(ILeaderboardPostEndPoint endpoint = null)
         {
-            SetupProperties();
             _endpoint = endpoint ?? new DreamloSendScoreEndPoint();
             _endpoint.OnSuccess += HandleEndPointOnSuccess;
             _endpoint.OnFail += HandleEndPointOnFail;
@@ -136,6 +135,11 @@ namespace BForBoss
             {
                 StopLoading?.Invoke();
             }
+        }
+
+        private void Awake()
+        {
+            SetupProperties();
         }
 
     }

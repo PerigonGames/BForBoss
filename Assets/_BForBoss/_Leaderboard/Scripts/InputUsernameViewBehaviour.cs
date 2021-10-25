@@ -1,4 +1,5 @@
 using System;
+using PerigonGames;
 using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,26 @@ namespace BForBoss
         [SerializeField] private TMP_Text _infoSettingsLabel = null;
         [SerializeField] private Button _saveUsernameButton = null;
         private InputUsernameViewModel _viewModel = null;
+        
+        public void Initialize(InputUsernameViewModel viewModel)
+        {
+            _viewModel = viewModel;
+            if (_viewModel.IsUsernameAlreadySet())
+            {
+                HidePanel();
+            }
+            else
+            {
+                ShowPanel();
+            }
+            
+            _saveUsernameButton.onClick.AddListener(() =>
+            {
+                _viewModel.SetUserName(_usernameField.text);
+            });
+            
+            BindViewModel();
+        }
         
         private void BindViewModel()
         {
@@ -34,27 +55,16 @@ namespace BForBoss
             transform.localScale = Vector3.zero;
         }
 
+        private void ShowPanel()
+        {
+            transform.ResetScale();
+        }
+
         private void ShowFailedPanel()
         {
             _infoSettingsLabel.text =
                 "Something is wrong with your username, try another one. (No Blank Text or names over 20 characters";
             _infoSettingsLabel.color = Color.red;
-        }
-        
-        private void Awake()
-        {
-            _viewModel = new InputUsernameViewModel();
-            if (_viewModel.IsUsernameAlreadySet())
-            {
-                HidePanel();
-            }
-            
-            _saveUsernameButton.onClick.AddListener(() =>
-            {
-                _viewModel.SetUserName(_usernameField.text);
-            });
-            
-            BindViewModel();
         }
         
         private void OnDestroy()
@@ -69,6 +79,14 @@ namespace BForBoss
         
         public event Action OnSuccess;
         public event Action OnFailure;
+
+        private ILockMouseInput _input = null;
+
+        public InputUsernameViewModel(ILockMouseInput mouseInput)
+        {
+            _input = mouseInput;
+            _input.UnlockMouse();
+        }
         
         public bool IsUsernameAlreadySet()
         {
@@ -80,6 +98,7 @@ namespace BForBoss
             if (CanUseThisUsername(username))
             {
                 PlayerPrefs.SetString(UploadPlayerScores.PlayerPrefKey.UserName, username);
+                _input.LockMouse();
                 OnSuccess?.Invoke();
             }
             else
