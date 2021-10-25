@@ -13,6 +13,8 @@ namespace BForBoss
         private float _speedMultiplier = 1f;
         [SerializeField]
         private float _maxWallRunAcceleration = 20f;
+        [SerializeField, Tooltip("Stop a wall run if speed dips below this")]
+        private float _minSpeed = 0.9f;
         [SerializeField, Tooltip("Don't allow a wall run if the player is too close to the ground")] 
         private float _minHeight = 1f;
         [SerializeField]
@@ -148,15 +150,21 @@ namespace BForBoss
             var movement = _movementInput();
             if (movement.sqrMagnitude <= 0 || movement.y < 0)
             {
+                StopWallRunning();
                 return;
             }
-            _timeSinceWallAttach += Time.fixedDeltaTime;
             var velocity = _baseCharacter.GetVelocity();
             var alongWall = ChildTransform.TransformDirection(Vector3.forward).normalized;
             velocity = velocity.dot(alongWall) * alongWall;
+            if (velocity.sqrMagnitude < _minSpeed * _minSpeed)
+            {
+                StopWallRunning();
+                return;
+            }
             var downwardForce = _timeSinceWallAttach >= _gravityTimerDuration ? 
                 Vector3.down * _wallGravityDownForce * Time.fixedDeltaTime
                 : Vector3.zero;
+            _timeSinceWallAttach += Time.fixedDeltaTime;
             _baseCharacter.SetVelocity(velocity + downwardForce);
         }
 
