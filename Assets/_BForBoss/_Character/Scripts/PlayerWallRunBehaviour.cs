@@ -23,6 +23,8 @@ namespace BForBoss
         private float _minJumpDuration = 0.3f;
         [SerializeField, Tooltip("Gravity won't apply until after this many seconds")]
         private float _gravityTimerDuration = 1f;
+        [SerializeField, Tooltip("Wall runs on the same wall are only allowed after this long")]
+        private float _wallResetTimer = 2f;
         [SerializeField]
         private float _wallBounciness = 6f;
         [SerializeField]
@@ -137,6 +139,10 @@ namespace BForBoss
             if (!_isWallRunning)
             {
                 _timeSinceWallDetach += Time.fixedDeltaTime;
+                if(_timeSinceWallDetach > _wallResetTimer && _lastWall != null)
+                {
+                    _lastWall = null;
+                }
                 return;
             }
             var movement = _movementInput();
