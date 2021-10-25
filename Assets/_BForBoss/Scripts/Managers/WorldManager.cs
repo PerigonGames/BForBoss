@@ -6,17 +6,18 @@ namespace BForBoss
 {
     public class WorldManager : MonoBehaviour
     {
+        [Title("Component")]
         [SerializeField] private TimeManager _timeManager = null;
         [SerializeField] private CheckpointManager _checkpointManager = null;
         [SerializeField] private FirstPersonPlayer _player = null;
-        
+
         [Title("User Interface")]
         [SerializeField] private TimerViewBehaviour _timerView = null;
         [SerializeField] private InputUsernameViewBehaviour _uploadView = null;
 
-        [Title("Effects")] 
+        [Title("Effects")]
         [SerializeField] private Volume _deathVolume = null;
-        
+
         // This probably best placed inside its own utility section
         private StateManager _stateManager = StateManager.Instance;
         // This is probably best kept within its own utility section
@@ -25,12 +26,12 @@ namespace BForBoss
 
         private TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
         private UploadPlayerScores _uploadPlayerScores = new UploadPlayerScores();
-        
+
         private void CleanUp()
         {
             Debug.Log("Cleaning Up");
         }
-        
+
         private void Reset()
         {
             _timeManager.Reset();
@@ -45,15 +46,18 @@ namespace BForBoss
             _stateManager.OnStateChanged += HandleStateChange;
             _character = _player;
             _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_deathVolume, 0.1f, 0f, 0.1f);
+            _inputSettingsViewModel = new InputSettingsViewModel(_player);
         }
 
         private void Start()
         {
+            _player.Initialize();
             _checkpointManager.Initialize();
             //_uploadView.Initialize(_uploadPlayerScoresViewModel);
             _timeManager.Initialize(_timeManagerViewModel);
             _timerView.Initialize(_timeManagerViewModel);
             _stateManager.SetState(State.PreGame);
+            _inputSettingsView.Initialize(_inputSettingsViewModel);
         }
 
         private void OnDestroy()
@@ -95,6 +99,6 @@ namespace BForBoss
                 }
             }
         }
-        
+
     }
 }

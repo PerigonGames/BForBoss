@@ -17,6 +17,11 @@ namespace BForBoss
         private PlayerWallRunBehaviour _wallRunBehaviour = null;
         private PlayerSlideBehaviour _slideBehaviour = null;
 
+        public void Initialize()
+        {
+            SetupInput();
+        }
+
         public override bool CanJump()
         {
             if (_wallRunBehaviour != null)
@@ -58,7 +63,7 @@ namespace BForBoss
             {
                 _slideBehaviour.Initialize(this);
             }
-            _wallRunBehaviour?.Initialize(this, base.GetMovementInput);
+            _wallRunBehaviour?.Initialize(this, base.GetMovementInput, ResetJumpCount);
         }
 
         protected override void SetupPlayerInput()
@@ -112,7 +117,7 @@ namespace BForBoss
         protected override void OnJumped()
         {
             base.OnJumped();
-            _wallRunBehaviour?.OnJumped(ref _jumpCount);
+            _wallRunBehaviour?.OnJumped();
         }
 
         protected override Vector3 CalcJumpVelocity()
@@ -196,6 +201,10 @@ namespace BForBoss
             }
         }
 
+        private void ResetJumpCount()
+        {
+            _jumpCount = 0;
+        }
 
         #region Helper
 
