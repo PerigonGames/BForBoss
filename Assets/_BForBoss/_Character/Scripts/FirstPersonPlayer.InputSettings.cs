@@ -24,8 +24,8 @@ namespace BForBoss {
         }
         
         private const int Default_Is_Inverted = 1;
-        private const float Default_Mouse_Sensitivity = 0.7f;
-        private const float Default_Controller_Sensitivity = 0.7f;
+        private const float Default_Mouse_Sensitivity = 0.4f;
+        private const float Default_Controller_Sensitivity = 0.4f;
         
             
         private void SetupInput()
