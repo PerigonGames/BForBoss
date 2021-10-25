@@ -2,31 +2,46 @@ using ECM2.Characters;
 using ECM2.Common;
 using UnityEngine;
 using System;
+using ECM2.Components;
 
 namespace BForBoss
 {
     public class PlayerWallRunBehaviour : MonoBehaviour
     {
         #region SERIALIZED_FIELDS
+        [Header("Wall Run Movement properties")]
         [SerializeField] 
         private float _speedMultiplier = 1f;
         [SerializeField]
         private float _maxWallRunAcceleration = 20f;
+        [SerializeField]
+        private float _wallGravityDownForce = 0f;
+
+        [Header("Wall Run Conditions")]
+        [SerializeField, Tooltip("Stop a wall run if speed dips below this")]
+        private float _minSpeed = 0.9f;
         [SerializeField, Tooltip("Don't allow a wall run if the player is too close to the ground")] 
         private float _minHeight = 1f;
         [SerializeField]
         private float _wallMaxDistance = 1f;
-        [SerializeField]
-        private float _wallGravityDownForce = 0f;
         [SerializeField, Range(0f, 3f), Tooltip("Only allow for a wall run if jump is longer than this")]
         private float _minJumpDuration = 0.3f;
+
+        [Header("Timers")]
         [SerializeField, Tooltip("Gravity won't apply until after this many seconds")]
         private float _gravityTimerDuration = 1f;
+        [SerializeField, Tooltip("Wall runs on the same wall are only allowed after this long")]
+        private float _wallResetTimer = 2f;
+
+        [Header("Wall Run jump properties")]
         [SerializeField]
         private float _wallBounciness = 6f;
         [SerializeField]
         private float _jumpHeightMultiplier = 1f;
+        [SerializeField, Range(0f, 2f)]
+        private float _jumpForwardVelocityMultiplier = .75f;
 
+        [Header("Camera Settings")]
         [SerializeField]
         private float _maxCameraAngleRoll = 30f;
         [SerializeField]
@@ -49,8 +64,10 @@ namespace BForBoss
         private LayerMask _mask;
         private Vector3 _lastWallRunPosition;
         private Vector3 _lastWallRunNormal;
+        private Collider _lastWall;
         private float _baseMaxSpeed;
         private Func<Vector2> _movementInput;
+        private Action _OnWallRunFinished;
 
         private float _currentJumpDuration = 0f;
         private float _timeSinceWallAttach = 0f;
@@ -67,11 +84,12 @@ namespace BForBoss
         #endregion
 
         #region PUBLIC_METHODS
-        public void Initialize(Character baseCharacter, Func<Vector2> getMovementInput)
+        public void Initialize(Character baseCharacter, Func<Vector2> getMovementInput, Action OnWallRunFinished)
         {
             _baseCharacter = baseCharacter;
             _fpsCharacter = baseCharacter as FirstPersonCharacter;
             _movementInput = getMovementInput;
+            _OnWallRunFinished = OnWallRunFinished;
             _mask = LayerMask.GetMask("ParkourWall");
         }
 
@@ -93,26 +111,26 @@ namespace BForBoss
                 }
             }
 
-            if (GetSmallestRaycastHitIfValid(_hits, out RaycastHit hit))
+            if (GetSmallestRaycastHitIfValid(_hits, out RaycastHit hit) && IsClearOfGround())
             {
-                WallRun(hit);
+                if(_isWallRunning || hit.collider != _lastWall) WallRun(hit);
             }
             else if (_isWallRunning) StopWallRunning();
         }
 
-        public void OnJumped(ref int _jumpCount)
+        public void OnJumped()
         {
             _currentJumpDuration = 0f;
             if (_isWallRunning)
             {
                 StopWallRunning();
-                _jumpCount = 0;
             }
         }
 
         public void OnLanded()
         {
             _currentJumpDuration = 0f;
+            _lastWall = null;
             if (_isWallRunning)
             {
                 StopWallRunning();
@@ -129,26 +147,36 @@ namespace BForBoss
             if (!_isWallRunning)
             {
                 _timeSinceWallDetach += Time.fixedDeltaTime;
+                if(_timeSinceWallDetach > _wallResetTimer)
+                {
+                    _lastWall = null;
+                }
                 return;
             }
-
-            if (_movementInput().sqrMagnitude <= 0)
+            var movement = _movementInput();
+            if (movement.sqrMagnitude <= 0 || movement.y < 0)
             {
+                StopWallRunning();
                 return;
             }
-            _timeSinceWallAttach += Time.fixedDeltaTime;
             var velocity = _baseCharacter.GetVelocity();
             var alongWall = ChildTransform.TransformDirection(Vector3.forward).normalized;
             velocity = velocity.dot(alongWall) * alongWall;
+            if (velocity.sqrMagnitude < _minSpeed * _minSpeed)
+            {
+                StopWallRunning();
+                return;
+            }
             var downwardForce = _timeSinceWallAttach >= _gravityTimerDuration ? 
                 Vector3.down * _wallGravityDownForce * Time.fixedDeltaTime
                 : Vector3.zero;
+            _timeSinceWallAttach += Time.fixedDeltaTime;
             _baseCharacter.SetVelocity(velocity + downwardForce);
         }
 
         public Vector3 CalcJumpVelocity()
         {
-            var velocity = _baseCharacter.GetVelocity();
+            var velocity = _baseCharacter.GetVelocity() * _jumpForwardVelocityMultiplier;
             if (_isWallRunning)
             {
                 velocity += _lastWallRunNormal * _wallBounciness + Vector3.up * _baseCharacter.jumpImpulse * _jumpHeightMultiplier;
@@ -171,6 +199,7 @@ namespace BForBoss
         #region PRIVATE_METHODS
         private void WallRun(RaycastHit wall)
         {
+            _lastWall = wall.collider;
             _lastWallRunNormal = wall.normal;
             _lastWallRunPosition = wall.point;
             if (!_isWallRunning)
@@ -192,10 +221,8 @@ namespace BForBoss
                 _currentJumpDuration += Time.fixedDeltaTime;
                 if (_currentJumpDuration < _minJumpDuration) return false;
             }
-
             if (_movementInput().y <= 0) return false;
-
-            return !Physics.Raycast(ChildTransform.position, Vector3.down, _minHeight);
+            return IsClearOfGround();
         }
 
         private void StopWallRunning()
@@ -205,6 +232,21 @@ namespace BForBoss
             _baseCharacter.maxWalkSpeed = _baseMaxSpeed;
             _timeSinceWallAttach = 0f;
             _timeSinceWallDetach = 0f;
+            _OnWallRunFinished?.Invoke();
+        }
+
+        private bool IsClearOfGround()
+        {
+            var downwardHit = Physics.Raycast(ChildTransform.position, Vector3.down, out RaycastHit hit, _minHeight);
+            if (downwardHit)
+            {
+                Debug.DrawRay(ChildTransform.position, Vector3.down * hit.distance, Color.red);
+            }
+            else
+            {
+                Debug.DrawRay(ChildTransform.position, Vector3.down * _minHeight, Color.green);
+            }
+            return !downwardHit;
         }
 
         #region CAMERA_ROLL
