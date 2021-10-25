@@ -262,6 +262,7 @@ MonoBehaviour:
   _gravityTimerDuration: 2
   _wallBounciness: 6
   _jumpHeightMultiplier: 1.5
+  _jumpForwardVelocityMultiplier: 0.75
   _maxCameraAngleRoll: 20
   _cameraRotateDuration: 2
 --- !u!114 &910638779
@@ -292,6 +293,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 689d9512b906a4e7c88fb020b63cd5ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _dashVisualEffects: {fileID: 0}
+  _dashPostProcessingEffects: {fileID: 0}
   _dashImpulse: 20
   _dashDuration: 0.2
   _dashCoolDown: 0.5

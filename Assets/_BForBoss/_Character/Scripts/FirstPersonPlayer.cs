@@ -112,7 +112,7 @@ namespace BForBoss
         protected override void OnJumped()
         {
             base.OnJumped();
-            _wallRunBehaviour?.OnJumped(ref _jumpCount);
+            _wallRunBehaviour?.OnJumped();
         }
 
         protected override Vector3 CalcJumpVelocity()
@@ -176,6 +176,10 @@ namespace BForBoss
             {
                 _dashBehaviour.OnOnDisable();
             }
+            if (_wallRunBehaviour != null)
+            {
+                _wallRunBehaviour.OnWallRunFinished -= ResetJumpCount;
+            }
         }
         
         protected override void OnOnEnable()
@@ -185,6 +189,11 @@ namespace BForBoss
             {
                 _dashBehaviour.OnOnEnable();
             }
+            if (_wallRunBehaviour != null)
+            {
+                _wallRunBehaviour.OnWallRunFinished += ResetJumpCount;
+            }
+
         }
 
         protected override void OnOnDestroy()
@@ -196,6 +205,10 @@ namespace BForBoss
             }
         }
 
+        private void ResetJumpCount()
+        {
+            _jumpCount = 0;
+        }
 
         #region Helper
 
