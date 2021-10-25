@@ -103,7 +103,7 @@ namespace BForBoss
                 }
             }
 
-            if (GetSmallestRaycastHitIfValid(_hits, out RaycastHit hit))
+            if (GetSmallestRaycastHitIfValid(_hits, out RaycastHit hit) && CheckGroundHeight())
             {
                 if(_isWallRunning || hit.collider != _lastWall) WallRun(hit);
             }
@@ -208,8 +208,7 @@ namespace BForBoss
                 if (_currentJumpDuration < _minJumpDuration) return false;
             }
             if (_movementInput().y <= 0) return false;
-
-            return !Physics.Raycast(ChildTransform.position, Vector3.down, _minHeight);
+            return CheckGroundHeight();
         }
 
         private void StopWallRunning()
@@ -220,6 +219,20 @@ namespace BForBoss
             _timeSinceWallAttach = 0f;
             _timeSinceWallDetach = 0f;
             OnWallRunFinished?.Invoke();
+        }
+
+        private bool CheckGroundHeight()
+        {
+            var downwardHit = Physics.Raycast(ChildTransform.position, Vector3.down, out RaycastHit hit, _minHeight);
+            if (downwardHit)
+            {
+                Debug.DrawRay(ChildTransform.position, Vector3.down * hit.distance, Color.red);
+            }
+            else
+            {
+                Debug.DrawRay(ChildTransform.position, Vector3.down * _minHeight, Color.green);
+            }
+            return !downwardHit;
         }
 
         #region CAMERA_ROLL

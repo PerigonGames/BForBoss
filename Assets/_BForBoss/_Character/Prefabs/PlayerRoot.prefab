@@ -154,7 +154,7 @@ MonoBehaviour:
   _collideWithTriggers: 0
   _groundMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 65
   _groundProbingDistance: 0.5
 --- !u!114 &616281459798487498
 MonoBehaviour:
@@ -255,11 +255,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speedMultiplier: 2
   _maxWallRunAcceleration: 40
-  _minHeight: 0.5
+  _minHeight: 0.75
   _wallMaxDistance: 1.3
   _wallGravityDownForce: 200
   _minJumpDuration: 0.5
   _gravityTimerDuration: 2
+  _wallResetTimer: 2
   _wallBounciness: 6
   _jumpHeightMultiplier: 1.5
   _jumpForwardVelocityMultiplier: 0.75
