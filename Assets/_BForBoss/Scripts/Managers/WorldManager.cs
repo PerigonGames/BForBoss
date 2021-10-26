@@ -57,11 +57,15 @@ namespace BForBoss
             _timerView.Initialize(_timeManagerViewModel);
             _stateManager.SetState(State.PreGame);
             _inputSettingsView.Initialize(_inputSettingsViewModel);
+            
+            PerigonAnalytics.StartSession();
         }
 
         private void OnDestroy()
         {
             _stateManager.OnStateChanged -= HandleStateChange;
+            
+            PerigonAnalytics.EndSession();
         }
 
         private void HandleStateChange(State newState)
