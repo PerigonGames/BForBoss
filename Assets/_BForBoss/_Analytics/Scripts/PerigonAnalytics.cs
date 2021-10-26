@@ -4,37 +4,79 @@ using mixpanel;
 
 namespace BForBoss
 {
-    public static class PerigonAnalytics
+    public readonly struct PlayerDeathEvent
     {
-        private const String PlayerDeathEvent = "Player - Death";
+        public PlayerDeathEvent(String course, String name)
+        {
+            EventName = "Player - Death";
+            Course = course;
+            Name = name;
+        }
+        
+        public String EventName { get; }
+        public String Course { get; }
+        public String Name { get; }
+    }
+
+    public interface IPerigonAnalytics
+    {
+        void StartSession();
+        void EndSession();
+        void LogDeathEvent(String name);
+        void LogEvent(String eventName);
+        void LogEventWithParams(String eventName, Hashtable parameters);
+        void ForceSendEvents();
+
+    }
+    public class PerigonAnalytics : IPerigonAnalytics
+    {
+        private const String DefaultCourse = "racecourse";
+        private const String Course = "course";
+        private const String Name = "name";
+        
         private const String SessionStart = "Session Start";
         private const String SessionEnd = "Session End";
         
-        public static void StartSession()
+        private static readonly PerigonAnalytics _instance = new PerigonAnalytics();
+
+        public static PerigonAnalytics Instance => _instance;
+
+        static PerigonAnalytics()
+        {
+        }
+
+        private PerigonAnalytics()
+        {
+        }
+
+        public void StartSession()
         {
             Mixpanel.Track(SessionStart);
         }
 
-        public static void EndSession()
+        public void EndSession()
         {
             Mixpanel.Track(SessionEnd);
             Mixpanel.Flush();
         }
         
-        public static void LogDeathEvent(String course, String name)
+        public void LogDeathEvent(String name)
         {
             var props = new Value();
-            props["course"] = course;
-            props["name"] = name;
-            Mixpanel.Track(PlayerDeathEvent, props);
+            
+            PlayerDeathEvent playerDeathEvent = new PlayerDeathEvent(DefaultCourse, name);
+            
+            props[Course] = playerDeathEvent.Course;
+            props[Name] = playerDeathEvent.Name;
+            Mixpanel.Track(playerDeathEvent.EventName, props);
         }
 
-        public static void LogEvent(String eventName)
+        public void LogEvent(String eventName)
         {
             Mixpanel.Track(eventName);
         }
 
-        public static void LogEventWithParams(String eventName, Hashtable parameters)
+        public void LogEventWithParams(String eventName, Hashtable parameters)
         {
             // convert hashtable into MixPanel Value
             var props = new Value();
@@ -45,7 +87,7 @@ namespace BForBoss
             Mixpanel.Track(eventName, props);
         }
 
-        public static void ForceSendEvents()
+        public void ForceSendEvents()
         {
             Mixpanel.Flush();
         }

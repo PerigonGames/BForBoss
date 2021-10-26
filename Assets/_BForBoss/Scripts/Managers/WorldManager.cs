@@ -20,6 +20,7 @@ namespace BForBoss
         
         // This probably best placed inside its own utility section
         private StateManager _stateManager = StateManager.Instance;
+        private PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
         // This is probably best kept within its own utility section
         private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
         
@@ -58,14 +59,14 @@ namespace BForBoss
             _stateManager.SetState(State.PreGame);
             _inputSettingsView.Initialize(_inputSettingsViewModel);
             
-            PerigonAnalytics.StartSession();
+            _perigonAnalytics.StartSession();
         }
 
         private void OnDestroy()
         {
             _stateManager.OnStateChanged -= HandleStateChange;
             
-            PerigonAnalytics.EndSession();
+            _perigonAnalytics.EndSession();
         }
 
         private void HandleStateChange(State newState)
