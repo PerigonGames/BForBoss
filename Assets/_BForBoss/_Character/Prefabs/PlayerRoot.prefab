@@ -210,7 +210,7 @@ MonoBehaviour:
   _jumpImpulse: 9
   _jumpMaxHoldTime: 0
   _jumpPreGroundedTime: 0
-  _jumpPostGroundedTime: 0
+  _jumpPostGroundedTime: 5
   _gravity: {x: 0, y: -30, z: 0}
   _canSwim: 0
   _maxSwimSpeed: 0
@@ -255,10 +255,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speedMultiplier: 2
   _maxWallRunAcceleration: 40
+  _wallGravityDownForce: 200
   _minSpeed: 0.9
   _minHeight: 0.75
   _wallMaxDistance: 1.3
-  _wallGravityDownForce: 200
   _minJumpDuration: 0.5
   _gravityTimerDuration: 2
   _wallResetTimer: 2
