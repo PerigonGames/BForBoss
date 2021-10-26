@@ -13,8 +13,8 @@ namespace BForBoss
     {
         public string name;
         public int score;
-        // Milliseconds
-        public float seconds;
+        public int seconds;
         public string text;
+        public DateTime date;
     }
 }

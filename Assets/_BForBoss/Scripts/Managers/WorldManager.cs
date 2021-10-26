@@ -110,7 +110,7 @@ namespace BForBoss
         private void HandleOnEndOfRace()
         {
             _timeManagerViewModel.StopTimer();
-            var gameTime = _timeManagerViewModel.CurrentGameTime;
+            var gameTime = _timeManagerViewModel.CurrentGameTimeMilliSeconds;
             var input = "Controller";
             _uploadPlayerScoreDataSource.UploadScoreIfPossible(gameTime, input);
             _leaderboardPanel.SetUserTime(gameTime, input);

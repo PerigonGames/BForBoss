@@ -5,8 +5,9 @@ namespace BForBoss
 {
     public class CheckpointManager : MonoBehaviour
     {
-        [SerializeField] private Checkpoint _spawnPoint;
-        [SerializeField] private Checkpoint[] _checkpoints;
+        [SerializeField] private Checkpoint _spawnPoint = null;
+        [SerializeField] private Checkpoint[] _checkpoints = null;
+        [SerializeField] private Checkpoint _endPoint = null;
         private Checkpoint _activeCheckpoint = null;
         
         public Vector3 CheckpointPosition => _activeCheckpoint == null ? _spawnPoint.transform.position : _activeCheckpoint.transform.position;
@@ -30,6 +31,8 @@ namespace BForBoss
 
                 checkpoint.OnEnterArea += SetNewCheckpoint;
             }
+
+            _endPoint.OnEnterArea += OnEnteredLastPoint;
         }
 
         public void Reset()
@@ -46,6 +49,11 @@ namespace BForBoss
         {
             _activeCheckpoint = checkpoint;
             _activeCheckpoint.SetCheckpoint();
+        }
+
+        private void OnEnteredLastPoint(Checkpoint _)
+        {
+            StateManager.Instance.SetState(State.EndRace);
         }
         
         private void OnDestroy()

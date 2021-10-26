@@ -1,5 +1,6 @@
 using DG.Tweening;
 using PerigonGames;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 
@@ -20,6 +21,7 @@ namespace BForBoss
         
         private void Awake()
         {
+            transform.localScale = Vector3.zero;
             _leaderboardEndpoint.OnSuccess += HandleOnSuccess;
             _leaderboardEndpoint.OnFail += HandleOnFail;
         }
@@ -33,6 +35,7 @@ namespace BForBoss
             _currentUserScores.SetField(-1, score);
         }
 
+        [Button]
         public void ShowPanel()
         {
             Reload();
