@@ -4,18 +4,20 @@ using mixpanel;
 
 namespace BForBoss
 {
-    public readonly struct PlayerDeathEvent
+    public readonly struct Event
     {
-        public PlayerDeathEvent(String course, String name)
-        {
-            EventName = "Player - Death";
-            Course = course;
-            Name = name;
-        }
-        
-        public String EventName { get; }
-        public String Course { get; }
-        public String Name { get; }
+        public const String PlayerDeath = "Player - Death";
+    }
+
+    public readonly struct EventAttribute
+    {
+        public const String Course = "course";
+        public const String Name = "name";
+    }
+
+    public readonly struct EventConstant
+    {
+        public const String RaceCourse = "racecourse";
     }
 
     public interface IPerigonAnalytics
@@ -26,14 +28,10 @@ namespace BForBoss
         void LogEvent(String eventName);
         void LogEventWithParams(String eventName, Hashtable parameters);
         void ForceSendEvents();
-
     }
+    
     public class PerigonAnalytics : IPerigonAnalytics
     {
-        private const String DefaultCourse = "racecourse";
-        private const String Course = "course";
-        private const String Name = "name";
-        
         private const String SessionStart = "Session Start";
         private const String SessionEnd = "Session End";
         
@@ -64,11 +62,9 @@ namespace BForBoss
         {
             var props = new Value();
             
-            PlayerDeathEvent playerDeathEvent = new PlayerDeathEvent(DefaultCourse, name);
-            
-            props[Course] = playerDeathEvent.Course;
-            props[Name] = playerDeathEvent.Name;
-            Mixpanel.Track(playerDeathEvent.EventName, props);
+            props[EventAttribute.Course] = EventConstant.RaceCourse;
+            props[EventAttribute.Name] = name;
+            Mixpanel.Track(Event.PlayerDeath, props);
         }
 
         public void LogEvent(String eventName)
