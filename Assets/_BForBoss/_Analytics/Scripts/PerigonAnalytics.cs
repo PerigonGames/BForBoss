@@ -4,23 +4,37 @@ using mixpanel;
 
 namespace BForBoss
 {
-
-    public interface IPerigonAnalytics
+    public static class PerigonAnalytics
     {
-        public void LogEvent(String eventName);
-        public void LogEventWithParams(String eventName, Hashtable parameters);
+        private const String PlayerDeathEvent = "Player - Death";
+        private const String SessionStart = "Session Start";
+        private const String SessionEnd = "Session End";
+        
+        public static void StartSession()
+        {
+            Mixpanel.Track(SessionStart);
+        }
 
-        public void ForceSendEvents();
-    }
-    
-    public class PerigonAnalytics : IPerigonAnalytics
-    {
-        public void LogEvent(String eventName)
+        public static void EndSession()
+        {
+            Mixpanel.Track(SessionEnd);
+            Mixpanel.Flush();
+        }
+        
+        public static void LogDeathEvent(String course, String name)
+        {
+            var props = new Value();
+            props["course"] = course;
+            props["name"] = name;
+            Mixpanel.Track(PlayerDeathEvent, props);
+        }
+
+        public static void LogEvent(String eventName)
         {
             Mixpanel.Track(eventName);
         }
 
-        public void LogEventWithParams(String eventName, Hashtable parameters)
+        public static void LogEventWithParams(String eventName, Hashtable parameters)
         {
             // convert hashtable into MixPanel Value
             var props = new Value();
@@ -31,7 +45,7 @@ namespace BForBoss
             Mixpanel.Track(eventName, props);
         }
 
-        public void ForceSendEvents()
+        public static void ForceSendEvents()
         {
             Mixpanel.Flush();
         }
