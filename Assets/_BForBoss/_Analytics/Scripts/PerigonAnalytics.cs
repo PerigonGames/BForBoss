@@ -32,8 +32,8 @@ namespace BForBoss
     
     public class PerigonAnalytics : IPerigonAnalytics
     {
-        private const String SessionStart = "Session Start";
-        private const String SessionEnd = "Session End";
+        private const String SessionStart = "$session_start";
+        private const String SessionEnd = "$session_end";
         
         private static readonly PerigonAnalytics _instance = new PerigonAnalytics();
 

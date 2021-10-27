@@ -62,11 +62,14 @@ namespace BForBoss
             _perigonAnalytics.StartSession();
         }
 
+        private void OnApplicationQuit()
+        {
+            _perigonAnalytics.EndSession();
+        }
+
         private void OnDestroy()
         {
             _stateManager.OnStateChanged -= HandleStateChange;
-            
-            _perigonAnalytics.EndSession();
         }
 
         private void HandleStateChange(State newState)
