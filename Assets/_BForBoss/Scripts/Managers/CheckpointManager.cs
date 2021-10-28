@@ -49,7 +49,6 @@ namespace BForBoss
                 checkpoint.Reset();
             }
 
-            _detectInput = new DetectInput();
             _activeCheckpoint = null;
         }
 
