@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using UnityEngine;
+using Sirenix.Utilities;
 
 namespace BForBoss
 {
@@ -19,7 +18,7 @@ namespace BForBoss
         private async void Get()
         {
             var client = new HttpClient();
-            var response = await client.GetAsync($"{DreamloData.Host}{DreamloData.Public}/json");
+            var response = await client.GetAsync($"{DreamloData.Host}{DreamloData.Public}/quote-seconds-asc");
             if (response.IsSuccessStatusCode)
             {
                 string responseBody = await response.Content.ReadAsStringAsync();
@@ -27,41 +26,78 @@ namespace BForBoss
             }
             else
             {
-                OnFail?.Invoke(); 
+                OnFail?.Invoke();
             }
         }
 
         private void Parse(string responseBody)
         {
-            string json = RemoveNJsonFields(responseBody, 2);
-            var leaderboardDTO = JsonUtility.FromJson<LeaderboardDTO>(json);
-            var leaderboard = MapDTOToLeaderboardScore(leaderboardDTO);
-            OnSuccess?.Invoke(leaderboard);
+            if (responseBody.IsNullOrWhitespace())
+            {
+                OnSuccess?.Invoke(new LeaderboardScore[]{});
+            }
+            else
+            {
+                var arrayOfEntryDTO = ParsingQuotedListToDTO(responseBody);
+                var leaderboardScores = MapDTOToLeaderboardScore(arrayOfEntryDTO);
+                OnSuccess?.Invoke(leaderboardScores);
+            }
         }
 
-        private LeaderboardScore[] MapDTOToLeaderboardScore(LeaderboardDTO dto)
+        private LeaderboardScore[] MapDTOToLeaderboardScore(EntryDTO[] dto)
         {
             List<LeaderboardScore> listOfScore = new List<LeaderboardScore>();
-            foreach (var scoreDTO in dto.entry)
+            foreach (var scoreDTO in dto)
             {
                 LeaderboardScore score = new LeaderboardScore();
-                score.Username = scoreDTO.name;
-                score.Time = scoreDTO.seconds / 1000;
-                score.Input = scoreDTO.text;
+                score.Username = scoreDTO.Username;
+                score.Time = scoreDTO.MilliSeconds / 1000;
+                score.Input = scoreDTO.Input;
+                score.Date = scoreDTO.CreationDate;
                 listOfScore.Add(score);
             }
 
             return listOfScore.ToArray();
         }
-        
+
         #region Helper
-        private string RemoveNJsonFields(string source, int n)
+        /* Response:
+            "Amy","0","49124","Mouse + Keyboard","10/27/2021 11:13:49 PM"
+            "bob","0","50244","Mouse + Keyboard","10/27/2021 11:13:43 PM"
+         */
+        private EntryDTO[] ParsingQuotedListToDTO(string source)
         {
-            n++;
+            var quotedEntries = CleanQuotedSource(source);
+            var entries = new List<EntryDTO>();
+            foreach(var entry in quotedEntries)
+            {
+                if (!entry.IsNullOrWhitespace())
+                {
+                    var stringTypeEntry = entry.Split(',');
+                    var entryDTO = buildEntryDTO(stringTypeEntry);
+                    entries.Add(entryDTO);
+                }
+            }
 
-            int index = source.TakeWhile(c => (n -= (c == '{' ? 1 : 0)) > 0).Count();
+            return entries.ToArray();
+        }
 
-            return source.Substring(index, source.Length - (index + 2 - n));
+        private String[] CleanQuotedSource(string source)
+        {
+            return source.Replace("\"", "").Split('\n');
+        }
+
+        /*
+         * "bob","0","50244","Mouse + Keyboard","10/27/2021 11:13:43 PM"
+         */
+        private EntryDTO buildEntryDTO(string[] components)
+        {
+            var entryDTO = new EntryDTO();
+            entryDTO.Username = components[0];
+            entryDTO.MilliSeconds = int.Parse(components[2]);
+            entryDTO.Input = components[3];
+            entryDTO.CreationDate = Convert.ToDateTime(components[4]);
+            return entryDTO;
         }
         #endregion
     }
