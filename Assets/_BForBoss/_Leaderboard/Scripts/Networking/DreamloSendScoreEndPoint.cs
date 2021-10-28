@@ -6,15 +6,17 @@ namespace BForBoss
     public class DreamloSendScoreEndPoint : ILeaderboardPostEndPoint
     {
         private string _username;
+        private int _score;
         private int _milliseconds;
         private string _input;
 
         public event Action OnSuccess;
         public event Action OnFail;
-        
+
         public void SendScore(string username, int milliseconds, string input)
-        {           
+        {
             _username = username;
+            _score = -milliseconds;
             _milliseconds = milliseconds;
             _input = input;
             Post();

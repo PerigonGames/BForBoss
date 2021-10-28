@@ -64,6 +64,8 @@ namespace BForBoss
             }
         }
 
+        public int CurrentGameTimeMilliSeconds => Mathf.CeilToInt(_currentGameTime * 1000);
+
         public event Action<float> OnTimeChanged;
 
         public void Reset()

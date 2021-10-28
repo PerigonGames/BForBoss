@@ -26,7 +26,7 @@ namespace BForBoss
             }
             else
             {
-                OnFail?.Invoke(); 
+                OnFail?.Invoke();
             }
         }
 
@@ -59,7 +59,7 @@ namespace BForBoss
 
             return listOfScore.ToArray();
         }
-        
+
         #region Helper
         /* Response:
             "Amy","0","49124","Mouse + Keyboard","10/27/2021 11:13:49 PM"
@@ -84,7 +84,7 @@ namespace BForBoss
 
         private String[] CleanQuotedSource(string source)
         {
-            return source.Replace("\"", "").Split('\n');   
+            return source.Replace("\"", "").Split('\n');
         }
 
         /*

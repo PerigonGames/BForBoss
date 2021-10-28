@@ -9,7 +9,6 @@ namespace BForBoss {
         float ControllerHorizontalSensitivity { get; set; }
         float ControllerVerticalSensitivity { get; set; }
         void RevertAllSettings();
-        void SetMouseLock(bool isLocked);
     }
 
     public partial class FirstPersonPlayer : IInputSettings
@@ -99,11 +98,6 @@ namespace BForBoss {
             MouseVerticalSensitivity = Default_Mouse_Sensitivity;
             ControllerHorizontalSensitivity = Default_Controller_Sensitivity;
             ControllerVerticalSensitivity = Default_Controller_Sensitivity;
-        }
-
-        public void SetMouseLock(bool isLocked)
-        {
-            GetCharacterLook().lockCursor = isLocked;
         }
     }
 }
