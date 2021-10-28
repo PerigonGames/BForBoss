@@ -27,7 +27,8 @@ namespace BForBoss
         public void clickUpload()
         {
             PlayerPrefs.SetString("name", UsernameField.text);
-            Endpoint.SendScore(UsernameField.text, float.Parse(TimerField.text), InputSelectField.captionText.text); //Replace controller line with dropdown input
+            var milliseconds = Mathf.CeilToInt(float.Parse(TimerField.text) * 1000);
+            Endpoint.SendScore(UsernameField.text, milliseconds, InputSelectField.captionText.text); //Replace controller line with dropdown input
         }
     }
 }

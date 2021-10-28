@@ -11,7 +11,7 @@ namespace BForBoss
 
     public interface ILeaderboardPostEndPoint
     {
-        public void SendScore(string username, float milliseconds, string input);
+        public void SendScore(string username, int milliseconds, string input);
         public event Action OnSuccess;
         public event Action OnFail;
     }
