@@ -16,7 +16,7 @@ namespace BForBoss
         public void SendScore(string username, int milliseconds, string input)
         {           
             _username = username;
-            _score = milliseconds;
+            _score = -milliseconds;
             _milliseconds = milliseconds;
             _input = input;
             Post();

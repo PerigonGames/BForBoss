@@ -18,7 +18,7 @@ namespace BForBoss
         private readonly ILeaderboardPostEndPoint _endpoint = null;
         private int _numberOfRetries = 0;
 
-        private int _time = 0;
+        private int _time = int.MaxValue;
         private string _input = "";
 
         public event Action StartUploading;
@@ -59,7 +59,7 @@ namespace BForBoss
 
         public void UploadScoreIfPossible(int time, string input)
         {
-            Time = Mathf.Max(time, Time);
+            Time = Mathf.Min(time, Time);
             Input = input;
             UploadIfPossible();
         }
@@ -78,7 +78,7 @@ namespace BForBoss
         {
             if (ShouldUploadScores)
             {
-                _time = PlayerPrefs.GetInt(PlayerPrefKey.Timer, 0);
+                _time = PlayerPrefs.GetInt(PlayerPrefKey.Timer, int.MaxValue);
                 _input = PlayerPrefs.GetString(PlayerPrefKey.Input, "");
             }
         }
@@ -92,7 +92,7 @@ namespace BForBoss
         private bool CanUpload()
         {
             var isUserNameFilled = !Username.IsNullOrWhitespace();
-            var isTimeHigher = _time > 0;
+            var isTimeHigher = _time < int.MaxValue;
             var isInputFilled = !_input.IsNullOrWhitespace();
             return isUserNameFilled && isTimeHigher && isInputFilled;
         }
@@ -109,6 +109,7 @@ namespace BForBoss
         private void HandleEndPointOnFail()
         {
             _numberOfRetries++;
+            Debug.Log("Number of Tries: "+_numberOfRetries);
             var isNumberOfRetriesWithinLimit = _numberOfRetries < MaxNumberOfRetries;
             if (isNumberOfRetriesWithinLimit)
             {
