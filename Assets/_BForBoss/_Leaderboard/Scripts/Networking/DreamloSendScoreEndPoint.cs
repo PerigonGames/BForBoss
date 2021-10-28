@@ -6,6 +6,7 @@ namespace BForBoss
     public class DreamloSendScoreEndPoint : ILeaderboardPostEndPoint
     {
         private string _username;
+        private int _score;
         private int _milliseconds;
         private string _input;
 
@@ -15,12 +16,13 @@ namespace BForBoss
         public void SendScore(string username, int milliseconds, string input)
         {           
             _username = username;
+            _score = milliseconds;
             _milliseconds = milliseconds;
             _input = input;
             Post();
         }
 
-        private string Path => $"{DreamloData.Host}{DreamloData.Secret}/add/{_username}/0/{_milliseconds}/{_input}";
+        private string Path => $"{DreamloData.Host}{DreamloData.Secret}/add/{_username}/{_score}/{_milliseconds}/{_input}";
 
         private async void Post()
         {

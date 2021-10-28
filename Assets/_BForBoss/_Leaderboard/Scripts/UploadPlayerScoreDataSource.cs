@@ -18,14 +18,13 @@ namespace BForBoss
         private readonly ILeaderboardPostEndPoint _endpoint = null;
         private int _numberOfRetries = 0;
 
-        private string _username = "";
         private int _time = 0;
         private string _input = "";
 
         public event Action StartUploading;
         public event Action StopLoading;
 
-        public string UserName => _username;
+        public string Username => PlayerPrefs.GetString(PlayerPrefKey.UserName, "");
 
         public int Time
         {
@@ -77,7 +76,6 @@ namespace BForBoss
 
         private void SetupProperties()
         {
-            _username = PlayerPrefs.GetString(PlayerPrefKey.UserName, "");
             if (ShouldUploadScores)
             {
                 _time = PlayerPrefs.GetInt(PlayerPrefKey.Timer, 0);
@@ -88,12 +86,12 @@ namespace BForBoss
         private void Upload()
         {
             PlayerPrefs.SetInt(PlayerPrefKey.ShouldUpload, 1);
-            _endpoint.SendScore(_username, _time, _input);
+            _endpoint.SendScore(Username, _time, _input);
         }
 
         private bool CanUpload()
         {
-            var isUserNameFilled = !_username.IsNullOrWhitespace();
+            var isUserNameFilled = !Username.IsNullOrWhitespace();
             var isTimeHigher = _time > 0;
             var isInputFilled = !_input.IsNullOrWhitespace();
             return isUserNameFilled && isTimeHigher && isInputFilled;

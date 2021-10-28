@@ -13,12 +13,7 @@ namespace BForBoss
         [SerializeField] private LeaderboardRowBehaviour _currentUserScores = null;
         
         private DreamloGetLeaderboardEndPoint _leaderboardEndpoint = new DreamloGetLeaderboardEndPoint();
-        
-        public void Initialize(UploadPlayerScoreDataSource uploadPlayerScoreDataSource)
-        {
-            uploadPlayerScoreDataSource.StopLoading += Reload;
-        }
-        
+
         private void Awake()
         {
             transform.localScale = Vector3.zero;

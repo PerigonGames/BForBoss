@@ -63,7 +63,6 @@ namespace BForBoss
 
         private void SetupLeaderboardViews()
         {
-            _leaderboardPanel.Initialize(_uploadPlayerScoreDataSource);
             _uploadView.Initialize(new InputUsernameViewModel(new LockMouseUtility(_player)));
             _timerView.Initialize(_timeManagerViewModel);
             _inputSettingsView.Initialize(_inputSettingsViewModel);
