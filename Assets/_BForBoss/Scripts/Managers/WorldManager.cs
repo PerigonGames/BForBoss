@@ -67,7 +67,6 @@ namespace BForBoss
             _uploadView.Initialize(new InputUsernameViewModel(new LockMouseUtility(_player)));
             _timerView.Initialize(_timeManagerViewModel);
             _inputSettingsView.Initialize(_inputSettingsViewModel);
-
             _perigonAnalytics.StartSession();
         }
 
