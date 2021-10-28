@@ -23,6 +23,7 @@ namespace BForBoss
         private PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
         // This is probably best kept within its own utility section
         private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
+        private DetectInput _detectInput = new DetectInput();
 
         private readonly TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
         private InputSettingsViewModel _inputSettingsViewModel = null;
@@ -36,6 +37,7 @@ namespace BForBoss
 
         private void Reset()
         {
+            _detectInput.Reset();
             _timeManager.Reset();
             _checkpointManager.Reset();
             _stateManager.SetState(State.Play);
@@ -55,7 +57,7 @@ namespace BForBoss
         private void Start()
         {
             _player.Initialize();
-            _checkpointManager.Initialize();
+            _checkpointManager.Initialize(_detectInput);
             _timeManager.Initialize(_timeManagerViewModel);
             _stateManager.SetState(State.PreGame);
             SetupLeaderboardViews();
@@ -118,7 +120,7 @@ namespace BForBoss
         {
             _timeManagerViewModel.StopTimer();
             var gameTime = _timeManagerViewModel.CurrentGameTimeMilliSeconds;
-            var input = (_checkpointManager as IDetectInput).GetInput(); //Placeholder, remove this after finishing the timed leader board stuff
+            var input = _detectInput.GetInput(); //Placeholder, remove this after finishing the timed leader board stuff
             _uploadPlayerScoreDataSource.UploadScoreIfPossible(gameTime, input);
             _leaderboardPanel.SetUserTime(gameTime, input);
             _leaderboardPanel.ShowPanel();
