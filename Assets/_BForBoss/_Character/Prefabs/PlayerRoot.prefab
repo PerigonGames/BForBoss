@@ -154,7 +154,7 @@ MonoBehaviour:
   _collideWithTriggers: 0
   _groundMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 65
   _groundProbingDistance: 0.5
 --- !u!114 &616281459798487498
 MonoBehaviour:
@@ -210,7 +210,7 @@ MonoBehaviour:
   _jumpImpulse: 9
   _jumpMaxHoldTime: 0
   _jumpPreGroundedTime: 0
-  _jumpPostGroundedTime: 0
+  _jumpPostGroundedTime: 5
   _gravity: {x: 0, y: -30, z: 0}
   _canSwim: 0
   _maxSwimSpeed: 0
@@ -255,13 +255,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speedMultiplier: 2
   _maxWallRunAcceleration: 40
-  _minHeight: 0.5
-  _wallMaxDistance: 1.3
   _wallGravityDownForce: 200
+  _minSpeed: 0.9
+  _minHeight: 0.75
+  _wallMaxDistance: 1.3
   _minJumpDuration: 0.5
   _gravityTimerDuration: 2
+  _wallResetTimer: 2
   _wallBounciness: 6
   _jumpHeightMultiplier: 1.5
+  _jumpForwardVelocityMultiplier: 0.75
   _maxCameraAngleRoll: 20
   _cameraRotateDuration: 2
 --- !u!114 &910638779
@@ -292,6 +295,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 689d9512b906a4e7c88fb020b63cd5ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _dashVisualEffects: {fileID: 0}
+  _dashPostProcessingEffects: {fileID: 0}
   _dashImpulse: 20
   _dashDuration: 0.2
   _dashCoolDown: 0.5
@@ -503,7 +508,7 @@ MonoBehaviour:
   CameraDistance: 0
   CameraCollisionFilter:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 0
   IgnoreTag: Player
   CameraRadius: 0.2
 --- !u!1 &7120097269958552081

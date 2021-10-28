@@ -6,20 +6,26 @@ namespace BForBoss
 {
     public class WorldManager : MonoBehaviour
     {
+        [Title("Component")]
         [SerializeField] private TimeManager _timeManager = null;
         [SerializeField] private CheckpointManager _checkpointManager = null;
         [SerializeField] private FirstPersonPlayer _player = null;
+        
+        [Title("User Interface")]
         [SerializeField] private TimerViewBehaviour _timerView = null;
-
+        [SerializeField] private InputSettingsViewBehaviour _inputSettingsView = null;
+        
         [Title("Effects")] 
         [SerializeField] private Volume _deathVolume = null;
         
         // This probably best placed inside its own utility section
         private StateManager _stateManager = StateManager.Instance;
+        private PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
         // This is probably best kept within its own utility section
         private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
         
         private TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
+        private InputSettingsViewModel _inputSettingsViewModel = null;
         private ICharacterSpawn _character = null;
         
         private void CleanUp()
@@ -41,14 +47,24 @@ namespace BForBoss
             _stateManager.OnStateChanged += HandleStateChange;
             _character = _player;
             _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_deathVolume, 0.1f, 0f, 0.1f);
+            _inputSettingsViewModel = new InputSettingsViewModel(_player);
         }
 
         private void Start()
         {
+            _player.Initialize();
             _checkpointManager.Initialize();
             _timeManager.Initialize(_timeManagerViewModel);
             _timerView.Initialize(_timeManagerViewModel);
             _stateManager.SetState(State.PreGame);
+            _inputSettingsView.Initialize(_inputSettingsViewModel);
+            
+            _perigonAnalytics.StartSession();
+        }
+
+        private void OnApplicationQuit()
+        {
+            _perigonAnalytics.EndSession();
         }
 
         private void OnDestroy()
