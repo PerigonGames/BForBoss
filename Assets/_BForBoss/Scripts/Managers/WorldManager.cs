@@ -6,7 +6,8 @@ namespace BForBoss
 {
     public class WorldManager : MonoBehaviour
     {
-        [Title("Component")] [SerializeField] private TimeManager _timeManager = null;
+        [Title("Component")] 
+        [SerializeField] private TimeManager _timeManager = null;
         [SerializeField] private CheckpointManager _checkpointManager = null;
         [SerializeField] private FirstPersonPlayer _player = null;
 
@@ -16,14 +17,15 @@ namespace BForBoss
         [SerializeField] private InputUsernameViewBehaviour _uploadView = null;
         [SerializeField] private LeaderboardPanelBehaviour _leaderboardPanel = null;
 
-        [Title("Effects")] [SerializeField] private Volume _deathVolume = null;
+        [Title("Effects")] 
+        [SerializeField] private Volume _deathVolume = null;
 
         // This probably best placed inside its own utility section
-        private StateManager _stateManager = StateManager.Instance;
-        private PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
+        private readonly StateManager _stateManager = StateManager.Instance;
+        private readonly PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
         // This is probably best kept within its own utility section
         private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
-        private DetectInput _detectInput = new DetectInput();
+        private DetectInput _detectInput = new DetectInput(); //Placeholder, remove this after finishing the timed leader board stuff
 
         private readonly TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
         private InputSettingsViewModel _inputSettingsViewModel = null;
@@ -65,9 +67,8 @@ namespace BForBoss
 
         private void SetupLeaderboardViews()
         {
-            var lockMouse = new LockMouseUtility(_player);
-            _leaderboardPanel.Initialize(lockMouse);
-            _uploadView.Initialize(new InputUsernameViewModel(lockMouse));
+            _leaderboardPanel.Initialize(LockMouseUtility.Instance);
+            _uploadView.Initialize(new InputUsernameViewModel(LockMouseUtility.Instance));
             _timerView.Initialize(_timeManagerViewModel);
             _inputSettingsView.Initialize(_inputSettingsViewModel);
             _perigonAnalytics.StartSession();

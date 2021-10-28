@@ -18,11 +18,12 @@ namespace BForBoss
         
         private DreamloGetLeaderboardEndPoint _leaderboardEndpoint = new DreamloGetLeaderboardEndPoint();
         private ILockMouseInput _input = null;
+        
         public void Initialize(ILockMouseInput input)
         {
             _input = input;
         }
-
+        
         private void Awake()
         {
             transform.localScale = Vector3.zero;

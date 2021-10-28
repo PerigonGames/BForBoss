@@ -1,22 +1,30 @@
+using UnityEngine;
+
 namespace BForBoss
 {
-    public class LockMouseUtility : ILockMouseInput
+    public class LockMouseUtility: ILockMouseInput
     {
-        private readonly IInputSettings _inputSettings = null;
+        private static readonly LockMouseUtility _instance = new LockMouseUtility();
+        public static LockMouseUtility Instance => _instance;
 
-        public LockMouseUtility(IInputSettings settings)
+        static LockMouseUtility()
         {
-            _inputSettings = settings;
         }
 
+        private LockMouseUtility()
+        {
+        }
+        
         public void LockMouse()
         {
-            _inputSettings.SetMouseLock(true);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         public void UnlockMouse()
         {
-            _inputSettings.SetMouseLock(false);
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
     }
 }

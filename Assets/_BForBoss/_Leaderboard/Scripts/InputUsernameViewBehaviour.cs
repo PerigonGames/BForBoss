@@ -76,15 +76,15 @@ namespace BForBoss
     public class InputUsernameViewModel
     {
         private const int CharacterLimit = 20;
+        private ILockMouseInput _input = null;
         
         public event Action OnSuccess;
         public event Action OnFailure;
 
-        private ILockMouseInput _input = null;
 
-        public InputUsernameViewModel(ILockMouseInput mouseInput)
+        public InputUsernameViewModel(ILockMouseInput input)
         {
-            _input = mouseInput;
+            _input = input;
             _input.UnlockMouse();
         }
         
