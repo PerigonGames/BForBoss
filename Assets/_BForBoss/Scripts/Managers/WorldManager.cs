@@ -10,7 +10,7 @@ namespace BForBoss
         [SerializeField] private CheckpointManager _checkpointManager = null;
         [SerializeField] private FirstPersonPlayer _player = null;
 
-        [Title("User Interface")] 
+        [Title("User Interface")]
         [SerializeField] private TimerViewBehaviour _timerView = null;
         [SerializeField] private InputSettingsViewBehaviour _inputSettingsView = null;
         [SerializeField] private InputUsernameViewBehaviour _uploadView = null;
@@ -20,7 +20,7 @@ namespace BForBoss
 
         // This probably best placed inside its own utility section
         private StateManager _stateManager = StateManager.Instance;
-
+        private PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
         // This is probably best kept within its own utility section
         private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
 
@@ -67,6 +67,13 @@ namespace BForBoss
             _uploadView.Initialize(new InputUsernameViewModel(new LockMouseUtility(_player)));
             _timerView.Initialize(_timeManagerViewModel);
             _inputSettingsView.Initialize(_inputSettingsViewModel);
+
+            _perigonAnalytics.StartSession();
+        }
+
+        private void OnApplicationQuit()
+        {
+            _perigonAnalytics.EndSession();
         }
 
         private void OnDestroy()
