@@ -118,7 +118,7 @@ namespace BForBoss
         {
             _timeManagerViewModel.StopTimer();
             var gameTime = _timeManagerViewModel.CurrentGameTimeMilliSeconds;
-            var input = "Controller";
+            var input = (_checkpointManager as IDetectInput).GetInput(); //Placeholder, remove this after finishing the timed leader board stuff
             _uploadPlayerScoreDataSource.UploadScoreIfPossible(gameTime, input);
             _leaderboardPanel.SetUserTime(gameTime, input);
             _leaderboardPanel.ShowPanel();

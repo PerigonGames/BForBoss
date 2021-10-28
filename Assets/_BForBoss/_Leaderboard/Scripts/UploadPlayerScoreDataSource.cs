@@ -24,9 +24,9 @@ namespace BForBoss
         public event Action StartUploading;
         public event Action StopLoading;
 
-        public string Username => PlayerPrefs.GetString(PlayerPrefKey.UserName, "");
+        private string Username => PlayerPrefs.GetString(PlayerPrefKey.UserName, "");
 
-        public int Time
+        private int Time
         {
             get => _time;
             set
@@ -36,7 +36,7 @@ namespace BForBoss
             }
         }
 
-        public string Input
+        private string Input
         {
             get => _input;
             set
