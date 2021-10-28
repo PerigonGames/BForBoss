@@ -63,7 +63,9 @@ namespace BForBoss
 
         private void SetupLeaderboardViews()
         {
-            _uploadView.Initialize(new InputUsernameViewModel(new LockMouseUtility(_player)));
+            var lockMouse = new LockMouseUtility(_player);
+            _leaderboardPanel.Initialize(lockMouse);
+            _uploadView.Initialize(new InputUsernameViewModel(lockMouse));
             _timerView.Initialize(_timeManagerViewModel);
             _inputSettingsView.Initialize(_inputSettingsViewModel);
             _perigonAnalytics.StartSession();
