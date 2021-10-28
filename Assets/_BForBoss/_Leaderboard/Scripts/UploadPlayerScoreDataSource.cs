@@ -19,7 +19,7 @@ namespace BForBoss
         private int _numberOfRetries = 0;
 
         private string _username = "";
-        private float _time = float.MaxValue;
+        private int _time = 0;
         private string _input = "";
 
         public event Action StartUploading;
@@ -27,7 +27,7 @@ namespace BForBoss
 
         public string UserName => _username;
 
-        public float Time
+        public int Time
         {
             get => _time;
             set
@@ -58,9 +58,9 @@ namespace BForBoss
             UploadIfPossible();
         }
 
-        public void UploadScoreIfPossible(float time, string input)
+        public void UploadScoreIfPossible(int time, string input)
         {
-            Time = Mathf.Min(time, Time);
+            Time = Mathf.Max(time, Time);
             Input = input;
             UploadIfPossible();
         }
@@ -80,7 +80,7 @@ namespace BForBoss
             _username = PlayerPrefs.GetString(PlayerPrefKey.UserName, "");
             if (ShouldUploadScores)
             {
-                _time = PlayerPrefs.GetFloat(PlayerPrefKey.Timer, float.MaxValue);
+                _time = PlayerPrefs.GetInt(PlayerPrefKey.Timer, 0);
                 _input = PlayerPrefs.GetString(PlayerPrefKey.Input, "");
             }
         }

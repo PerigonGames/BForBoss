@@ -9,25 +9,28 @@ namespace BForBoss
     public class LeaderboardRowBehaviour : MonoBehaviour
     {
 
-        [SerializeField] private TMP_Text Rank; //TMP_Text
-        [SerializeField] private TMP_Text Username;
-        [SerializeField] private TMP_Text Time;
-        [SerializeField] private TMP_Text Input;
-
+        [SerializeField] private TMP_Text _rank = null;
+        [SerializeField] private TMP_Text _username = null;
+        [SerializeField] private TMP_Text _time = null;
+        [SerializeField] private TMP_Text _input = null;
+        [SerializeField] private TMP_Text _date = null;
+        
         public void SetField(int rank, LeaderboardScore score)
         {
-            Rank.text = rank.ToString();
-            Username.text = score.Username;
-            Time.text = score.Time.ToString();
-            Input.text = score.Input;
+            _rank.text = rank.ToString();
+            _username.text = score.Username;
+            _time.text = score.Time.ToString();
+            _input.text = score.Input;
+            _date.text = score.Date.ToShortDateString();
         }
 
         private void OnEnable()
         {
-            Rank.text = "--";
-            Username.text = "--";
-            Time.text = "--";
-            Input.text = "--";
+            _rank.text = "--";
+            _username.text = "--";
+            _time.text = "--";
+            _input.text = "--";
+            _date.text = "--";
         }
     }
 }

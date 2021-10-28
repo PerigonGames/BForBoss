@@ -1,3 +1,5 @@
+using System;
+
 namespace BForBoss
 {
     public struct LeaderboardScore
@@ -5,5 +7,6 @@ namespace BForBoss
         public string Username;
         public float Time;
         public string Input;
+        public DateTime Date;
     }
 }
