@@ -8,6 +8,10 @@ namespace BForBoss
 {
     public partial class FirstPersonPlayer : FirstPersonCharacter
     {
+        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+        public static event System.Func<bool> IsDebugWindowOpen = null; 
+        #endif
+        
         [Header("Cinemachine")]
         public GameObject cmWalkingCamera;
         public GameObject cmCrouchedCamera;
@@ -65,6 +69,24 @@ namespace BForBoss
             }
             _wallRunBehaviour?.Initialize(this, base.GetMovementInput, ResetJumpCount);
         }
+
+        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+        protected override void OnCursorLock(InputAction.CallbackContext context)
+        {
+            UnityEngine.EventSystems.EventSystem current = UnityEngine.EventSystems.EventSystem.current;
+            bool isOverGUIButton = IsDebugWindowOpen?.Invoke() ?? false;
+            if (current && (current.IsPointerOverGameObject() || isOverGUIButton))
+            {
+                return;
+            }
+
+            if (context.started)
+            {
+                characterLook.LockCursor();
+            }
+        }
+        
+        #endif
 
         protected override void SetupPlayerInput()
         {
