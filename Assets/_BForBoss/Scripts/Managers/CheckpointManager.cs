@@ -61,7 +61,7 @@ namespace BForBoss
             _activeCheckpoint = checkpoint;
             _activeCheckpoint.SetCheckpoint();
             
-            _perigonAnalytics.LogCheckpointData(_timeManagerViewModel.CurrentGameTime, _activeCheckpoint.name);
+            _perigonAnalytics.LogCheckpointEvent(_timeManagerViewModel.CurrentGameTime, _activeCheckpoint.name);
         }
 
         private void OnEnteredLastPoint(Checkpoint _)

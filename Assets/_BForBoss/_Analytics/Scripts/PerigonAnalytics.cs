@@ -76,7 +76,7 @@ namespace BForBoss
             Mixpanel.Track(Event.PlayerDeath, props);
         }
 
-        public void LogCheckpointData(float time, String checkpointName)
+        public void LogCheckpointEvent(float time, String checkpointName)
         {
             String formattedTime = string.Format($"{time:0.00}s");
             var props = new Value();
