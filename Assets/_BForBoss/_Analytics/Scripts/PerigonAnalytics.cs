@@ -78,10 +78,9 @@ namespace BForBoss
 
         public void LogCheckpointEvent(float time, String checkpointName)
         {
-            String formattedTime = string.Format($"{time:0.00}s");
             var props = new Value();
             
-            props[EventAttribute.Time] = formattedTime;
+            props[EventAttribute.Time] = time;
             props[EventAttribute.Course] = EventConstant.RaceCourse;
             props[EventAttribute.Name] = checkpointName;
             Mixpanel.Track(Event.CheckpointReached, props);
