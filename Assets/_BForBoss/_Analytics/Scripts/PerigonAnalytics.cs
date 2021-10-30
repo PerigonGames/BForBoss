@@ -43,13 +43,19 @@ namespace BForBoss
 
         public static PerigonAnalytics Instance => _instance;
 
-        #region CONSTRUCTORS
+        #region CONSTRUCTORS / SETTERS
         static PerigonAnalytics()
         {
         }
 
         private PerigonAnalytics()
         {
+        }
+
+        public void SetSessionUsername(String username)
+        {
+            Mixpanel.Identify(username);
+            Mixpanel.People.Set("$name", username);
         }
         
         #endregion

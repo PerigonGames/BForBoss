@@ -15,6 +15,7 @@ namespace BForBoss
         [SerializeField] private TMP_InputField _usernameField = null;
         [SerializeField] private TMP_Text _infoSettingsLabel = null;
         [SerializeField] private Button _saveUsernameButton = null;
+        private readonly PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
         private InputUsernameViewModel _viewModel = null;
         
         public void Initialize(InputUsernameViewModel viewModel)
@@ -23,6 +24,8 @@ namespace BForBoss
             if (_viewModel.IsUsernameAlreadySet())
             {
                 HidePanel();
+                String username = PlayerPrefs.GetString(UploadPlayerScoreDataSource.PlayerPrefKey.UserName);
+                _perigonAnalytics.SetSessionUsername(username);
             }
             else
             {
@@ -32,6 +35,7 @@ namespace BForBoss
             _saveUsernameButton.onClick.AddListener(() =>
             {
                 _viewModel.SetUserName(_usernameField.text);
+                _perigonAnalytics.SetSessionUsername(_usernameField.text);
             });
             
             BindViewModel();
