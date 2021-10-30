@@ -4,21 +4,25 @@ using mixpanel;
 
 namespace BForBoss
 {
+    #region STRUCTS
     public readonly struct Event
     {
         public const String PlayerDeath = "Player - Death";
+        public const String CheckpointReached = "Checkpoint - Reached";
     }
 
     public readonly struct EventAttribute
     {
         public const String Course = "course";
         public const String Name = "name";
+        public const String Time = "timer";
     }
 
     public readonly struct EventConstant
     {
         public const String RaceCourse = "racecourse";
     }
+    #endregion
 
     public interface IPerigonAnalytics
     {
@@ -39,6 +43,7 @@ namespace BForBoss
 
         public static PerigonAnalytics Instance => _instance;
 
+        #region CONSTRUCTORS
         static PerigonAnalytics()
         {
         }
@@ -46,7 +51,9 @@ namespace BForBoss
         private PerigonAnalytics()
         {
         }
-
+        
+        #endregion
+        
         public void StartSession()
         {
             Mixpanel.Track(SessionStart);
@@ -57,15 +64,29 @@ namespace BForBoss
             Mixpanel.Track(SessionEnd);
             Mixpanel.Flush();
         }
-        
-        public void LogDeathEvent(String name)
+
+        #region CUSTOM EVENTS
+
+        public void LogDeathEvent(String deathAreaName)
         {
             var props = new Value();
             
             props[EventAttribute.Course] = EventConstant.RaceCourse;
-            props[EventAttribute.Name] = name;
+            props[EventAttribute.Name] = deathAreaName;
             Mixpanel.Track(Event.PlayerDeath, props);
         }
+
+        public void LogCheckpointEvent(float time, String checkpointName)
+        {
+            var props = new Value();
+            
+            props[EventAttribute.Time] = time;
+            props[EventAttribute.Course] = EventConstant.RaceCourse;
+            props[EventAttribute.Name] = checkpointName;
+            Mixpanel.Track(Event.CheckpointReached, props);
+        }
+        
+        #endregion
 
         public void LogEvent(String eventName)
         {

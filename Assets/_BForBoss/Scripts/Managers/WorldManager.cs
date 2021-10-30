@@ -59,7 +59,7 @@ namespace BForBoss
         private void Start()
         {
             _player.Initialize();
-            _checkpointManager.Initialize(_detectInput);
+            _checkpointManager.Initialize(_detectInput, _timeManagerViewModel);
             _timeManager.Initialize(_timeManagerViewModel);
             _stateManager.SetState(State.PreGame);
             SetupLeaderboardViews();
