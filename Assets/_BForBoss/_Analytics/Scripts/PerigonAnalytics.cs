@@ -53,7 +53,7 @@ namespace BForBoss
         {
         }
 
-        public void SetSessionUsername(String username)
+        public void SetUsername(String username)
         {
             Mixpanel.People.Set("$name", username);
         }

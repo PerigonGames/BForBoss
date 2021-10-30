@@ -33,7 +33,7 @@ namespace BForBoss
             _saveUsernameButton.onClick.AddListener(() =>
             {
                 _viewModel.SetUserName(_usernameField.text);
-                _perigonAnalytics.SetSessionUsername(_usernameField.text);
+                _perigonAnalytics.SetUsername(_usernameField.text);
             });
             
             BindViewModel();
