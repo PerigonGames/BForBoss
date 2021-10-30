@@ -24,8 +24,6 @@ namespace BForBoss
             if (_viewModel.IsUsernameAlreadySet())
             {
                 HidePanel();
-                String username = PlayerPrefs.GetString(UploadPlayerScoreDataSource.PlayerPrefKey.UserName);
-                _perigonAnalytics.SetSessionUsername(username);
             }
             else
             {

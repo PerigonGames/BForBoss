@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using mixpanel;
+using UnityEngine;
 
 namespace BForBoss
 {
@@ -54,7 +55,6 @@ namespace BForBoss
 
         public void SetSessionUsername(String username)
         {
-            Mixpanel.Identify(username);
             Mixpanel.People.Set("$name", username);
         }
         
@@ -62,6 +62,7 @@ namespace BForBoss
         
         public void StartSession()
         {
+            Mixpanel.Identify(SystemInfo.deviceUniqueIdentifier);
             Mixpanel.Track(SessionStart);
         }
 
