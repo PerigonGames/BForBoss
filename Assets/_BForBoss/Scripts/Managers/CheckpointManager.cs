@@ -12,6 +12,8 @@ namespace BForBoss
         [SerializeField] private Checkpoint _spawnPoint = null;
         [SerializeField] private Checkpoint[] _checkpoints = null;
         [SerializeField] private Checkpoint _endPoint = null;
+        private TimeManagerViewModel _timeManagerViewModel = null;
+        private readonly PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
         private Checkpoint _activeCheckpoint = null;
         
         private DetectInput _detectInput = null;
@@ -19,7 +21,7 @@ namespace BForBoss
         public Vector3 CheckpointPosition => _activeCheckpoint == null ? _spawnPoint.transform.position : _activeCheckpoint.transform.position;
         public Quaternion CheckpointRotation => _activeCheckpoint == null ? _spawnPoint.transform.rotation : _activeCheckpoint.transform.rotation;
 
-        public void Initialize(DetectInput detectInput)
+        public void Initialize(DetectInput detectInput, TimeManagerViewModel timeManagerViewModel)
         {
             _detectInput = detectInput;
             if (_checkpoints.IsNullOrEmpty())
@@ -40,6 +42,7 @@ namespace BForBoss
             }
 
             _endPoint.OnEnterArea += OnEnteredLastPoint;
+            _timeManagerViewModel = timeManagerViewModel;
         }
 
         public void Reset()
@@ -57,6 +60,8 @@ namespace BForBoss
             _detectInput.Detect();
             _activeCheckpoint = checkpoint;
             _activeCheckpoint.SetCheckpoint();
+            
+            _perigonAnalytics.LogCheckpointEvent(_timeManagerViewModel.CurrentGameTime, _activeCheckpoint.name);
         }
 
         private void OnEnteredLastPoint(Checkpoint _)
