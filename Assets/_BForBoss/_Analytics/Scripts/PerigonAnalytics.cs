@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using mixpanel;
-using UnityEngine;
 
 namespace BForBoss
 {
@@ -27,7 +26,7 @@ namespace BForBoss
 
     public interface IPerigonAnalytics
     {
-        void StartSession();
+        void StartSession(String uniqueId);
         void EndSession();
         void LogDeathEvent(String name);
         void LogEvent(String eventName);
@@ -60,9 +59,9 @@ namespace BForBoss
         
         #endregion
         
-        public void StartSession()
+        public void StartSession(String uniqueId)
         {
-            Mixpanel.Identify(SystemInfo.deviceUniqueIdentifier);
+            Mixpanel.Identify(uniqueId);
             Mixpanel.Track(SessionStart);
         }
 
