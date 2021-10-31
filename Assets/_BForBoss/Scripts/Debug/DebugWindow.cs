@@ -67,8 +67,6 @@ namespace BForBoss
         {
             using (new GUILayout.AreaScope(_windowRect, String.Empty, GUI.skin.window))
             {
-                //GUILayout.FlexibleSpace();
-
                 using (new GUILayout.HorizontalScope())
                 {
                     GUILayout.FlexibleSpace();
@@ -95,7 +93,11 @@ namespace BForBoss
 
         private void ResetView()
         {
-            
+            if (_currentDebugView != null)
+            {
+                _currentDebugView.ResetData();
+                _currentDebugView = null;
+            }
         }
 
         private void OpenPanel()
@@ -142,6 +144,11 @@ namespace BForBoss
         private void OnRectTransformDimensionsChange()
         {
             GetCanvasRect();
+
+            if (_currentDebugView != null && OnGUIUpdate != null)
+            {
+                _currentDebugView.MasterRect = _windowRect;
+            }
         }
     }
 }

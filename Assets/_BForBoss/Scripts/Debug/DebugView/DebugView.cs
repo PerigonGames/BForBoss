@@ -1,28 +1,59 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;    
+using UnityEngine;
 
-public abstract class DebugView
+namespace BForBoss
 {
-    protected Rect _masterRect;
-    protected Rect _baseRect;
-    protected Rect _backButtonRect;
-
-    private const float _backButtonHeight = 20f;
-    
-    public Rect MasterRect
+    public abstract class DebugView
     {
-        set
+        protected Rect _masterRect;
+        protected Rect _baseRect;
+        protected Rect _backButtonRect;
+
+        private const float _backButtonHeight = 20f;
+
+        public Rect MasterRect
         {
-            _masterRect = value;
-            CreateBaseRect();
+            set
+            {
+                _masterRect = value;
+                CreateBaseRect();
+            }
         }
-    }
 
-    protected abstract void DrawWindow(int id);
+        public virtual void ResetData()
+        {
+            DebugWindow.OnGUIUpdate -= OnGUIUpdate;
+        }
 
-    protected virtual void CreateBaseRect()
-    {
-        
+        protected abstract void DrawWindow(int id);
+
+        protected virtual void CreateBaseRect()
+        {
+            _baseRect = new Rect(_masterRect.x, _backButtonHeight, _masterRect.width,
+                _masterRect.height - _backButtonHeight);
+            _backButtonRect = new Rect(_masterRect.x, 0, _masterRect.width, _backButtonHeight);
+        }
+
+        protected virtual void DrawGUI()
+        {
+            
+        }
+
+
+        private void OnGUIUpdate()
+        {
+            DrawBackButton();
+            DrawGUI();
+        }
+
+        private void DrawBackButton()
+        {
+            using (new GUILayout.AreaScope(_backButtonRect))
+            {
+                if (GUILayout.Button("Back", GUILayout.Width(_backButtonRect.width)))
+                {
+                    ResetData();
+                }
+            }
+        }
     }
 }
