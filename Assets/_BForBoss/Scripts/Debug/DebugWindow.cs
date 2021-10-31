@@ -18,6 +18,8 @@ namespace BForBoss
         //[SerializeField] private List<DebugOptions> _debugOptions;
         [SerializeField] private RectTransform _rectTransform;
 
+        private StateManager _stateManager = StateManager.Instance;
+        private State _currentState;
         private bool _isPanelShowing = false;
         private DebugView _currentDebugView;
 
@@ -25,7 +27,7 @@ namespace BForBoss
         
         public void Initialize()
         {
-            //Use this method to get Rect and get list of Options;
+            
         }
         
         private void Update()
@@ -102,10 +104,12 @@ namespace BForBoss
 
         private void OpenPanel()
         {
+            _currentState = _stateManager.GetState();
+            _stateManager.SetState(State.Pause);
             FirstPersonPlayer.IsDebugWindowOpen += IsPanelShowing;
             GetCanvasRect();
             transform.localScale = Vector3.one;
-            SceneManager.sceneLoaded += OnSceneChanged;
+            //SceneManager.sceneLoaded += OnSceneChanged;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
@@ -114,8 +118,9 @@ namespace BForBoss
         {
             FirstPersonPlayer.IsDebugWindowOpen -= IsPanelShowing;
             ResetView();
-            transform.localScale = Vector3.one;
-            SceneManager.sceneLoaded -= OnSceneChanged;
+            transform.localScale = Vector3.zero;
+            //SceneManager.sceneLoaded -= OnSceneChanged;
+            _stateManager.SetState(_currentState);
         }
 
         private bool IsPanelShowing()
