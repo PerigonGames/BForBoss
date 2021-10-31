@@ -19,6 +19,11 @@ namespace BForBoss
 
         [Title("Effects")] 
         [SerializeField] private Volume _deathVolume = null;
+        
+        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+        [Title("Debug")]
+        [SerializeField] private GameObject _debugCanvas;
+        #endif
 
         // This probably best placed inside its own utility section
         private readonly StateManager _stateManager = StateManager.Instance;
@@ -50,6 +55,13 @@ namespace BForBoss
         private void Awake()
         {
             _stateManager.OnStateChanged += HandleStateChange;
+            
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            DebugWindow debugWindow = Instantiate(_debugCanvas).gameObject.GetComponent<DebugWindow>();
+            debugWindow.Initialize();
+            #endif
+            
+            
             _character = _player;
             _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_deathVolume, 0.1f, 0f, 0.1f);
             _inputSettingsViewModel = new InputSettingsViewModel(_player);

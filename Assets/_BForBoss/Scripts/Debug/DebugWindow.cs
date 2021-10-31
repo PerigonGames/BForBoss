@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -18,16 +20,26 @@ namespace BForBoss
         //[SerializeField] private List<DebugOptions> _debugOptions;
         [SerializeField] private RectTransform _rectTransform;
 
+        //State Handling
         private StateManager _stateManager = StateManager.Instance;
         private State _currentState;
+        
         private bool _isPanelShowing = false;
+        
+        private List<Type> _debugOptions = new List<Type>();
         private DebugView _currentDebugView;
 
         private Rect _windowRect;
         
         public void Initialize()
         {
-            
+            foreach (Type viewType in Assembly.GetAssembly(typeof(DebugView)).GetTypes())
+            {
+                if (viewType.IsClass && !viewType.IsAbstract && viewType.IsSubclassOf(typeof(DebugView)))
+                {
+                    _debugOptions.Add(viewType);
+                }
+            }
         }
         
         private void Update()
@@ -76,12 +88,14 @@ namespace BForBoss
                     using (new GUILayout.VerticalScope())
                     {
                         GUILayout.Space(0.15f * _windowRect.height);
-                        
-                        for (int i = 0; i < 5; i++)
+
+                        foreach (Type debugType in _debugOptions)
                         {
-                            if (GUILayout.Button($"Press This {i}"))
+                            if (GUILayout.Button(debugType.Name))
                             {
-                                Debug.Log($"You Pressed this {i}");
+                                ConstructorInfo constructorInfo = debugType.GetConstructor(new Type[] {typeof(Rect)});
+                                object[] parameters = new object[] {_windowRect};
+                                _currentDebugView = constructorInfo.Invoke(parameters) as DebugView;
                             }
                         }
                     }

@@ -8,8 +8,6 @@ namespace BForBoss
         protected Rect _baseRect;
         protected Rect _backButtonRect;
 
-        protected bool _isInitialized = false;
-
         private const float _backButtonHeight = 20f;
 
         public Rect MasterRect
@@ -25,23 +23,12 @@ namespace BForBoss
         {
             _masterRect = masterRect;
             CreateBaseRect();
-            DebugWindow.OnGUIUpdate += DrawGUI;
+            DebugWindow.OnGUIUpdate += OnGUIUpdate;
         }
-
-        protected virtual void Initialize(Rect masterRect)
-        {
-            if (_isInitialized)
-            {
-                return;
-            }
-            
-            _masterRect = masterRect;
-            _isInitialized = true;
-        }
+        
 
         public virtual void ResetData()
         {
-            _isInitialized = false;
             DebugWindow.OnGUIUpdate -= OnGUIUpdate;
         }
 
@@ -53,18 +40,12 @@ namespace BForBoss
                 _masterRect.height - _backButtonHeight);
             _backButtonRect = new Rect(_masterRect.x, 0, _masterRect.width, _backButtonHeight);
         }
-
-        protected virtual void DrawGUI()
-        {
-            DrawBackButton();
-            DrawWindow();
-        }
-
-
+        
+        
         private void OnGUIUpdate()
         {
             DrawBackButton();
-            DrawGUI();
+            DrawWindow();
         }
 
         private void DrawBackButton()
