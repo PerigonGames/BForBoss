@@ -9,7 +9,7 @@ namespace BForBoss
     public partial class FirstPersonPlayer : FirstPersonCharacter
     {
         #if UNITY_EDITOR || DEVELOPMENT_BUILD
-        public static event System.Func<bool> IsDebugWindowOpen = null; 
+        public static bool IsDebugWindowOpen = false; 
         #endif
         
         [Header("Cinemachine")]
@@ -74,8 +74,7 @@ namespace BForBoss
         protected override void OnCursorLock(InputAction.CallbackContext context)
         {
             UnityEngine.EventSystems.EventSystem current = UnityEngine.EventSystems.EventSystem.current;
-            bool isOverGUIButton = IsDebugWindowOpen?.Invoke() ?? false;
-            if (current && (current.IsPointerOverGameObject() || isOverGUIButton))
+            if (current && (current.IsPointerOverGameObject() || IsDebugWindowOpen))
             {
                 return;
             }

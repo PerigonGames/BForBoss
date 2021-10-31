@@ -9,7 +9,7 @@ namespace BForBoss
 {
     public class DebugWindow : MonoBehaviour
     {
-        public static Action OnGUIUpdate;
+        //public static Action OnGUIUpdate;
 
         private const Key _keyCodeCharacter = Key.F1;
         private const Key _keyCodeModifier = Key.LeftCtrl;
@@ -67,9 +67,9 @@ namespace BForBoss
                 return;
             }
 
-            if (OnGUIUpdate != null)
+            if (_currentDebugView != null && _currentDebugView.IsInitialized)
             {
-                OnGUIUpdate.Invoke();
+                _currentDebugView.DrawGUI();
             }
             else
             {
@@ -120,20 +120,18 @@ namespace BForBoss
         {
             _currentState = _stateManager.GetState();
             _stateManager.SetState(State.Pause);
-            FirstPersonPlayer.IsDebugWindowOpen += IsPanelShowing;
+            FirstPersonPlayer.IsDebugWindowOpen = true;
             GetCanvasRect();
             transform.localScale = Vector3.one;
-            //SceneManager.sceneLoaded += OnSceneChanged;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
 
         private void ClosePanel()
         {
-            FirstPersonPlayer.IsDebugWindowOpen -= IsPanelShowing;
+            FirstPersonPlayer.IsDebugWindowOpen = false;
             ResetView();
             transform.localScale = Vector3.zero;
-            //SceneManager.sceneLoaded -= OnSceneChanged;
             _stateManager.SetState(_currentState);
         }
 
@@ -141,13 +139,7 @@ namespace BForBoss
         {
             return _isPanelShowing;
         }
-        
-        private void OnSceneChanged(Scene scene, LoadSceneMode mode)
-        {
-            ClosePanel();
-            _isPanelShowing = false;
-        }
-        
+
         private void GetCanvasRect()
         {
             if (_rectTransform != null)
@@ -164,7 +156,7 @@ namespace BForBoss
         {
             GetCanvasRect();
 
-            if (_currentDebugView != null && OnGUIUpdate != null)
+            if (_currentDebugView != null)
             {
                 _currentDebugView.MasterRect = _windowRect;
             }

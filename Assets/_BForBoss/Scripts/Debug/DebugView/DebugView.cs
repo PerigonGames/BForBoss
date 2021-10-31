@@ -4,6 +4,8 @@ namespace BForBoss
 {
     public abstract class DebugView
     {
+        public bool IsInitialized = false;
+        
         protected Rect _masterRect;
         protected Rect _baseRect;
         protected Rect _backButtonRect;
@@ -18,19 +20,25 @@ namespace BForBoss
                 CreateBaseRect();
             }
         }
+        
+        public virtual void ResetData()
+        {
+            IsInitialized = false;
+        }
 
         protected DebugView(Rect masterRect)
         {
             _masterRect = masterRect;
             CreateBaseRect();
-            DebugWindow.OnGUIUpdate += OnGUIUpdate;
+            IsInitialized = true;
         }
         
-
-        public virtual void ResetData()
+        public void DrawGUI()
         {
-            DebugWindow.OnGUIUpdate -= OnGUIUpdate;
+            DrawBackButton();
+            DrawWindow();
         }
+        
 
         protected abstract void DrawWindow();
 
@@ -41,13 +49,6 @@ namespace BForBoss
             _backButtonRect = new Rect(_masterRect.x, 0, _masterRect.width, _backButtonHeight);
         }
         
-        
-        private void OnGUIUpdate()
-        {
-            DrawBackButton();
-            DrawWindow();
-        }
-
         private void DrawBackButton()
         {
             using (new GUILayout.AreaScope(_backButtonRect))
