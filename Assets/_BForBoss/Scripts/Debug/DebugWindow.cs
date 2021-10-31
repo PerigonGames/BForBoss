@@ -29,7 +29,7 @@ namespace BForBoss
 
         private Rect _windowRect;
         
-        public void Initialize()
+        private void Awake()
         {
             foreach (Type viewType in Assembly.GetAssembly(typeof(DebugView)).GetTypes())
             {
@@ -39,7 +39,7 @@ namespace BForBoss
                 }
             }
         }
-        
+
         private void Update()
         {
             if (Keyboard.current[_keyCodeModifier].isPressed &&

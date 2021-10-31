@@ -33,18 +33,21 @@ namespace BForBoss
         {
             using (new GUILayout.AreaScope(_baseRect))
             {
-                using (new GUILayout.HorizontalScope())
+                using (new GUILayout.VerticalScope())
                 {
-                    GUILayout.FlexibleSpace();
-                    GUILayout.Label("Scenes", GUILayout.Width(0.8f * _baseRect.width));
-                    GUILayout.FlexibleSpace();
-                }
-
-                for (int i = 0, count = _buildSceneNames.Count; i < count; i++)
-                {
-                    if (GUILayout.Button(_buildSceneNames[i]))
+                    using (new GUILayout.HorizontalScope())
                     {
-                        ChangeScene(i);
+                        GUILayout.FlexibleSpace();
+                        GUILayout.Label("Scenes");
+                        GUILayout.FlexibleSpace();
+                    }
+                    
+                    for (int i = 0, count = _buildSceneNames.Count; i < count; i++)
+                    {
+                        if (GUILayout.Button(_buildSceneNames[i]))
+                        {
+                            ChangeScene(i);
+                        }
                     }
                 }
             }
@@ -52,8 +55,7 @@ namespace BForBoss
 
         private void ChangeScene(int buildIndex)
         {
-            Debug.Log("Sup");
-            //SceneManager.LoadScene(buildIndex, LoadSceneMode.Single);
+            SceneManager.LoadScene(buildIndex, LoadSceneMode.Single);
         }
 
         private void GetBuildSceneNames()

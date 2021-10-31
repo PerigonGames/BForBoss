@@ -20,10 +20,10 @@ namespace BForBoss
         [Title("Effects")] 
         [SerializeField] private Volume _deathVolume = null;
         
-        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         [Title("Debug")]
         [SerializeField] private GameObject _debugCanvas;
-        #endif
+#endif
 
         // This probably best placed inside its own utility section
         private readonly StateManager _stateManager = StateManager.Instance;
@@ -56,10 +56,9 @@ namespace BForBoss
         {
             _stateManager.OnStateChanged += HandleStateChange;
             
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             DebugWindow debugWindow = Instantiate(_debugCanvas).gameObject.GetComponent<DebugWindow>();
-            debugWindow.Initialize();
-            #endif
+#endif
             
             
             _character = _player;

@@ -8,9 +8,9 @@ namespace BForBoss
 {
     public partial class FirstPersonPlayer : FirstPersonCharacter
     {
-        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         public static bool IsDebugWindowOpen = false; 
-        #endif
+#endif
         
         [Header("Cinemachine")]
         public GameObject cmWalkingCamera;
@@ -70,7 +70,7 @@ namespace BForBoss
             _wallRunBehaviour?.Initialize(this, base.GetMovementInput, ResetJumpCount);
         }
 
-        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
 
         protected override Vector2 GetMouseLookInput()
         {
@@ -94,7 +94,7 @@ namespace BForBoss
             }
         }
         
-        #endif
+#endif
 
         protected override void SetupPlayerInput()
         {
