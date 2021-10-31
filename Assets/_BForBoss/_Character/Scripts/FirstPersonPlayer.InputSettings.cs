@@ -9,7 +9,6 @@ namespace BForBoss {
         float ControllerHorizontalSensitivity { get; set; }
         float ControllerVerticalSensitivity { get; set; }
         void RevertAllSettings();
-        void SetMouseLock(bool isLocked);
     }
 
     public partial class FirstPersonPlayer : IInputSettings
@@ -23,14 +22,14 @@ namespace BForBoss {
             public const string Controller_Vertical_Sensitivity = "controller_vertical_sensitivity";
         }
         
-        private const int Default_Is_Inverted = 1;
+        private const int Default_Is_Inverted = 0;
         private const float Default_Mouse_Sensitivity = 0.4f;
         private const float Default_Controller_Sensitivity = 0.4f;
         
             
         private void SetupInput()
         {
-            IsInverted = PlayerPrefs.GetInt(PlayerPrefKey.Is_Inverted, Default_Is_Inverted) == 1;
+            IsInverted = PlayerPrefs.GetInt(PlayerPrefKey.Is_Inverted, Default_Is_Inverted) == 0;
             MouseHorizontalSensitivity = PlayerPrefs.GetFloat(PlayerPrefKey.Mouse_Horizontal_Sensitivity, Default_Mouse_Sensitivity);
             MouseVerticalSensitivity = PlayerPrefs.GetFloat(PlayerPrefKey.Mouse_Vertical_Sensitivity, Default_Mouse_Sensitivity);
             ControllerHorizontalSensitivity = PlayerPrefs.GetFloat(PlayerPrefKey.Controller_Horizontal_Sensitivity, Default_Controller_Sensitivity);
@@ -44,7 +43,7 @@ namespace BForBoss {
 
             set
             {
-                var isInverted = value ? 1 : 0;
+                var isInverted = value ? 0 : 1; // ECM2 flipped the inverted values
                 PlayerPrefs.SetInt(PlayerPrefKey.Is_Inverted, isInverted);
                 GetCharacterLook().invertLook = value;
             }
@@ -94,16 +93,11 @@ namespace BForBoss {
 
         public void RevertAllSettings()
         {
-            IsInverted = Default_Is_Inverted == 1;
+            IsInverted = Default_Is_Inverted == 0;
             MouseHorizontalSensitivity = Default_Mouse_Sensitivity;
             MouseVerticalSensitivity = Default_Mouse_Sensitivity;
             ControllerHorizontalSensitivity = Default_Controller_Sensitivity;
             ControllerVerticalSensitivity = Default_Controller_Sensitivity;
-        }
-
-        public void SetMouseLock(bool isLocked)
-        {
-            GetCharacterLook().lockCursor = isLocked;
         }
     }
 }

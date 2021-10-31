@@ -1,42 +1,20 @@
-using System;
 using UnityEngine;
 
 namespace BForBoss
 {
     public class LeaderboardTableBehaviour : MonoBehaviour
     {
-        [SerializeField] private LeaderboardRowBehaviour[] LeaderboardRows;
+        [SerializeField] private LeaderboardRowBehaviour[] _leaderboardRows;
 
-        private DreamloGetLeaderboardEndPoint LeaderboardEndpoint = new DreamloGetLeaderboardEndPoint();
-        private string Rank;
-
-        // Start is called before the first frame update
-
-        private void Awake()
+        public void SetScores(LeaderboardScore[] scores)
         {
-            LeaderboardEndpoint.OnSuccess += HandleOnSuccess;
-        }
-
-        private void HandleOnSuccess(LeaderboardScore[] scores)
-        {
-            Debug.Log("I finished getting data from the internet");
-
             for (var i = 0; i < 10; i++)
             {
                 if(scores.Length > i)
                 {
-                    LeaderboardRows[i].SetField(i+1, scores[i]);
-                }
-                else
-                {
-                    LeaderboardRows[i].SetFieldEmpty();
+                    _leaderboardRows[i].SetField(i+1, scores[i]);
                 }
             }
-        }
-
-        private void OnEnable()
-        {
-            LeaderboardEndpoint.GetLeaderboard(); //Starts getting scores from database
         }
     }
 }

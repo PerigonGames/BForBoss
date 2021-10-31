@@ -124,7 +124,14 @@ namespace BForBoss
 
         public void SetMouseLock(bool isLocked)
         {
-            _settings.SetMouseLock(isLocked);
+            if (isLocked)
+            {
+                LockMouseUtility.Instance.LockMouse();
+            }
+            else
+            {
+                LockMouseUtility.Instance.UnlockMouse();
+            }
         }
 
         public void ApplySettings(float horizontalMouse, float verticalMouse, float horizontalController, float verticalController, bool isInverted)
