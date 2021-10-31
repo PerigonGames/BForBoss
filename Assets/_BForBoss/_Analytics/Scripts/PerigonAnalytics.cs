@@ -26,7 +26,7 @@ namespace BForBoss
 
     public interface IPerigonAnalytics
     {
-        void StartSession();
+        void StartSession(String uniqueId);
         void EndSession();
         void LogDeathEvent(String name);
         void LogEvent(String eventName);
@@ -43,7 +43,7 @@ namespace BForBoss
 
         public static PerigonAnalytics Instance => _instance;
 
-        #region CONSTRUCTORS
+        #region CONSTRUCTORS / SETTERS
         static PerigonAnalytics()
         {
         }
@@ -51,11 +51,17 @@ namespace BForBoss
         private PerigonAnalytics()
         {
         }
+
+        public void SetUsername(String username)
+        {
+            Mixpanel.People.Set("$name", username);
+        }
         
         #endregion
         
-        public void StartSession()
+        public void StartSession(String uniqueId)
         {
+            Mixpanel.Identify(uniqueId);
             Mixpanel.Track(SessionStart);
         }
 
