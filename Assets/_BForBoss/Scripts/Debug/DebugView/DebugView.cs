@@ -10,7 +10,9 @@ namespace BForBoss
         protected Rect _baseRect;
         protected Rect _backButtonRect;
 
-        private const float _backButtonHeight = 20f;
+        protected string _windowHeader = "Debug Options";
+        
+        private const float BACK_BUTTON_HEIGHT = 20f;
 
         public Rect MasterRect
         {
@@ -35,8 +37,16 @@ namespace BForBoss
         
         public void DrawGUI()
         {
-            DrawBackButton();
-            DrawWindow();
+            if (!IsInitialized)
+            {
+                return;
+            }
+            
+            using (new GUILayout.AreaScope(_masterRect, string.Empty, GUI.skin.box))
+            {
+                DrawBackButton();
+                DrawWindow();
+            }
         }
         
 
@@ -44,9 +54,9 @@ namespace BForBoss
 
         protected virtual void CreateBaseRect()
         {
-            _baseRect = new Rect(_masterRect.x, _backButtonHeight, _masterRect.width,
-                _masterRect.height - _backButtonHeight);
-            _backButtonRect = new Rect(_masterRect.x, 0, _masterRect.width, _backButtonHeight);
+            _baseRect = new Rect(_masterRect.x, BACK_BUTTON_HEIGHT, _masterRect.width,
+                _masterRect.height - BACK_BUTTON_HEIGHT);
+            _backButtonRect = new Rect(_masterRect.x, 0, _masterRect.width, BACK_BUTTON_HEIGHT);
         }
         
         private void DrawBackButton()

@@ -31,14 +31,14 @@ namespace BForBoss
 
         protected override void DrawWindow()
         {
-            if (!IsInitialized)
+            using (new GUILayout.AreaScope(_baseRect))
             {
-                return;
-            }
-
-            using (new GUILayout.AreaScope(_baseRect, "Scene Switcher", GUI.skin.window))
-            {
-                GUILayout.Label("Scenes", GUILayout.Width(0.8f * _baseRect.width));
+                using (new GUILayout.HorizontalScope())
+                {
+                    GUILayout.FlexibleSpace();
+                    GUILayout.Label("Scenes", GUILayout.Width(0.8f * _baseRect.width));
+                    GUILayout.FlexibleSpace();
+                }
 
                 for (int i = 0, count = _buildSceneNames.Count; i < count; i++)
                 {

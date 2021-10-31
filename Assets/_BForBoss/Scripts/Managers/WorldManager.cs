@@ -108,10 +108,16 @@ namespace BForBoss
                 }
                 case State.Play:
                 {
+                    if (Time.timeScale != 1.0f)
+                    {
+                        Time.timeScale = 1.0f;
+                    }
+                    
                     break;
                 }
                 case State.Pause:
                 {
+                    Time.timeScale = 0.0f;
                     break;
                 }
                 case State.EndRace:

@@ -71,6 +71,15 @@ namespace BForBoss
         }
 
         #if UNITY_EDITOR || DEVELOPMENT_BUILD
+
+        protected override Vector2 GetMouseLookInput()
+        {
+            if (mouseLookInputAction != null && !IsDebugWindowOpen)
+                return mouseLookInputAction.ReadValue<Vector2>();
+
+            return Vector2.zero;
+        }
+
         protected override void OnCursorLock(InputAction.CallbackContext context)
         {
             UnityEngine.EventSystems.EventSystem current = UnityEngine.EventSystems.EventSystem.current;

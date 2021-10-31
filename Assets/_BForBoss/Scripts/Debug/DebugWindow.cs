@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 namespace BForBoss
 {
     public class DebugWindow : MonoBehaviour
     {
-        //public static Action OnGUIUpdate;
 
         private const Key _keyCodeCharacter = Key.F1;
         private const Key _keyCodeModifier = Key.LeftCtrl;
@@ -79,7 +77,7 @@ namespace BForBoss
 
         private void CreateDebugViewList()
         {
-            using (new GUILayout.AreaScope(_windowRect, String.Empty, GUI.skin.window))
+            using (new GUILayout.AreaScope(_windowRect, "Debug Options", GUI.skin.window))
             {
                 using (new GUILayout.HorizontalScope())
                 {
