@@ -15,7 +15,6 @@ namespace BForBoss
         [SerializeField] private TMP_InputField _usernameField = null;
         [SerializeField] private TMP_Text _infoSettingsLabel = null;
         [SerializeField] private Button _saveUsernameButton = null;
-        private readonly PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
         private InputUsernameViewModel _viewModel = null;
         
         public void Initialize(InputUsernameViewModel viewModel)
@@ -33,7 +32,6 @@ namespace BForBoss
             _saveUsernameButton.onClick.AddListener(() =>
             {
                 _viewModel.SetUserName(_usernameField.text);
-                _perigonAnalytics.SetUsername(_usernameField.text);
             });
             
             BindViewModel();
@@ -79,10 +77,10 @@ namespace BForBoss
     {
         private const int CharacterLimit = 20;
         private ILockMouseInput _input = null;
-        
+        private readonly PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
+
         public event Action OnSuccess;
         public event Action OnFailure;
-
 
         public InputUsernameViewModel(ILockMouseInput input)
         {
@@ -100,6 +98,7 @@ namespace BForBoss
             if (CanUseThisUsername(username))
             {
                 PlayerPrefs.SetString(UploadPlayerScoreDataSource.PlayerPrefKey.UserName, username);
+                _perigonAnalytics.SetUsername(username);
                 _input.LockMouse();
                 OnSuccess?.Invoke();
             }
