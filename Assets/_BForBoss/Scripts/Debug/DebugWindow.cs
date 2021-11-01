@@ -154,12 +154,7 @@ namespace BForBoss
             transform.localScale = Vector3.zero;
             _stateManager.SetState(_currentState);
         }
-
-        private bool IsPanelShowing()
-        {
-            return _isPanelShowing;
-        }
-
+        
         private void GetCanvasRect()
         {
             if (_rectTransform != null)

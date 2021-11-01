@@ -24,6 +24,22 @@ namespace BForBoss
         public void Initialize()
         {
             SetupInput();
+            
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            UnityEngine.SceneManagement.SceneManager.sceneUnloaded += arg0 => 
+            {
+                movementInputAction?.Disable();            
+                jumpInputAction?.Disable();
+                crouchInputAction?.Disable();
+                sprintInputAction?.Disable();
+                mouseLookInputAction?.Disable();
+                controllerLookInputAction?.Disable();
+                cursorLockInputAction?.Disable();
+                cursorUnlockInputAction?.Disable();
+                Destroy(this);
+            };
+#endif
+
         }
 
         public override bool CanJump()
@@ -93,6 +109,8 @@ namespace BForBoss
                 characterLook.LockCursor();
             }
         }
+        
+        
         
 #endif
 
