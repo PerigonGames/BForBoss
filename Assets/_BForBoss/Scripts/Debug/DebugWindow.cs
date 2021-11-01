@@ -31,15 +31,7 @@ namespace BForBoss
         private static DebugWindow _instance = null;
 
         public static DebugWindow Instance => _instance;
-
-        public State CurrentState
-        {
-            set
-            {
-                _currentState = value;
-            }
-        }
-
+        
         private void Awake()
         {
             if (_instance != null && _instance != this)
@@ -143,8 +135,7 @@ namespace BForBoss
             FirstPersonPlayer.IsDebugWindowOpen = true;
             GetCanvasRect();
             transform.localScale = Vector3.one;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            LockMouseUtility.Instance.UnlockMouse();
         }
 
         private void ClosePanel()
@@ -153,6 +144,7 @@ namespace BForBoss
             ResetView();
             transform.localScale = Vector3.zero;
             _stateManager.SetState(_currentState);
+            LockMouseUtility.Instance.LockMouse();
         }
         
         private void GetCanvasRect()
