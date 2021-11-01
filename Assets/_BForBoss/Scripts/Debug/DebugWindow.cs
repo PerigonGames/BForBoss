@@ -10,7 +10,7 @@ namespace BForBoss
     {
 
         private const Key _keyCodeCharacter = Key.F1;
-        private const Key _keyCodeModifier = Key.LeftCtrl;
+        private const Key _keyCodeModifier = Key.LeftAlt;
 
         private const float _canvasWidthMultiplier = 0.15f;
         private const float _canvasHeightMultiplier = 0.5f;
