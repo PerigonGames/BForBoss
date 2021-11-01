@@ -116,18 +116,13 @@ namespace BForBoss
         public InputSettingsViewModel(IInputSettings settings)
         {
             _settings = settings;
+            SetControlSettings();
         }
 
         public void RevertSettings()
         {
             _settings.RevertAllSettings();
-            
-            _perigonAnalytics.SetControlSettings(
-                GetMouseHorizontal,
-                GetMouseVertical,
-                GetControllerHorizontal,
-                GetControllerVeritcal,
-                GetIsInverted);
+            SetControlSettings();
         }
 
         public void SetMouseLock(bool isLocked)
@@ -150,12 +145,17 @@ namespace BForBoss
             _settings.ControllerVerticalSensitivity = verticalController;
             _settings.IsInverted = isInverted;
 
+            SetControlSettings();
+        }
+
+        public void SetControlSettings()
+        {
             _perigonAnalytics.SetControlSettings(
-                horizontalMouse,
-                verticalMouse,
-                horizontalController,
-                verticalController,
-                isInverted);
+                GetMouseHorizontal,
+                GetMouseVertical,
+                GetControllerHorizontal,
+                GetControllerVeritcal,
+                GetIsInverted);
         }
     }
 }
