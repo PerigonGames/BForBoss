@@ -56,6 +56,15 @@ namespace BForBoss
         {
             Mixpanel.People.Set("$name", username);
         }
+
+        public void SetControlSettings(float horizontalMouse, float verticalMouse, float horizontalController, float verticalController, bool isInverted)
+        {
+            Mixpanel.People.Set("mouse_horizontal_sens", horizontalMouse);
+            Mixpanel.People.Set("mouse_vertical_sens", verticalMouse);
+            Mixpanel.People.Set("controller_horizontal_sens", horizontalController);
+            Mixpanel.People.Set("controller_vertical_sens", verticalController);
+            Mixpanel.People.Set("inverted", isInverted);
+        }
         
         #endregion
         
