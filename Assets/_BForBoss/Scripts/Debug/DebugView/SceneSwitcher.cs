@@ -11,6 +11,7 @@ namespace BForBoss
         private const string SCENE_NAME_EXTENSION = ".unity";
         
         private List<string> _buildSceneNames = new List<string>();
+        private Vector2 _scrollPosition = Vector2.zero;
 
         public SceneSwitcher(Rect masterRect) : base(masterRect)
         {
@@ -41,12 +42,21 @@ namespace BForBoss
                         GUILayout.Label("Scenes");
                         GUILayout.FlexibleSpace();
                     }
-                    
-                    for (int i = 0, count = _buildSceneNames.Count; i < count; i++)
+
+                    using (var scrollViewScope = new GUILayout.ScrollViewScope(_scrollPosition))
                     {
-                        if (GUILayout.Button(_buildSceneNames[i]))
+                        _scrollPosition = scrollViewScope.scrollPosition;
+                        for (int i = 0, count = _buildSceneNames.Count; i < count; i++)
                         {
-                            ChangeScene(i);
+                            using (new GUILayout.HorizontalScope())
+                            {
+                                GUILayout.FlexibleSpace();
+                                if (GUILayout.Button(_buildSceneNames[i]))
+                                {
+                                    ChangeScene(i);
+                                }
+                                GUILayout.FlexibleSpace();
+                            }
                         }
                     }
                 }
