@@ -90,7 +90,12 @@ namespace BForBoss
         
         public bool IsUsernameAlreadySet()
         {
-            return PlayerPrefs.HasKey(UploadPlayerScoreDataSource.PlayerPrefKey.UserName);
+            if(PlayerPrefs.HasKey(UploadPlayerScoreDataSource.PlayerPrefKey.UserName))
+            {
+                _perigonAnalytics.SetUsername(PlayerPrefs.GetString(UploadPlayerScoreDataSource.PlayerPrefKey.UserName));
+                return true;
+            }
+            return false;
         }
 
         public void SetUserName(string username)
