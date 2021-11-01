@@ -148,7 +148,7 @@ namespace BForBoss
             SetControlSettings();
         }
 
-        public void SetControlSettings()
+        private void SetControlSettings()
         {
             _perigonAnalytics.SetControlSettings(
                 GetMouseHorizontal,
