@@ -28,9 +28,31 @@ namespace BForBoss
         private DebugView _currentDebugView;
 
         private Rect _windowRect;
-        
+        private static DebugWindow _instance = null;
+
+        public static DebugWindow Instance => _instance;
+
+        public State CurrentState
+        {
+            set
+            {
+                _currentState = value;
+            }
+        }
+
         private void Awake()
         {
+            if (_instance != null && _instance != this)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                _instance = this;
+            }
+            
+            DontDestroyOnLoad(this);
+            
             foreach (Type viewType in Assembly.GetAssembly(typeof(DebugView)).GetTypes())
             {
                 if (viewType.IsClass && !viewType.IsAbstract && viewType.IsSubclassOf(typeof(DebugView)))

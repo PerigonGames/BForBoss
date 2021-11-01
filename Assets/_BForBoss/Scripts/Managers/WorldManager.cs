@@ -57,7 +57,11 @@ namespace BForBoss
             _stateManager.OnStateChanged += HandleStateChange;
             
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            DebugWindow debugWindow = Instantiate(_debugCanvas).gameObject.GetComponent<DebugWindow>();
+
+            if (FindObjectOfType<DebugWindow>() == null)
+            {
+                DebugWindow debugWindow = Instantiate(_debugCanvas).gameObject.GetComponent<DebugWindow>();
+            }
 #endif
             
             

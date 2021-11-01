@@ -57,6 +57,8 @@ namespace BForBoss
         {
             SceneManager.LoadScene(buildIndex, LoadSceneMode.Single);
         }
+        
+        
 
         private void GetBuildSceneNames()
         {
@@ -79,6 +81,5 @@ namespace BForBoss
             string sceneNameWithExtension = buildPath.Substring(buildPath.LastIndexOf(SCENE_NAME_DELIMITER, StringComparison.Ordinal) + 1);
             return sceneNameWithExtension.Replace(SCENE_NAME_EXTENSION, string.Empty);
         }
-        
     }
 }
