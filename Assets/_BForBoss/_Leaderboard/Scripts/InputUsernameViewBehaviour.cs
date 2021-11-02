@@ -77,10 +77,10 @@ namespace BForBoss
     {
         private const int CharacterLimit = 20;
         private ILockMouseInput _input = null;
-        
+        private readonly PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
+
         public event Action OnSuccess;
         public event Action OnFailure;
-
 
         public InputUsernameViewModel(ILockMouseInput input)
         {
@@ -90,7 +90,12 @@ namespace BForBoss
         
         public bool IsUsernameAlreadySet()
         {
-            return PlayerPrefs.HasKey(UploadPlayerScoreDataSource.PlayerPrefKey.UserName);
+            if(PlayerPrefs.HasKey(UploadPlayerScoreDataSource.PlayerPrefKey.UserName))
+            {
+                _perigonAnalytics.SetUsername(PlayerPrefs.GetString(UploadPlayerScoreDataSource.PlayerPrefKey.UserName));
+                return true;
+            }
+            return false;
         }
 
         public void SetUserName(string username)
@@ -98,6 +103,7 @@ namespace BForBoss
             if (CanUseThisUsername(username))
             {
                 PlayerPrefs.SetString(UploadPlayerScoreDataSource.PlayerPrefKey.UserName, username);
+                _perigonAnalytics.SetUsername(username);
                 _input.LockMouse();
                 OnSuccess?.Invoke();
             }

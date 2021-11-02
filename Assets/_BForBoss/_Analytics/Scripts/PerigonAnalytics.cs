@@ -22,11 +22,25 @@ namespace BForBoss
     {
         public const String RaceCourse = "racecourse";
     }
+
+    public readonly struct Profile
+    {
+        public const String Name = "$name";
+        public readonly struct Controls
+        {
+            public const String MouseHorizontalSens = "mouse_horizontal_sens";
+            public const String MouseVerticalSens = "mouse_vertical_sens";
+            public const String ControllerHorizontalSens = "controller_horizontal_sens";
+            public const String ControllerVerticalSens = "controller_vertical_sens";
+            public const String Inverted = "inverted";
+        }
+    }
+
     #endregion
 
     public interface IPerigonAnalytics
     {
-        void StartSession();
+        void StartSession(String uniqueId);
         void EndSession();
         void LogDeathEvent(String name);
         void LogEvent(String eventName);
@@ -43,7 +57,7 @@ namespace BForBoss
 
         public static PerigonAnalytics Instance => _instance;
 
-        #region CONSTRUCTORS
+        #region CONSTRUCTORS / SETTERS
         static PerigonAnalytics()
         {
         }
@@ -51,11 +65,26 @@ namespace BForBoss
         private PerigonAnalytics()
         {
         }
+
+        public void SetUsername(String username)
+        {
+            Mixpanel.People.Set(Profile.Name, username);
+        }
+
+        public void SetControlSettings(float horizontalMouse, float verticalMouse, float horizontalController, float verticalController, bool isInverted)
+        {
+            Mixpanel.People.Set(Profile.Controls.MouseHorizontalSens, horizontalMouse);
+            Mixpanel.People.Set(Profile.Controls.MouseVerticalSens, verticalMouse);
+            Mixpanel.People.Set(Profile.Controls.ControllerHorizontalSens, horizontalController);
+            Mixpanel.People.Set(Profile.Controls.ControllerVerticalSens, verticalController);
+            Mixpanel.People.Set(Profile.Controls.Inverted, isInverted);
+        }
         
         #endregion
         
-        public void StartSession()
+        public void StartSession(String uniqueId)
         {
+            Mixpanel.Identify(uniqueId);
             Mixpanel.Track(SessionStart);
         }
 
