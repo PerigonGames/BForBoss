@@ -66,8 +66,12 @@ namespace BForBoss
 
         private void OnEnteredLastPoint(Checkpoint _)
         {
-            _detectInput.Detect();
-            StateManager.Instance.SetState(State.EndRace);
+            var stateManager = StateManager.Instance;
+            if (stateManager.GetState() == State.Play)
+            {
+                _detectInput.Detect();
+                stateManager.SetState(State.EndRace);
+            }
         }
         
         private void OnDestroy()
