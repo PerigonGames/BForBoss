@@ -40,6 +40,7 @@ namespace BForBoss
 
         private void Awake()
         {
+            transform.localScale = Vector3.zero;
             _backButton.onClick.AddListener(() =>
             {
                 LockMouseUtility.Instance.LockMouse();

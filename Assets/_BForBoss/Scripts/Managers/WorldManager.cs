@@ -14,7 +14,7 @@ namespace BForBoss
         [Title("User Interface")]
         [SerializeField] private TimerViewBehaviour _timerView = null;
         [SerializeField] private SettingsViewBehaviour _settingsViewBehaviour = null;
-        [SerializeField] private InputUsernameViewBehaviour _uploadView = null;
+        [SerializeField] private ForcedInputUsernameViewBehaviour _forcedUploadView = null;
         [SerializeField] private LeaderboardPanelBehaviour _leaderboardPanel = null;
 
         [Title("Effects")] 
@@ -56,6 +56,7 @@ namespace BForBoss
 
         private void Start()
         {
+            _perigonAnalytics.StartSession(SystemInfo.deviceUniqueIdentifier);
             _player.Initialize();
             _checkpointManager.Initialize(_detectInput, _timeManagerViewModel);
             _timeManager.Initialize(_timeManagerViewModel);
@@ -69,8 +70,7 @@ namespace BForBoss
         private void SetupLeaderboardViews()
         {
             _leaderboardPanel.Initialize(LockMouseUtility.Instance);
-            _uploadView.Initialize(new InputUsernameViewModel(LockMouseUtility.Instance));
-            _perigonAnalytics.StartSession(SystemInfo.deviceUniqueIdentifier);
+            _forcedUploadView.Initialize();
         }
 
         private void OnApplicationQuit()
