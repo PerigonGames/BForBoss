@@ -18,19 +18,10 @@ namespace BForBoss
         {
             _viewModel = viewModel ?? new InputUsernameViewModel();
             BindViewModel();
-            SetUsernameField();
             _saveUsernameButton.onClick.AddListener(() =>
             {
                 _viewModel.SetUserName(_usernameField.text);
             });
-        }
-
-        private void SetUsernameField()
-        {
-            if (_viewModel.IsUsernameAlreadySet())
-            {
-                _usernameField.text = _viewModel.Username;
-            }
         }
 
         protected virtual void BindViewModel()
@@ -43,6 +34,14 @@ namespace BForBoss
             _infoSettingsLabel.text =
                 "Something is wrong with your username, try another one. (No Blank Text or names over 20 characters";
             _infoSettingsLabel.color = Color.red;
+        }
+
+        private void OnEnable()
+        {
+            if (_viewModel != null)
+            {
+                _usernameField.text = _viewModel.Username;
+            }
         }
 
         protected virtual void OnDestroy()

@@ -9,24 +9,14 @@ namespace BForBoss
     {
         [SerializeField] private Button _backButton = null;
         
-        private InputSettingsViewBehaviour _inputSettingsView = null;
-
-        private InputSettingsViewBehaviour InputSettingsView
-        {
-            get
-            {
-                if (_inputSettingsView == null)
-                {
-                    _inputSettingsView = GetComponentInChildren<InputSettingsViewBehaviour>();
-                }
-
-                return _inputSettingsView;
-            }   
-        }
-
+        private InputSettingsViewBehaviour InputSettingsView => GetComponentInChildren<InputSettingsViewBehaviour>();
+        private InputUsernameViewBehaviour InputUsernameView => GetComponentInChildren<InputUsernameViewBehaviour>();
+        
         public void Initialize(IInputSettings inputSettings)
         {
             InputSettingsView.Initialize(new InputSettingsViewModel(inputSettings));
+            InputUsernameView.Initialize();
+            GetComponentInChildren<TabbedPanelViewBehaviour>().Initialize();
         }
 
         private void Update()

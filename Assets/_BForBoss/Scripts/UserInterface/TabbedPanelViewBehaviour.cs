@@ -8,7 +8,7 @@ namespace BForBoss
     {
         [SerializeField] private TabbedContent[] _tabbedContent = null;
 
-        private void Awake()
+        public void Initialize()
         {
             if (_tabbedContent.IsNullOrEmpty())
             {
