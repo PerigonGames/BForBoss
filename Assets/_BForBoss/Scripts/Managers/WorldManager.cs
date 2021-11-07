@@ -58,6 +58,7 @@ namespace BForBoss
         {
             _perigonAnalytics.StartSession(SystemInfo.deviceUniqueIdentifier);
             _player.Initialize();
+            _inputSettingsViewModel = new InputSettingsViewModel(_player);
             _checkpointManager.Initialize(_detectInput, _timeManagerViewModel);
             _timeManager.Initialize(_timeManagerViewModel);
             _timerView.Initialize(_timeManagerViewModel);
