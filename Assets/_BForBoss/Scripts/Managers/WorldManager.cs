@@ -52,13 +52,13 @@ namespace BForBoss
             _stateManager.OnStateChanged += HandleStateChange;
             _character = _player;
             _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_deathVolume, 0.1f, 0f, 0.1f);
-            _inputSettingsViewModel = new InputSettingsViewModel(_player);
             _uploadPlayerScoreDataSource = new UploadPlayerScoreDataSource();
         }
 
         private void Start()
         {
             _player.Initialize();
+            _inputSettingsViewModel = new InputSettingsViewModel(_player);
             _checkpointManager.Initialize(_detectInput, _timeManagerViewModel);
             _timeManager.Initialize(_timeManagerViewModel);
             _stateManager.SetState(State.PreGame);
