@@ -91,9 +91,13 @@ namespace BForBoss
                 InputAction dashInputAction = actions.FindAction("Dash");
                 _dashBehaviour.SetupPlayerInput(dashInputAction);
             }
+
             _switchViewAction = actions.FindAction("Switch View");
-            _switchViewAction.started += SwitchView;
-            _switchViewAction.canceled += SwitchView;
+            if (_switchViewAction != null)
+            {
+                _switchViewAction.started += SwitchView;
+                _switchViewAction.canceled += SwitchView;
+            }
         }
 
         protected override void AnimateEye()
@@ -203,7 +207,7 @@ namespace BForBoss
         protected override void OnOnDisable()
         {
             base.OnOnDisable();
-            _switchViewAction.Disable();
+            _switchViewAction?.Disable();
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.OnOnDisable();
@@ -213,7 +217,7 @@ namespace BForBoss
         protected override void OnOnEnable()
         {
             base.OnOnEnable();
-            _switchViewAction.Enable();
+            _switchViewAction?.Enable();
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.OnOnEnable();
