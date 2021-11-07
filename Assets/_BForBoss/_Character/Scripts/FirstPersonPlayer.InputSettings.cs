@@ -42,11 +42,10 @@ namespace BForBoss {
             get => !GetCharacterLook().invertLook;
 
             set
-            {
-                var convertedInvert = !value; // ECM2 flipped the inverted values
-                var isInverted = convertedInvert ? 1 : 0; 
+            { 
+                var isInverted = value ? 1 : 0; 
                 PlayerPrefs.SetInt(PlayerPrefKey.Is_Inverted, isInverted);
-                GetCharacterLook().invertLook = convertedInvert;
+                GetCharacterLook().invertLook = !value;
             }
         }
 
