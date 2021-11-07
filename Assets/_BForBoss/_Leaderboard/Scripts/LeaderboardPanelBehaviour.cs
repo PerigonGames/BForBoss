@@ -42,9 +42,9 @@ namespace BForBoss
         {
             var score = new LeaderboardScore();
             score.Input = input;
-            score.Time = time;
+            score.Time = time / 1000;
             score.Username = PlayerPrefs.GetString(UploadPlayerScoreDataSource.PlayerPrefKey.UserName);
-            _currentUserScores.SetField(-1, score);
+            _currentUserScores.SetField(0, score);
         }
 
         public void ShowPanel()
