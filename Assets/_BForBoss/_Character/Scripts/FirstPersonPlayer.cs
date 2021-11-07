@@ -20,15 +20,15 @@ namespace BForBoss
 
         private InputAction _switchViewAction = null;
 
-        [SerializeField] private bool isThirdPerson = false;
+        [SerializeField] private bool _isThirdPerson = false;
 
         public bool IsThirdPerson
         {
-            get => isThirdPerson;
+            get => _isThirdPerson;
             set
             {
-                if (value == isThirdPerson) return;
-                isThirdPerson = value;
+                if (value == _isThirdPerson) return;
+                _isThirdPerson = value;
                 ToggleThirdPerson();
             }
         }
@@ -117,7 +117,7 @@ namespace BForBoss
             {
                 _slideBehaviour.Slide();
             }
-            if (!isThirdPerson)
+            if (!_isThirdPerson)
             {
                 cmWalkingCamera.SetActive(false);
                 cmCrouchedCamera.SetActive(true);
@@ -131,7 +131,7 @@ namespace BForBoss
             {
                 _slideBehaviour.StopSliding();
             }
-            if (!isThirdPerson)
+            if (!_isThirdPerson)
             {
                 cmCrouchedCamera.SetActive(false);
                 cmWalkingCamera.SetActive(true);

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace BForBoss
 {
-    public partial class FirstPersonPlayer : FirstPersonCharacter
+    public partial class FirstPersonPlayer
     {
         #region ANIMATOR_FIELDS
         private static readonly int ForwardParamId = Animator.StringToHash("Forward");
@@ -17,22 +17,42 @@ namespace BForBoss
         {
             if (!IsThirdPerson) return;
 
-            // Compute input move direction vector in local space
-            Vector3 move = rootPivot.InverseTransformDirection(GetMovementDirection());
-
-            float forwardAmount = useRootMotion ? move.z : Mathf.InverseLerp(0.0f, GetMaxSpeed(), GetSpeed());
-
-            animator.SetFloat(ForwardParamId, forwardAmount, 0.1f, Time.deltaTime);
-            animator.SetFloat(TurnParamId, Mathf.Atan2(move.x, move.z), 0.1f, Time.deltaTime);
+            SetRunSpeed();
 
             animator.SetBool(GroundParamId, IsOnGround() || IsWallRunning());
             animator.SetBool(CrouchParamId, IsCrouching());
 
+            SetAnimatorJump();
+        }
+
+        private void SetAnimatorJump()
+        {
             if (IsFalling() && !IsWallRunning())
             {
                 float verticalSpeed = Vector3.Dot(GetVelocity(), GetUpVector());
                 animator.SetFloat(JumpParamId, verticalSpeed, 0.1f, Time.deltaTime);
             }
+        }
+
+        private void SetAnimatorSpeed(float forwardAmount, float damping = 0.1f)
+        {
+            animator.SetFloat(ForwardParamId, forwardAmount, damping, Time.deltaTime);
+        }
+
+        private void SetAnimatorTurn(float turnVal, float damping = 0.1f)
+        {
+            animator.SetFloat(TurnParamId, turnVal, damping, Time.deltaTime);
+        }
+
+        private void SetRunSpeed()
+        {
+            // Compute input move direction vector in local space
+            Vector3 move = rootPivot.InverseTransformDirection(GetMovementDirection());
+            float forwardAmount = useRootMotion ? move.z : Mathf.InverseLerp(0.0f, GetMaxSpeed(), GetSpeed());
+            forwardAmount = IsWallRunning() ? 1f : forwardAmount; //always go at max speed when wall running, walk animations look weird on the wall
+            
+            SetAnimatorSpeed(forwardAmount);
+            SetAnimatorTurn(Mathf.Atan2(move.x, move.z));
         }
     }
 }
