@@ -52,6 +52,7 @@ namespace BForBoss
 
         private void HidePanel()
         {
+            _infoSettingsLabel.text = "";
             transform.localScale = Vector3.zero;
         }
 

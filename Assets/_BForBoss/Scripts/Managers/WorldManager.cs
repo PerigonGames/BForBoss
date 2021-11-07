@@ -13,7 +13,7 @@ namespace BForBoss
 
         [Title("User Interface")]
         [SerializeField] private TimerViewBehaviour _timerView = null;
-        [SerializeField] private InputSettingsViewBehaviour _inputSettingsView = null;
+        [SerializeField] private SettingsViewBehaviour _settingsViewBehaviour = null;
         [SerializeField] private InputUsernameViewBehaviour _uploadView = null;
         [SerializeField] private LeaderboardPanelBehaviour _leaderboardPanel = null;
 
@@ -28,7 +28,6 @@ namespace BForBoss
         private DetectInput _detectInput = new DetectInput(); //Placeholder, remove this after finishing the timed leader board stuff
 
         private readonly TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
-        private InputSettingsViewModel _inputSettingsViewModel = null;
         private ICharacterSpawn _character = null;
         private UploadPlayerScoreDataSource _uploadPlayerScoreDataSource = null;
 
@@ -52,7 +51,6 @@ namespace BForBoss
             _stateManager.OnStateChanged += HandleStateChange;
             _character = _player;
             _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_deathVolume, 0.1f, 0f, 0.1f);
-            _inputSettingsViewModel = new InputSettingsViewModel(_player);
             _uploadPlayerScoreDataSource = new UploadPlayerScoreDataSource();
         }
 
@@ -61,16 +59,17 @@ namespace BForBoss
             _player.Initialize();
             _checkpointManager.Initialize(_detectInput, _timeManagerViewModel);
             _timeManager.Initialize(_timeManagerViewModel);
-            _stateManager.SetState(State.PreGame);
+            _timerView.Initialize(_timeManagerViewModel);
+            _settingsViewBehaviour.Initialize(_player);
             SetupLeaderboardViews();
+            
+            _stateManager.SetState(State.PreGame);
         }
 
         private void SetupLeaderboardViews()
         {
             _leaderboardPanel.Initialize(LockMouseUtility.Instance);
             _uploadView.Initialize(new InputUsernameViewModel(LockMouseUtility.Instance));
-            _timerView.Initialize(_timeManagerViewModel);
-            _inputSettingsView.Initialize(_inputSettingsViewModel);
             _perigonAnalytics.StartSession(SystemInfo.deviceUniqueIdentifier);
         }
 

@@ -145,6 +145,8 @@ GameObject:
   - component: {fileID: 2032896691619483302}
   - component: {fileID: 1470848948110079068}
   - component: {fileID: 6928094467055682922}
+  - component: {fileID: 2504912119967812938}
+  - component: {fileID: 6380272360524962517}
   m_Layer: 0
   m_Name: TabbedPanel
   m_TagString: Untagged
@@ -212,6 +214,36 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2504912119967812938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1095885826313856845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b94d7f109d5fc4396b96081828fd028d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tabbedContent:
+  - Tab: {fileID: 0}
+    Content: {fileID: 0}
+  - Tab: {fileID: 0}
+    Content: {fileID: 0}
+--- !u!114 &6380272360524962517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1095885826313856845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15eb1b87d96954f2091e92335c7c9234, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _backButton: {fileID: 6216046668641691376}
 --- !u!1 &1940051982887819716
 GameObject:
   m_ObjectHideFlags: 0
