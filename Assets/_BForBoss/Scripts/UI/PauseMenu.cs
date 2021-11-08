@@ -10,20 +10,40 @@ namespace BForBoss
         [SerializeField] private Button _resetButton = null;
         [SerializeField] private Button _quitButton = null;
         [SerializeField] private Button _settingsButton = null;
-
-
-        private void OnEnable()
+        
+        private IInputSettings _inputSettings;
+        
+        public void Initialize(IInputSettings inputSettings)
         {
+            _inputSettings = inputSettings;
+            
             _resumeButton.onClick.AddListener(ResumeGame);
             _resetButton.onClick.AddListener(ResetGame);
             _quitButton.onClick.AddListener(QuitGame);
             _settingsButton.onClick.AddListener(OpenSettings);
         }
 
+        public void OpenPanel()
+        {
+            StateManager.Instance.SetState(State.Pause);
+            LockCharacterFunctionality(_inputSettings);
+        }
+
+        public void ClosePanel()
+        {
+            ResumeGame();
+        }
+
         private void ResumeGame()
         {
+            UnlockCharacterFunctionality(_inputSettings);
             StateManager.Instance.SetState(State.Play);
-            gameObject.SetActive(false);
+        }
+        
+        private void ResetGame()
+        {
+            UnlockCharacterFunctionality(_inputSettings);
+            StateManager.Instance.SetState(State.PreGame);
         }
 
         private void QuitGame()
@@ -35,18 +55,26 @@ namespace BForBoss
 #endif
         }
 
-        private void ResetGame()
-        {
-            StateManager.Instance.SetState(State.PreGame);
-        }
-
         private void OpenSettings()
         {
             //Open Settings Menu
         }
+        
+        private void LockCharacterFunctionality(IInputSettings inputSettings)
+        {
+            LockMouseUtility.Instance.UnlockMouse();
+            inputSettings.DisableActions();
+            gameObject.SetActive(true);
+        }
 
-
-        private void OnDisable()
+        private void UnlockCharacterFunctionality(IInputSettings inputSettings)
+        {
+            LockMouseUtility.Instance.LockMouse();
+            inputSettings.EnableActions();
+            gameObject.SetActive(false);
+        }
+        
+        private void OnDestroy()
         {
             _resumeButton.onClick.RemoveAllListeners();
             _resetButton.onClick.RemoveAllListeners();

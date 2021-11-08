@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
 namespace BForBoss
@@ -12,6 +13,7 @@ namespace BForBoss
         [SerializeField] private FirstPersonPlayer _player = null;
 
         [Title("User Interface")]
+        [SerializeField] private PauseMenu _pauseMenu;
         [SerializeField] private TimerViewBehaviour _timerView = null;
         [SerializeField] private InputSettingsViewBehaviour _inputSettingsView = null;
         [SerializeField] private InputUsernameViewBehaviour _uploadView = null;
@@ -25,6 +27,7 @@ namespace BForBoss
         [SerializeField] private GameObject _debugCanvas;
 #endif
 
+        private const Key PauseKey = Key.Escape;
         // This probably best placed inside its own utility section
         private readonly StateManager _stateManager = StateManager.Instance;
         private readonly PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
@@ -66,6 +69,7 @@ namespace BForBoss
             
             
             _character = _player;
+            _pauseMenu.Initialize(_player);
             _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_deathVolume, 0.1f, 0f, 0.1f);
             _uploadPlayerScoreDataSource = new UploadPlayerScoreDataSource();
         }
@@ -87,6 +91,21 @@ namespace BForBoss
             _timerView.Initialize(_timeManagerViewModel);
             _inputSettingsView.Initialize(_inputSettingsViewModel);
             _perigonAnalytics.StartSession(SystemInfo.deviceUniqueIdentifier);
+        }
+
+        private void Update()
+        {
+            if (Keyboard.current[PauseKey].wasPressedThisFrame)
+            {
+                if (_pauseMenu.gameObject.activeSelf)
+                {
+                    _pauseMenu.ClosePanel();
+                }
+                else
+                {
+                    _pauseMenu.OpenPanel();
+                }
+            }
         }
 
         private void OnApplicationQuit()
