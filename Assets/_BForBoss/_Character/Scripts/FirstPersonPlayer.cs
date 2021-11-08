@@ -82,7 +82,7 @@ namespace BForBoss
             }
             _wallRunBehaviour?.Initialize(this, base.GetMovementInput, ResetJumpCount);
         }
-
+        
         protected override void SetupPlayerInput()
         {
             base.SetupPlayerInput();
