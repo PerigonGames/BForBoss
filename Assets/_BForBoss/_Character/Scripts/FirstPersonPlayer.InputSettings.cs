@@ -104,7 +104,7 @@ namespace BForBoss {
         {
             cursorLockInputAction?.Enable();
             controllerLookInputAction?.Enable();
-            controllerLookInputAction?.Enable();
+            mouseLookInputAction?.Enable();
         }
 
 
