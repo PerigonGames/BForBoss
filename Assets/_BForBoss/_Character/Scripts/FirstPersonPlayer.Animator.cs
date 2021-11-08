@@ -1,4 +1,3 @@
-using ECM2.Characters;
 using UnityEngine;
 
 namespace BForBoss
@@ -11,18 +10,31 @@ namespace BForBoss
         private static readonly int GroundParamId = Animator.StringToHash("OnGround");
         private static readonly int CrouchParamId = Animator.StringToHash("Crouch");
         private static readonly int JumpParamId = Animator.StringToHash("Jump");
+        private static readonly int SlideParamId = Animator.StringToHash("Sliding");
         #endregion
 
         protected override void Animate()
         {
-            if (!IsThirdPerson) return;
+            if (!IsThirdPerson)
+            {
+                TurnOffAnimator();
+                return;
+            }
 
             SetRunSpeed();
 
             animator.SetBool(GroundParamId, IsOnGround() || IsWallRunning());
+            animator.SetBool(SlideParamId, IsSliding());
             animator.SetBool(CrouchParamId, IsCrouching());
 
             SetAnimatorJump();
+        }
+
+        private void TurnOffAnimator()
+        {
+            animator.SetFloat(JumpParamId, 0f);
+            animator.SetFloat(ForwardParamId, 0f);
+            animator.SetFloat(TurnParamId, 0f);
         }
 
         private void SetAnimatorJump()
