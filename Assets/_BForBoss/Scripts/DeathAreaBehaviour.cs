@@ -8,8 +8,17 @@ namespace BForBoss
         [SerializeField] private String _deathAreaName = "deathArea";
         private void OnCollisionEnter(Collision other)
         {
-            StateManager.Instance.SetState(State.Death);
-            PerigonAnalytics.Instance.LogDeathEvent(_deathAreaName);        
+            var state = StateManager.Instance;
+            switch (state.GetState())
+            {
+                case State.EndRace:
+                    StateManager.Instance.SetState(State.PreGame);
+                    break;
+                default:
+                    StateManager.Instance.SetState(State.Death);
+                    PerigonAnalytics.Instance.LogDeathEvent(_deathAreaName);
+                    break;
+            }
         }
     }
 }

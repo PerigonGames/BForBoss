@@ -29,7 +29,7 @@ namespace BForBoss {
             
         private void SetupInput()
         {
-            IsInverted = PlayerPrefs.GetInt(PlayerPrefKey.Is_Inverted, Default_Is_Inverted) == 0;
+            IsInverted = PlayerPrefs.GetInt(PlayerPrefKey.Is_Inverted, Default_Is_Inverted) == 1;
             MouseHorizontalSensitivity = PlayerPrefs.GetFloat(PlayerPrefKey.Mouse_Horizontal_Sensitivity, Default_Mouse_Sensitivity);
             MouseVerticalSensitivity = PlayerPrefs.GetFloat(PlayerPrefKey.Mouse_Vertical_Sensitivity, Default_Mouse_Sensitivity);
             ControllerHorizontalSensitivity = PlayerPrefs.GetFloat(PlayerPrefKey.Controller_Horizontal_Sensitivity, Default_Controller_Sensitivity);
@@ -39,13 +39,13 @@ namespace BForBoss {
         
         public bool IsInverted
         {
-            get => GetCharacterLook().invertLook;
+            get => !GetCharacterLook().invertLook;
 
             set
-            {
-                var isInverted = value ? 0 : 1; // ECM2 flipped the inverted values
+            { 
+                var isInverted = value ? 1 : 0; 
                 PlayerPrefs.SetInt(PlayerPrefKey.Is_Inverted, isInverted);
-                GetCharacterLook().invertLook = value;
+                GetCharacterLook().invertLook = !value;
             }
         }
 
@@ -93,7 +93,7 @@ namespace BForBoss {
 
         public void RevertAllSettings()
         {
-            IsInverted = Default_Is_Inverted == 0;
+            IsInverted = Default_Is_Inverted == 1;
             MouseHorizontalSensitivity = Default_Mouse_Sensitivity;
             MouseVerticalSensitivity = Default_Mouse_Sensitivity;
             ControllerHorizontalSensitivity = Default_Controller_Sensitivity;

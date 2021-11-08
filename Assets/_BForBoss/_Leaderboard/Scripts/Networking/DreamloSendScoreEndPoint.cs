@@ -22,7 +22,7 @@ namespace BForBoss
             Post();
         }
 
-        private string Path => $"{DreamloData.Host}{DreamloData.Secret}/add/{_username}/0/{_milliseconds}/{_input}";
+        private string Path => $"{DreamloData.Host}{DreamloData.Secret}/add/{_username}/{_score}/{_milliseconds}/{_input}";
 
         private async void Post()
         {
