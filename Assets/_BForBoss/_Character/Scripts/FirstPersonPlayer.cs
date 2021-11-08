@@ -227,6 +227,12 @@ namespace BForBoss
         protected override void OnOnDestroy()
         {
             base.OnOnDestroy();
+            if (_switchViewAction != null)
+            {
+                _switchViewAction.started -= SwitchView;
+                _switchViewAction.canceled -= SwitchView;
+                _switchViewAction = null;
+            }
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.OnOnDestroy();
