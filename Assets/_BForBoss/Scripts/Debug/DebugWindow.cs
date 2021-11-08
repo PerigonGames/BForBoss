@@ -8,9 +8,7 @@ namespace BForBoss
 {
     public class DebugWindow : MonoBehaviour
     {
-
-        private const Key _keyCodeCharacter = Key.F1;
-        private const Key _keyCodeModifier = Key.LeftAlt;
+        private const Key _keyCodeCharacter = Key.Backquote;
 
         private const float _canvasWidthMultiplier = 0.15f;
         private const float _canvasHeightMultiplier = 0.5f;
@@ -56,8 +54,7 @@ namespace BForBoss
 
         private void Update()
         {
-            if (Keyboard.current[_keyCodeModifier].isPressed &&
-                Keyboard.current[_keyCodeCharacter].wasPressedThisFrame)
+            if (Keyboard.current[_keyCodeCharacter].wasPressedThisFrame)
             {
                 if (_isPanelShowing)
                 {
@@ -132,7 +129,8 @@ namespace BForBoss
         {
             _currentState = _stateManager.GetState();
             _stateManager.SetState(State.Pause);
-            FirstPersonPlayer.IsDebugWindowOpen = true;
+            IInputSettings input = FindObjectOfType<FirstPersonPlayer>();
+            input.DisableActions();
             GetCanvasRect();
             transform.localScale = Vector3.one;
             LockMouseUtility.Instance.UnlockMouse();
@@ -140,7 +138,8 @@ namespace BForBoss
 
         private void ClosePanel()
         {
-            FirstPersonPlayer.IsDebugWindowOpen = false;
+            IInputSettings input = FindObjectOfType<FirstPersonPlayer>();
+            input.EnableActions();
             ResetView();
             transform.localScale = Vector3.zero;
             _stateManager.SetState(_currentState);

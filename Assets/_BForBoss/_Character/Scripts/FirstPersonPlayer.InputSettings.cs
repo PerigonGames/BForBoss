@@ -9,6 +9,8 @@ namespace BForBoss {
         float ControllerHorizontalSensitivity { get; set; }
         float ControllerVerticalSensitivity { get; set; }
         void RevertAllSettings();
+        void DisableActions();
+        void EnableActions();
     }
 
     public partial class FirstPersonPlayer : IInputSettings
@@ -90,6 +92,21 @@ namespace BForBoss {
                 GetCharacterLook().controllerVerticalSensitivity = value;   
             }  
         }
+
+        public void DisableActions()
+        {
+            cursorLockInputAction?.Disable();
+            controllerLookInputAction?.Disable();
+            mouseLookInputAction?.Disable();
+        }
+
+        public void EnableActions()
+        {
+            cursorLockInputAction?.Enable();
+            controllerLookInputAction?.Enable();
+            controllerLookInputAction?.Enable();
+        }
+
 
         public void RevertAllSettings()
         {

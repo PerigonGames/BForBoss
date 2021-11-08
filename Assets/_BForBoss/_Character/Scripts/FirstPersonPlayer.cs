@@ -8,10 +8,6 @@ namespace BForBoss
 {
     public partial class FirstPersonPlayer : FirstPersonCharacter
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        public static bool IsDebugWindowOpen = false; 
-#endif
-        
         [Header("Cinemachine")]
         public GameObject cmWalkingCamera;
         public GameObject cmCrouchedCamera;
@@ -24,22 +20,6 @@ namespace BForBoss
         public void Initialize()
         {
             SetupInput();
-            
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            UnityEngine.SceneManagement.SceneManager.sceneUnloaded += arg0 => 
-            {
-                movementInputAction?.Disable();            
-                jumpInputAction?.Disable();
-                crouchInputAction?.Disable();
-                sprintInputAction?.Disable();
-                mouseLookInputAction?.Disable();
-                controllerLookInputAction?.Disable();
-                cursorLockInputAction?.Disable();
-                cursorUnlockInputAction?.Disable();
-                Destroy(this);
-            };
-#endif
-
         }
 
         public override bool CanJump()
@@ -85,35 +65,7 @@ namespace BForBoss
             }
             _wallRunBehaviour?.Initialize(this, base.GetMovementInput, ResetJumpCount);
         }
-
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-
-        protected override Vector2 GetMouseLookInput()
-        {
-            if (mouseLookInputAction != null && !IsDebugWindowOpen)
-                return mouseLookInputAction.ReadValue<Vector2>();
-
-            return Vector2.zero;
-        }
-
-        protected override void OnCursorLock(InputAction.CallbackContext context)
-        {
-            UnityEngine.EventSystems.EventSystem current = UnityEngine.EventSystems.EventSystem.current;
-            if (current && (current.IsPointerOverGameObject() || IsDebugWindowOpen))
-            {
-                return;
-            }
-
-            if (context.started)
-            {
-                characterLook.LockCursor();
-            }
-        }
         
-        
-        
-#endif
-
         protected override void SetupPlayerInput()
         {
             base.SetupPlayerInput();

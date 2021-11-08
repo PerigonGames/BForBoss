@@ -67,8 +67,6 @@ namespace BForBoss
         {
             SceneManager.LoadScene(buildIndex, LoadSceneMode.Single);
         }
-        
-        
 
         private void GetBuildSceneNames()
         {
