@@ -115,10 +115,10 @@ namespace BForBoss
 
         private bool CanUseThisUsername(string username)
         {
-            var isWhiteSpace = !username.IsNullOrWhitespace();
-            var isWithinTwentyChar = username.Length < CharacterLimit;
+            var isNotWhiteSpace = !username.IsNullOrWhitespace();
+            var isWithinCharacterLimit = username.Length < CharacterLimit;
 
-            return isWhiteSpace && isWithinTwentyChar;
+            return isNotWhiteSpace && isWithinCharacterLimit;
         }
     }
 }
