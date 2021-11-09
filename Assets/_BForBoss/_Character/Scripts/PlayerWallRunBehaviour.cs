@@ -60,7 +60,7 @@ namespace BForBoss
 
         private bool _isWallRunning = false;
         private Character _baseCharacter = null;
-        private FirstPersonCharacter _fpsCharacter = null;
+        private FirstPersonPlayer _fpsCharacter = null;
         private LayerMask _mask;
         private Vector3 _lastWallRunPosition;
         private Vector3 _lastWallRunNormal;
@@ -87,7 +87,7 @@ namespace BForBoss
         public void Initialize(Character baseCharacter, Func<Vector2> getMovementInput, Action OnWallRunFinished)
         {
             _baseCharacter = baseCharacter;
-            _fpsCharacter = baseCharacter as FirstPersonCharacter;
+            _fpsCharacter = baseCharacter as FirstPersonPlayer;
             _movementInput = getMovementInput;
             _OnWallRunFinished = OnWallRunFinished;
             _mask = LayerMask.GetMask("ParkourWall");
@@ -191,7 +191,7 @@ namespace BForBoss
 
         public void OnLateUpdate()
         {
-            if (_fpsCharacter != null) HandleEyePivotRotation();
+            if (_fpsCharacter != null && !_fpsCharacter.IsThirdPerson) HandleEyePivotRotation();
         }
 
 #endregion

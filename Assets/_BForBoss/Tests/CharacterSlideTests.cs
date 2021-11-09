@@ -318,9 +318,7 @@ namespace Tests.Character
             Assert.Less(character.transform.position.z, blockadeBackward.transform.position.z, "Sliding backward left should have went under and beyond the forward blockade");
             Assert.Less(character.transform.position.x, blockadeLeft.transform.position.x, "Sliding backward left should have went under and beyond the left blockade");
         }
-        
-        /*
-         THIS IS CURRENTLY BUGGED
+
         [UnityTest]
         public IEnumerator Character_SlideBackwardRight_BeyondDiagonalBackwardRightBlockade()
         {
@@ -338,13 +336,13 @@ namespace Tests.Character
             Press(_keyboard.sKey);
             Press(_keyboard.dKey);
             yield return  new WaitForSeconds(0);
-            Press(_keyboard.cKey);
+            Press(_keyboard.leftCtrlKey);
             yield return new WaitForSeconds(1.0f);
             
             Assert.Less(character.transform.position.z, blockadeBackward.transform.position.z, "Sliding backward right should have went under and beyond the forward blockade");
             Assert.Greater(character.transform.position.x, blockadeRight.transform.position.x, "Sliding backward right should have went under and beyond the right blockade");
         }
-        */
+        
     }
 }
 

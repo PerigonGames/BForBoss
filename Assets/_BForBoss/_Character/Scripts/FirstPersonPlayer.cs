@@ -11,15 +11,32 @@ namespace BForBoss
         [Header("Cinemachine")]
         public GameObject cmWalkingCamera;
         public GameObject cmCrouchedCamera;
+        public GameObject cmThirdPersonCamera;
 
         [Title("Optional Behaviour")]
         private PlayerDashBehaviour _dashBehaviour = null;
         private PlayerWallRunBehaviour _wallRunBehaviour = null;
         private PlayerSlideBehaviour _slideBehaviour = null;
 
+        private InputAction _switchViewAction = null;
+
+        [SerializeField] private bool _isThirdPerson = false;
+
+        public bool IsThirdPerson
+        {
+            get => _isThirdPerson;
+            set
+            {
+                if (value == _isThirdPerson) return;
+                _isThirdPerson = value;
+                ToggleThirdPerson();
+            }
+        }
+
         public void Initialize()
         {
             SetupInput();
+            ToggleThirdPerson();
         }
 
         public override bool CanJump()
@@ -65,7 +82,7 @@ namespace BForBoss
             }
             _wallRunBehaviour?.Initialize(this, base.GetMovementInput, ResetJumpCount);
         }
-
+        
         protected override void SetupPlayerInput()
         {
             base.SetupPlayerInput();
@@ -73,6 +90,13 @@ namespace BForBoss
             {
                 InputAction dashInputAction = actions.FindAction("Dash");
                 _dashBehaviour.SetupPlayerInput(dashInputAction);
+            }
+
+            _switchViewAction = actions.FindAction("Switch View");
+            if (_switchViewAction != null)
+            {
+                _switchViewAction.started += SwitchView;
+                _switchViewAction.canceled += SwitchView;
             }
         }
 
@@ -93,8 +117,11 @@ namespace BForBoss
             {
                 _slideBehaviour.Slide();
             }
-            cmWalkingCamera.SetActive(false);
-            cmCrouchedCamera.SetActive(true);
+            if (!_isThirdPerson)
+            {
+                cmWalkingCamera.SetActive(false);
+                cmCrouchedCamera.SetActive(true);
+            }
         }
 
         protected override void OnUncrouched()
@@ -104,8 +131,11 @@ namespace BForBoss
             {
                 _slideBehaviour.StopSliding();
             }
-            cmCrouchedCamera.SetActive(false);
-            cmWalkingCamera.SetActive(true);
+            if (!_isThirdPerson)
+            {
+                cmCrouchedCamera.SetActive(false);
+                cmWalkingCamera.SetActive(true);
+            }
         }
 
         protected override void Falling(Vector3 desiredVelocity)
@@ -177,6 +207,7 @@ namespace BForBoss
         protected override void OnOnDisable()
         {
             base.OnOnDisable();
+            _switchViewAction?.Disable();
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.OnOnDisable();
@@ -186,6 +217,7 @@ namespace BForBoss
         protected override void OnOnEnable()
         {
             base.OnOnEnable();
+            _switchViewAction?.Enable();
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.OnOnEnable();
@@ -195,6 +227,12 @@ namespace BForBoss
         protected override void OnOnDestroy()
         {
             base.OnOnDestroy();
+            if (_switchViewAction != null)
+            {
+                _switchViewAction.started -= SwitchView;
+                _switchViewAction.canceled -= SwitchView;
+                _switchViewAction = null;
+            }
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.OnOnDestroy();
@@ -206,7 +244,33 @@ namespace BForBoss
             _jumpCount = 0;
         }
 
+        private void ToggleThirdPerson()
+        {
+            cmCrouchedCamera.SetActive(!IsThirdPerson && IsCrouching());
+            cmWalkingCamera.SetActive(!IsThirdPerson && !IsCrouching());
+            cmThirdPersonCamera.SetActive(IsThirdPerson);
+        }
+
+        private void SwitchView(InputAction.CallbackContext context)
+        {
+            if (context.started) IsThirdPerson = !IsThirdPerson;
+        }
+
+        protected override void OnOnValidate()
+        {
+            base.OnOnValidate();
+            if(IsThirdPerson != IsThirdPersonCamActive())
+            {
+                ToggleThirdPerson();
+            }
+        }
+
         #region Helper
+
+        private bool IsThirdPersonCamActive()
+        {
+            return cmThirdPersonCamera != null && cmThirdPersonCamera.activeSelf;
+        }
 
         private bool IsSliding()
         {
