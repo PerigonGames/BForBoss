@@ -12,6 +12,7 @@ namespace BForBoss
         [SerializeField] private Button _settingsButton = null;
         
         private IInputSettings _inputSettings;
+        private State _stateWhenPaused;
         
         public void Initialize(IInputSettings inputSettings)
         {
@@ -25,6 +26,7 @@ namespace BForBoss
 
         public void OpenPanel()
         {
+            _stateWhenPaused = StateManager.Instance.GetState();
             StateManager.Instance.SetState(State.Pause);
             LockCharacterFunctionality(_inputSettings);
         }
@@ -37,7 +39,7 @@ namespace BForBoss
         private void ResumeGame()
         {
             UnlockCharacterFunctionality(_inputSettings);
-            StateManager.Instance.SetState(State.Play);
+            StateManager.Instance.SetState(_stateWhenPaused);
         }
         
         private void ResetGame()
