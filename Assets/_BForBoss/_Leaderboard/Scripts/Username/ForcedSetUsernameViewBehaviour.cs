@@ -34,14 +34,5 @@ namespace BForBoss
         {
             transform.ResetScale();
         }
-
-        protected override void OnDestroy()
-        {
-            if (_viewModel != null)
-            {
-                _viewModel.OnSuccess -= HidePanel;
-            }
-            base.OnDestroy();
-        }
     }
 }

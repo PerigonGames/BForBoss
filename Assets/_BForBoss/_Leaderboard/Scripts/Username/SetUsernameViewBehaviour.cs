@@ -43,11 +43,11 @@ namespace BForBoss
             }
         }
 
-        protected virtual void OnDestroy()
+        private void OnDestroy()
         {
             if (_viewModel != null)
             {
-                _viewModel.OnFailure -= ShowFailedText;
+                _viewModel.RemoveSubscribers();
             }
             _setUsernameButton.onClick.RemoveAllListeners();
         }

@@ -29,5 +29,11 @@ namespace BForBoss
         {
             return PlayerPrefs.HasKey(UploadPlayerScoreDataSource.PlayerPrefKey.UserName);
         }
+
+        public void RemoveSubscribers()
+        {
+            OnSuccess = null;
+            OnFailure = null;
+        }
     }
 }
