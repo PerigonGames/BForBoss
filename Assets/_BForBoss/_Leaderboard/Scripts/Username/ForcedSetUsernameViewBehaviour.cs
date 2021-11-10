@@ -7,9 +7,7 @@ namespace BForBoss
     {
         public override void Initialize(SetUsernameViewModel viewModel = null)
         {
-            _viewModel = viewModel ?? new SetUsernameViewModel();
             base.Initialize(_viewModel);
-            
             if (_viewModel.IsUsernameAlreadySet())
             {
                 HidePanel();

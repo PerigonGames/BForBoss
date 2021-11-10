@@ -5,7 +5,7 @@ namespace BForBoss
 {
     public class InputUsername
     {
-        public readonly static int CharacterLimit = 20;
+        public static readonly int CharacterLimit = 20;
         private readonly IPerigonAnalytics _analytics = null;
         
         public string Username => PlayerPrefs.GetString(UploadPlayerScoreDataSource.PlayerPrefKey.UserName, "N/A");
