@@ -1,6 +1,5 @@
 using PerigonGames;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace BForBoss
@@ -10,22 +9,19 @@ namespace BForBoss
         [SerializeField] private Button _backButton = null;
         
         private InputSettingsViewBehaviour InputSettingsView => GetComponentInChildren<InputSettingsViewBehaviour>();
-        private InputUsernameViewBehaviour InputUsernameView => GetComponentInChildren<InputUsernameViewBehaviour>();
+        private SetUsernameViewBehaviour SetUsernameView => GetComponentInChildren<SetUsernameViewBehaviour>();
+        private TabbedPanelViewBehaviour TabbedPanelViews => GetComponentInChildren<TabbedPanelViewBehaviour>();
         
         public void Initialize(IInputSettings inputSettings)
         {
             InputSettingsView.Initialize(new InputSettingsViewModel(inputSettings));
-            InputUsernameView.Initialize();
-            GetComponentInChildren<TabbedPanelViewBehaviour>().Initialize();
+            SetUsernameView.Initialize();
+            TabbedPanelViews.Initialize();
         }
 
-        private void Update()
+        public void OpenPanel()
         {
-            if (Keyboard.current.digit0Key.isPressed)
-            {
-                LockMouseUtility.Instance.UnlockMouse();
-                transform.ResetScale();
-            }
+            transform.ResetScale();
         }
 
         private void Awake()
@@ -33,7 +29,6 @@ namespace BForBoss
             transform.localScale = Vector3.zero;
             _backButton.onClick.AddListener(() =>
             {
-                LockMouseUtility.Instance.LockMouse();
                 transform.localScale = Vector3.zero;
             });
         }

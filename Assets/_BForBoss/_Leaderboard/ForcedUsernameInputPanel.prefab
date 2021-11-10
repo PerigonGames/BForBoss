@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2346028130027041214}
   - component: {fileID: 2346028130027041209}
   m_Layer: 5
-  m_Name: UploadScoreButton
+  m_Name: SetUsernameButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -376,7 +376,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _usernameField: {fileID: 2346028131115759166}
   _infoSettingsLabel: {fileID: 2346028130698625369}
-  _saveUsernameButton: {fileID: 2346028130027041209}
+  _setUsernameButton: {fileID: 2346028130027041209}
 --- !u!1 &2346028130450640759
 GameObject:
   m_ObjectHideFlags: 0
@@ -606,7 +606,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 33.1
+  m_fontSize: 27.1
   m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 1

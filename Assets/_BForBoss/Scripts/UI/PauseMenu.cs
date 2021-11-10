@@ -1,11 +1,18 @@
+using System;
+using PerigonGames;
+using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace BForBoss
 {
     public class PauseMenu : MonoBehaviour
     {
+        [Title("Panels")] 
+        [SerializeField] private SettingsViewBehaviour _settingsView = null;
+        [Title("Buttons")]
         [SerializeField] private Button _resumeButton = null;
         [SerializeField] private Button _resetButton = null;
         [SerializeField] private Button _quitButton = null;
@@ -17,25 +24,31 @@ namespace BForBoss
         public void Initialize(IInputSettings inputSettings)
         {
             _inputSettings = inputSettings;
-            
+            _settingsView.Initialize(inputSettings);
             _resumeButton.onClick.AddListener(ResumeGame);
             _resetButton.onClick.AddListener(ResetGame);
             _quitButton.onClick.AddListener(QuitGame);
             _settingsButton.onClick.AddListener(OpenSettings);
+            ClosePanel();
         }
 
-        public void OpenPanel()
+        private void OpenPanel()
+        {
+            transform.ResetScale();
+        }
+        
+        private void ClosePanel()
+        {
+            transform.localScale = Vector3.zero;
+        }
+        
+        private void HandleOnPause()
         {
             _stateWhenPaused = StateManager.Instance.GetState();
             StateManager.Instance.SetState(State.Pause);
             LockCharacterFunctionality(_inputSettings);
         }
-
-        public void ClosePanel()
-        {
-            ResumeGame();
-        }
-
+        
         private void ResumeGame()
         {
             UnlockCharacterFunctionality(_inputSettings);
@@ -59,23 +72,38 @@ namespace BForBoss
 
         private void OpenSettings()
         {
-            //Open Settings Menu
+            _settingsView.OpenPanel();
         }
         
         private void LockCharacterFunctionality(IInputSettings inputSettings)
         {
             LockMouseUtility.Instance.UnlockMouse();
             inputSettings.DisableActions();
-            gameObject.SetActive(true);
         }
 
         private void UnlockCharacterFunctionality(IInputSettings inputSettings)
         {
             LockMouseUtility.Instance.LockMouse();
             inputSettings.EnableActions();
-            gameObject.SetActive(false);
         }
-        
+
+        private void Update()
+        {
+            if (Keyboard.current.escapeKey.wasPressedThisFrame)
+            {
+                if (StateManager.Instance.GetState() == State.Pause)
+                {
+                    ClosePanel();
+                    ResumeGame();
+                }
+                else
+                {
+                    OpenPanel();
+                    HandleOnPause();
+                }
+            }
+        }
+
         private void OnDestroy()
         {
             _resumeButton.onClick.RemoveAllListeners();
