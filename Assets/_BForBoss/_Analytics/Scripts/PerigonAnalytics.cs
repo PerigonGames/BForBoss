@@ -46,6 +46,7 @@ namespace BForBoss
         void LogEvent(String eventName);
         void LogEventWithParams(String eventName, Hashtable parameters);
         void ForceSendEvents();
+        void SetUsername(string username);
     }
     
     public class PerigonAnalytics : IPerigonAnalytics
