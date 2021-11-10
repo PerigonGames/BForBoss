@@ -45,6 +45,10 @@ namespace BForBoss
 
         protected virtual void OnDestroy()
         {
+            if (_viewModel != null)
+            {
+                _viewModel.OnFailure -= ShowFailedText;
+            }
             _setUsernameButton.onClick.RemoveAllListeners();
         }
     }
