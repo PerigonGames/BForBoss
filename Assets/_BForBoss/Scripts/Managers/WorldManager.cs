@@ -1,6 +1,5 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
 namespace BForBoss
@@ -15,8 +14,7 @@ namespace BForBoss
         [Title("User Interface")]
         [SerializeField] private PauseMenu _pauseMenu;
         [SerializeField] private TimerViewBehaviour _timerView = null;
-        [SerializeField] private InputSettingsViewBehaviour _inputSettingsView = null;
-        [SerializeField] private InputUsernameViewBehaviour _uploadView = null;
+        [SerializeField] private ForcedSetUsernameViewBehaviour _forcedUploadView = null;
         [SerializeField] private LeaderboardPanelBehaviour _leaderboardPanel = null;
 
         [Title("Effects")] 
@@ -27,7 +25,6 @@ namespace BForBoss
         [SerializeField] private GameObject _debugCanvas;
 #endif
 
-        private const Key PauseKey = Key.Escape;
         // This probably best placed inside its own utility section
         private readonly StateManager _stateManager = StateManager.Instance;
         private readonly PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
@@ -36,7 +33,6 @@ namespace BForBoss
         private DetectInput _detectInput = new DetectInput(); //Placeholder, remove this after finishing the timed leader board stuff
 
         private readonly TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
-        private InputSettingsViewModel _inputSettingsViewModel = null;
         private ICharacterSpawn _character = null;
         private UploadPlayerScoreDataSource _uploadPlayerScoreDataSource = null;
 
@@ -63,49 +59,35 @@ namespace BForBoss
 
             if (FindObjectOfType<DebugWindow>() == null)
             {
-                DebugWindow debugWindow = Instantiate(_debugCanvas).gameObject.GetComponent<DebugWindow>();
+                Instantiate(_debugCanvas).gameObject.GetComponent<DebugWindow>();
             }
 #endif
-            
-            
             _character = _player;
-            _pauseMenu.Initialize(_player);
             _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_deathVolume, 0.1f, 0f, 0.1f);
             _uploadPlayerScoreDataSource = new UploadPlayerScoreDataSource();
         }
 
         private void Start()
         {
+            _perigonAnalytics.StartSession(SystemInfo.deviceUniqueIdentifier);
+            SetupSubManagers();
+            SetupUserInterface();
+            _stateManager.SetState(State.PreGame);
+        }
+
+        private void SetupSubManagers()
+        {
             _player.Initialize();
-            _inputSettingsViewModel = new InputSettingsViewModel(_player);
             _checkpointManager.Initialize(_detectInput, _timeManagerViewModel);
             _timeManager.Initialize(_timeManagerViewModel);
-            _stateManager.SetState(State.PreGame);
-            SetupLeaderboardViews();
         }
 
-        private void SetupLeaderboardViews()
+        private void SetupUserInterface()
         {
-            _leaderboardPanel.Initialize(LockMouseUtility.Instance);
-            _uploadView.Initialize(new InputUsernameViewModel(LockMouseUtility.Instance));
+            _pauseMenu.Initialize(_player);
             _timerView.Initialize(_timeManagerViewModel);
-            _inputSettingsView.Initialize(_inputSettingsViewModel);
-            _perigonAnalytics.StartSession(SystemInfo.deviceUniqueIdentifier);
-        }
-
-        private void Update()
-        {
-            if (Keyboard.current[PauseKey].wasPressedThisFrame)
-            {
-                if (_pauseMenu.gameObject.activeSelf)
-                {
-                    _pauseMenu.ClosePanel();
-                }
-                else
-                {
-                    _pauseMenu.OpenPanel();
-                }
-            }
+            _leaderboardPanel.Initialize(LockMouseUtility.Instance);
+            _forcedUploadView.Initialize();
         }
 
         private void OnApplicationQuit()
