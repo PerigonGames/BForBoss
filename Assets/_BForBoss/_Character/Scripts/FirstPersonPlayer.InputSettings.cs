@@ -95,6 +95,10 @@ namespace BForBoss {
 
         public void DisableActions()
         {
+            _dashBehaviour?.DisableAction();
+            crouchInputAction?.Disable();
+            jumpInputAction?.Disable();
+            movementInputAction?.Disable();
             cursorLockInputAction?.Disable();
             controllerLookInputAction?.Disable();
             mouseLookInputAction?.Disable();
@@ -102,6 +106,10 @@ namespace BForBoss {
 
         public void EnableActions()
         {
+            _dashBehaviour?.EnableAction();
+            crouchInputAction?.Enable();
+            jumpInputAction?.Enable();
+            movementInputAction?.Enable();
             cursorLockInputAction?.Enable();
             controllerLookInputAction?.Enable();
             mouseLookInputAction?.Enable();

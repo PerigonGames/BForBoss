@@ -83,6 +83,16 @@ namespace BForBoss
             }
         }
 
+        public void DisableAction()
+        {
+            _dashInputAction.Disable();
+        }
+
+        public void EnableAction()
+        {
+            _dashInputAction.Enable();
+        }
+
         private Vector3 GetDashVelocity()
         {
             var characterVelocity = _baseCharacter.GetVelocity();

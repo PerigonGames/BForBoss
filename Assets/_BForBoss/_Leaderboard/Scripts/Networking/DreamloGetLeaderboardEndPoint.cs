@@ -92,12 +92,20 @@ namespace BForBoss
          */
         private EntryDTO buildEntryDTO(string[] components)
         {
-            var entryDTO = new EntryDTO();
-            entryDTO.Username = components[0];
-            entryDTO.MilliSeconds = int.Parse(components[2]);
-            entryDTO.Input = components[3];
-            entryDTO.CreationDate = Convert.ToDateTime(components[4]);
-            return entryDTO;
+            try
+            {
+                var entryDTO = new EntryDTO();
+                entryDTO.Username = components[0];
+                entryDTO.MilliSeconds = int.Parse(components[2]);
+                entryDTO.Input = components[3];
+                entryDTO.CreationDate = Convert.ToDateTime(components[4]);
+                return entryDTO;
+            }
+            catch (Exception _)
+            {
+                return new EntryDTO();
+            }
+
         }
         #endregion
     }
