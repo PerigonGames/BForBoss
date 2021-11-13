@@ -31,8 +31,8 @@ namespace BForBoss
 
         public void RemoveSubscribers()
         {
-            //OnSuccess = null;
-            //OnFailure = null;
+            OnSuccess = null;
+            OnFailure = null;
         }
     }
 }
