@@ -6,7 +6,6 @@ namespace BForBoss
     public class SetUsernameViewModel
     {
         private readonly InputUsername _inputUsername = new InputUsername();
-
         public event Action OnSuccess;
         public event Action OnFailure;
 

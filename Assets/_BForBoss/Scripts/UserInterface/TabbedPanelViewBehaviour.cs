@@ -18,6 +18,14 @@ namespace BForBoss
             BindAllTabs();
             OpenFirstTab();
         }
+        
+        public void TurnOffAllContent()
+        {
+            foreach (var content in _tabbedContent)
+            {
+                content.Content.SetActive(false);
+            }
+        }
 
         private void OpenFirstTab()
         {
@@ -47,14 +55,6 @@ namespace BForBoss
         {
             TurnOffAllContent();
             content.SetActive(true);
-        }
-
-        private void TurnOffAllContent()
-        {
-            foreach (var content in _tabbedContent)
-            {
-                content.Content.SetActive(false);
-            }
         }
     }
 
