@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace BForBoss
 {
-    public class LockMouseUtility: ILockMouseInput
+    public class LockMouseUtility
     {
         private static readonly LockMouseUtility _instance = new LockMouseUtility();
         public static LockMouseUtility Instance => _instance;

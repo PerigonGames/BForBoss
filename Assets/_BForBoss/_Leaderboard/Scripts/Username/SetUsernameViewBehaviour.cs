@@ -14,9 +14,9 @@ namespace BForBoss
         [SerializeField] private Button _setUsernameButton = null;
         protected SetUsernameViewModel _viewModel = null;
         
-        public virtual void Initialize(SetUsernameViewModel viewModel = null)
+        public virtual void Initialize(ILockInput lockInput = null)
         {
-            _viewModel = viewModel ?? new SetUsernameViewModel();
+            _viewModel = new SetUsernameViewModel();
             BindViewModel();
             _setUsernameButton.onClick.AddListener(() =>
             {

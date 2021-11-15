@@ -5,9 +5,12 @@ namespace BForBoss
 {
     public class ForcedSetUsernameViewBehaviour : SetUsernameViewBehaviour
     {
-        public override void Initialize(SetUsernameViewModel viewModel = null)
+        private ILockInput _lockInput = null;
+        
+        public override void Initialize(ILockInput lockInput = null)
         {
-            base.Initialize(_viewModel);
+            _lockInput = lockInput;
+            base.Initialize(lockInput);
             if (_viewModel.IsUsernameAlreadySet())
             {
                 HidePanel();
@@ -28,11 +31,13 @@ namespace BForBoss
         {
             _infoSettingsLabel.text = "";
             transform.localScale = Vector3.zero;
+            _lockInput.UnlockInput();
         }
 
         private void ShowPanel()
         {
             transform.ResetScale();
+            _lockInput.LockInput();
         }
     }
 }
