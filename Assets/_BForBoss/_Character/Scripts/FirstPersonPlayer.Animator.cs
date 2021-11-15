@@ -13,6 +13,8 @@ namespace BForBoss
         private static readonly int SlideParamId = Animator.StringToHash("Sliding");
         #endregion
 
+        private const float MAX_FORWARD_VALUE = 1f;
+
         protected override void Animate()
         {
             if (!IsThirdPerson)
@@ -73,7 +75,7 @@ namespace BForBoss
 
         private void SetWallRunSpeed()
         {
-            SetAnimatorSpeed(1f);
+            SetAnimatorSpeed(MAX_FORWARD_VALUE);
             SetAnimatorTurn(-_wallRunBehaviour.CalculateWallSideRelativeToPlayer());
         }
     }
