@@ -34,7 +34,6 @@ namespace BForBoss
         public void ForceOpenLeaderboardWithScore(int time, string input)
         {
             _lockInput.LockInput();
-            OpenPanel();
             _settingsView.OpenLeaderboard(time, input);
         }
 
@@ -50,9 +49,9 @@ namespace BForBoss
         
         private void PauseGame()
         {
+            _lockInput.LockInput();
             _stateWhenPaused = StateManager.Instance.GetState();
             StateManager.Instance.SetState(State.Pause);
-            _lockInput.LockInput();
             OpenPanel();
         }
         
@@ -60,6 +59,7 @@ namespace BForBoss
         {
             _lockInput.UnlockInput();
             StateManager.Instance.SetState(_stateWhenPaused);
+            _settingsView.ClosePanel();
             ClosePanel();
         }
         
@@ -88,11 +88,12 @@ namespace BForBoss
         {
             if (Keyboard.current.escapeKey.wasPressedThisFrame)
             {
+                /// TODO - During End Race, won't be able to pause.
                 if (StateManager.Instance.GetState() == State.Pause)
                 {
                     ResumeGame();
                 }
-                else
+                else if (StateManager.Instance.GetState() == State.Play)
                 {
                     PauseGame();
                 }

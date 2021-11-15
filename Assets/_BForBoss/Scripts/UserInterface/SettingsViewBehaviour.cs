@@ -12,9 +12,12 @@ namespace BForBoss
         private SetUsernameViewBehaviour _setUsernameView = null;
         private LeaderboardPanelBehaviour _leaderboardView = null;
         private TabbedPanelViewBehaviour _tabbedPanelViews = null;
+
+        private ILockInput _lockInput = null;
         
         public void Initialize(IInputSettings inputSettings, ILockInput lockInput)
         {
+            _lockInput = lockInput;
             _inputSettingsView.Initialize(new InputSettingsViewModel(inputSettings));
             _setUsernameView.Initialize(lockInput);
             _tabbedPanelViews.Initialize();
@@ -25,6 +28,12 @@ namespace BForBoss
             transform.ResetScale();
         }
 
+        public void ClosePanel()
+        {
+            transform.localScale = Vector3.zero;
+            UnlockInputIfEndRaceState();
+        }
+        
         public void OpenLeaderboard(int time, string input)
         {
             OpenPanel();
@@ -36,11 +45,16 @@ namespace BForBoss
         private void Awake()
         {
             transform.localScale = Vector3.zero;
-            _backButton.onClick.AddListener(() =>
-            {
-                transform.localScale = Vector3.zero;
-            });
+            _backButton.onClick.AddListener(ClosePanel);
             SetupViews();
+        }
+        
+        private void UnlockInputIfEndRaceState()
+        {
+            if (StateManager.Instance.GetState() == State.EndRace)
+            {
+                _lockInput.UnlockInput();
+            }
         }
 
         private void SetupViews()
@@ -49,7 +63,11 @@ namespace BForBoss
             _setUsernameView =  GetComponentInChildren<SetUsernameViewBehaviour>();
             _leaderboardView = GetComponentInChildren<LeaderboardPanelBehaviour>();
             _tabbedPanelViews = GetComponentInChildren<TabbedPanelViewBehaviour>();
+        }
 
+        private void OnDestroy()
+        {
+            _backButton.onClick.RemoveAllListeners();
         }
     }
 }
