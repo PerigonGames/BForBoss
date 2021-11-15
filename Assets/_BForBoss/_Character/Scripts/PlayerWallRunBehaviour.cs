@@ -95,7 +95,8 @@ namespace BForBoss
 
         public void Falling(Vector3 _)
         {
-            if (!CanWallRun()) return;
+            if (!CanWallRun()) 
+                return;
             RaycastHit[] _hits = new RaycastHit[directions.Length];
             for (int i = 0; i < directions.Length; i++)
             {
@@ -113,7 +114,8 @@ namespace BForBoss
 
             if (GetSmallestRaycastHitIfValid(_hits, out RaycastHit hit) && IsClearOfGround())
             {
-                if(_isWallRunning || hit.collider != _lastWall) WallRun(hit);
+                if(_isWallRunning || hit.collider != _lastWall) 
+                    WallRun(hit);
             }
             else if (_isWallRunning) StopWallRunning();
         }
@@ -191,10 +193,23 @@ namespace BForBoss
 
         public void OnLateUpdate()
         {
-            if (_fpsCharacter != null && !_fpsCharacter.IsThirdPerson) HandleEyePivotRotation();
+            if (_fpsCharacter != null && !_fpsCharacter.IsThirdPerson) 
+                HandleEyePivotRotation();
         }
 
-#endregion
+        public float CalculateWallSideRelativeToPlayer()
+        {
+            if (_isWallRunning)
+            {
+                Vector3 heading = _lastWallRunPosition - transform.position;
+                Vector3 perpendicular = Vector3.Cross(ChildTransform.forward, heading);
+                float wallDirection = Vector3.Dot(perpendicular, ChildTransform.up);
+                return wallDirection;
+            }
+            return 0;
+        }
+
+        #endregion
 
         #region PRIVATE_METHODS
         private void WallRun(RaycastHit wall)
@@ -219,15 +234,18 @@ namespace BForBoss
             if (_baseCharacter.IsJumping())
             {
                 _currentJumpDuration += Time.fixedDeltaTime;
-                if (_currentJumpDuration < _minJumpDuration) return false;
+                if (_currentJumpDuration < _minJumpDuration) 
+                    return false;
             }
-            if (_movementInput().y <= 0) return false;
+            if (_movementInput().y <= 0) 
+                return false;
             return IsClearOfGround();
         }
 
         private void StopWallRunning()
         {
-            if (!_isWallRunning) return;
+            if (!_isWallRunning) 
+                return;
             _isWallRunning = false;
             _baseCharacter.maxWalkSpeed = _baseMaxSpeed;
             _timeSinceWallAttach = 0f;
@@ -250,17 +268,6 @@ namespace BForBoss
         }
 
         #region CAMERA_ROLL
-        private float CalculateWallSideRelativeToPlayer()
-        {
-            if (_isWallRunning)
-            {
-                Vector3 heading = _lastWallRunPosition - transform.position;
-                Vector3 perpendicular = Vector3.Cross(ChildTransform.forward, heading);
-                float wallDirection = Vector3.Dot(perpendicular, ChildTransform.up);
-                return wallDirection;
-            }
-            return 0;
-        }
 
         private void HandleEyePivotRotation()
         {
