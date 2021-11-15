@@ -1,3 +1,4 @@
+using Cinemachine;
 using ECM2.Characters;
 using ECM2.Components;
 using Sirenix.OdinInspector;
@@ -9,9 +10,9 @@ namespace BForBoss
     public partial class FirstPersonPlayer : FirstPersonCharacter
     {
         [Header("Cinemachine")]
-        public GameObject cmWalkingCamera;
-        public GameObject cmCrouchedCamera;
-        public GameObject cmThirdPersonCamera;
+        public CinemachineVirtualCamera cmWalkingCamera;
+        public CinemachineVirtualCamera cmCrouchedCamera;
+        public CinemachineVirtualCamera cmThirdPersonCamera;
 
         [Title("Optional Behaviour")]
         private PlayerDashBehaviour _dashBehaviour = null;
@@ -119,8 +120,8 @@ namespace BForBoss
             }
             if (!_isThirdPerson)
             {
-                cmWalkingCamera.SetActive(false);
-                cmCrouchedCamera.SetActive(true);
+                cmWalkingCamera.gameObject.SetActive(false);
+                cmCrouchedCamera.gameObject.SetActive(true);
             }
         }
 
@@ -133,8 +134,8 @@ namespace BForBoss
             }
             if (!_isThirdPerson)
             {
-                cmCrouchedCamera.SetActive(false);
-                cmWalkingCamera.SetActive(true);
+                cmCrouchedCamera.gameObject.SetActive(false);
+                cmWalkingCamera.gameObject.SetActive(true);
             }
         }
 
@@ -246,9 +247,9 @@ namespace BForBoss
 
         private void ToggleThirdPerson()
         {
-            cmCrouchedCamera.SetActive(!IsThirdPerson && IsCrouching());
-            cmWalkingCamera.SetActive(!IsThirdPerson && !IsCrouching());
-            cmThirdPersonCamera.SetActive(IsThirdPerson);
+            cmCrouchedCamera.gameObject.SetActive(!IsThirdPerson && IsCrouching());
+            cmWalkingCamera.gameObject.SetActive(!IsThirdPerson && !IsCrouching());
+            cmThirdPersonCamera.gameObject.SetActive(IsThirdPerson);
         }
 
         private void SwitchView(InputAction.CallbackContext context)
@@ -269,7 +270,7 @@ namespace BForBoss
 
         private bool IsThirdPersonCamActive()
         {
-            return cmThirdPersonCamera != null && cmThirdPersonCamera.activeSelf;
+            return cmThirdPersonCamera != null && cmThirdPersonCamera.gameObject.activeSelf;
         }
 
         private bool IsSliding()
