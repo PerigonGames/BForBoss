@@ -10,6 +10,8 @@ namespace BForBoss
 {
     public partial class FirstPersonPlayer : FirstPersonCharacter
     {
+        private const string PLAYER_MODEL_LAYER = "PlayerModel";
+
         [Header("Cinemachine")]
         public CinemachineVirtualCamera cmWalkingCamera;
         public CinemachineVirtualCamera cmCrouchedCamera;
@@ -22,11 +24,10 @@ namespace BForBoss
         private PlayerSlideBehaviour _slideBehaviour = null;
 
         private InputAction _switchViewAction = null;
-        private const string PLAYER_MODEL_LAYER = "PlayerModel";
         private int firstPersonMask;
         private int thirdPersonMask;
 
-        Coroutine switchingViews = null;
+        private Coroutine switchingViews = null;
 
         [SerializeField] private bool _isThirdPerson = false;
 
