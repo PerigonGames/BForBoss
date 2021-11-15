@@ -2,6 +2,7 @@ using Cinemachine;
 using ECM2.Characters;
 using ECM2.Components;
 using Sirenix.OdinInspector;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,6 +14,7 @@ namespace BForBoss
         public CinemachineVirtualCamera cmWalkingCamera;
         public CinemachineVirtualCamera cmCrouchedCamera;
         public CinemachineVirtualCamera cmThirdPersonCamera;
+        private CinemachineBrain cmBrain;
 
         [Title("Optional Behaviour")]
         private PlayerDashBehaviour _dashBehaviour = null;
@@ -20,6 +22,11 @@ namespace BForBoss
         private PlayerSlideBehaviour _slideBehaviour = null;
 
         private InputAction _switchViewAction = null;
+        private const string PLAYER_MODEL_LAYER = "PlayerModel";
+        private int firstPersonMask;
+        private int thirdPersonMask;
+
+        Coroutine switchingViews = null;
 
         [SerializeField] private bool _isThirdPerson = false;
 
@@ -33,6 +40,8 @@ namespace BForBoss
                 ToggleThirdPerson();
             }
         }
+
+        private float SwitchViewDuration => cmBrain.m_DefaultBlend.m_Time;
 
         public void Initialize()
         {
@@ -67,6 +76,11 @@ namespace BForBoss
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();
             _wallRunBehaviour = GetComponent<PlayerWallRunBehaviour>();
             _slideBehaviour = GetComponent<PlayerSlideBehaviour>();
+            cmBrain = camera.GetComponent<CinemachineBrain>();
+
+            thirdPersonMask = camera.cullingMask;
+            firstPersonMask = ~(1 << LayerMask.NameToLayer(PLAYER_MODEL_LAYER));
+
             base.OnAwake();
         }
 
@@ -82,6 +96,8 @@ namespace BForBoss
                 _slideBehaviour.Initialize(this);
             }
             _wallRunBehaviour?.Initialize(this, base.GetMovementInput, ResetJumpCount);
+
+            TogglePlayerModel();
         }
         
         protected override void SetupPlayerInput()
@@ -247,14 +263,39 @@ namespace BForBoss
 
         private void ToggleThirdPerson()
         {
+            if (switchingViews != null)
+            {
+                StopCoroutine(switchingViews);
+                switchingViews = null;
+            }
             cmCrouchedCamera.gameObject.SetActive(!IsThirdPerson && IsCrouching());
             cmWalkingCamera.gameObject.SetActive(!IsThirdPerson && !IsCrouching());
             cmThirdPersonCamera.gameObject.SetActive(IsThirdPerson);
+            if (IsThirdPerson)
+            {
+                TogglePlayerModel();
+            }
+            else
+            {
+                switchingViews = StartCoroutine(TogglePlayerModelWithDelay());
+            }
         }
 
         private void SwitchView(InputAction.CallbackContext context)
         {
             if (context.started) IsThirdPerson = !IsThirdPerson;
+        }
+
+        private IEnumerator TogglePlayerModelWithDelay()
+        {
+            yield return new WaitForSeconds(SwitchViewDuration);
+            TogglePlayerModel();
+        }
+
+        private void TogglePlayerModel()
+        {
+            animate = IsThirdPerson;
+            camera.cullingMask = IsThirdPerson ? thirdPersonMask : firstPersonMask;
         }
 
         protected override void OnOnValidate()
