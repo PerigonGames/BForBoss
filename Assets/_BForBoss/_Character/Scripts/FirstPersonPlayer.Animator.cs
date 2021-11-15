@@ -13,6 +13,8 @@ namespace BForBoss
         private static readonly int SlideParamId = Animator.StringToHash("Sliding");
         #endregion
 
+        private const float MAX_FORWARD_VALUE = 1f;
+
         protected override void Animate()
         {
             if (!IsThirdPerson)
@@ -21,7 +23,11 @@ namespace BForBoss
                 return;
             }
 
-            SetRunSpeed();
+            if (IsWallRunning())
+                SetWallRunSpeed();
+            else
+                SetRunSpeed();
+
 
             animator.SetBool(GroundParamId, IsOnGround() || IsWallRunning());
             animator.SetBool(SlideParamId, IsSliding());
@@ -35,6 +41,7 @@ namespace BForBoss
             animator.SetFloat(JumpParamId, 0f);
             animator.SetFloat(ForwardParamId, 0f);
             animator.SetFloat(TurnParamId, 0f);
+            animator.SetBool(GroundParamId, true);
         }
 
         private void SetAnimatorJump()
@@ -61,10 +68,15 @@ namespace BForBoss
             // Compute input move direction vector in local space
             Vector3 move = rootPivot.InverseTransformDirection(GetMovementDirection());
             float forwardAmount = useRootMotion ? move.z : Mathf.InverseLerp(0.0f, GetMaxSpeed(), GetSpeed());
-            forwardAmount = IsWallRunning() ? 1f : forwardAmount; //always go at max speed when wall running, walk animations look weird on the wall
             
             SetAnimatorSpeed(forwardAmount);
             SetAnimatorTurn(Mathf.Atan2(move.x, move.z));
+        }
+
+        private void SetWallRunSpeed()
+        {
+            SetAnimatorSpeed(MAX_FORWARD_VALUE);
+            SetAnimatorTurn(-_wallRunBehaviour.CalculateWallSideRelativeToPlayer());
         }
     }
 }
