@@ -46,7 +46,7 @@ namespace BForBoss
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
                 return GraphyManager.ModuleState.FULL;
 #endif
-                return GraphyManager.ModuleState.TEXT;
+                return GraphyManager.ModuleState.BASIC;
             }
 
             return GraphyManager.ModuleState.OFF;
