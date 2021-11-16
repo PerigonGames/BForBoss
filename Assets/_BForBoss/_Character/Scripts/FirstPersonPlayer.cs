@@ -36,7 +36,7 @@ namespace BForBoss
         public void Initialize()
         {
             SetupInput();
-            ToggleThirdPerson();
+            SetupThirdPerson();
         }
 
         public override bool CanJump()
