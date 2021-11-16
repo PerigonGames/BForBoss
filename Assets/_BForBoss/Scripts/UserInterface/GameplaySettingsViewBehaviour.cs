@@ -16,8 +16,12 @@ namespace BForBoss
         public void Initialize(IThirdPerson thirdPersonSettings)
         {
             _viewModel = new GameplaySettingsViewModel(thirdPersonSettings);
-            BindModel();
             SetViews();
+            BindModel();
+            _viewModel.SetGraphy();
+#if !DEVELOPMENT_BUILD && !UNITY_EDITOR
+            HideSettingsForProduction();
+#endif
         }
 
         private void BindModel()
@@ -52,6 +56,15 @@ namespace BForBoss
             _showFPSToggle.isOn = _viewModel.IsShowingFPS;
             _showPCSpecsToggle.isOn = _viewModel.IsShowingPCSpecs;
             _showRAMToggle.isOn = _viewModel.IsShowingRAM;
+            _povDropdown.value = _viewModel.IsThirdPersonView ? 1 : 0;
+        }
+
+        private void HideSettingsForProduction()
+        {
+            _viewModel.SetShowPCSpecifications(false);
+            _viewModel.SetShowRAMUsage(false);
+            _showPCSpecsToggle.gameObject.SetActive(false);
+            _showRAMToggle.gameObject.SetActive(false);
         }
     }
     
@@ -65,22 +78,24 @@ namespace BForBoss
         }
 
         private ISpecification _graphyManager = null;
-        private IInputSettings _inputSettings = null;
         private IThirdPerson _thirdPersonSettings = null;
         
         public bool IsShowingFPS => PlayerPrefs.GetInt(PlayerPrefKey.ShowFPS, 0) == 1;
         public bool IsShowingRAM => PlayerPrefs.GetInt(PlayerPrefKey.ShowRAMUsage, 0) == 1;
         public bool IsShowingPCSpecs => PlayerPrefs.GetInt(PlayerPrefKey.ShowPCSpecs, 0) == 1;
+        public bool IsThirdPersonView => _thirdPersonSettings.IsThirdPerson;
 
         public GameplaySettingsViewModel(IThirdPerson thirdPersonSettings, ISpecification specification = null)
         {
             _thirdPersonSettings = thirdPersonSettings;
             _graphyManager = specification ?? new GraphyAdapter();
+        }
 
+        public void SetGraphy()
+        {
             SetShowFPS(IsShowingFPS);
             SetShowRAMUsage(IsShowingRAM);
             SetShowPCSpecifications(IsShowingPCSpecs);
-            
             _graphyManager.SetAudioUsage(false);
         }
 

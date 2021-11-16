@@ -5,6 +5,7 @@ namespace BForBoss
     public class GraphyAdapter : ISpecification
     {
         private GraphyManager Manager => GraphyManager.Instance;
+        
         public void SetShowFPSActive(bool isOn)
         {
             if (Manager != null)
@@ -45,12 +46,10 @@ namespace BForBoss
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
                 return GraphyManager.ModuleState.FULL;
 #endif
-                return GraphyManager.ModuleState.BASIC;
+                return GraphyManager.ModuleState.TEXT;
             }
-            else
-            {
-                return GraphyManager.ModuleState.OFF;
-            }
+
+            return GraphyManager.ModuleState.OFF;
         }
     }
 }
