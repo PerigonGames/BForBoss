@@ -31,7 +31,7 @@ namespace BForBoss
 
         private void ShowFailedText()
         {
-            _infoSettingsLabel.text = $"Something is wrong with your username, try another one. (No Blank Text or names over {InputUsername.CharacterLimit} characters";
+            _infoSettingsLabel.text = $"Something is wrong with your username, try another one. (Only Alphanumberic characters,  No Blank Text or names over {InputUsername.CharacterLimit} characters)";
             _infoSettingsLabel.color = Color.red;
         }
 

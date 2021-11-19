@@ -1,3 +1,4 @@
+using System.Linq;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -25,8 +26,9 @@ namespace BForBoss
         {
             var isWhiteSpace = !username.IsNullOrWhitespace();
             var isWithinTwentyChar = username.Length < CharacterLimit;
-
-            return isWhiteSpace && isWithinTwentyChar;
+            var onlyLetterOrDigits = username.All(char.IsLetterOrDigit);
+            
+            return isWhiteSpace && isWithinTwentyChar && onlyLetterOrDigits;
         }
     }
 }
