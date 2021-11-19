@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace BForBoss
@@ -7,7 +10,7 @@ namespace BForBoss
     {
         private Vector2 _scrollPosition = Vector2.zero;
 
-        private string[] _keys;
+        private IList<string> _keys;
 
         public PlayerPrefResetter(Rect masterRect) : base(masterRect)
         {
@@ -35,14 +38,14 @@ namespace BForBoss
 
                     using var scrollViewScope = new GUILayout.ScrollViewScope(_scrollPosition);
                     _scrollPosition = scrollViewScope.scrollPosition;
-                    for (int i = 0, count = _keys.Length; i < count; i++)
+                    foreach(string key in _keys)
                     {
                         using (new GUILayout.HorizontalScope())
                         {
                             GUILayout.FlexibleSpace();
-                            if (GUILayout.Button($"Delete {_keys[i]}"))
+                            if (GUILayout.Button($"Delete {key}"))
                             {
-                                DeleteSpecificKey(_keys[i]);
+                                DeleteSpecificKey(key);
                             }
                             GUILayout.FlexibleSpace();
                         }
@@ -64,27 +67,20 @@ namespace BForBoss
         }
 
         /// <summary>
-        /// Real fancy and a bit cursed method of iterating through a struct to get all the values.
-        /// Rests on a couple kinda dangerous assumptions - 
-        /// 1) All fields are strings.
-        /// 2) All fields are consts. 
+        /// Gets all constant string values defined in the struct
         /// </summary>
         /// <typeparam name="T">Struct containing player pref keys</typeparam>
         /// <returns>Array of Keys</returns>
-        private static string[] GetConstStringValuesFromStruct<T>() where T : struct
+        private static List<string> GetConstStringValuesFromStruct<T>() where T : struct
         {
-            var keys = new T();
             Type playerPrefStruct = typeof(T);
 
-            System.Reflection.FieldInfo[] fields = playerPrefStruct.GetFields();
+            FieldInfo[] fields = playerPrefStruct.GetFields(BindingFlags.Public |
+         BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
-            string[] toReturn = new string[fields.Length];
-
-            for(int i = 0; i < fields.Length; i++)
-            {
-                toReturn[i] = fields[i].GetValue(keys).ToString();
-            }
-            return toReturn;
+            return fields
+                .Where(field => field.IsLiteral && !field.IsInitOnly && field.FieldType == typeof(string))
+                .Select(field => (string)field.GetRawConstantValue()).ToList();
         }
     }
 }
