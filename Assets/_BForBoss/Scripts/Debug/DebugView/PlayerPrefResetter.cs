@@ -33,20 +33,18 @@ namespace BForBoss
                         ClearPlayerPrefs();
                     }
 
-                    using (var scrollViewScope = new GUILayout.ScrollViewScope(_scrollPosition))
+                    using var scrollViewScope = new GUILayout.ScrollViewScope(_scrollPosition);
+                    _scrollPosition = scrollViewScope.scrollPosition;
+                    for (int i = 0, count = _keys.Length; i < count; i++)
                     {
-                        _scrollPosition = scrollViewScope.scrollPosition;
-                        for (int i = 0, count = _keys.Length; i < count; i++)
+                        using (new GUILayout.HorizontalScope())
                         {
-                            using (new GUILayout.HorizontalScope())
+                            GUILayout.FlexibleSpace();
+                            if (GUILayout.Button($"Delete {_keys[i]}"))
                             {
-                                GUILayout.FlexibleSpace();
-                                if (GUILayout.Button($"Delete {_keys[i]}"))
-                                {
-                                    DeleteSpecificKey(_keys[i]);
-                                }
-                                GUILayout.FlexibleSpace();
+                                DeleteSpecificKey(_keys[i]);
                             }
+                            GUILayout.FlexibleSpace();
                         }
                     }
                 }
