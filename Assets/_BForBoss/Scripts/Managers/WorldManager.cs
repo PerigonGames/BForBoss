@@ -85,7 +85,7 @@ namespace BForBoss
 
         private void SetupUserInterface()
         {
-            _pauseMenu.Initialize(_player, _freezeActionsUtility);
+            _pauseMenu.Initialize(_player, _player, _freezeActionsUtility);
             _timerView.Initialize(_timeManagerViewModel);
             _forcedUploadView.Initialize(_freezeActionsUtility);
         }

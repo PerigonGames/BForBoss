@@ -15,7 +15,7 @@ namespace BForBoss {
 
     public partial class FirstPersonPlayer : IInputSettings
     {
-        private struct PlayerPrefKey
+        private partial struct PlayerPrefKey
         {
             public const string Is_Inverted = "is_inverted";
             public const string Mouse_Horizontal_Sensitivity = "mouse_horizontal_sensitivity";
@@ -94,7 +94,7 @@ namespace BForBoss {
                 GetCharacterLook().controllerVerticalSensitivity = value;   
             }  
         }
-
+        
         public void DisableActions()
         {
             actions.FindActionMap(PlayerControlActionMap).Disable();
@@ -104,7 +104,6 @@ namespace BForBoss {
         {
             actions.FindActionMap(PlayerControlActionMap).Enable();
         }
-
 
         public void RevertAllSettings()
         {

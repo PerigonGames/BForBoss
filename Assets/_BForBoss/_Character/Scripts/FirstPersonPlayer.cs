@@ -22,7 +22,6 @@ namespace BForBoss
         private PlayerWallRunBehaviour _wallRunBehaviour = null;
         private PlayerSlideBehaviour _slideBehaviour = null;
 
-        private InputAction _switchViewAction = null;
         private int firstPersonMask;
         private int thirdPersonMask;
 
@@ -42,7 +41,7 @@ namespace BForBoss
         public void Initialize()
         {
             SetupInput();
-            ToggleThirdPerson();
+            SetupThirdPerson();
         }
 
         public override bool CanJump()
@@ -102,13 +101,6 @@ namespace BForBoss
             {
                 InputAction dashInputAction = actions.FindAction("Dash");
                 _dashBehaviour.SetupPlayerInput(dashInputAction);
-            }
-
-            _switchViewAction = actions.FindAction("Switch View");
-            if (_switchViewAction != null)
-            {
-                _switchViewAction.started += SwitchView;
-                _switchViewAction.canceled += SwitchView;
             }
         }
 
@@ -219,7 +211,6 @@ namespace BForBoss
         protected override void OnOnDisable()
         {
             base.OnOnDisable();
-            _switchViewAction?.Disable();
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.OnOnDisable();
@@ -229,7 +220,6 @@ namespace BForBoss
         protected override void OnOnEnable()
         {
             base.OnOnEnable();
-            _switchViewAction?.Enable();
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.OnOnEnable();
@@ -239,12 +229,6 @@ namespace BForBoss
         protected override void OnOnDestroy()
         {
             base.OnOnDestroy();
-            if (_switchViewAction != null)
-            {
-                _switchViewAction.started -= SwitchView;
-                _switchViewAction.canceled -= SwitchView;
-                _switchViewAction = null;
-            }
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.OnOnDestroy();
@@ -256,19 +240,8 @@ namespace BForBoss
             _jumpCount = 0;
         }
 
-        private void ToggleThirdPerson()
-        {
-            cmCrouchedCamera.gameObject.SetActive(!IsThirdPerson && IsCrouching());
-            cmWalkingCamera.gameObject.SetActive(!IsThirdPerson && !IsCrouching());
-            cmThirdPersonCamera.gameObject.SetActive(IsThirdPerson);
-            TogglePlayerModel();
-        }
 
-        private void SwitchView(InputAction.CallbackContext context)
-        {
-            if (context.started) IsThirdPerson = !IsThirdPerson;
-        }
-
+        
         private void TogglePlayerModel()
         {
             animate = IsThirdPerson;

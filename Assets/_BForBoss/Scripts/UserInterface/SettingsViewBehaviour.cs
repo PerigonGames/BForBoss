@@ -12,15 +12,20 @@ namespace BForBoss
         private SetUsernameViewBehaviour _setUsernameView = null;
         private LeaderboardPanelBehaviour _leaderboardView = null;
         private TabbedPanelViewBehaviour _tabbedPanelViews = null;
+        private GameplaySettingsViewBehaviour _gameplaySettingsView = null;
 
         private ILockInput _lockInput = null;
         
-        public void Initialize(IInputSettings inputSettings, ILockInput lockInput)
+        public void Initialize(
+            IThirdPerson thirdPersonSettings,
+            IInputSettings inputSettings, 
+            ILockInput lockInput)
         {
             _lockInput = lockInput;
             _inputSettingsView.Initialize(new InputSettingsViewModel(inputSettings));
             _setUsernameView.Initialize(lockInput);
             _tabbedPanelViews.Initialize();
+            _gameplaySettingsView.Initialize(thirdPersonSettings);
         }
 
         public void OpenPanel()
@@ -63,6 +68,7 @@ namespace BForBoss
             _setUsernameView =  GetComponentInChildren<SetUsernameViewBehaviour>();
             _leaderboardView = GetComponentInChildren<LeaderboardPanelBehaviour>();
             _tabbedPanelViews = GetComponentInChildren<TabbedPanelViewBehaviour>();
+            _gameplaySettingsView = GetComponentInChildren<GameplaySettingsViewBehaviour>();
         }
 
         private void OnDestroy()
