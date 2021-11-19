@@ -34,6 +34,14 @@ namespace BForBoss
             public const String ControllerVerticalSens = "controller_vertical_sens";
             public const String Inverted = "inverted";
         }
+
+        public const String PointOfView = "point_of_view";
+    }
+
+    public readonly struct PointOfView
+    {
+        public const String FirstPerson = "first_person";
+        public const String ThirdPerson = "third_person";
     }
 
     #endregion
@@ -79,6 +87,11 @@ namespace BForBoss
             Mixpanel.People.Set(Profile.Controls.ControllerHorizontalSens, horizontalController);
             Mixpanel.People.Set(Profile.Controls.ControllerVerticalSens, verticalController);
             Mixpanel.People.Set(Profile.Controls.Inverted, isInverted);
+        }
+
+        public void SetPOV(bool isThirdPersonActive)
+        {
+            Mixpanel.People.Set(Profile.PointOfView, isThirdPersonActive ? PointOfView.ThirdPerson : PointOfView.FirstPerson);
         }
         
         #endregion
