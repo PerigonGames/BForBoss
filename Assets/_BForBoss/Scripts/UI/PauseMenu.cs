@@ -17,18 +17,24 @@ namespace BForBoss
         [SerializeField] private Button _quitButton = null;
         [SerializeField] private Button _settingsButton = null;
         
-        private IInputSettings _inputSettings;
+        private ILockInput _lockInput;
         private State _stateWhenPaused;
         
-        public void Initialize(IInputSettings inputSettings)
+        public void Initialize(IInputSettings inputSettings, ILockInput lockInput)
         {
-            _inputSettings = inputSettings;
-            _settingsView.Initialize(inputSettings);
+            _lockInput = lockInput;
+            _settingsView.Initialize(inputSettings, lockInput);
             _resumeButton.onClick.AddListener(ResumeGame);
             _resetButton.onClick.AddListener(ResetGame);
             _quitButton.onClick.AddListener(QuitGame);
             _settingsButton.onClick.AddListener(OpenSettings);
             ClosePanel();
+        }
+
+        public void ForceOpenLeaderboardWithScore(int time, string input)
+        {
+            _lockInput.LockInput();
+            _settingsView.OpenLeaderboard(time, input);
         }
 
         private void OpenPanel()
@@ -41,31 +47,35 @@ namespace BForBoss
             transform.localScale = Vector3.zero;
         }
         
-        private void HandleOnPause()
+        private void PauseGame()
         {
+            _lockInput.LockInput();
             _stateWhenPaused = StateManager.Instance.GetState();
             StateManager.Instance.SetState(State.Pause);
-            LockCharacterFunctionality(_inputSettings);
+            OpenPanel();
         }
         
         private void ResumeGame()
         {
-            UnlockCharacterFunctionality(_inputSettings);
+            _lockInput.UnlockInput();
             StateManager.Instance.SetState(_stateWhenPaused);
+            _settingsView.ClosePanel();
+            ClosePanel();
         }
         
         private void ResetGame()
         {
-            UnlockCharacterFunctionality(_inputSettings);
+            _lockInput.UnlockInput();
             StateManager.Instance.SetState(State.PreGame);
+            ClosePanel();
         }
 
         private void QuitGame()
         {
-            Application.Quit();
-
 #if UNITY_EDITOR
             EditorApplication.ExitPlaymode();
+#else
+            Application.Quit();
 #endif
         }
 
@@ -73,32 +83,19 @@ namespace BForBoss
         {
             _settingsView.OpenPanel();
         }
-        
-        private void LockCharacterFunctionality(IInputSettings inputSettings)
-        {
-            LockMouseUtility.Instance.UnlockMouse();
-            inputSettings.DisableActions();
-        }
-
-        private void UnlockCharacterFunctionality(IInputSettings inputSettings)
-        {
-            LockMouseUtility.Instance.LockMouse();
-            inputSettings.EnableActions();
-        }
 
         private void Update()
         {
             if (Keyboard.current.escapeKey.wasPressedThisFrame)
             {
+                /// TODO - During End Race, won't be able to pause.
                 if (StateManager.Instance.GetState() == State.Pause)
                 {
-                    ClosePanel();
                     ResumeGame();
                 }
-                else
+                else if (StateManager.Instance.GetState() == State.Play)
                 {
-                    OpenPanel();
-                    HandleOnPause();
+                    PauseGame();
                 }
             }
         }

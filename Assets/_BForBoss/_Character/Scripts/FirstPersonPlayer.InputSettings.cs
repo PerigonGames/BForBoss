@@ -23,6 +23,8 @@ namespace BForBoss {
             public const string Controller_Horizontal_Sensitivity = "controller_horizontal_sensitivity";
             public const string Controller_Vertical_Sensitivity = "controller_vertical_sensitivity";
         }
+
+        private const string PlayerControlActionMap = "Player Controls";
         
         private const int Default_Is_Inverted = 0;
         private const float Default_Mouse_Sensitivity = 0.4f;
@@ -95,16 +97,12 @@ namespace BForBoss {
 
         public void DisableActions()
         {
-            cursorLockInputAction?.Disable();
-            controllerLookInputAction?.Disable();
-            mouseLookInputAction?.Disable();
+            actions.FindActionMap(PlayerControlActionMap).Disable();
         }
 
         public void EnableActions()
         {
-            cursorLockInputAction?.Enable();
-            controllerLookInputAction?.Enable();
-            mouseLookInputAction?.Enable();
+            actions.FindActionMap(PlayerControlActionMap).Enable();
         }
 
 

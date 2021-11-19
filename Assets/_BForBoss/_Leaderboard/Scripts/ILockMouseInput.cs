@@ -1,9 +1,9 @@
 namespace BForBoss
 {
-    public interface ILockMouseInput
+    public interface ILockInput
     {
-        void LockMouse();
-        void UnlockMouse();
+        void LockInput();
+        void UnlockInput();
     }
 }
 

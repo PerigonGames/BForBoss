@@ -15,7 +15,6 @@ namespace BForBoss
         [SerializeField] private PauseMenu _pauseMenu;
         [SerializeField] private TimerViewBehaviour _timerView = null;
         [SerializeField] private ForcedSetUsernameViewBehaviour _forcedUploadView = null;
-        [SerializeField] private LeaderboardPanelBehaviour _leaderboardPanel = null;
 
         [Title("Effects")] 
         [SerializeField] private Volume _deathVolume = null;
@@ -28,6 +27,7 @@ namespace BForBoss
         // This probably best placed inside its own utility section
         private readonly StateManager _stateManager = StateManager.Instance;
         private readonly PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
+        private FreezeActionsUtility _freezeActionsUtility = null;
         // This is probably best kept within its own utility section
         private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
         private DetectInput _detectInput = new DetectInput(); //Placeholder, remove this after finishing the timed leader board stuff
@@ -80,14 +80,14 @@ namespace BForBoss
             _player.Initialize();
             _checkpointManager.Initialize(_detectInput, _timeManagerViewModel);
             _timeManager.Initialize(_timeManagerViewModel);
+            _freezeActionsUtility = new FreezeActionsUtility(_player);
         }
 
         private void SetupUserInterface()
         {
-            _pauseMenu.Initialize(_player);
+            _pauseMenu.Initialize(_player, _freezeActionsUtility);
             _timerView.Initialize(_timeManagerViewModel);
-            _leaderboardPanel.Initialize(LockMouseUtility.Instance);
-            _forcedUploadView.Initialize();
+            _forcedUploadView.Initialize(_freezeActionsUtility);
         }
 
         private void OnApplicationQuit()
@@ -141,8 +141,7 @@ namespace BForBoss
             var gameTime = _timeManagerViewModel.CurrentGameTimeMilliSeconds;
             var input = _detectInput.GetInput(); //Placeholder, remove this after finishing the timed leader board stuff
             _uploadPlayerScoreDataSource.UploadScoreIfPossible(gameTime, input);
-            _leaderboardPanel.SetUserTime(gameTime, input);
-            _leaderboardPanel.ShowPanel();
+            _pauseMenu.ForceOpenLeaderboardWithScore(gameTime, input);
         }
     }
 }
