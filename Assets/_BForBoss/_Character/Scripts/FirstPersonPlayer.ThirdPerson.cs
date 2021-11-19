@@ -15,12 +15,6 @@ namespace BForBoss
         }
 
         private const int Default_Is_Third_Person = 0;
-
-        private void SetupThirdPerson()
-        {
-            IsThirdPerson = PlayerPrefs.GetInt(PlayerPrefKey.IsThirdPerson, Default_Is_Third_Person) == 1;
-            ToggleThirdPerson();
-        }
         
         public void SetThirdPersonActive(bool isActive)
         {
@@ -28,5 +22,21 @@ namespace BForBoss
             PlayerPrefs.SetInt(PlayerPrefKey.IsThirdPerson, isThirdPerson);
             IsThirdPerson = isActive;
         }
+        
+        private void SetupThirdPerson()
+        {
+            IsThirdPerson = PlayerPrefs.GetInt(PlayerPrefKey.IsThirdPerson, Default_Is_Third_Person) == 1;
+            ToggleThirdPerson();
+        }
+        
+        private void ToggleThirdPerson()
+        {
+            cmCrouchedCamera.gameObject.SetActive(!IsThirdPerson && IsCrouching());
+            cmWalkingCamera.gameObject.SetActive(!IsThirdPerson && !IsCrouching());
+            cmThirdPersonCamera.gameObject.SetActive(IsThirdPerson);
+            TogglePlayerModel();
+        }
+        
+
     }
 }

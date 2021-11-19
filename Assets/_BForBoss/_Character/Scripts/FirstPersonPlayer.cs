@@ -240,13 +240,7 @@ namespace BForBoss
             _jumpCount = 0;
         }
 
-        private void ToggleThirdPerson()
-        {
-            cmCrouchedCamera.gameObject.SetActive(!IsThirdPerson && IsCrouching());
-            cmWalkingCamera.gameObject.SetActive(!IsThirdPerson && !IsCrouching());
-            cmThirdPersonCamera.gameObject.SetActive(IsThirdPerson);
-            TogglePlayerModel();
-        }
+
         
         private void TogglePlayerModel()
         {
