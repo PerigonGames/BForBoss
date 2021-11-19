@@ -79,6 +79,7 @@ namespace BForBoss
 
         private ISpecification _graphyManager = null;
         private IThirdPerson _thirdPersonSettings = null;
+        private readonly PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
         
         public bool IsShowingFPS => PlayerPrefs.GetInt(PlayerPrefKey.ShowFPS, 0) == 1;
         public bool IsShowingRAM => PlayerPrefs.GetInt(PlayerPrefKey.ShowRAMUsage, 0) == 1;
@@ -89,6 +90,8 @@ namespace BForBoss
         {
             _thirdPersonSettings = thirdPersonSettings;
             _graphyManager = specification ?? new GraphyAdapter();
+            
+            _perigonAnalytics.SetPOV(IsThirdPersonView);
         }
 
         public void SetGraphy()
@@ -124,6 +127,8 @@ namespace BForBoss
         {
             var isThirdPerson = DropDownToIsThirdPerson(dropDownValue);
             _thirdPersonSettings.SetThirdPersonActive(isThirdPerson);
+            
+            _perigonAnalytics.SetPOV(isThirdPerson);
         }
 
         private bool DropDownToIsThirdPerson(int value)
