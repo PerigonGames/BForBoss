@@ -11,7 +11,7 @@ namespace BForBoss
 
         public PlayerPrefResetter(Rect masterRect) : base(masterRect)
         {
-            _keys = GetKeysFromStruct<UploadPlayerScoreDataSource.PlayerPrefKey>();
+            _keys = GetConstStringValuesFromStruct<UploadPlayerScoreDataSource.PlayerPrefKey>();
             // if we add player pref fields anywhere else make sure to append them to the array here
         }
 
@@ -68,12 +68,12 @@ namespace BForBoss
         /// <summary>
         /// Real fancy and a bit cursed method of iterating through a struct to get all the values.
         /// Rests on a couple kinda dangerous assumptions - 
-        /// 1) All fields are strings. If we wanted we could check this, but I think given the use case its okay
+        /// 1) All fields are strings.
         /// 2) All fields are consts. 
         /// </summary>
         /// <typeparam name="T">Struct containing player pref keys</typeparam>
         /// <returns>Array of Keys</returns>
-        private string[] GetKeysFromStruct<T>() where T : struct
+        private static string[] GetConstStringValuesFromStruct<T>() where T : struct
         {
             var keys = new T();
             Type playerPrefStruct = typeof(T);
