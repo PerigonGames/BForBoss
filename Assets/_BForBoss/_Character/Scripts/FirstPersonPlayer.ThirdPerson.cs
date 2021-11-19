@@ -36,7 +36,5 @@ namespace BForBoss
             cmThirdPersonCamera.gameObject.SetActive(IsThirdPerson);
             TogglePlayerModel();
         }
-        
-
     }
 }
