@@ -13,11 +13,13 @@ namespace BForBoss
         private static readonly int SlideParamId = Animator.StringToHash("Sliding");
         #endregion
 
+        private bool animate;
+
         private const float MAX_FORWARD_VALUE = 1f;
 
         protected override void Animate()
         {
-            if (!IsThirdPerson)
+            if (!animate)
             {
                 TurnOffAnimator();
                 return;

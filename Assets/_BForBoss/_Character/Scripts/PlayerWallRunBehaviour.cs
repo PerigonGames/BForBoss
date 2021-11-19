@@ -193,8 +193,8 @@ namespace BForBoss
 
         public void OnLateUpdate()
         {
-            if (_fpsCharacter != null && !_fpsCharacter.IsThirdPerson) 
-                HandleEyePivotRotation();
+            if (_fpsCharacter != null)
+                _fpsCharacter.cmWalkingCamera.m_Lens.Dutch = GetCameraRoll();
         }
 
         public float CalculateWallSideRelativeToPlayer()
@@ -267,19 +267,10 @@ namespace BForBoss
             return !downwardHit;
         }
 
-        #region CAMERA_ROLL
-
-        private void HandleEyePivotRotation()
-        {
-            var rotation = _fpsCharacter.eyePivot.localEulerAngles;
-            rotation.z = GetCameraRoll();
-            _fpsCharacter.eyePivot.localEulerAngles = rotation;
-        }
-
         private float GetCameraRoll()
         {
             float wallDirection = CalculateWallSideRelativeToPlayer();
-            float cameraAngle = _baseCharacter.cameraTransform.eulerAngles.z;
+            float cameraAngle = _fpsCharacter.cmWalkingCamera.m_Lens.Dutch;
             float targetAngle = 0;
             if (wallDirection != 0)
             {
@@ -287,7 +278,6 @@ namespace BForBoss
             }
             return Mathf.LerpAngle(cameraAngle, targetAngle, Mathf.Max(_timeSinceWallAttach, _timeSinceWallDetach) / _cameraRotateDuration);
         }
-        #endregion
 
         private static bool GetSmallestRaycastHitIfValid(RaycastHit[] array, out RaycastHit smallest)
         {
