@@ -27,12 +27,19 @@ namespace BForBoss
         protected virtual void BindViewModel()
         {
             _viewModel.OnFailure += ShowFailedText;
+            _viewModel.OnSuccess += ShowSuccessText;
         }
 
         private void ShowFailedText()
         {
-            _infoSettingsLabel.text = $"Something is wrong with your username, try another one. (No Blank Text or names over {InputUsername.CharacterLimit} characters";
+            _infoSettingsLabel.text = $"Something is wrong with your username, try another one. (Only Alphanumberic characters,  No Blank Text or names over {InputUsername.CharacterLimit} characters)";
             _infoSettingsLabel.color = Color.red;
+        }
+
+        private void ShowSuccessText()
+        {
+            _infoSettingsLabel.text = $"Success";
+            _infoSettingsLabel.color = Color.green;
         }
 
         private void OnEnable()

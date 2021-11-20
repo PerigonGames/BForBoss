@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -23,10 +24,18 @@ namespace BForBoss
 
         public bool CanUseThisUsername(string username)
         {
-            var isWhiteSpace = !username.IsNullOrWhitespace();
+            var notOnlyWhiteSpace = !username.IsNullOrWhitespace();
             var isWithinTwentyChar = username.Length < CharacterLimit;
-
-            return isWhiteSpace && isWithinTwentyChar;
+            var onlyLetterOrDigits = IsAlphaNumeric(username);
+            
+            return notOnlyWhiteSpace && isWithinTwentyChar && onlyLetterOrDigits;
+        }
+        
+        private bool IsAlphaNumeric(string inputString)
+        {
+            var regexPattern = "^[a-zA-Z0-9 ]+$";
+            Regex r = new Regex(regexPattern);
+            return r.IsMatch(inputString);
         }
     }
 }
