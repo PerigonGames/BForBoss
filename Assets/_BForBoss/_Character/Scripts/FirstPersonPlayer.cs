@@ -2,7 +2,6 @@ using Cinemachine;
 using ECM2.Characters;
 using ECM2.Components;
 using Sirenix.OdinInspector;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -239,8 +238,6 @@ namespace BForBoss
         {
             _jumpCount = 0;
         }
-
-
         
         private void TogglePlayerModel()
         {
