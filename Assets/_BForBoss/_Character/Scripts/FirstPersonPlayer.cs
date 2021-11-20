@@ -89,7 +89,7 @@ namespace BForBoss
             {
                 _slideBehaviour.Initialize(this);
             }
-            _wallRunBehaviour?.Initialize(this, base.GetMovementInput, ResetJumpCount);
+            _wallRunBehaviour?.Initialize(this, base.GetMovementInput, AllowAdditionalJump);
 
             TogglePlayerModel();
         }
@@ -240,7 +240,10 @@ namespace BForBoss
             _jumpCount = 0;
         }
 
-
+        private void AllowAdditionalJump()
+        {
+            _jumpCount = jumpMaxCount - 1;
+        }
         
         private void TogglePlayerModel()
         {
