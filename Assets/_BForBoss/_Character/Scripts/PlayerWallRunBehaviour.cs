@@ -67,7 +67,7 @@ namespace BForBoss
         private Collider _lastWall;
         private float _baseMaxSpeed;
         private Func<Vector2> _movementInput;
-        private Action _OnWallRunFinished;
+        private Action<int> _OnWallRunFinished;
 
         private float _currentJumpDuration = 0f;
         private float _timeSinceWallAttach = 0f;
@@ -84,7 +84,7 @@ namespace BForBoss
         #endregion
 
         #region PUBLIC_METHODS
-        public void Initialize(Character baseCharacter, Func<Vector2> getMovementInput, Action OnWallRunFinished)
+        public void Initialize(Character baseCharacter, Func<Vector2> getMovementInput, Action<int> OnWallRunFinished)
         {
             _baseCharacter = baseCharacter;
             _fpsCharacter = baseCharacter as FirstPersonPlayer;
@@ -117,7 +117,7 @@ namespace BForBoss
                 if(_isWallRunning || hit.collider != _lastWall) 
                     WallRun(hit);
             }
-            else if (_isWallRunning) StopWallRunning();
+            else if (_isWallRunning) StopWallRunning(false);
         }
 
         public void OnJumped()
@@ -125,7 +125,7 @@ namespace BForBoss
             _currentJumpDuration = 0f;
             if (_isWallRunning)
             {
-                StopWallRunning();
+                StopWallRunning(true);
             }
         }
 
@@ -135,7 +135,7 @@ namespace BForBoss
             _lastWall = null;
             if (_isWallRunning)
             {
-                StopWallRunning();
+                StopWallRunning(false);
             }
         }
 
@@ -158,7 +158,7 @@ namespace BForBoss
             var movement = _movementInput();
             if (movement.sqrMagnitude <= 0 || movement.y < 0)
             {
-                StopWallRunning();
+                StopWallRunning(false);
                 return;
             }
             var velocity = _baseCharacter.GetVelocity();
@@ -166,7 +166,7 @@ namespace BForBoss
             velocity = velocity.dot(alongWall) * alongWall;
             if (velocity.sqrMagnitude < _minSpeed * _minSpeed)
             {
-                StopWallRunning();
+                StopWallRunning(false);
                 return;
             }
             var downwardForce = _timeSinceWallAttach >= _gravityTimerDuration ? 
@@ -242,7 +242,7 @@ namespace BForBoss
             return IsClearOfGround();
         }
 
-        private void StopWallRunning()
+        private void StopWallRunning(bool jumpedOutOfWallRun)
         {
             if (!_isWallRunning) 
                 return;
@@ -250,7 +250,7 @@ namespace BForBoss
             _baseCharacter.maxWalkSpeed = _baseMaxSpeed;
             _timeSinceWallAttach = 0f;
             _timeSinceWallDetach = 0f;
-            _OnWallRunFinished?.Invoke();
+            _OnWallRunFinished?.Invoke(jumpedOutOfWallRun ? 1 : 0);
         }
 
         private bool IsClearOfGround()
