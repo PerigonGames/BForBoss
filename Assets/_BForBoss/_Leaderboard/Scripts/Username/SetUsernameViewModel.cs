@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace BForBoss
+namespace Perigon.Leaderboard
 {
     public class SetUsernameViewModel
     {

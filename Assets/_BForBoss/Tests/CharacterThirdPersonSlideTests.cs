@@ -1,7 +1,6 @@
-using BForBoss;
 using NUnit.Framework;
 using System.Collections;
-using System.Collections.Generic;
+using Perigon.Character;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;

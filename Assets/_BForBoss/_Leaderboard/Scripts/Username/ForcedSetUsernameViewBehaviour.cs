@@ -1,7 +1,8 @@
+using Perigon.Utility;
 using PerigonGames;
 using UnityEngine;
 
-namespace BForBoss
+namespace Perigon.Leaderboard
 {
     public class ForcedSetUsernameViewBehaviour : SetUsernameViewBehaviour
     {

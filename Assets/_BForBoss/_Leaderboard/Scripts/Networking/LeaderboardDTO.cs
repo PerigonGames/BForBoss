@@ -1,6 +1,6 @@
 using System;
 
-namespace BForBoss
+namespace Perigon.Leaderboard
 {
     public class EntryDTO
     {

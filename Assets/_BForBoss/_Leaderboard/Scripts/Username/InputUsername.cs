@@ -1,8 +1,9 @@
 using System.Text.RegularExpressions;
+using Perigon.Analytics;
 using Sirenix.Utilities;
 using UnityEngine;
 
-namespace BForBoss
+namespace Perigon.Leaderboard
 {
     public class InputUsername
     {

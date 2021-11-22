@@ -1,12 +1,13 @@
 using System;
-using ECM2.Characters;
 using ECM2.Components;
+using ECM2.Characters;
+using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
-namespace BForBoss
+namespace Perigon.Character
 {
     public class PlayerDashBehaviour : MonoBehaviour
     {
@@ -26,12 +27,12 @@ namespace BForBoss
         private Vector3 _dashingDirection = Vector3.zero;
         private Func<Vector2> _characterInputMovement = null;
 
-        private Character _baseCharacter = null;
+        private ECM2.Characters.Character _baseCharacter = null;
         private InputAction _dashInputAction = null;
 
         private bool IsCoolDownOver => _dashCoolDownElapsedTime <= 0;
         
-        public void Initialize(Character baseCharacter, Func<Vector2> characterMovement)
+        public void Initialize(ECM2.Characters.Character baseCharacter, Func<Vector2> characterMovement)
         {
             _baseCharacter = baseCharacter;
             _characterInputMovement = characterMovement;

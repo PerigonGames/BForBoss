@@ -1,8 +1,9 @@
+using Perigon.Utility;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-namespace BForBoss
+namespace Perigon.Leaderboard
 {
     /// <summary>
     /// Placeholder view just to input the name

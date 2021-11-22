@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using Sirenix.Utilities;
 
-namespace BForBoss
+namespace Perigon.Leaderboard
 {
     public class DreamloGetLeaderboardEndPoint : ILeaderboardGetEndPoint
     {

@@ -1,28 +1,10 @@
+using Perigon.Utility;
 using UnityEngine;
 
-namespace BForBoss {
-    public interface IInputSettings
-    {
-        bool IsInverted { get; set; }
-        float MouseHorizontalSensitivity { get; set; }
-        float MouseVerticalSensitivity { get; set; }
-        float ControllerHorizontalSensitivity { get; set; }
-        float ControllerVerticalSensitivity { get; set; }
-        void RevertAllSettings();
-        void DisableActions();
-        void EnableActions();
-    }
-
+namespace Perigon.Character 
+{
     public partial class FirstPersonPlayer : IInputSettings
     {
-        private partial struct PlayerPrefKey
-        {
-            public const string Is_Inverted = "is_inverted";
-            public const string Mouse_Horizontal_Sensitivity = "mouse_horizontal_sensitivity";
-            public const string Mouse_Vertical_Sensitivity = "mouse_vertical_sensitivity";
-            public const string Controller_Horizontal_Sensitivity = "controller_horizontal_sensitivity";
-            public const string Controller_Vertical_Sensitivity = "controller_vertical_sensitivity";
-        }
 
         private const string PlayerControlActionMap = "Player Controls";
         
@@ -33,11 +15,11 @@ namespace BForBoss {
             
         private void SetupInput()
         {
-            IsInverted = PlayerPrefs.GetInt(PlayerPrefKey.Is_Inverted, Default_Is_Inverted) == 1;
-            MouseHorizontalSensitivity = PlayerPrefs.GetFloat(PlayerPrefKey.Mouse_Horizontal_Sensitivity, Default_Mouse_Sensitivity);
-            MouseVerticalSensitivity = PlayerPrefs.GetFloat(PlayerPrefKey.Mouse_Vertical_Sensitivity, Default_Mouse_Sensitivity);
-            ControllerHorizontalSensitivity = PlayerPrefs.GetFloat(PlayerPrefKey.Controller_Horizontal_Sensitivity, Default_Controller_Sensitivity);
-            ControllerVerticalSensitivity = PlayerPrefs.GetFloat(PlayerPrefKey.Controller_Vertical_Sensitivity,
+            IsInverted = PlayerPrefs.GetInt(PlayerPrefKeys.InputSettings.Is_Inverted, Default_Is_Inverted) == 1;
+            MouseHorizontalSensitivity = PlayerPrefs.GetFloat(PlayerPrefKeys.InputSettings.Mouse_Horizontal_Sensitivity, Default_Mouse_Sensitivity);
+            MouseVerticalSensitivity = PlayerPrefs.GetFloat(PlayerPrefKeys.InputSettings.Mouse_Vertical_Sensitivity, Default_Mouse_Sensitivity);
+            ControllerHorizontalSensitivity = PlayerPrefs.GetFloat(PlayerPrefKeys.InputSettings.Controller_Horizontal_Sensitivity, Default_Controller_Sensitivity);
+            ControllerVerticalSensitivity = PlayerPrefs.GetFloat(PlayerPrefKeys.InputSettings.Controller_Vertical_Sensitivity,
                 Default_Controller_Sensitivity);
         }
         
@@ -48,7 +30,7 @@ namespace BForBoss {
             set
             { 
                 var isInverted = value ? 1 : 0; 
-                PlayerPrefs.SetInt(PlayerPrefKey.Is_Inverted, isInverted);
+                PlayerPrefs.SetInt(PlayerPrefKeys.InputSettings.Is_Inverted, isInverted);
                 GetCharacterLook().invertLook = !value;
             }
         }
@@ -59,7 +41,7 @@ namespace BForBoss {
 
             set
             {
-                PlayerPrefs.SetFloat(PlayerPrefKey.Mouse_Horizontal_Sensitivity, value);
+                PlayerPrefs.SetFloat(PlayerPrefKeys.InputSettings.Mouse_Horizontal_Sensitivity, value);
                 GetCharacterLook().mouseHorizontalSensitivity = value;
             }
         }
@@ -70,7 +52,7 @@ namespace BForBoss {
 
             set
             {
-                PlayerPrefs.SetFloat(PlayerPrefKey.Mouse_Vertical_Sensitivity, value);
+                PlayerPrefs.SetFloat(PlayerPrefKeys.InputSettings.Mouse_Vertical_Sensitivity, value);
                 GetCharacterLook().mouseVerticalSensitivity = value;
             }
         }
@@ -80,7 +62,7 @@ namespace BForBoss {
             get => GetCharacterLook().controllerHorizontalSensitivity;
             set
             {
-                PlayerPrefs.SetFloat(PlayerPrefKey.Controller_Horizontal_Sensitivity, value);
+                PlayerPrefs.SetFloat(PlayerPrefKeys.InputSettings.Controller_Horizontal_Sensitivity, value);
                 GetCharacterLook().controllerHorizontalSensitivity = value;   
             }     
         }
@@ -90,7 +72,7 @@ namespace BForBoss {
             get => GetCharacterLook().controllerVerticalSensitivity;
             set
             {
-                PlayerPrefs.SetFloat(PlayerPrefKey.Controller_Vertical_Sensitivity, value);
+                PlayerPrefs.SetFloat(PlayerPrefKeys.InputSettings.Controller_Vertical_Sensitivity, value);
                 GetCharacterLook().controllerVerticalSensitivity = value;   
             }  
         }

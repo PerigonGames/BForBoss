@@ -5,7 +5,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace BForBoss
+namespace Perigon.Character
 {
     public partial class FirstPersonPlayer : FirstPersonCharacter
     {

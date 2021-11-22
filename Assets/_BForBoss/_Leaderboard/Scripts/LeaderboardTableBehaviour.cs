@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BForBoss
+namespace Perigon.Leaderboard
 {
     public class LeaderboardTableBehaviour : MonoBehaviour
     {

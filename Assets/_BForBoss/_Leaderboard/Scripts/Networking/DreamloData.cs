@@ -1,4 +1,4 @@
-namespace BForBoss
+namespace Perigon.Leaderboard
 {
     public static class DreamloData
     {

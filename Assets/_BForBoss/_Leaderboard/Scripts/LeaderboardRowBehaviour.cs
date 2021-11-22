@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-namespace BForBoss
+namespace Perigon.Leaderboard
 {
     public class LeaderboardRowBehaviour : MonoBehaviour
     {

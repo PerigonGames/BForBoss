@@ -1,7 +1,7 @@
 using System;
 using System.Net.Http;
 
-namespace BForBoss
+namespace Perigon.Leaderboard
 {
     public class DreamloSendScoreEndPoint : ILeaderboardPostEndPoint
     {
