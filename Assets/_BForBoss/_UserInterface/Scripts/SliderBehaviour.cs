@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BForBoss
+namespace Perigon.UserInterface
 {
     public class SliderBehaviour : MonoBehaviour
     {

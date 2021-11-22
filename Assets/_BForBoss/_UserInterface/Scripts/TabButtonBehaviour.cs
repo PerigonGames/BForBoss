@@ -1,6 +1,6 @@
 using UnityEngine.UI;
 
-namespace BForBoss
+namespace Perigon.UserInterface
 {
     public class TabButtonBehaviour : Button
     {

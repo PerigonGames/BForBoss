@@ -1,5 +1,6 @@
 using Perigon.Character;
 using Perigon.Leaderboard;
+using Perigon.UserInterface;
 using Perigon.Utility;
 using PerigonGames;
 using UnityEngine;

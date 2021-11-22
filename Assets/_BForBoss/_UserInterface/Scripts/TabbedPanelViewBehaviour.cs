@@ -2,7 +2,7 @@ using System;
 using PerigonGames;
 using UnityEngine;
 
-namespace BForBoss
+namespace Perigon.UserInterface
 {
     public sealed class TabbedPanelViewBehaviour : MonoBehaviour
     {
