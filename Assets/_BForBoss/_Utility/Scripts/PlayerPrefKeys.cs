@@ -1,6 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
 namespace Perigon.Utility
 {
-    public class PlayerPrefKeys 
+    public static class PlayerPrefKeys 
     {
         public struct InputSettings
         {
@@ -21,6 +26,31 @@ namespace Perigon.Utility
             public const string ShowFPS = "ShowFPS";
             public const string ShowRAMUsage = "ShowRAMUsage";
             public const string ShowPCSpecs = "ShowPCSpecs";
+        }
+
+        public static IList<string> GetAllKeys()
+        {
+            var keys = GetConstStringValuesFromStruct<InputSettings>().ToList();
+            keys.AddRange(GetConstStringValuesFromStruct<ThirdPerson>());
+            keys.AddRange(GetConstStringValuesFromStruct<GameplaySettings>());
+            return keys;
+        }
+
+        /// <summary>
+        /// Gets all constant string values defined in the struct
+        /// </summary>
+        /// <typeparam name="T">Struct containing player pref keys</typeparam>
+        /// <returns>Array of Keys</returns>
+        private static IEnumerable<string> GetConstStringValuesFromStruct<T>() where T : struct
+        {
+            Type playerPrefStruct = typeof(T);
+
+            FieldInfo[] fields = playerPrefStruct.GetFields(BindingFlags.Public |
+         BindingFlags.Static | BindingFlags.FlattenHierarchy);
+
+            return fields
+                .Where(field => field.IsLiteral && !field.IsInitOnly && field.FieldType == typeof(string))
+                .Select(field => (string)field.GetRawConstantValue());
         }
     }
 }

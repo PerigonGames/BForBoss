@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Perigon.Utility;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace BForBoss
@@ -16,10 +12,7 @@ namespace BForBoss
 
         public PlayerPrefResetter(Rect masterRect) : base(masterRect)
         {
-            _keys = GetConstStringValuesFromStruct<PlayerPrefKeys.InputSettings>();
-            _keys.AddRange(GetConstStringValuesFromStruct<PlayerPrefKeys.ThirdPerson>());
-            _keys.AddRange(GetConstStringValuesFromStruct<PlayerPrefKeys.GameplaySettings>());
-            // if we add player pref fields anywhere else make sure to append them to the array here
+            _keys = PlayerPrefKeys.GetAllKeys();
         }
 
         protected override void DrawWindow()
@@ -68,23 +61,6 @@ namespace BForBoss
         {
             Debug.Log($"Deleting {key} player pref");
             PlayerPrefs.DeleteKey(key);
-        }
-
-        /// <summary>
-        /// Gets all constant string values defined in the struct
-        /// </summary>
-        /// <typeparam name="T">Struct containing player pref keys</typeparam>
-        /// <returns>Array of Keys</returns>
-        private static List<string> GetConstStringValuesFromStruct<T>() where T : struct
-        {
-            Type playerPrefStruct = typeof(T);
-
-            FieldInfo[] fields = playerPrefStruct.GetFields(BindingFlags.Public |
-         BindingFlags.Static | BindingFlags.FlattenHierarchy);
-
-            return fields
-                .Where(field => field.IsLiteral && !field.IsInitOnly && field.FieldType == typeof(string))
-                .Select(field => (string)field.GetRawConstantValue()).ToList();
         }
     }
 }
