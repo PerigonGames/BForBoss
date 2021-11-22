@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BForBoss
+namespace Perigon.Leaderboard
 {
     public class PanelSwitch : MonoBehaviour
     {

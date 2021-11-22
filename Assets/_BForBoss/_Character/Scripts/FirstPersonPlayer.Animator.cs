@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BForBoss
+namespace Perigon.Character
 {
     public partial class FirstPersonPlayer
     {

@@ -2,7 +2,7 @@ using System;
 using Sirenix.Utilities;
 using UnityEngine;
 
-namespace BForBoss
+namespace Perigon.Leaderboard
 {
     public class UploadPlayerScoreDataSource
     {

@@ -1,4 +1,4 @@
-namespace BForBoss
+namespace Perigon.Character
 {
     public interface ICharacterSpeed
     {

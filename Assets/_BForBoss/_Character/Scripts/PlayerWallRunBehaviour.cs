@@ -1,10 +1,8 @@
-using ECM2.Characters;
-using ECM2.Common;
 using UnityEngine;
 using System;
-using ECM2.Components;
+using ECM2.Common;
 
-namespace BForBoss
+namespace Perigon.Character
 {
     public class PlayerWallRunBehaviour : MonoBehaviour
     {
@@ -59,7 +57,7 @@ namespace BForBoss
         };
 
         private bool _isWallRunning = false;
-        private Character _baseCharacter = null;
+        private ECM2.Characters.Character _baseCharacter = null;
         private FirstPersonPlayer _fpsCharacter = null;
         private LayerMask _mask;
         private Vector3 _lastWallRunPosition;
@@ -84,7 +82,7 @@ namespace BForBoss
         #endregion
 
         #region PUBLIC_METHODS
-        public void Initialize(Character baseCharacter, Func<Vector2> getMovementInput, Action<int> OnWallRunFinished)
+        public void Initialize(ECM2.Characters.Character baseCharacter, Func<Vector2> getMovementInput, Action<int> OnWallRunFinished)
         {
             _baseCharacter = baseCharacter;
             _fpsCharacter = baseCharacter as FirstPersonPlayer;

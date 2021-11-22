@@ -1,8 +1,7 @@
-using ECM2.Characters;
 using ECM2.Common;
 using UnityEngine;
 
-namespace BForBoss
+namespace Perigon.Character
 {
     public class PlayerSlideBehaviour : MonoBehaviour
     {
@@ -14,14 +13,14 @@ namespace BForBoss
         private bool _canSlide = true;
         private bool _isSliding = false;
 
-        private Character _baseCharacter = null;
+        private ECM2.Characters.Character _baseCharacter = null;
 
         public bool IsSliding => _isSliding;
 
         public float MaxWalkSpeedSliding => _maxWalkSpeedSliding;
         public float brakingDecelerationSliding => _brakingDecelerationSliding;
 
-        public void Initialize(Character character)
+        public void Initialize(ECM2.Characters.Character character)
         {
             _baseCharacter = character;
         }

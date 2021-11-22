@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using mixpanel;
 
-namespace BForBoss
+namespace Perigon.Analytics
 {
     #region STRUCTS
     public readonly struct Event
