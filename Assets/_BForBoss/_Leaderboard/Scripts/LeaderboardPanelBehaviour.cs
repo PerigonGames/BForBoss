@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Perigon.Utility;
 using PerigonGames;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -35,7 +36,7 @@ namespace Perigon.Leaderboard
             {
                 Input = input,
                 Time = time / 1000,
-                Username = PlayerPrefs.GetString(UploadPlayerScoreDataSource.PlayerPrefKey.UserName)
+                Username = PlayerPrefs.GetString(PlayerPrefKeys.LeaderboardSettings.UserName)
             };
             _currentUserScores.SetField(0, score);
         }

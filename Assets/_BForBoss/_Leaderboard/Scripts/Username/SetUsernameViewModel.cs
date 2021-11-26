@@ -1,3 +1,4 @@
+using Perigon.Utility;
 using System;
 using UnityEngine;
 
@@ -26,7 +27,7 @@ namespace Perigon.Leaderboard
 
         public bool IsUsernameAlreadySet()
         {
-            return PlayerPrefs.HasKey(UploadPlayerScoreDataSource.PlayerPrefKey.UserName);
+            return PlayerPrefs.HasKey(PlayerPrefKeys.LeaderboardSettings.UserName);
         }
 
         public void RemoveSubscribers()

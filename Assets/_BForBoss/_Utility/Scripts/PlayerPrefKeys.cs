@@ -28,11 +28,20 @@ namespace Perigon.Utility
             public const string ShowPCSpecs = "ShowPCSpecs";
         }
 
+        public struct LeaderboardSettings
+        {
+            public const string UserName = "UserName";
+            public const string Timer = "Timer";
+            public const string Input = "Input";
+            public const string ShouldUpload = "ShouldUpload";
+        }
+
         public static IList<string> GetAllKeys()
         {
             var keys = GetConstStringValuesFromStruct<InputSettings>().ToList();
             keys.AddRange(GetConstStringValuesFromStruct<ThirdPerson>());
             keys.AddRange(GetConstStringValuesFromStruct<GameplaySettings>());
+            keys.AddRange(GetConstStringValuesFromStruct<LeaderboardSettings>());
             return keys;
         }
 
