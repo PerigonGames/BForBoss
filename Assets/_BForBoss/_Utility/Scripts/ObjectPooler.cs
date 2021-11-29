@@ -20,23 +20,44 @@ namespace Perigon.Utility
 		protected List<T> pool = null;
 #endif
 
-		protected Func<T> createFunc;
+		protected Func<T> buildObject;
 		protected Action<T> actionOnGet;
 		protected Action<T> actionOnRelease;
 
-        public ObjectPooler(string poolName, Func<T> createFunc, Action<T> actionOnGet, Action<T> actionOnRelease)
-        {
-            this.name = poolName;
-            this.createFunc = createFunc;
-            this.actionOnGet = actionOnGet;
-            this.actionOnRelease = actionOnRelease;
+		/// <summary>
+		/// Create a new Object pooler for a given type
+		/// </summary>
+		/// <param name="poolName">Name of the pool, to be used for the pool scene name</param>
+		/// <param name="buildObject">Function that creates a new instance of an object when existing object is available</param>
+		/// <param name="actionOnGet">Setup action on grabbing a new object from the pool</param>
+		/// <param name="actionOnRelease">Clean up action when recycling an object</param>
+		public ObjectPooler(string poolName, Func<T> buildObject, Action<T> actionOnGet = null, Action<T> actionOnRelease = null)
+		{
+			this.name = poolName;
+			this.buildObject = buildObject;
+			this.actionOnGet = actionOnGet;
+			this.actionOnRelease = actionOnRelease;
 
 #if UNITY_2021_1_OR_NEWER
-			objectPool = new ObjectPool<T>(createFunc, actionOnGet, actionOnRelease);
+			objectPool = new ObjectPool<T>(buildObject, actionOnGet, actionOnRelease);
 #endif
 		}
 
-        public T Get()
+        ~ObjectPooler()
+        {
+#if UNITY_2021_1_OR_NEWER
+			objectPool.Dispose();
+#else
+			GameObject[] rootObjects = poolScene.GetRootGameObjects();
+			for (int i = 0; i < rootObjects.Length; i++)
+			{
+                UnityEngine.Object.Destroy(rootObjects[i]);
+			}
+			pool = null;
+#endif
+		}
+
+		public T Get()
 		{
 
 #if UNITY_2021_1_OR_NEWER
@@ -55,7 +76,7 @@ namespace Perigon.Utility
 			}
 			else
 			{
-				instance = createFunc();
+				instance = buildObject();
 				SceneManager.MoveGameObjectToScene(
 					instance.gameObject, poolScene
 				);
@@ -83,7 +104,7 @@ namespace Perigon.Utility
 		void CreatePools()
 		{
 			pool = new List<T>();
-
+#if UNITY_EDITOR
 			if (Application.isEditor)
 			{
 				poolScene = SceneManager.GetSceneByName(name);
@@ -101,7 +122,7 @@ namespace Perigon.Utility
 					return;
 				}
 			}
-
+#endif
 			poolScene = SceneManager.CreateScene(name);
 		}
 #endif
