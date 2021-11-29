@@ -48,11 +48,7 @@ namespace Perigon.Utility
 #if UNITY_2021_1_OR_NEWER
 			objectPool.Dispose();
 #else
-			GameObject[] rootObjects = poolScene.GetRootGameObjects();
-			for (int i = 0; i < rootObjects.Length; i++)
-			{
-                UnityEngine.Object.Destroy(rootObjects[i]);
-			}
+			SceneManager.UnloadSceneAsync(poolScene); //destroys all objects in the pool
 			pool = null;
 #endif
 		}
