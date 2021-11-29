@@ -101,22 +101,19 @@ namespace Perigon.Utility
 		{
 			pool = new List<T>();
 #if UNITY_EDITOR
-			if (Application.isEditor)
+			poolScene = SceneManager.GetSceneByName(name);
+			if (poolScene.isLoaded)
 			{
-				poolScene = SceneManager.GetSceneByName(name);
-				if (poolScene.isLoaded)
+				GameObject[] rootObjects = poolScene.GetRootGameObjects();
+				for (int i = 0; i < rootObjects.Length; i++)
 				{
-					GameObject[] rootObjects = poolScene.GetRootGameObjects();
-					for (int i = 0; i < rootObjects.Length; i++)
+					T instance = rootObjects[i].GetComponent<T>();
+					if (!instance.gameObject.activeSelf)
 					{
-						T instance = rootObjects[i].GetComponent<T>();
-						if (!instance.gameObject.activeSelf)
-						{
-							pool.Add(instance);
-						}
+						pool.Add(instance);
 					}
-					return;
 				}
+				return;
 			}
 #endif
 			poolScene = SceneManager.CreateScene(name);
