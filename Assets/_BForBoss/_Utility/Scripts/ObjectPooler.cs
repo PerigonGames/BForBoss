@@ -1,7 +1,11 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_2021_1_OR_NEWER
+using UnityEngine.Pool;
+#else
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+#endif
 
 namespace Perigon.Utility
 {
@@ -9,9 +13,12 @@ namespace Perigon.Utility
     {
 		protected string name;
 
-		protected List<T> pool = null;
-
+#if UNITY_2021_1_OR_NEWER
+		protected IObjectPool<T> objectPool;
+#else
 		protected Scene poolScene;
+		protected List<T> pool = null;
+#endif
 
 		protected Func<T> createFunc;
 		protected Action<T> actionOnGet;
@@ -23,12 +30,19 @@ namespace Perigon.Utility
             this.createFunc = createFunc;
             this.actionOnGet = actionOnGet;
             this.actionOnRelease = actionOnRelease;
-        }
+
+#if UNITY_2021_1_OR_NEWER
+			objectPool = new ObjectPool<T>(createFunc, actionOnGet, actionOnRelease);
+#endif
+		}
 
         public T Get()
 		{
-			T instance;
 
+#if UNITY_2021_1_OR_NEWER
+			return objectPool.Get();
+#else
+			T instance;
 			if (pool == null)
 			{
 				CreatePools();
@@ -48,18 +62,24 @@ namespace Perigon.Utility
 			}
 			actionOnGet?.Invoke(instance);
 			return instance;
+#endif
 		}
 
 		public void Reclaim(T toRecycle)
 		{
+#if UNITY_2021_1_OR_NEWER
+			objectPool.Release(toRecycle);
+#else
 			if (pool == null)
 			{
 				CreatePools();
 			}
 			actionOnRelease?.Invoke(toRecycle);
 			pool.Add(toRecycle);
+#endif
 		}
 
+#if !UNITY_2021_1_OR_NEWER
 		void CreatePools()
 		{
 			pool = new List<T>();
@@ -84,5 +104,6 @@ namespace Perigon.Utility
 
 			poolScene = SceneManager.CreateScene(name);
 		}
+#endif
 	}
 }
