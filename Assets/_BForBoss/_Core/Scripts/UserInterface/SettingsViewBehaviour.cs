@@ -26,10 +26,10 @@ namespace BForBoss
             ILockInput lockInput)
         {
             _lockInput = lockInput;
-            _inputSettingsView.Initialize(new InputSettingsViewModel(inputSettings));
-            _setUsernameView.Initialize(lockInput);
-            _tabbedPanelViews.Initialize();
-            _gameplaySettingsView.Initialize(thirdPersonSettings);
+            _inputSettingsView?.Initialize(new InputSettingsViewModel(inputSettings));
+            _setUsernameView?.Initialize(lockInput);
+            _tabbedPanelViews?.Initialize();
+            _gameplaySettingsView?.Initialize(thirdPersonSettings);
         }
 
         public void OpenPanel()
