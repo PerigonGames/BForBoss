@@ -1,4 +1,3 @@
-using System;
 using Perigon.Character;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
@@ -14,8 +13,20 @@ namespace BForBoss
         private FreezeActionsUtility _freezeActionsUtility = null;
         private readonly StateManager _stateManager = StateManager.Instance;
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        [Title("Debug")]
+        [SerializeField] private GameObject _debugCanvas;
+#endif
+        
         private void Awake()
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+
+            if (FindObjectOfType<DebugWindow>() == null)
+            {
+                Instantiate(_debugCanvas).gameObject.GetComponent<DebugWindow>();
+            }
+#endif
             _stateManager.OnStateChanged += HandleStateChange;
         }
 
