@@ -8,15 +8,16 @@ namespace Perigon.Weapons
     {
         private Camera _mainCamera = null;
         [SerializeField] private InputActionAsset _actions;
+        [SerializeField] protected Transform _firePoint = null;
         [InlineEditor]
         [SerializeField] private WeaponScriptableObject _weaponScriptableObject;
         
-        private bool _isFiring = false;
-        private float _elapsedRateOfFire = 0;
+        protected bool _isFiring = false;
+        protected float _elapsedRateOfFire = 0;
         protected InputAction _fireInputAction { get; set; }
         protected IWeapon _weaponProperty;
 
-        private bool CanShoot => _elapsedRateOfFire < 0;
+        protected bool CanShoot => _elapsedRateOfFire < 0;
         
         public void Initialize(IWeapon weaponProperty = null)
         {
@@ -59,36 +60,10 @@ namespace Perigon.Weapons
             }
         }
 
-        private void OnFire(InputAction.CallbackContext context)
-        {
-            if (context.started)
-            {
-                _isFiring = true;
-            }
-            
-            if (context.canceled)
-            {
-                _isFiring = false;
-                _elapsedRateOfFire = 0;
-            }
-        }
-
-        protected virtual void Update()
-        {
-            if (!_isFiring)
-            {
-                return;
-            }
-
-            _elapsedRateOfFire -= Time.deltaTime;
-            if (CanShoot)
-            {
-                _elapsedRateOfFire = _weaponProperty.RateOfFire;
-                GenerateBullet(MainCamera.transform.position + MainCamera.transform.TransformDirection(Vector3.forward));
-            }
-        }
-
-        private void GenerateBullet(Vector3 position)
+        protected abstract void OnFire(InputAction.CallbackContext context);
+        protected abstract void Update();
+        
+        protected void GenerateBullet(Vector3 position)
         {
             var bullet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             bullet.GetComponent<Collider>().enabled = false;
