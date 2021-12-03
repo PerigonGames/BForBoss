@@ -6,15 +6,17 @@ namespace Perigon.Weapons
 {
     public abstract class WeaponBehaviour : MonoBehaviour
     {
-        private Camera _mainCamera = null;
+
         [SerializeField] private InputActionAsset _actions;
         [SerializeField] protected Transform _firePoint = null;
         [InlineEditor]
         [SerializeField] private WeaponScriptableObject _weaponScriptableObject;
+       
+        private InputAction _fireInputAction { get; set; }
+        private Camera _mainCamera = null;
         
-        protected bool _isFiring = false;
         protected float _elapsedRateOfFire = 0;
-        protected InputAction _fireInputAction { get; set; }
+ 
         protected IWeapon _weaponProperty;
 
         protected bool CanShoot => _elapsedRateOfFire < 0;
