@@ -29,8 +29,7 @@ namespace Perigon.Weapons
             _elapsedRateOfFire -= Time.deltaTime;
             if (CanShoot)
             {
-                _elapsedRateOfFire = _weaponProperty.RateOfFire;
-                GenerateBullet(_firePoint.position);
+                Fire();
             }
         }
     }

@@ -23,6 +23,22 @@ namespace Perigon.Weapons
         {
             _weaponProperty = weaponProperty ?? _weaponScriptableObject;
         }
+        
+        protected abstract void OnFire(InputAction.CallbackContext context);
+        protected abstract void Update();
+        
+        protected void Fire()
+        {
+            _elapsedRateOfFire = _weaponProperty.RateOfFire;
+            GenerateBullet(_firePoint.position);
+        }
+        
+        protected void GenerateBullet(Vector3 position)
+        {
+            var bullet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            bullet.GetComponent<Collider>().enabled = false;
+            bullet.transform.position = position;
+        }
 
         private Camera MainCamera
         {
@@ -60,14 +76,5 @@ namespace Perigon.Weapons
             }
         }
 
-        protected abstract void OnFire(InputAction.CallbackContext context);
-        protected abstract void Update();
-        
-        protected void GenerateBullet(Vector3 position)
-        {
-            var bullet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            bullet.GetComponent<Collider>().enabled = false;
-            bullet.transform.position = position;
-        }
     }
 }
