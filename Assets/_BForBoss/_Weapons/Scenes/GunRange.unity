@@ -749,6 +749,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actions: {fileID: -944628639613478452, guid: 11b5fd57f5ed74ef0a6fcf19057db823, type: 3}
   _firePoint: {fileID: 2100014822}
+  _crosshair: {fileID: 1924278439}
   _weaponScriptableObject: {fileID: 11400000, guid: b669f6e948f309b43adf276791a84958, type: 2}
 --- !u!114 &513119966
 MonoBehaviour:
@@ -764,6 +765,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actions: {fileID: -944628639613478452, guid: 11b5fd57f5ed74ef0a6fcf19057db823, type: 3}
   _firePoint: {fileID: 2100014822}
+  _crosshair: {fileID: 1924278439}
   _weaponScriptableObject: {fileID: 11400000, guid: 175511df022b9864089a441245a65268, type: 2}
 --- !u!1001 &649737413
 PrefabInstance:
@@ -2660,6 +2662,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2814208295122474512, guid: de861eb90edee1544b0c90c2d42d7760, type: 3}
   m_PrefabInstance: {fileID: 1917978320}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1924278439 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8591326829607428203, guid: b7ba11e2a48654c4b8cc5bf1d0797519, type: 3}
+  m_PrefabInstance: {fileID: 8591326830568516209}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c63655f96a0cb847b22ac3fb7227938, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1998908193 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2960909343835694006, guid: e14e306200113394488052c1209e4e04, type: 3}
