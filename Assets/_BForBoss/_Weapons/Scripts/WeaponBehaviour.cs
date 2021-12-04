@@ -1,4 +1,3 @@
-using PerigonGames;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,23 +5,19 @@ using UnityEngine.InputSystem;
 namespace Perigon.Weapons
 {
     public abstract class WeaponBehaviour : MonoBehaviour
-    {
+    {        
+        private const float FutherestDistanceToRayCast = 10000f;
         private readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
-        private readonly float FutherestDistanceToRayCast = 10000f;
         [SerializeField] private InputActionAsset _actions;
         [SerializeField] protected Transform _firePoint = null;
         [SerializeField] private CrosshairBehaviour _crosshair = null;
         [InlineEditor]
         [SerializeField] private WeaponScriptableObject _weaponScriptableObject;
         
-        protected float _elapsedRateOfFire = 0;
-        protected IWeapon _weaponProperty;
-        
-        private IRandomUtility _randomUtility;
+        protected Weapon _weapon = null;
         private InputAction FireInputAction { get; set; }
         private Camera _mainCamera = null;
         
-        protected bool CanShoot => _elapsedRateOfFire <= 0;
         
         private Camera MainCamera
         {
@@ -37,19 +32,25 @@ namespace Perigon.Weapons
             }
         }
         
-        public void Initialize(IWeapon weaponProperty = null, IRandomUtility randomUtility = null)
+        public void Initialize(IWeaponProperties properties = null)
         {
-            _randomUtility = randomUtility ?? new RandomUtility();
-            _weaponProperty = weaponProperty ?? _weaponScriptableObject;
-            _crosshair.SetCrosshairImage(_weaponProperty.Crosshair);
+            var weaponProperty = properties ?? _weaponScriptableObject;
+            _weapon = new Weapon(weaponProperty);
+            BindWeapon();
+            
+            _crosshair.SetCrosshairImage(weaponProperty.Crosshair);
+        }
+
+        private void BindWeapon()
+        {
+            _weapon.OnFireWeapon += Fire;
         }
         
         protected abstract void OnFire(InputAction.CallbackContext context);
         protected abstract void Update();
         
-        protected void Fire()
+        private void Fire()
         {
-            _elapsedRateOfFire = _weaponProperty.RateOfFire;
             GenerateBullet(_firePoint.position, GetDirectionOfShot());
         }
         
@@ -77,19 +78,9 @@ namespace Perigon.Weapons
                 targetPoint = camRay.GetPoint(FutherestDistanceToRayCast);
             }
 
-            var directionWithoutSpread = targetPoint - _firePoint.position;
-            var directionWithSpread = directionWithoutSpread + GenerateSpreadAmount();
-            return directionWithSpread.normalized;
+            return _weapon.GetShootDirection(_firePoint.position, targetPoint);
         }
 
-        private Vector3 GenerateSpreadAmount()
-        {
-            var spread = _weaponProperty.BulletSpread;
-            var spreadRange = spread * 2;
-            var x = -spread + (float)_randomUtility.NextDouble() * spreadRange;
-            var y = -spread + (float)_randomUtility.NextDouble() * spreadRange;
-            return new Vector3(x, y, 0);
-        }
 
         private void Start()
         {
@@ -114,5 +105,13 @@ namespace Perigon.Weapons
             }
         }
 
+        private void OnDisable()
+        {
+            FireInputAction.started -= OnFire;
+            FireInputAction.canceled -= OnFire;
+            FireInputAction.Disable();
+            
+            _weapon.OnFireWeapon -= Fire;
+        }
     }
 }

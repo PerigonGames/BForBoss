@@ -17,7 +17,6 @@ namespace Perigon.Weapons
             if (context.canceled)
             {
                 _isFiring = false;
-                _elapsedRateOfFire = 0;
             }
         }
 
@@ -28,11 +27,8 @@ namespace Perigon.Weapons
                 return;
             }
 
-            _elapsedRateOfFire -= Time.deltaTime;
-            if (CanShoot)
-            {
-                Fire();
-            }
+            _weapon.DecrementElapsedTimeRateOfFire(Time.deltaTime);
+            _weapon.FireIfPossible();
         }
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Perigon.Weapons
 {
-    public interface IWeapon
+    public interface IWeaponProperties
     {
         float RateOfFire { get; }
         Sprite Crosshair { get; }
@@ -11,7 +11,7 @@ namespace Perigon.Weapons
     }
     
     [CreateAssetMenu(fileName = "WeaponProperties", menuName = "PerigonGames/Weapon", order = 1)]
-    public class WeaponScriptableObject : ScriptableObject, IWeapon
+    public class WeaponScriptableObject : ScriptableObject, IWeaponProperties
     {
         [SerializeField] private float _rateOfFire = 0.1f;
         [SerializeField] private float _bulletSpread = 1f;

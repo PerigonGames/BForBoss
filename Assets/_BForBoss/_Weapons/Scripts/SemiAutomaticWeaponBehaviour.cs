@@ -9,19 +9,13 @@ namespace Perigon.Weapons
         {
             if (context.started)
             {
-                if (CanShoot)
-                {
-                    Fire();
-                }
+                _weapon.FireIfPossible();
             }
         }
 
         protected override void Update()
         {
-            if (_elapsedRateOfFire > 0)
-            {
-                _elapsedRateOfFire -= Time.deltaTime;
-            }
+            _weapon.DecrementElapsedTimeRateOfFire(Time.deltaTime);
         }
     }
 }
