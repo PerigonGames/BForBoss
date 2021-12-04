@@ -10,6 +10,7 @@ namespace Perigon.Weapons
         private readonly float FutherestDistanceToRayCast = 10000f;
         [SerializeField] private InputActionAsset _actions;
         [SerializeField] protected Transform _firePoint = null;
+        [SerializeField] private CrosshairBehaviour _crosshair = null;
         [InlineEditor]
         [SerializeField] private WeaponScriptableObject _weaponScriptableObject;
        
@@ -38,6 +39,7 @@ namespace Perigon.Weapons
         public void Initialize(IWeapon weaponProperty = null)
         {
             _weaponProperty = weaponProperty ?? _weaponScriptableObject;
+            _crosshair.SetCrosshairImage(_weaponProperty.Crosshair);
         }
         
         protected abstract void OnFire(InputAction.CallbackContext context);
@@ -77,7 +79,7 @@ namespace Perigon.Weapons
             return directionWithoutSpread.normalized;
         }
 
-        private void Awake()
+        private void Start()
         {
             Initialize();
             SetupPlayerInput();

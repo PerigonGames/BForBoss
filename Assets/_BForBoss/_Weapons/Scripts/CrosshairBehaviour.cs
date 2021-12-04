@@ -12,9 +12,10 @@ namespace Perigon.Weapons
         private void Awake()
         {
             _crosshair = GetComponentInChildren<Image>();
+            SetDefaultCrosshair();
         }
 
-        private void Start()
+        public void SetDefaultCrosshair()
         {
             _crosshair.sprite = _defaultCrosshair;
         }
