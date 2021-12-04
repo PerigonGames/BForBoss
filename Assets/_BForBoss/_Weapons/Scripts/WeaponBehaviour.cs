@@ -1,3 +1,4 @@
+using PerigonGames;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,14 +14,14 @@ namespace Perigon.Weapons
         [SerializeField] private CrosshairBehaviour _crosshair = null;
         [InlineEditor]
         [SerializeField] private WeaponScriptableObject _weaponScriptableObject;
-       
+        
+        protected float _elapsedRateOfFire = 0;
+        protected IWeapon _weaponProperty;
+        
+        private IRandomUtility _randomUtility;
         private InputAction FireInputAction { get; set; }
         private Camera _mainCamera = null;
         
-        protected float _elapsedRateOfFire = 0;
- 
-        protected IWeapon _weaponProperty;
-
         protected bool CanShoot => _elapsedRateOfFire <= 0;
         
         private Camera MainCamera
@@ -36,8 +37,9 @@ namespace Perigon.Weapons
             }
         }
         
-        public void Initialize(IWeapon weaponProperty = null)
+        public void Initialize(IWeapon weaponProperty = null, IRandomUtility randomUtility = null)
         {
+            _randomUtility = randomUtility ?? new RandomUtility();
             _weaponProperty = weaponProperty ?? _weaponScriptableObject;
             _crosshair.SetCrosshairImage(_weaponProperty.Crosshair);
         }
@@ -57,7 +59,7 @@ namespace Perigon.Weapons
             var bullet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             bullet.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
             var rb = bullet.AddComponent<Rigidbody>();
-            rb.AddForce(fireDirection * 500, ForceMode.Impulse);
+            rb.AddForce(fireDirection * 100, ForceMode.Impulse);
             
             bullet.transform.position = position;
         }
@@ -76,7 +78,17 @@ namespace Perigon.Weapons
             }
 
             var directionWithoutSpread = targetPoint - _firePoint.position;
-            return directionWithoutSpread.normalized;
+            var directionWithSpread = directionWithoutSpread + GenerateSpreadAmount();
+            return directionWithSpread.normalized;
+        }
+
+        private Vector3 GenerateSpreadAmount()
+        {
+            var spread = _weaponProperty.BulletSpread;
+            var spreadRange = spread * 2;
+            var x = -spread + (float)_randomUtility.NextDouble() * spreadRange;
+            var y = -spread + (float)_randomUtility.NextDouble() * spreadRange;
+            return new Vector3(x, y, 0);
         }
 
         private void Start()
