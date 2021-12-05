@@ -8,7 +8,7 @@ namespace Perigon.Weapons
     {
         [SerializeField] private Sprite _defaultCrosshair = null;
         private Image _crosshair = null;
-        
+
         private void Awake()
         {
             _crosshair = GetComponentInChildren<Image>();
