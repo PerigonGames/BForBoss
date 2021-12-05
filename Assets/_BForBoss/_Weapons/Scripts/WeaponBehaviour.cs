@@ -6,7 +6,7 @@ namespace Perigon.Weapons
 {
     public abstract class WeaponBehaviour : MonoBehaviour
     {        
-        private const float FutherestDistanceToRayCast = 10000f;
+        private const float FutherestDistanceToRayCast = 50f;
         private readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
         [SerializeField] private InputActionAsset _actions;
         [SerializeField] protected Transform _firePoint = null;
@@ -62,9 +62,8 @@ namespace Perigon.Weapons
         {
             var bullet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             bullet.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-            //var rb = bullet.AddComponent<Rigidbody>();
-            //rb.AddForce(fireDirection * 50, ForceMode.Impulse);
-            
+            var rb = bullet.AddComponent<Rigidbody>();
+            rb.AddForce(fireDirection * 50, ForceMode.Impulse);
             bullet.transform.position = position;
         }
 
