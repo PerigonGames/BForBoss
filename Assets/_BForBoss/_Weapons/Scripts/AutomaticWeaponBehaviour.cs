@@ -5,7 +5,7 @@ namespace Perigon.Weapons
 {
     public class AutomaticWeaponBehaviour : WeaponBehaviour
     {
-        private bool _isFiring = false;
+        private bool _isFiring;
         
         protected override void OnFire(InputAction.CallbackContext context)
         {

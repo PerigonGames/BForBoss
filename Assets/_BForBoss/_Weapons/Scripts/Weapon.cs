@@ -13,7 +13,7 @@ namespace Perigon.Weapons
          
          public event Action OnFireWeapon;
 
-         public bool CanShoot => _elapsedRateOfFire <= 0;
+         private bool CanShoot => _elapsedRateOfFire <= 0;
          
          public Weapon(IWeaponProperties weaponProperties, IRandomUtility randomUtility = null)
          {
@@ -51,14 +51,9 @@ namespace Perigon.Weapons
              return new Vector3(x, y, 0);
          }
          
-
-
-
          private void ResetRateOfFire()
          {
              _elapsedRateOfFire = _weaponProperties.RateOfFire;
          }
-         
-
     }
 }
