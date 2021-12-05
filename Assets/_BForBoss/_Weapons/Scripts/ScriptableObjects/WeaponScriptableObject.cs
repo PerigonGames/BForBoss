@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace Perigon.Weapons
     public interface IWeaponProperties
     {
         float RateOfFire { get; }
-        Sprite Crosshair { get; }
+        [CanBeNull] Sprite Crosshair { get; }
         float BulletSpread { get; }
     }
     
@@ -19,7 +20,7 @@ namespace Perigon.Weapons
         [SerializeField] private Sprite _crosshairImage = null;
 
         public float RateOfFire => _rateOfFire;
+        [CanBeNull] public Sprite Crosshair => _crosshairImage;
         public float BulletSpread => _bulletSpread;
-        public Sprite Crosshair => _crosshairImage;
     }
 }
