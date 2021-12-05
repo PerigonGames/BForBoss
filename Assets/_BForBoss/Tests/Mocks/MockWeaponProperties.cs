@@ -11,6 +11,7 @@ namespace Tests
         public float RateOfFire => _rateOfFire;
         public Sprite Crosshair => null;
         public float BulletSpread => _bulletSpread;
+        public int NumberOfBullets => 1;
 
         public MockWeaponProperties(float rateOfFire = 0.1f, float bulletSpread = 1f)
         {

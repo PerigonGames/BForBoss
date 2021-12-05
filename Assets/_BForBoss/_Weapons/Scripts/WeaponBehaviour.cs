@@ -43,24 +43,27 @@ namespace Perigon.Weapons
 
         private void BindWeapon()
         {
-            _weapon.OnFireWeapon += Fire;
+            _weapon.OnFireWeapon += HandleOnFire;
         }
         
-        protected abstract void OnFire(InputAction.CallbackContext context);
+        protected abstract void OnFireInputAction(InputAction.CallbackContext context);
         protected abstract void Update();
         
-        private void Fire()
+        private void HandleOnFire(int numberOfBullets)
         {
-            GenerateBullet(_firePoint.position, GetDirectionOfShot());
+            for (int i = 0; i < numberOfBullets; i++)
+            {
+                GenerateBullet(_firePoint.position, GetDirectionOfShot());
+            }
         }
         
         //Placeholder
         protected void GenerateBullet(Vector3 position, Vector3 fireDirection)
         {
             var bullet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            bullet.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-            var rb = bullet.AddComponent<Rigidbody>();
-            rb.AddForce(fireDirection * 100, ForceMode.Impulse);
+            bullet.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+            //var rb = bullet.AddComponent<Rigidbody>();
+            //rb.AddForce(fireDirection * 50, ForceMode.Impulse);
             
             bullet.transform.position = position;
         }
@@ -99,19 +102,19 @@ namespace Perigon.Weapons
             FireInputAction = _actions.FindAction("Fire");
             if (FireInputAction != null)
             {
-                FireInputAction.started += OnFire;
-                FireInputAction.canceled += OnFire;
+                FireInputAction.started += OnFireInputAction;
+                FireInputAction.canceled += OnFireInputAction;
                 FireInputAction.Enable();
             }
         }
 
         private void OnDisable()
         {
-            FireInputAction.started -= OnFire;
-            FireInputAction.canceled -= OnFire;
+            FireInputAction.started -= OnFireInputAction;
+            FireInputAction.canceled -= OnFireInputAction;
             FireInputAction.Disable();
             
-            _weapon.OnFireWeapon -= Fire;
+            _weapon.OnFireWeapon -= HandleOnFire;
         }
     }
 }

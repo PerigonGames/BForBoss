@@ -7,7 +7,7 @@ namespace Perigon.Weapons
     {
         private bool _isFiring;
         
-        protected override void OnFire(InputAction.CallbackContext context)
+        protected override void OnFireInputAction(InputAction.CallbackContext context)
         {
             if (context.started)
             {

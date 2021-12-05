@@ -15,7 +15,7 @@ namespace Tests.Weapons
             var mockProperties = new MockWeaponProperties();
             var weapon = new Weapon(mockProperties);
             var shootTimes = 0;
-            weapon.OnFireWeapon += () =>
+            weapon.OnFireWeapon += bullets =>
             {
                 shootTimes++;
             };
@@ -34,7 +34,7 @@ namespace Tests.Weapons
             var mockProperties = new MockWeaponProperties();
             var weapon = new Weapon(mockProperties);
             var shootTimes = 0;
-            weapon.OnFireWeapon += () =>
+            weapon.OnFireWeapon += bullets =>
             {
                 shootTimes++;
             };
@@ -54,7 +54,7 @@ namespace Tests.Weapons
             var mockProperties = new MockWeaponProperties();
             var weapon = new Weapon(mockProperties);
             var shootTimes = 0;
-            weapon.OnFireWeapon += () =>
+            weapon.OnFireWeapon += bullets =>
             {
                 shootTimes++;
             };
