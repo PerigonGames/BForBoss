@@ -111,7 +111,7 @@ namespace Tests.Weapons
         {
             // Given
             var expectedNumberOfBullets = 10;
-            var mockProperties = new MockWeaponProperties(numberOfBullets: expectedNumberOfBullets);
+            var mockProperties = new MockWeaponProperties(bulletsPerShot: expectedNumberOfBullets);
             var mockRandom = new MockRandom {RandomDouble = 1};
             var weapon = new Weapon(mockProperties, mockRandom);
             var actualNumberOfBullets = 0;

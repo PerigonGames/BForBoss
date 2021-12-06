@@ -16,6 +16,7 @@ namespace Perigon.Weapons
         protected override void Update()
         {
             _weapon.DecrementElapsedTimeRateOfFire(Time.deltaTime);
+            _weapon.ReloadWeaponIfNeeded(Time.deltaTime);
         }
     }
 }
