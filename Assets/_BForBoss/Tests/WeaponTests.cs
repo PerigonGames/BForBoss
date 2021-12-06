@@ -15,7 +15,7 @@ namespace Tests.Weapons
             var mockProperties = new MockWeaponProperties();
             var weapon = new Weapon(mockProperties);
             var shootTimes = 0;
-            weapon.OnFireWeapon += () =>
+            weapon.OnFireWeapon += bullets =>
             {
                 shootTimes++;
             };
@@ -34,7 +34,7 @@ namespace Tests.Weapons
             var mockProperties = new MockWeaponProperties();
             var weapon = new Weapon(mockProperties);
             var shootTimes = 0;
-            weapon.OnFireWeapon += () =>
+            weapon.OnFireWeapon += bullets =>
             {
                 shootTimes++;
             };
@@ -54,7 +54,7 @@ namespace Tests.Weapons
             var mockProperties = new MockWeaponProperties();
             var weapon = new Weapon(mockProperties);
             var shootTimes = 0;
-            weapon.OnFireWeapon += () =>
+            weapon.OnFireWeapon += bullets =>
             {
                 shootTimes++;
             };
@@ -96,14 +96,35 @@ namespace Tests.Weapons
             var from = Vector3.zero;
             var to = new Vector3(0, 0, 15);
             var expectedResult = new Vector3(1, 1, 15);
-            var normalizedResult = expectedResult.normalized;
+            var normalizedExpectedResult = expectedResult.normalized;
             
             
             //When
             var actualResult = weapon.GetShootDirection(from, to);
             
             //Then
-            Assert.AreEqual(normalizedResult, actualResult, "Should shoot forward with spread up right and normalized");
+            Assert.IsTrue(TestUtilities.WithinBounds(normalizedExpectedResult, actualResult), "Should shoot forward with spread up right and normalized");
+        }
+        
+        [Test]
+        public void Test_GetShootDirection_WithTenBullets_FireTenBullets()
+        {
+            // Given
+            var expectedNumberOfBullets = 10;
+            var mockProperties = new MockWeaponProperties(numberOfBullets: expectedNumberOfBullets);
+            var mockRandom = new MockRandom {RandomDouble = 1};
+            var weapon = new Weapon(mockProperties, mockRandom);
+            var actualNumberOfBullets = 0;
+            weapon.OnFireWeapon += bullets =>
+            {
+                actualNumberOfBullets = bullets;
+            };
+            
+            //When
+            weapon.FireIfPossible();
+            
+            //Then
+            Assert.AreEqual(expectedNumberOfBullets, actualNumberOfBullets, "Number of bullets shot");
         }
     }
 }

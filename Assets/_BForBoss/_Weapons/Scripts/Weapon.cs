@@ -11,7 +11,7 @@ namespace Perigon.Weapons
 
          private float _elapsedRateOfFire;
          
-         public event Action OnFireWeapon;
+         public event Action<int> OnFireWeapon;
 
          private bool CanShoot => _elapsedRateOfFire <= 0;
          
@@ -38,8 +38,13 @@ namespace Perigon.Weapons
              if (CanShoot)
              {
                  ResetRateOfFire();
-                 OnFireWeapon?.Invoke();
+                 Fire();
              }
+         }
+
+         private void Fire()
+         { 
+             OnFireWeapon?.Invoke(_weaponProperties.NumberOfBullets);
          }
 
          private Vector3 GenerateSpreadAmount()
@@ -48,7 +53,8 @@ namespace Perigon.Weapons
              var spreadRange = spread * 2;
              var x = -spread + (float)_randomUtility.NextDouble() * spreadRange;
              var y = -spread + (float)_randomUtility.NextDouble() * spreadRange;
-             return new Vector3(x, y, 0);
+             var z = -spread + (float) _randomUtility.NextDouble() * spreadRange;
+             return new Vector3(x, y, z);
          }
          
          private void ResetRateOfFire()
