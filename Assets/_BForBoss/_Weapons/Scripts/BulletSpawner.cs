@@ -3,13 +3,6 @@ using UnityEngine;
 
 namespace Perigon.Weapons
 {
-
-    public enum BulletTypes
-    {
-        NoPhysics,
-        Physics
-    }
-    
     public class BulletSpawner : MonoBehaviour
     {
         [SerializeField] private BulletBehaviour[] _bulletPrefabs;
