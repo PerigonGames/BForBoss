@@ -1,4 +1,3 @@
-using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -62,7 +61,9 @@ namespace Perigon.Weapons
         
         private void GenerateBullet(Vector3 position, Vector3 fireDirection)
         {
-            _bulletSpawner.SpawnBullet().SetSpawnAndDirection(position, fireDirection);
+            _bulletSpawner
+                .SpawnBullet(_weaponScriptableObject.TypeOfBullet)
+                .SetSpawnAndDirection(position, fireDirection);
         }
 
         private Vector3 GetDirectionOfShot()

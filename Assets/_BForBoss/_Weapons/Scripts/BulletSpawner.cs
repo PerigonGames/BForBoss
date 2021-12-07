@@ -1,5 +1,4 @@
 using Perigon.Utility;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Perigon.Weapons
@@ -14,19 +13,13 @@ namespace Perigon.Weapons
     public class BulletSpawner : MonoBehaviour
     {
         [SerializeField] private BulletBehaviour[] _bulletPrefabs;
-        [InlineEditor]
-        [SerializeField] private BulletPropertiesScriptableObject _bulletPropertiesScriptableObject;
-        // placeholder for more robust bullet switching
-        [SerializeField] private bool _usePhysics = false;
-        
         private ObjectPooler<BulletBehaviour>[] _pools = null;
 
-        public IBullet SpawnBullet()
+        public IBullet SpawnBullet(BulletTypes typeOfBullet = BulletTypes.NoPhysics)
         {
             if(_pools == null) 
                 SetupPools();
-            var bulletType = _usePhysics ? BulletTypes.Physics : BulletTypes.NoPhysics;
-            return _pools[(int)bulletType].Get();
+            return _pools[(int)typeOfBullet].Get();
         }
 
         private void SetupPools()
@@ -45,7 +38,7 @@ namespace Perigon.Weapons
         private BulletBehaviour GenerateBullet(BulletBehaviour prefab, int poolIndex)
         {
             var newBullet = Instantiate(prefab);
-            newBullet.Initialize(_bulletPropertiesScriptableObject, _pools[poolIndex]);
+            newBullet.Pool = _pools[poolIndex];
             return newBullet;
         }
     }

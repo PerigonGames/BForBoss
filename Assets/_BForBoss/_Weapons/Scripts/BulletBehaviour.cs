@@ -1,16 +1,31 @@
 using System;
 using Perigon.Utility;
-using System.Collections;
-using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Perigon.Weapons
 {
     public abstract class BulletBehaviour : MonoBehaviour, IBullet
     {
-        protected IBulletProperties _properties;
+        [InlineEditor]
+        [SerializeField] protected BulletPropertiesScriptableObject _properties;
+        
         private ObjectPooler<BulletBehaviour> _pool = null;
         private Vector3 _startPosition;
+
+        public ObjectPooler<BulletBehaviour> Pool
+        {
+            get => _pool;
+            set
+            {
+                if (_pool == null)
+                    _pool = value;
+                else
+                {
+                    Debug.LogError("Bullet is getting initialized with a pool twice!");
+                }
+            }
+        }
 
         public event Action OnBulletSpawn;
         public event Action OnBulletDeactivate;
@@ -27,12 +42,6 @@ namespace Perigon.Weapons
                 transform.SetPositionAndRotation(location, Quaternion.LookRotation(normalizedDirection));
                 OnBulletSpawn?.Invoke();
             }
-        }
-
-        public void Initialize(IBulletProperties properties, ObjectPooler<BulletBehaviour> pool)
-        {
-            _properties = properties;
-            _pool = pool;
         }
 
         protected abstract void HandleCollision(Vector3 position);
