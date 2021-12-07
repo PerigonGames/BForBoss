@@ -16,8 +16,8 @@ namespace Perigon.Weapons
         
         protected Weapon _weapon = null;
         private InputAction FireInputAction { get; set; }
+        private InputAction ReloadInputAction { get; set; }
         private Camera _mainCamera = null;
-        
         
         private Camera MainCamera
         {
@@ -48,6 +48,11 @@ namespace Perigon.Weapons
         
         protected abstract void OnFireInputAction(InputAction.CallbackContext context);
         protected abstract void Update();
+
+        private void OnReloadInputAction(InputAction.CallbackContext context)
+        {
+            _weapon.StartReloading();
+        }
         
         private void HandleOnFire(int numberOfBullets)
         {
@@ -97,6 +102,13 @@ namespace Perigon.Weapons
                 Debug.LogWarning("Input Action Asset is missing from weapons behaviour");
                 return;
             }
+
+            ReloadInputAction = _actions.FindAction("Reload");
+            if (ReloadInputAction != null)
+            {
+                ReloadInputAction.started += OnReloadInputAction;
+                ReloadInputAction.Enable();
+            }
             
             FireInputAction = _actions.FindAction("Fire");
             if (FireInputAction != null)
@@ -112,6 +124,9 @@ namespace Perigon.Weapons
             FireInputAction.started -= OnFireInputAction;
             FireInputAction.canceled -= OnFireInputAction;
             FireInputAction.Disable();
+            
+            ReloadInputAction.started -= OnReloadInputAction;
+            ReloadInputAction.Disable();
             
             _weapon.OnFireWeapon -= HandleOnFire;
         }

@@ -12,10 +12,11 @@ namespace Perigon.Weapons
          private float _elapsedRateOfFire;
          private float _elapsedReloadDuration;
          private int _ammunitionAmount;
+         private bool _isReloading;
          
          public event Action<int> OnFireWeapon;
 
-         private bool CanShoot => _elapsedRateOfFire <= 0 && _ammunitionAmount > 0;
+         private bool CanShoot => _elapsedRateOfFire <= 0 && _ammunitionAmount > 0 && !_isReloading;
          
          public Weapon(IWeaponProperties weaponProperties, IRandomUtility randomUtility = null)
          {
@@ -30,11 +31,22 @@ namespace Perigon.Weapons
              _elapsedRateOfFire = Mathf.Clamp(_elapsedRateOfFire - deltaTime, 0, float.PositiveInfinity);
          }
 
-         public void ReloadWeaponIfNeeded(float deltaTime)
+         public void StartReloading()
          {
-             if (_ammunitionAmount <= 0)
+             _isReloading = true;
+         }
+
+         public void ReloadWeaponCountDown(float deltaTime)
+         {
+             if (_isReloading)
              {
                  _elapsedReloadDuration -= deltaTime;
+             }
+             ///TODO - DOuble check how it works in other games when running out of bullets
+             
+             if (_ammunitionAmount <= 0)
+             {
+                 
              }
 
              if (_elapsedReloadDuration <= 0)
