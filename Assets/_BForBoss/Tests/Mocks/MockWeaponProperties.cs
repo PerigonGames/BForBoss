@@ -14,6 +14,8 @@ namespace Tests
         public float BulletSpread => _bulletSpread;
         public int NumberOfBullets => _numberOfBullets;
 
+        public BulletTypes TypeOfBullet => BulletTypes.NoPhysics;
+
         public MockWeaponProperties(float rateOfFire = 0.1f, float bulletSpread = 1f, int numberOfBullets = 1)
         {
             _rateOfFire = rateOfFire;
