@@ -7,8 +7,8 @@ namespace Perigon.Weapons
 
     public enum BulletTypes
     {
-        RifleNoPhysics,
-        RiflePhysics
+        NoPhysics,
+        Physics
     }
     
     public class BulletSpawner : MonoBehaviour
@@ -25,7 +25,7 @@ namespace Perigon.Weapons
         {
             if(_pools == null) 
                 SetupPools();
-            var bulletType = _usePhysics ? BulletTypes.RiflePhysics : BulletTypes.RifleNoPhysics;
+            var bulletType = _usePhysics ? BulletTypes.Physics : BulletTypes.NoPhysics;
             return _pools[(int)bulletType].Get();
         }
 
