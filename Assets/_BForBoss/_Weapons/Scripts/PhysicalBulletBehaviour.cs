@@ -7,7 +7,7 @@ namespace Perigon.Weapons
 {
     [RequireComponent(typeof(Collider))]
     [RequireComponent(typeof(Rigidbody))]
-    public class RifleBulletBehaviour : BulletBehaviour
+    public class PhysicalBulletBehaviour : BulletBehaviour
     {
         private Rigidbody _rb;
 

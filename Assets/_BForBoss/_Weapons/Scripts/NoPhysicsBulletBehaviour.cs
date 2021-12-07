@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Perigon.Weapons
 {
-    public class RifleBulletBehaviour_NoPhysics : BulletBehaviour
+    public class NoPhysicsBulletBehaviour : BulletBehaviour
     {
         
         private bool TryMoveForward(out Vector3 translationForward)
