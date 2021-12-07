@@ -1,10 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Perigon.Weapons
 {
-    public class BulletPropertiesScriptableObject : ScriptableObject
+    public interface IBulletProperties
+    {
+        public float Damage { get; }
+        public float Speed { get; }
+        public float MaxDistance { get; }
+        public float BulletHoleTimeToLive { get; }
+    }
+
+    [CreateAssetMenu(fileName = "BulletProperties", menuName = "PerigonGames/Bullet", order = 2)]
+    public class BulletPropertiesScriptableObject : ScriptableObject, IBulletProperties
     {
         [SerializeField] private float _damage = 1f;
         [SerializeField] private float _speed = 1f;

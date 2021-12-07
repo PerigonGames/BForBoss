@@ -1,9 +1,11 @@
+using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Perigon.Weapons
 {
+    [RequireComponent(typeof(BulletSpawner))]
     public abstract class WeaponBehaviour : MonoBehaviour
     {        
         private const float FutherestDistanceToRayCast = 50f;
@@ -17,7 +19,7 @@ namespace Perigon.Weapons
         protected Weapon _weapon = null;
         private InputAction FireInputAction { get; set; }
         private Camera _mainCamera = null;
-        
+        private BulletSpawner _bulletSpawner;
         
         private Camera MainCamera
         {
@@ -34,6 +36,7 @@ namespace Perigon.Weapons
         
         public void Initialize(IWeaponProperties properties = null)
         {
+            _bulletSpawner = GetComponent<BulletSpawner>();
             var weaponProperty = properties ?? _weaponScriptableObject;
             _weapon = new Weapon(weaponProperty);
             BindWeapon();
@@ -57,14 +60,9 @@ namespace Perigon.Weapons
             }
         }
         
-        //Placeholder
-        protected void GenerateBullet(Vector3 position, Vector3 fireDirection)
+        private void GenerateBullet(Vector3 position, Vector3 fireDirection)
         {
-            var bullet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            bullet.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-            var rb = bullet.AddComponent<Rigidbody>();
-            rb.AddForce(fireDirection * 50, ForceMode.Impulse);
-            bullet.transform.position = position;
+            _bulletSpawner.SpawnBullet().SetSpawnAndDirection(position, fireDirection);
         }
 
         private Vector3 GetDirectionOfShot()
