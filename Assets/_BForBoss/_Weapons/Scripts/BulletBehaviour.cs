@@ -10,7 +10,6 @@ namespace Perigon.Weapons
     {
         protected IBulletProperties _properties;
         private ObjectPooler<BulletBehaviour> _pool = null;
-
         private Vector3 _startPosition;
 
         public event Action OnBulletSpawn;
