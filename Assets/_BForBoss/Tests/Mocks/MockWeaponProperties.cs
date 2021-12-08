@@ -23,12 +23,14 @@ namespace Tests
             float rateOfFire = 0.1f,
             float bulletSpread = 1f,
             int bulletsPerShot = 1,
-            int ammoAmount = 20)
+            int ammoAmount = 20,
+            float reloadDuration = 0.5f)
         {
             _rateOfFire = rateOfFire;
             _bulletSpread = bulletSpread;
             _bulletsPerShot = bulletsPerShot;
             _ammoAmount = ammoAmount;
+            _reloadDuration = reloadDuration;
         }
     }
 }

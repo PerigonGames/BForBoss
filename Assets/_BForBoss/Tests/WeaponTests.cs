@@ -126,5 +126,36 @@ namespace Tests.Weapons
             //Then
             Assert.AreEqual(expectedNumberOfBullets, actualNumberOfBullets, "Number of bullets shot");
         }
+
+        [Test]
+        public void Test_ReloadWeaponCountDownIfNeeded_WithNoAmmunition()
+        {
+            //Given 
+            var mockProperties = new MockWeaponProperties(ammoAmount: 1);
+            var weapon = new Weapon(mockProperties);
+            weapon.FireIfPossible();
+            
+            //When
+            weapon.ReloadWeaponCountDownIfNeeded(0);
+            
+            //Then
+            Assert.IsTrue(weapon.IsReloading, "Weapon should be reloading when out of ammo");
+        }
+
+        [Test]
+        public void Test_ReloadWeaponCountDownIfNeeded_WithSomeAmmunition_CompletesReload()
+        {
+            //Given 
+            var mockProperties = new MockWeaponProperties(ammoAmount: 5, reloadDuration: 0.5f);
+            var weapon = new Weapon(mockProperties);
+            weapon.FireIfPossible();
+            weapon.IsReloading = true;
+            
+            //When
+            weapon.ReloadWeaponCountDownIfNeeded(0.5f);
+            
+            //Then
+            Assert.IsFalse(weapon.IsReloading, "Weapon should have completed reloading");
+        }
     }
 }
