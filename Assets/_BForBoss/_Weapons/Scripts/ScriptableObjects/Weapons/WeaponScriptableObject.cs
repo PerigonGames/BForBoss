@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -26,15 +25,14 @@ namespace Perigon.Weapons
         [SerializeField] private int _ammunitionAmount = 20;
         [SerializeField] private BulletTypes _typeOfBullet = BulletTypes.NoPhysics;
         [PreviewField]
-        [SerializeField] private Sprite _crosshairImage = null;
+        [SerializeField] private Sprite _crosshair = null;
 
         public float RateOfFire => _rateOfFire;
         public float BulletSpread => _bulletSpread;
         public float ReloadDuration => _reloadDuration;
         public int BulletsPerShot => _bulletsPerShot;
         public int AmmunitionAmount => _ammunitionAmount;
-        public Sprite Crosshair => _crosshairImage;
+        public Sprite Crosshair => _crosshair;
         public BulletTypes TypeOfBullet => _typeOfBullet;
-        [CanBeNull] public Sprite Crosshair => _crosshairImage;
     }
 }

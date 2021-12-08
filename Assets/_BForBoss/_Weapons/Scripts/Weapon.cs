@@ -12,11 +12,12 @@ namespace Perigon.Weapons
          private float _elapsedRateOfFire;
          private float _elapsedReloadDuration;
          private int _ammunitionAmount;
-         private bool _isReloading;
+         
+         public bool IsReloading { get; set; }
          
          public event Action<int> OnFireWeapon;
 
-         private bool CanShoot => _elapsedRateOfFire <= 0 && _ammunitionAmount > 0 && !_isReloading;
+         private bool CanShoot => _elapsedRateOfFire <= 0 && _ammunitionAmount > 0 && !IsReloading;
          
          public Weapon(IWeaponProperties weaponProperties, IRandomUtility randomUtility = null)
          {
@@ -31,24 +32,18 @@ namespace Perigon.Weapons
              _elapsedRateOfFire = Mathf.Clamp(_elapsedRateOfFire - deltaTime, 0, float.PositiveInfinity);
          }
 
-         public void StartReloading()
+         public void ReloadWeaponCountDownIfNeeded(float deltaTime)
          {
-             _isReloading = true;
-         }
-
-         public void ReloadWeaponCountDown(float deltaTime)
-         {
-             if (_isReloading)
+             if (_ammunitionAmount <= 0)
+             {
+                 IsReloading = true;
+             }
+             
+             if (IsReloading)
              {
                  _elapsedReloadDuration -= deltaTime;
              }
-             ///TODO - DOuble check how it works in other games when running out of bullets
              
-             if (_ammunitionAmount <= 0)
-             {
-                 
-             }
-
              if (_elapsedReloadDuration <= 0)
              {
                  ResetWeaponState();
@@ -66,6 +61,7 @@ namespace Perigon.Weapons
          {
              if (CanShoot)
              {
+                 StopReloading();
                  _ammunitionAmount--;
                  Debug.Log("Ammo :"+ _ammunitionAmount);
                  ResetRateOfFire();
@@ -75,9 +71,15 @@ namespace Perigon.Weapons
 
          private void ResetWeaponState()
          {
+             StopReloading();
              _ammunitionAmount = _weaponProperties.AmmunitionAmount;
-             _elapsedReloadDuration = _weaponProperties.ReloadDuration;
              Debug.Log("Ammo :"+ _ammunitionAmount);
+         }
+
+         private void StopReloading()
+         {
+             IsReloading = false;
+             _elapsedReloadDuration = _weaponProperties.ReloadDuration;
          }
 
          private void Fire()

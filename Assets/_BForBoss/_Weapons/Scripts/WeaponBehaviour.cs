@@ -54,7 +54,7 @@ namespace Perigon.Weapons
 
         private void OnReloadInputAction(InputAction.CallbackContext context)
         {
-            _weapon.StartReloading();
+            _weapon.IsReloading = true;
         }
 
         private void HandleOnFire(int numberOfBullets)
