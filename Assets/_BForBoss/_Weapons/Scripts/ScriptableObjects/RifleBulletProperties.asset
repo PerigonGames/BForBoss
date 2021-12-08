@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 681c7221818898543b23f8427a3a431f, type: 3}
-  m_Name: AutoRifle
+  m_Script: {fileID: 11500000, guid: 5f77224d147762d4c8e2002e6c4620ca, type: 3}
+  m_Name: RifleBulletProperties
   m_EditorClassIdentifier: 
-  _rateOfFire: 0.2
-  _bulletSpread: 1
-  _numberOfBullets: 1
-  _typeOfBullet: 0
-  _crosshairImage: {fileID: 21300000, guid: 30381596fec2d5a4781da94a833fdf75, type: 3}
+  _damage: 1
+  _speed: 50
+  _maxDistance: 200
+  _bulletHoleTimeToLive: 10
