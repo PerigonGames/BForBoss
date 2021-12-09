@@ -55,6 +55,10 @@ namespace Perigon.Analytics
         void LogEventWithParams(String eventName, Hashtable parameters);
         void ForceSendEvents();
         void SetUsername(string username);
+
+        void SetControlSettings(float horizontalMouse, float verticalMouse, float horizontalController,
+            float verticalController, bool isInverted);
+
     }
     
     public class PerigonAnalytics : IPerigonAnalytics
