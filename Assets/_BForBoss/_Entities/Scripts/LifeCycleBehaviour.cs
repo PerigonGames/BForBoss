@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Perigon.AI
+namespace Perigon.Entities
 {
     public abstract class LifeCycleBehaviour : MonoBehaviour
     {

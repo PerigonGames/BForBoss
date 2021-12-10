@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Perigon.AI
+namespace Perigon.Entities
 {
 
     public interface IHealth

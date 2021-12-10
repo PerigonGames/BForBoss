@@ -1,12 +1,11 @@
 using System;
-using Perigon.AI;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Perigon.Weapons
 {
-    public abstract class BulletBehaviour : MonoBehaviour, IBullet
+    public abstract partial class BulletBehaviour : MonoBehaviour, IBullet
     {
         [InlineEditor]
         [SerializeField] protected BulletPropertiesScriptableObject _properties;
@@ -46,14 +45,6 @@ namespace Perigon.Weapons
         }
 
         protected abstract void HandleCollision(Vector3 position);
-
-        protected void HitObject(Collider col)
-        {
-            if(col.TryGetComponent(out LifeCycleBehaviour lifeCycle))
-            {
-                lifeCycle.Damage(_properties.Damage);
-            }
-        }
 
         protected void Deactivate()
         {
