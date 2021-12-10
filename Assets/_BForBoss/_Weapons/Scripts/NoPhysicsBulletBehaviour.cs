@@ -14,6 +14,7 @@ namespace Perigon.Weapons
             translationForward = transform.forward * distance;
             if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, distance))
             {
+                HitObject(hit.collider);
                 HandleCollision(hit.point);
                 return false;
             }

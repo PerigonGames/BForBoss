@@ -1,4 +1,5 @@
 using System;
+using Perigon.AI;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -45,6 +46,14 @@ namespace Perigon.Weapons
         }
 
         protected abstract void HandleCollision(Vector3 position);
+
+        protected void HitObject(Collider col)
+        {
+            if(col.TryGetComponent(out LifeCycleBehaviour lifeCycle))
+            {
+                lifeCycle.Damage(_properties.Damage);
+            }
+        }
 
         protected void Deactivate()
         {
