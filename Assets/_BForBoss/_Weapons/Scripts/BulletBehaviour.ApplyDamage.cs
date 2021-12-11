@@ -3,14 +3,9 @@ using UnityEngine;
 
 namespace Perigon.Weapons
 {
-    public interface IApplyDamage
+    public abstract partial class BulletBehaviour
     {
-        public void HitObject(Collider col);
-    }
-    
-    public abstract partial class BulletBehaviour : IApplyDamage
-    {
-        public void HitObject(Collider col)
+        protected void HitObject(Collider col)
         {
             if(col.TryGetComponent(out LifeCycleBehaviour lifeCycle))
             {
