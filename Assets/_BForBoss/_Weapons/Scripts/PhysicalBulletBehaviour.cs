@@ -29,6 +29,7 @@ namespace Perigon.Weapons
         
         private void OnCollisionEnter(Collision collision)
         {
+            HitObject(collision.collider);
             HandleCollision(collision.contacts[0].point);
             Deactivate();
         }

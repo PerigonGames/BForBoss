@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Perigon.Weapons
 {
-    public abstract class BulletBehaviour : MonoBehaviour, IBullet
+    public abstract partial class BulletBehaviour : MonoBehaviour, IBullet
     {
         [InlineEditor]
         [SerializeField] protected BulletPropertiesScriptableObject _properties;
