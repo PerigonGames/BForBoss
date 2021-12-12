@@ -8,6 +8,7 @@ namespace Perigon.Entities
 {
     public abstract class LifeCycleBehaviour : MonoBehaviour
     {
+        [InlineEditor()]
         [SerializeField] private HealthScriptableObject _health = null;
 
         protected LifeCycle _lifeCycle;
