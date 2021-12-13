@@ -9,15 +9,16 @@ namespace Perigon.Weapons
     {
         private const float FutherestDistanceToRayCast = 50f;
         private readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
-        [SerializeField] private InputActionAsset _actions;
         [SerializeField] protected Transform _firePoint = null;
         [SerializeField] private CrosshairBehaviour _crosshair = null;
         [InlineEditor]
         [SerializeField] private WeaponScriptableObject _weaponScriptableObject;
-
+        
         protected Weapon _weapon = null;
-        private InputAction FireInputAction { get; set; }
-        private InputAction ReloadInputAction { get; set; }
+
+        private InputAction _fireInputAction = null;
+        private InputAction _reloadInputAction = null;
+
         private Camera _mainCamera = null;
         private BulletSpawner _bulletSpawner;
 
@@ -34,14 +35,18 @@ namespace Perigon.Weapons
             }
         }
 
-        public void Initialize(IWeaponProperties properties = null)
+        public void Initialize(
+            InputAction fireInputAction,
+            InputAction reloadInputAction,
+            IWeaponProperties properties = null)
         {
+            _fireInputAction = fireInputAction;
+            _reloadInputAction = reloadInputAction;
             _bulletSpawner = GetComponent<BulletSpawner>();
             var weaponProperty = properties ?? _weaponScriptableObject;
             _weapon = new Weapon(weaponProperty);
             BindWeapon();
-
-            _crosshair.SetCrosshairImage(weaponProperty.Crosshair);
+            SetCrosshairImage();
         }
 
         private void BindWeapon()
@@ -61,15 +66,10 @@ namespace Perigon.Weapons
         {
             for (int i = 0; i < numberOfBullets; i++)
             {
-                GenerateBullet(_firePoint.position, GetDirectionOfShot());
+                _bulletSpawner
+                    .SpawnBullet(_weaponScriptableObject.TypeOfBullet)
+                    .SetSpawnAndDirection(_firePoint.position, GetDirectionOfShot());
             }
-        }
-
-        private void GenerateBullet(Vector3 position, Vector3 fireDirection)
-        {
-            _bulletSpawner
-                .SpawnBullet(_weaponScriptableObject.TypeOfBullet)
-                .SetSpawnAndDirection(position, fireDirection);
         }
 
         private Vector3 GetDirectionOfShot()
@@ -87,48 +87,49 @@ namespace Perigon.Weapons
 
             return _weapon.GetShootDirection(_firePoint.position, targetPoint);
         }
-
-
-        private void Start()
-        {
-            Initialize();
-            SetupPlayerInput();
-        }
-
+        
         private void SetupPlayerInput()
         {
-            if (_actions == null)
+            if (_fireInputAction != null)
             {
-                Debug.LogWarning("Input Action Asset is missing from weapons behaviour");
-                return;
+                _fireInputAction.started += OnFireInputAction;
+                _fireInputAction.canceled += OnFireInputAction;
             }
 
-            ReloadInputAction = _actions.FindAction("Reload");
-            if (ReloadInputAction != null)
+            if (_reloadInputAction != null)
             {
-                ReloadInputAction.started += OnReloadInputAction;
-                ReloadInputAction.Enable();
+                _reloadInputAction.started += OnReloadInputAction;
             }
+        }
 
-            FireInputAction = _actions.FindAction("Fire");
-            if (FireInputAction != null)
+        private void SetCrosshairImage()
+        {
+            if (_weapon != null)
             {
-                FireInputAction.started += OnFireInputAction;
-                FireInputAction.canceled += OnFireInputAction;
-                FireInputAction.Enable();
+                _crosshair.SetCrosshairImage(_weapon.Crosshair);
             }
+        }
+
+        private void OnEnable()
+        {
+            SetupPlayerInput();
+            SetCrosshairImage();
         }
 
         private void OnDisable()
         {
-            FireInputAction.started -= OnFireInputAction;
-            FireInputAction.canceled -= OnFireInputAction;
-            FireInputAction.Disable();
+            _fireInputAction.started -= OnFireInputAction;
+            _fireInputAction.canceled -= OnFireInputAction;
+            _reloadInputAction.started -= OnReloadInputAction;
+        }
 
-            ReloadInputAction.started -= OnReloadInputAction;
-            ReloadInputAction.Disable();
-
-            _weapon.OnFireWeapon -= HandleOnFire;
+        private void OnDestroy()
+        {
+            if (_weapon != null)
+            {
+                _weapon.OnFireWeapon -= HandleOnFire;
+                _weapon = null;
+            }
         }
     }
 }
