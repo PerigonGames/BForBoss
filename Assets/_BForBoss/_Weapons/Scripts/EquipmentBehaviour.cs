@@ -18,7 +18,7 @@ namespace Perigon.Weapons
         {
             EnableEquipmentPlayerInput();
             SetupWeapons();
-            SetupSwapWeaponInputBinding();
+            SetupControllerSwapWeaponInputBinding();
         }
 
         private void EnableEquipmentPlayerInput()
@@ -68,23 +68,11 @@ namespace Perigon.Weapons
             _reloadInputAction = _inputActions.FindAction("Reload");
             _fireInputAction = _inputActions.FindAction("Fire");
             _swapWeaponInputAction = _inputActions.FindAction("WeaponSwap");
-            var weaponScroll = _inputActions.FindAction("WeaponScroll");
-            weaponScroll.started += OnWeaponScrollAction;
-            weaponScroll.Enable();
-        }
-        
-        private void OnWeaponScrollAction(InputAction.CallbackContext context)
-        {
-            Debug.Log("Weapon Scroll PC");
-            if (context.started)
-            {
-                ScrollSwapWeapons(true);
-            }
         }
 
-        private void SetupSwapWeaponInputBinding()
+        private void SetupControllerSwapWeaponInputBinding()
         {
-            _swapWeaponInputAction.started += OnSwapWeaponAction;
+            _swapWeaponInputAction.started += OnControllerSwapWeaponAction;
         }
         
         private void ScrollSwapWeapons(bool isUpwards)
@@ -109,17 +97,11 @@ namespace Perigon.Weapons
             }
         }
 
-        private void OnSwapWeaponAction(InputAction.CallbackContext context)
-        {
-            if (context.started)
-            {
-                ScrollSwapWeapons(true);
-            }
-        }
+
 
         private void Update()
         {
-            SwapWeaponOnMouse();
+            OnMouseSwapWeaponAction();
         }
 
         private void Start()
@@ -142,8 +124,8 @@ namespace Perigon.Weapons
             SetupPlayerEquipmentInput();
         }
         
-        #region Mouse Input 
-        private void SwapWeaponOnMouse()
+        #region Input 
+        private void OnMouseSwapWeaponAction()
         {
             var scrollVector = Mouse.current.scroll.ReadValue().normalized;
             if (scrollVector.y > 0)
@@ -153,6 +135,14 @@ namespace Perigon.Weapons
             else if (scrollVector.y < 0)
             {
                 ScrollSwapWeapons(false);
+            }
+        }
+        
+        private void OnControllerSwapWeaponAction(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                ScrollSwapWeapons(true);
             }
         }
         #endregion
