@@ -1,5 +1,6 @@
 using Perigon.Character;
 using Perigon.Utility;
+using Perigon.Weapons;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ namespace BForBoss
     {
         [Title("Component")] 
         [SerializeField] private FirstPersonPlayer _player = null;
+        [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
         [SerializeField] private PauseMenu _pauseMenu = null;
         private FreezeActionsUtility _freezeActionsUtility = null;
         private readonly StateManager _stateManager = StateManager.Instance;
@@ -33,6 +35,7 @@ namespace BForBoss
         private void Start()
         {
             _player.Initialize();
+            _equipmentBehaviour.Initialize();
             _freezeActionsUtility = new FreezeActionsUtility(_player);
             _pauseMenu.Initialize(_player, _player, _freezeActionsUtility);
             _stateManager.SetState(State.Play);

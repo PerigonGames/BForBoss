@@ -4,29 +4,24 @@ using UnityEngine.InputSystem;
 
 namespace Perigon.Weapons
 {
-    public class EquipmentBehaviour : MonoBehaviour
+    public partial class EquipmentBehaviour : MonoBehaviour
     {
         [SerializeField] private InputActionAsset _inputActions;
         [SerializeField] private WeaponBehaviour[] _weapons = null;
-        private WeaponBehaviour _currentWeaponHeld = null;
+        private int _currentWeaponIndex = 0;
 
         private InputAction _reloadInputAction = null;
         private InputAction _fireInputAction = null;
+        private InputAction _swapWeaponInputAction = null;
         
         public void Initialize()
         {
             EnableEquipmentPlayerInput();
-            foreach (var weapon in _weapons)
-            {
-                weapon.Initialize(_fireInputAction, _reloadInputAction);
-                weapon.enabled = false;
-            }
-
-            _currentWeaponHeld = _weapons[0];
-            _currentWeaponHeld.enabled = true;
+            SetupWeapons();
+            SetupSwapWeaponInputBinding();
         }
-        
-        public void EnableEquipmentPlayerInput()
+
+        private void EnableEquipmentPlayerInput()
         {
             if (_reloadInputAction != null)
             {
@@ -39,7 +34,7 @@ namespace Perigon.Weapons
             }
         }
         
-        public void DisableEquipmentPlayerInput()
+        private void DisableEquipmentPlayerInput()
         {
             if (_reloadInputAction != null)
             {
@@ -51,28 +46,43 @@ namespace Perigon.Weapons
                 _fireInputAction.Disable();
             }
         }
+
+        private void SetupWeapons()
+        {
+            foreach (var weapon in _weapons)
+            {
+                weapon.Initialize(_fireInputAction, _reloadInputAction);
+                weapon.enabled = false;
+            }
+
+            _weapons[_currentWeaponIndex].enabled = true;
+        }
         
         private void SetupPlayerEquipmentInput()
         {
             _reloadInputAction = _inputActions.FindAction("Reload");
             _fireInputAction = _inputActions.FindAction("Fire");
+            _swapWeaponInputAction = _inputActions.FindAction("WeaponSwap");
         }
-        
+
+        private void SetupSwapWeaponInputBinding()
+        {
+            _swapWeaponInputAction.started += SwapWeaponInputAction;
+        }
+
+        private void SwapWeaponInputAction(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                print("started :" + context.ReadValue<Vector2>());
+            }
+        }
+
         private void Update()
         {
-            if (Keyboard.current.digit1Key.wasPressedThisFrame)
-            {
-                _currentWeaponHeld.enabled = false;
-                _currentWeaponHeld = _weapons[0];
-                _currentWeaponHeld.enabled = true;
-            }
-            else if (Keyboard.current.digit2Key.wasPressedThisFrame)
-            {
-                _currentWeaponHeld.enabled = false;
-                _currentWeaponHeld = _weapons[1];
-                _currentWeaponHeld.enabled = true;
-            }
+            SwapWeaponOnMouse();
         }
+
 
         private void Start()
         {
