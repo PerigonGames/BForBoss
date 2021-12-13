@@ -13,6 +13,7 @@ namespace Perigon.Weapons
         private InputAction _reloadInputAction = null;
         private InputAction _fireInputAction = null;
         private InputAction _swapWeaponInputAction = null;
+        private bool _isMouseScrollEnabled = true;
         
         public void Initialize()
         {
@@ -37,6 +38,8 @@ namespace Perigon.Weapons
             {
                 _swapWeaponInputAction.Enable();
             }
+
+            _isMouseScrollEnabled = true;
         }
         
         private void DisableEquipmentPlayerInput()
@@ -50,6 +53,13 @@ namespace Perigon.Weapons
             {
                 _fireInputAction.Disable();
             }
+            
+            if (_swapWeaponInputAction != null)
+            {
+                _swapWeaponInputAction.Disable();
+            }
+
+            _isMouseScrollEnabled = false;
         }
 
         private void SetupWeapons()
@@ -127,7 +137,7 @@ namespace Perigon.Weapons
         #region Input 
         private void OnMouseSwapWeaponAction()
         {
-            var scrollVector = Mouse.current.scroll.ReadValue().normalized;
+            var scrollVector = _isMouseScrollEnabled ? Mouse.current.scroll.ReadValue().normalized : Vector2.zero;
             if (scrollVector.y > 0)
             {
                 ScrollSwapWeapons(true);
