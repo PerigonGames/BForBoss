@@ -86,10 +86,26 @@
                     "interactions": ""
                 },
                 {
-                    "name": "WeaponSwap",
-                    "type": "Value",
-                    "id": "f56a3b70-5e01-41bd-bc65-6db2dee3dbb4",
+                    "name": "WeaponScroll",
+                    "type": "PassThrough",
+                    "id": "17c174c8-a672-4893-ba2f-3a7093943059",
                     "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "WeaponSwap",
+                    "type": "Button",
+                    "id": "f56a3b70-5e01-41bd-bc65-6db2dee3dbb4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Weapon Slot 1",
+                    "type": "Button",
+                    "id": "50ef2abd-6e59-447c-84e1-9ca23f428105",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 }
@@ -327,37 +343,37 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "1D Axis",
-                    "id": "0b72ea1e-ac30-4737-a9c3-488ed98d4ff7",
-                    "path": "1DAxis",
+                    "name": "",
+                    "id": "dabf16fa-39d6-4079-934f-dc7333a5b0bc",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepad",
                     "action": "WeaponSwap",
-                    "isComposite": true,
+                    "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "Negative",
-                    "id": "f9a94e64-e81a-45bc-9992-d67e3072920d",
-                    "path": "<Mouse>/scroll/y",
+                    "name": "",
+                    "id": "b857a81a-1e5f-4b90-99d9-d17d62b318d1",
+                    "path": "",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard And Mouse",
-                    "action": "WeaponSwap",
+                    "groups": "",
+                    "action": "Weapon Slot 1",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 },
                 {
-                    "name": "Positive",
-                    "id": "fc9d020f-80fd-4279-aa9c-0850a5799de3",
+                    "name": "",
+                    "id": "83578bb6-d7c5-4fcc-b4bf-aeec74893b92",
                     "path": "<Mouse>/scroll/y",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard And Mouse",
-                    "action": "WeaponSwap",
+                    "action": "WeaponScroll",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 }
             ]
         }

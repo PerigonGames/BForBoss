@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace Perigon.Weapons
 {
-    public partial class EquipmentBehaviour : MonoBehaviour
+    public class EquipmentBehaviour : MonoBehaviour
     {
         [SerializeField] private InputActionAsset _inputActions;
         [SerializeField] private WeaponBehaviour[] _weapons = null;
@@ -31,6 +31,11 @@ namespace Perigon.Weapons
             if (_fireInputAction != null)
             {
                 _fireInputAction.Enable();
+            }
+
+            if (_swapWeaponInputAction != null)
+            {
+                _swapWeaponInputAction.Enable();
             }
         }
         
@@ -63,18 +68,52 @@ namespace Perigon.Weapons
             _reloadInputAction = _inputActions.FindAction("Reload");
             _fireInputAction = _inputActions.FindAction("Fire");
             _swapWeaponInputAction = _inputActions.FindAction("WeaponSwap");
+            var weaponScroll = _inputActions.FindAction("WeaponScroll");
+            weaponScroll.started += OnWeaponScrollAction;
+            weaponScroll.Enable();
+        }
+        
+        private void OnWeaponScrollAction(InputAction.CallbackContext context)
+        {
+            Debug.Log("Weapon Scroll PC");
+            if (context.started)
+            {
+                ScrollSwapWeapons(true);
+            }
         }
 
         private void SetupSwapWeaponInputBinding()
         {
-            _swapWeaponInputAction.started += SwapWeaponInputAction;
+            _swapWeaponInputAction.started += OnSwapWeaponAction;
+        }
+        
+        private void ScrollSwapWeapons(bool isUpwards)
+        {
+            _weapons[_currentWeaponIndex].enabled = false;
+            UpdateCurrentWeaponIndex(isUpwards);
+            _weapons[_currentWeaponIndex].enabled = true;
+        }
+        
+        private void UpdateCurrentWeaponIndex(bool isUpwards)
+        {
+            var indexLength = _weapons.Length - 1;
+            _currentWeaponIndex += isUpwards ? 1 : -1;
+            
+            if (_currentWeaponIndex > indexLength)
+            {
+                _currentWeaponIndex = 0;
+            } 
+            else if (_currentWeaponIndex < 0)
+            {
+                _currentWeaponIndex = indexLength;
+            }
         }
 
-        private void SwapWeaponInputAction(InputAction.CallbackContext context)
+        private void OnSwapWeaponAction(InputAction.CallbackContext context)
         {
             if (context.started)
             {
-                print("started :" + context.ReadValue<Vector2>());
+                ScrollSwapWeapons(true);
             }
         }
 
@@ -82,7 +121,6 @@ namespace Perigon.Weapons
         {
             SwapWeaponOnMouse();
         }
-
 
         private void Start()
         {
@@ -103,5 +141,20 @@ namespace Perigon.Weapons
             
             SetupPlayerEquipmentInput();
         }
+        
+        #region Mouse Input 
+        private void SwapWeaponOnMouse()
+        {
+            var scrollVector = Mouse.current.scroll.ReadValue().normalized;
+            if (scrollVector.y > 0)
+            {
+                ScrollSwapWeapons(true);
+            }
+            else if (scrollVector.y < 0)
+            {
+                ScrollSwapWeapons(false);
+            }
+        }
+        #endregion
     }
 }
