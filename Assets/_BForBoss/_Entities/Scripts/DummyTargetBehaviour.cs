@@ -5,7 +5,7 @@ namespace Perigon.Entities
 {
     public class DummyTargetBehaviour : LifeCycleBehaviour
     {
-        private const float DEATH_ANIMATION_DURATION = 5f;
+        
         private const string IS_DEAD = "IsDead";
         private const string HIT = "Hit";
         private const float MAX_DISSOLVE = 1f;
@@ -13,7 +13,8 @@ namespace Perigon.Entities
         private readonly int HIT_ID = Animator.StringToHash(HIT);
         private readonly int DISSOLVE_ID = Shader.PropertyToID("_Dissolve");
         
-        
+        [SerializeField]
+        private float _dissolveVFXDuration = 7.5f;
         
         private Animator _animator;
         private Renderer _renderer;
@@ -28,7 +29,7 @@ namespace Perigon.Entities
         protected override void LifeCycleFinished()
         {
             _animator.SetBool(DEATH_ID, true);
-            var tween = _renderer.material.DOFloat(MAX_DISSOLVE, DISSOLVE_ID, DEATH_ANIMATION_DURATION * 2);
+            var tween = _renderer.material.DOFloat(MAX_DISSOLVE, DISSOLVE_ID, _dissolveVFXDuration);
             tween.OnComplete(() => Destroy(gameObject));
             tween.Play();
         }
