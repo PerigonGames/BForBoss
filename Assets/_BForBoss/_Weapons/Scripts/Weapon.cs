@@ -17,6 +17,7 @@ namespace Perigon.Weapons
          
          public event Action<int> OnFireWeapon;
 
+         public Sprite Crosshair => _weaponProperties?.Crosshair;
          private bool CanShoot => _elapsedRateOfFire <= 0 && _ammunitionAmount > 0 && !IsReloading;
          
          public Weapon(IWeaponProperties weaponProperties, IRandomUtility randomUtility = null)
