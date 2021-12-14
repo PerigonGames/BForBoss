@@ -1,30 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Perigon.Entities
 {
     public class DummyTargetBehaviour : LifeCycleBehaviour
     {
-        private const float DEATH_ANIMATION_DURATION = 5f;
+        
         private const string IS_DEAD = "IsDead";
         private const string HIT = "Hit";
+        private const float MAX_DISSOLVE = 1f;
         private readonly int DEATH_ID = Animator.StringToHash(IS_DEAD);
         private readonly int HIT_ID = Animator.StringToHash(HIT);
+        private readonly int DISSOLVE_ID = Shader.PropertyToID("_Dissolve");
+        
+        [SerializeField]
+        private float _dissolveVFXDuration = 7.5f;
         
         private Animator _animator;
-        
+        private Renderer _renderer;
         
         protected override void Awake()
         {
             base.Awake();
             _animator = GetComponentInChildren<Animator>();
+            _renderer = GetComponentInChildren<Renderer>();
         }
 
         protected override void LifeCycleFinished()
         {
             _animator.SetBool(DEATH_ID, true);
-            Destroy(gameObject, DEATH_ANIMATION_DURATION);
+            var tween = _renderer.material.DOFloat(MAX_DISSOLVE, DISSOLVE_ID, _dissolveVFXDuration);
+            tween.OnComplete(() => Destroy(gameObject));
+            tween.Play();
         }
 
         private void TriggerHitAnimation()
