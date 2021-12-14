@@ -25,41 +25,17 @@ namespace Perigon.Weapons
 
         private void EnableEquipmentPlayerInput()
         {
-            if (_reloadInputAction != null)
-            {
-                _reloadInputAction.Enable();
-            }
-
-            if (_fireInputAction != null)
-            {
-                _fireInputAction.Enable();
-            }
-
-            if (_swapWeaponInputAction != null)
-            {
-                _swapWeaponInputAction.Enable();
-            }
-
+            _reloadInputAction?.Enable();
+            _fireInputAction?.Enable();
+            _swapWeaponInputAction?.Enable();
             _isMouseScrollEnabled = true;
         }
         
         private void DisableEquipmentPlayerInput()
         {
-            if (_reloadInputAction != null)
-            {
-                _reloadInputAction.Disable();
-            }
-
-            if (_fireInputAction != null)
-            {
-                _fireInputAction.Disable();
-            }
-            
-            if (_swapWeaponInputAction != null)
-            {
-                _swapWeaponInputAction.Disable();
-            }
-
+            _reloadInputAction?.Disable();
+            _fireInputAction?.Disable();
+            _swapWeaponInputAction?.Disable();
             _isMouseScrollEnabled = false;
         }
 
