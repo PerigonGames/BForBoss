@@ -1,3 +1,4 @@
+using System;
 using PerigonGames;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -19,7 +20,7 @@ namespace Perigon.Weapons
         {
             EnableEquipmentPlayerInput();
             SetupWeapons();
-            SetupControllerSwapWeaponInputBinding();
+            _swapWeaponInputAction.started += OnControllerSwapWeaponAction;
         }
 
         private void EnableEquipmentPlayerInput()
@@ -80,11 +81,6 @@ namespace Perigon.Weapons
             _swapWeaponInputAction = _inputActions.FindAction("WeaponSwap");
         }
 
-        private void SetupControllerSwapWeaponInputBinding()
-        {
-            _swapWeaponInputAction.started += OnControllerSwapWeaponAction;
-        }
-        
         private void ScrollSwapWeapons(bool isUpwards)
         {
             _weapons[_currentWeaponIndex].enabled = false;
@@ -106,9 +102,7 @@ namespace Perigon.Weapons
                 _currentWeaponIndex = indexLength;
             }
         }
-
-
-
+        
         private void Update()
         {
             OnMouseSwapWeaponAction();
@@ -121,19 +115,27 @@ namespace Perigon.Weapons
 
         private void Awake()
         {
+            SetupPlayerEquipmentInput();
+        }
+
+        private void OnValidate()
+        {
             if (_inputActions == null)
             {
-                Debug.LogWarning("Input Action Asset is missing from equipment behaviour");
+                Debug.LogWarning("Input Action Asset is missing from Equipment Behaviour");
             }
 
             if (_weapons.IsNullOrEmpty())
             {
                 Debug.LogWarning("There are currently no weapons equipped within Equipment Behaviour");
             }
-            
-            SetupPlayerEquipmentInput();
         }
-        
+
+        private void OnDestroy()
+        {
+            _swapWeaponInputAction.started -= OnControllerSwapWeaponAction;
+        }
+
         #region Input 
         private void OnMouseSwapWeaponAction()
         {
