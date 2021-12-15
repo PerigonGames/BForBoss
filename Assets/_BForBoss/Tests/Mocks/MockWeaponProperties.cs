@@ -11,6 +11,7 @@ namespace Tests
         private int _bulletsPerShot;
         private int _ammoAmount;
 
+        public string NameOfWeapon => "Mock Weapon";
         public float RateOfFire => _rateOfFire;
         public Sprite Crosshair => null;
         public float BulletSpread => _bulletSpread;

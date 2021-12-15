@@ -5,6 +5,7 @@ namespace Perigon.Weapons
 {
     public interface IWeaponProperties
     {
+        string NameOfWeapon { get; }
         float RateOfFire { get; }
         Sprite Crosshair { get; }
         float BulletSpread { get; }
@@ -18,6 +19,7 @@ namespace Perigon.Weapons
     [CreateAssetMenu(fileName = "WeaponProperties", menuName = "PerigonGames/Weapon", order = 1)]
     public class WeaponScriptableObject : ScriptableObject, IWeaponProperties
     {
+        [SerializeField] private string _nameOfWeapon = "";
         [SerializeField] private float _rateOfFire = 0.1f;
         [SerializeField] private float _bulletSpread = 1f;
         [SerializeField] private float _reloadDuration = 0.5f;
@@ -27,6 +29,7 @@ namespace Perigon.Weapons
         [PreviewField]
         [SerializeField] private Sprite _crosshair = null;
 
+        public string NameOfWeapon => _nameOfWeapon;
         public float RateOfFire => _rateOfFire;
         public float BulletSpread => _bulletSpread;
         public float ReloadDuration => _reloadDuration;

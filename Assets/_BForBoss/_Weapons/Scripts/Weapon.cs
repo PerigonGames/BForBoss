@@ -14,9 +14,18 @@ namespace Perigon.Weapons
          private int _ammunitionAmount;
          
          public bool IsReloading { get; set; }
+
+         public bool ActivateWeapon
+         {
+             set => OnSetWeaponActivate?.Invoke(value);
+         }
          
          public event Action<int> OnFireWeapon;
-
+         public event Action<bool> OnSetWeaponActivate;
+         
+         public int AmmunitionAmount => _ammunitionAmount;
+         public int MaxAmmunitionAmount => _weaponProperties.AmmunitionAmount;
+         public string NameOfWeapon => _weaponProperties?.NameOfWeapon;
          public Sprite Crosshair => _weaponProperties?.Crosshair;
          private bool CanShoot => _elapsedRateOfFire <= 0 && _ammunitionAmount > 0 && !IsReloading;
          
@@ -64,7 +73,6 @@ namespace Perigon.Weapons
              {
                  StopReloading();
                  _ammunitionAmount--;
-                 Debug.Log("Ammo :"+ _ammunitionAmount);
                  ResetRateOfFire();
                  Fire();
              }
@@ -74,7 +82,6 @@ namespace Perigon.Weapons
          {
              StopReloading();
              _ammunitionAmount = _weaponProperties.AmmunitionAmount;
-             Debug.Log("Ammo :"+ _ammunitionAmount);
          }
 
          private void StopReloading()
