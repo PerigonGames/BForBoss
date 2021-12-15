@@ -1,14 +1,14 @@
-using System;
 using PerigonGames;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Perigon.Weapons
 {
-    public class EquipmentBehaviour : MonoBehaviour
+    public partial class EquipmentBehaviour : MonoBehaviour
     {
         [SerializeField] private InputActionAsset _inputActions;
-        [SerializeField] private WeaponBehaviour[] _weapons = null;
+        private WeaponBehaviour[] _weaponBehaviours = null;
+        private Weapon[] _weapons = null;
         private int _currentWeaponIndex = 0;
 
         private InputAction _reloadInputAction = null;
@@ -41,13 +41,15 @@ namespace Perigon.Weapons
 
         private void SetupWeapons()
         {
-            foreach (var weapon in _weapons)
+            _weapons = new Weapon[_weaponBehaviours.Length];
+            for(int i = 0; i < _weaponBehaviours.Length; i++)
             {
-                weapon.Initialize(_fireInputAction, _reloadInputAction);
-                weapon.enabled = false;
+                _weaponBehaviours[i].Initialize(_fireInputAction, _reloadInputAction);
+                _weapons[i] = _weaponBehaviours[i].WeaponViewModel;
+                _weapons[i].ActivateWeapon = false;
             }
 
-            _weapons[_currentWeaponIndex].enabled = true;
+            _weapons[_currentWeaponIndex].ActivateWeapon = true;
         }
         
         private void SetupPlayerEquipmentInput()
@@ -59,14 +61,14 @@ namespace Perigon.Weapons
 
         private void ScrollSwapWeapons(bool isUpwards)
         {
-            _weapons[_currentWeaponIndex].enabled = false;
+            _weapons[_currentWeaponIndex].ActivateWeapon = false;
             UpdateCurrentWeaponIndex(isUpwards);
-            _weapons[_currentWeaponIndex].enabled = true;
+            _weapons[_currentWeaponIndex].ActivateWeapon = true;
         }
         
         private void UpdateCurrentWeaponIndex(bool isUpwards)
         {
-            var indexLength = _weapons.Length - 1;
+            var indexLength = _weaponBehaviours.Length - 1;
             _currentWeaponIndex += isUpwards ? 1 : -1;
             
             if (_currentWeaponIndex > indexLength)
@@ -84,14 +86,15 @@ namespace Perigon.Weapons
             OnMouseSwapWeaponAction();
         }
 
-        private void Start()
-        {
-            Initialize();
-        }
-
         private void Awake()
         {
             SetupPlayerEquipmentInput();
+            
+            _weaponBehaviours = GetComponentsInChildren<WeaponBehaviour>();
+            if (_weaponBehaviours.IsNullOrEmpty())
+            {
+                Debug.LogWarning("There are currently no WeaponBehaviour within the child of EquipmentBehaviour");
+            }
         }
 
         private void OnValidate()
@@ -99,11 +102,6 @@ namespace Perigon.Weapons
             if (_inputActions == null)
             {
                 Debug.LogWarning("Input Action Asset is missing from Equipment Behaviour");
-            }
-
-            if (_weapons.IsNullOrEmpty())
-            {
-                Debug.LogWarning("There are currently no weapons equipped within Equipment Behaviour");
             }
         }
 

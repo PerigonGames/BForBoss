@@ -22,6 +22,8 @@ namespace Perigon.Weapons
         private Camera _mainCamera = null;
         private BulletSpawner _bulletSpawner;
 
+        public Weapon WeaponViewModel => _weapon;
+
         private Camera MainCamera
         {
             get
@@ -42,16 +44,20 @@ namespace Perigon.Weapons
         {
             _fireInputAction = fireInputAction;
             _reloadInputAction = reloadInputAction;
-            _bulletSpawner = GetComponent<BulletSpawner>();
-            var weaponProperty = properties ?? _weaponScriptableObject;
-            _weapon = new Weapon(weaponProperty);
+            _weapon = new Weapon(properties ?? _weaponScriptableObject);
             BindWeapon();
             SetCrosshairImage();
+        }
+
+        public void HandleOnWeaponActivate(bool activate)
+        {
+            enabled = activate;
         }
 
         private void BindWeapon()
         {
             _weapon.OnFireWeapon += HandleOnFire;
+            _weapon.OnSetWeaponActivate += HandleOnWeaponActivate;
         }
 
         protected abstract void OnFireInputAction(InputAction.CallbackContext context);
@@ -110,6 +116,11 @@ namespace Perigon.Weapons
             }
         }
 
+        private void Awake()
+        {
+            _bulletSpawner = GetComponent<BulletSpawner>();
+        }
+
         private void OnEnable()
         {
             SetupPlayerInput();
@@ -128,6 +139,7 @@ namespace Perigon.Weapons
             if (_weapon != null)
             {
                 _weapon.OnFireWeapon -= HandleOnFire;
+                _weapon.OnSetWeaponActivate -= HandleOnWeaponActivate;
                 _weapon = null;
             }
         }
