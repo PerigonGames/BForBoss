@@ -1,5 +1,6 @@
 using Perigon.Utility;
 using DG.Tweening;
+using PerigonGames;
 using UnityEngine;
 
 namespace Perigon.Weapons
@@ -15,21 +16,26 @@ namespace Perigon.Weapons
 
         private ObjectPooler<WallHitVFX> _pool;
 
-        // Start is called before the first frame update
-        void Awake()
+        private RandomUtility _rand;
+        
+        private void Awake()
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _particleSystem = GetComponentInChildren<ParticleSystem>();
+            _rand = new RandomUtility();
         }
 
-        public void Setup(ObjectPooler<WallHitVFX> pool)
+        public void Initialize(ObjectPooler<WallHitVFX> pool)
         {
             _pool = pool;
         }
 
         public void Spawn(float fadeDuration)
         {
-            _spriteRenderer.sprite = _bulletHoleSprites.GetRandomElement();
+            if (_rand.NextTryGetElement(_bulletHoleSprites, out var bulletHole))
+            {
+                _spriteRenderer.sprite = bulletHole;
+            }
             _particleSystem.Play();
             
             var tween = _spriteRenderer.DOFade(MIN_ALPHA, fadeDuration);
