@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Perigon.Weapons
@@ -14,8 +11,7 @@ namespace Perigon.Weapons
             translationForward = transform.forward * distance;
             if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, distance))
             {
-                HitObject(hit.collider);
-                HandleCollision(hit.point);
+                HitObject(hit.collider, hit.point, hit.normal);
                 return false;
             }
             return true;
@@ -31,11 +27,6 @@ namespace Perigon.Weapons
             {
                 Deactivate();
             }
-        }
-
-        protected override void HandleCollision(Vector3 point)
-        {
-            
         }
     }
 }
