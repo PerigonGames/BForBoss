@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Perigon.Weapons
@@ -21,16 +18,11 @@ namespace Perigon.Weapons
             _rb.velocity = Vector3.zero;
             _rb.angularVelocity = Vector3.zero;
         }
-        
-        protected override void HandleCollision(Vector3 position)
-        {
-            
-        }
-        
+
         private void OnCollisionEnter(Collision collision)
         {
-            HitObject(collision.collider);
-            HandleCollision(collision.contacts[0].point);
+            var contact = collision.GetContact(0);
+            HitObject(collision.collider, contact.point, contact.normal );
             Deactivate();
         }
 
