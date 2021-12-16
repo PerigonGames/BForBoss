@@ -5,6 +5,8 @@ namespace Perigon.Weapons
         int AmmunitionAmount { get; }
         int MaxAmmunitionAmount { get; }
         string NameOfWeapon { get; }
+        float MaxReloadDuration { get; }
+        float ElapsedReloadDuration { get; }
     }
 
     public partial class EquipmentBehaviour: IEquipmentData
@@ -13,5 +15,8 @@ namespace Perigon.Weapons
         public int AmmunitionAmount => _currentWeapon.AmmunitionAmount;
         public int MaxAmmunitionAmount => _currentWeapon.MaxAmmunitionAmount;
         public string NameOfWeapon => _currentWeapon.NameOfWeapon;
+
+        public float MaxReloadDuration => _currentWeapon.MaxReloadDuration;
+        public float ElapsedReloadDuration => _currentWeapon.ElapsedReloadDuration;
     }
 }

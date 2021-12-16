@@ -12,6 +12,7 @@ namespace BForBoss
         [SerializeField] private FirstPersonPlayer _player = null;
         [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
         [SerializeField] private AmmunitionCountViewBehaviour _ammunitionCountView = null;
+        [SerializeField] private ReloadViewBehaviour _reloadView = null;
         [SerializeField] private PauseMenu _pauseMenu = null;
         private FreezeActionsUtility _freezeActionsUtility = null;
         private readonly StateManager _stateManager = StateManager.Instance;
@@ -38,6 +39,7 @@ namespace BForBoss
             _player.Initialize();
             _equipmentBehaviour.Initialize();
             _ammunitionCountView.Initialize(_equipmentBehaviour);
+            _reloadView.Initialize(_equipmentBehaviour);
             _freezeActionsUtility = new FreezeActionsUtility(_player);
             _pauseMenu.Initialize(_player, _player, _freezeActionsUtility);
             _stateManager.SetState(State.Play);
