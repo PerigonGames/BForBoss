@@ -65,6 +65,14 @@ namespace Perigon.Weapons
                  ResetWeaponState();
              }
          }
+
+         public void ReloadWeaponIfPossible()
+         {
+             if (_ammunitionAmount < _weaponProperties.AmmunitionAmount)
+             {
+                 IsReloading = true;
+             }
+         }
          
          public Vector3 GetShootDirection(Vector3 from, Vector3 to)
          {
