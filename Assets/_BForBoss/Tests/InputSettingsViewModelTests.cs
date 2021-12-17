@@ -104,8 +104,8 @@ namespace Tests.Input
             viewModel.ApplySettings(9, 9, false);
             
             //Then
-            Assert.AreEqual(viewModel.GetHorizontal, 9f, "Controller Horizontal value should be overriden");
-            Assert.AreEqual(viewModel.GetVertical, 9f, "Controller Vertical value should be overriden");
+            Assert.AreEqual(9f, viewModel.GetHorizontal , "Controller Horizontal value should be overriden");
+            Assert.AreEqual(9f, viewModel.GetVertical,  "Controller Vertical value should be overriden");
             Assert.IsFalse(viewModel.GetIsInverted, "Input should not be inverted");
         }
     }

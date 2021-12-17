@@ -5,8 +5,8 @@ namespace BForBoss
 {
     public class ControllerInputSettingsViewModel: BaseInputSettingsViewModel
     {
-        public override float GetHorizontal => _settings.MouseHorizontalSensitivity;
-        public override float GetVertical => _settings.MouseVerticalSensitivity;
+        public override float GetHorizontal => _settings.ControllerHorizontalSensitivity;
+        public override float GetVertical => _settings.ControllerVerticalSensitivity;
         
         public ControllerInputSettingsViewModel(IInputSettings settings, IPerigonAnalytics analytics = null) : base(settings, analytics)
         {
