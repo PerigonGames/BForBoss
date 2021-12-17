@@ -18,6 +18,12 @@ namespace Perigon.UserInterface
             BindAllTabs();
             OpenFirstTab();
         }
+
+        public void Reset()
+        {
+            TurnOffAllContent();
+            OpenFirstTab();
+        }
         
         public void TurnOffAllContent()
         {
@@ -31,7 +37,7 @@ namespace Perigon.UserInterface
         {
             if (!_tabbedContent.IsNullOrEmpty())
             {
-                _tabbedContent[0].Tab.Select();
+                TurnOnTab(_tabbedContent[0].Content);
             }
         }
 

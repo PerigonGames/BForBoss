@@ -38,6 +38,7 @@ namespace BForBoss
 
         public void OpenPanel()
         {
+            _tabbedPanelViews.Reset();
             transform.ResetScale();
         }
 
