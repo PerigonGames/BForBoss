@@ -31,7 +31,7 @@ namespace Perigon.UserInterface
         {
             if (!_tabbedContent.IsNullOrEmpty())
             {
-                TurnOnTab(_tabbedContent[0].Content);
+                _tabbedContent[0].Tab.Select();
             }
         }
 
