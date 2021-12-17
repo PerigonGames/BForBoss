@@ -22,14 +22,13 @@ namespace Perigon.Weapons
 
         protected override void Update()
         {
-            if (!_isFiring)
+            if (_isFiring)
             {
-                return;
+                _weapon.DecrementElapsedTimeRateOfFire(Time.deltaTime);
+                _weapon.FireIfPossible();
             }
-
-            _weapon.DecrementElapsedTimeRateOfFire(Time.deltaTime);
+            
             _weapon.ReloadWeaponCountDownIfNeeded(Time.deltaTime);
-            _weapon.FireIfPossible();
         }
     }
 }
