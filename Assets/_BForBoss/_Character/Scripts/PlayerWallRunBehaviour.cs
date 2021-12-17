@@ -172,7 +172,7 @@ namespace Perigon.Character
                 return;
             }
 
-            var heading = CalculateDesiredDirection();
+            var heading = CalculateWallHeadingDirection();
             var angleDifference = Vector3.SignedAngle(ChildTransform.forward, heading, Vector3.up);
             _baseCharacter.AddYawInput(angleDifference * deltaTime * _lookAlongWallRotationSpeed);
 
@@ -286,7 +286,7 @@ namespace Perigon.Character
             return Mathf.LerpAngle(cameraAngle, targetAngle, Mathf.Max(_timeSinceWallAttach, _timeSinceWallDetach) / _cameraRotateDuration);
         }
         
-        private Vector3 CalculateDesiredDirection()
+        private Vector3 CalculateWallHeadingDirection()
         {
             return (Vector3.Cross(ChildTransform.up, _lastWallRunNormal) * CalculateWallSideRelativeToPlayer()).normalized;
         }
