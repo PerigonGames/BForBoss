@@ -1,4 +1,3 @@
-using System;
 using Perigon.Character;
 using Perigon.Leaderboard;
 using Perigon.UserInterface;
@@ -30,10 +29,8 @@ namespace BForBoss
             ILockInput lockInput)
         {
             _lockInput = lockInput;
-            if (_mouseKeyboardInputSettingsView != null)
-            {
-                _mouseKeyboardInputSettingsView.Initialize(new MouseKeyboardInputSettingsViewModel(inputSettings));
-            }
+            _mouseKeyboardInputSettingsView.Initialize(new MouseKeyboardInputSettingsViewModel(inputSettings));
+            _controllerInputSettingsView.Initialize(new ControllerInputSettingsViewModel(inputSettings));
             _setUsernameView?.Initialize(lockInput);
             _tabbedPanelViews?.Initialize();
             _gameplaySettingsView?.Initialize(thirdPersonSettings);
@@ -69,12 +66,12 @@ namespace BForBoss
         {
             if (_mouseKeyboardInputSettingsView == null)
             {
-                Debug.LogWarning("Mouse and Keyboard Input Settings View Is Missing From Settings View Behaviour ");
+                Debug.LogWarning("MouseAndKeyboardInputSettingsView is missing from SettingsViewBehaviour ");
             }
             
             if (_controllerInputSettingsView == null)
             {
-                Debug.LogWarning("Controller Input Settings View Is Missing From Settings View Behaviour ");
+                Debug.LogWarning("ControllerInputSettingsView is missing from SettingsViewBehaviour ");
             }
         }
 
