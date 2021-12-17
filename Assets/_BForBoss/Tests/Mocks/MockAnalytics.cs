@@ -18,6 +18,13 @@ namespace Tests
         public void ForceSendEvents() {}
 
         public void SetUsername(string username) {}
+        public void SetControllerSettings(float horizontal, float vertical, bool isInverted)
+        {
+        }
+
+        public void SetMouseKeyboardSettings(float horizontal, float vertical, bool isInverted)
+        {
+        }
 
         public void SetControlSettings(float horizontalMouse, float verticalMouse, float horizontalController,
             float verticalController, bool isInverted) { }

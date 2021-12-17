@@ -5,7 +5,6 @@ namespace Perigon.Character
 {
     public partial class FirstPersonPlayer : IInputSettings
     {
-
         private const string PlayerControlActionMap = "Player Controls";
         
         private const int Default_Is_Inverted = 0;

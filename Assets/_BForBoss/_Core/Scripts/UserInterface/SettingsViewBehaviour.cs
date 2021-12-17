@@ -1,8 +1,10 @@
+using System;
 using Perigon.Character;
 using Perigon.Leaderboard;
 using Perigon.UserInterface;
 using Perigon.Utility;
 using PerigonGames;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,14 +12,16 @@ namespace BForBoss
 {
     public class SettingsViewBehaviour : MonoBehaviour
     {
+        [Title("Buttons")]
         [SerializeField] private Button _backButton = null;
-
-        private InputSettingsViewBehaviour _inputSettingsView = null;
+        
+        [Title("Panel")]
+        [SerializeField] private InputSettingsViewBehaviour _mouseKeyboardInputSettingsView = null;
+        [SerializeField] private InputSettingsViewBehaviour _controllerInputSettingsView = null;
         private SetUsernameViewBehaviour _setUsernameView = null;
         private LeaderboardPanelBehaviour _leaderboardView = null;
         private TabbedPanelViewBehaviour _tabbedPanelViews = null;
         private GameplaySettingsViewBehaviour _gameplaySettingsView = null;
-
         private ILockInput _lockInput = null;
         
         public void Initialize(
@@ -26,7 +30,10 @@ namespace BForBoss
             ILockInput lockInput)
         {
             _lockInput = lockInput;
-            _inputSettingsView?.Initialize(new InputSettingsViewModel(inputSettings));
+            if (_mouseKeyboardInputSettingsView != null)
+            {
+                _mouseKeyboardInputSettingsView.Initialize(new MouseKeyboardInputSettingsViewModel(inputSettings));
+            }
             _setUsernameView?.Initialize(lockInput);
             _tabbedPanelViews?.Initialize();
             _gameplaySettingsView?.Initialize(thirdPersonSettings);
@@ -57,7 +64,20 @@ namespace BForBoss
             _backButton.onClick.AddListener(ClosePanel);
             SetupViews();
         }
-        
+
+        private void OnValidate()
+        {
+            if (_mouseKeyboardInputSettingsView == null)
+            {
+                Debug.LogWarning("Mouse and Keyboard Input Settings View Is Missing From Settings View Behaviour ");
+            }
+            
+            if (_controllerInputSettingsView == null)
+            {
+                Debug.LogWarning("Controller Input Settings View Is Missing From Settings View Behaviour ");
+            }
+        }
+
         private void UnlockInputIfEndRaceState()
         {
             if (StateManager.Instance.GetState() == State.EndRace)
@@ -68,7 +88,6 @@ namespace BForBoss
 
         private void SetupViews()
         {
-            _inputSettingsView = GetComponentInChildren<InputSettingsViewBehaviour>();
             _setUsernameView =  GetComponentInChildren<SetUsernameViewBehaviour>();
             _leaderboardView = GetComponentInChildren<LeaderboardPanelBehaviour>();
             _tabbedPanelViews = GetComponentInChildren<TabbedPanelViewBehaviour>();
