@@ -14,6 +14,8 @@ namespace Perigon.Character
         private float _maxWallRunAcceleration = 20f;
         [SerializeField]
         private float _wallGravityDownForce = 0f;
+        [SerializeField] 
+        private bool _factorLookDirectionIntoVelocity = false;
 
         [Header("Wall Run Conditions")]
         [SerializeField, Tooltip("Stop a wall run if speed dips below this")]
@@ -163,16 +165,18 @@ namespace Perigon.Character
                 return;
             }
 
+            var heading = CalculateWallHeadingDirection();
             var velocity = _baseCharacter.GetVelocity();
-            var alongWall = ChildTransform.TransformDirection(Vector3.forward).normalized;
-            velocity = velocity.dot(alongWall) * alongWall;
+            var characterForward = ChildTransform.forward;
+            var movementDir = _factorLookDirectionIntoVelocity ? characterForward : heading;
+            velocity = velocity.dot(movementDir) * movementDir;
+
             if (velocity.sqrMagnitude < _minSpeed * _minSpeed)
             {
                 StopWallRunning(false);
                 return;
             }
-
-            var heading = CalculateWallHeadingDirection();
+            
             var angleDifference = Vector3.SignedAngle(ChildTransform.forward, heading, Vector3.up);
             _baseCharacter.AddYawInput(angleDifference * deltaTime * _lookAlongWallRotationSpeed);
 
