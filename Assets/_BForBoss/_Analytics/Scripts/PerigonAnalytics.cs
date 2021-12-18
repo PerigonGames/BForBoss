@@ -55,9 +55,8 @@ namespace Perigon.Analytics
         void LogEventWithParams(String eventName, Hashtable parameters);
         void ForceSendEvents();
         void SetUsername(string username);
-
-        void SetControlSettings(float horizontalMouse, float verticalMouse, float horizontalController,
-            float verticalController, bool isInverted);
+        void SetControllerSettings(float horizontal, float vertical, bool isInverted);
+        void SetMouseKeyboardSettings(float horizontal, float vertical, bool isInverted);
 
     }
     
@@ -84,12 +83,17 @@ namespace Perigon.Analytics
             Mixpanel.People.Set(Profile.Name, username);
         }
 
-        public void SetControlSettings(float horizontalMouse, float verticalMouse, float horizontalController, float verticalController, bool isInverted)
+        public void SetControllerSettings(float horizontal, float vertical, bool isInverted)
         {
-            Mixpanel.People.Set(Profile.Controls.MouseHorizontalSens, horizontalMouse);
-            Mixpanel.People.Set(Profile.Controls.MouseVerticalSens, verticalMouse);
-            Mixpanel.People.Set(Profile.Controls.ControllerHorizontalSens, horizontalController);
-            Mixpanel.People.Set(Profile.Controls.ControllerVerticalSens, verticalController);
+            Mixpanel.People.Set(Profile.Controls.ControllerHorizontalSens, horizontal);
+            Mixpanel.People.Set(Profile.Controls.ControllerVerticalSens, vertical);
+            Mixpanel.People.Set(Profile.Controls.Inverted, isInverted);
+        }
+
+        public void SetMouseKeyboardSettings(float horizontal, float vertical, bool isInverted)
+        {
+            Mixpanel.People.Set(Profile.Controls.MouseHorizontalSens, horizontal);
+            Mixpanel.People.Set(Profile.Controls.MouseVerticalSens, vertical);
             Mixpanel.People.Set(Profile.Controls.Inverted, isInverted);
         }
 
