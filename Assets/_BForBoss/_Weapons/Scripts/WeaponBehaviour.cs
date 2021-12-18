@@ -49,7 +49,7 @@ namespace Perigon.Weapons
             SetCrosshairImage();
         }
 
-        public void HandleOnWeaponActivate(bool activate)
+        private void HandleOnWeaponActivate(bool activate)
         {
             enabled = activate;
         }
@@ -65,7 +65,7 @@ namespace Perigon.Weapons
 
         private void OnReloadInputAction(InputAction.CallbackContext context)
         {
-            _weapon.IsReloading = true;
+            _weapon.ReloadWeaponIfPossible();
         }
 
         private void HandleOnFire(int numberOfBullets)
