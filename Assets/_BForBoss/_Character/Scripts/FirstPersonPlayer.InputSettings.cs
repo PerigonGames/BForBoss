@@ -1,16 +1,21 @@
 using Perigon.Utility;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Perigon.Character 
 {
     public partial class FirstPersonPlayer : IInputSettings
     {
 
-        private const string PlayerControlActionMap = "Player Controls";
+        private const string PlayerControlActionMapName = "Player Controls";
+        private const string UIActionMapName = "UI";
         
         private const int Default_Is_Inverted = 0;
         private const float Default_Mouse_Sensitivity = 0.4f;
         private const float Default_Controller_Sensitivity = 0.4f;
+
+        private InputActionMap UIActionMap => actions.FindActionMap(UIActionMapName);
+        private InputActionMap PlayerControllerActionMap => actions.FindActionMap(PlayerControlActionMapName);
         
             
         private void SetupInput()
@@ -76,15 +81,17 @@ namespace Perigon.Character
                 GetCharacterLook().controllerVerticalSensitivity = value;   
             }  
         }
-        
-        public void DisableActions()
-        {
-            actions.FindActionMap(PlayerControlActionMap).Disable();
-        }
 
-        public void EnableActions()
+        public void SwapToPlayerActions()
         {
-            actions.FindActionMap(PlayerControlActionMap).Enable();
+            PlayerControllerActionMap.Enable();
+            UIActionMap.Disable();
+        }
+        
+        public void SwapToUIActions()
+        {
+            PlayerControllerActionMap.Disable();
+            UIActionMap.Enable();
         }
 
         public void RevertAllSettings()
