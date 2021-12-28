@@ -14,6 +14,7 @@ namespace BForBoss
         private const float RESOLVER_WIDTH = 80f;
         private const float OBJECT_FIELD_BUTTON_WIDTH = 18f; //Change depending on field Depth
         private const float RESOLVER_BUTTON_WIDTH = 20f;
+        private const float ENUMERABLE_BOX_OFFSET = 25f;
 
         private bool _isContentInitialized = false;
         private bool _includeInactiveGameObjects;
@@ -66,7 +67,7 @@ namespace BForBoss
             position.Set(position.x, position.y, position.width - RESOLVER_WIDTH, position.height);
             EditorGUI.PropertyField(position,property,label);
 
-            CreateRects(position);
+            CreateRects(position, property.depth);
 
             DrawResolverButtons(property);
         }
@@ -127,27 +128,29 @@ namespace BForBoss
                     break;
                 }
             }
-            
-            if (!components.IsNullOrEmpty())
-            {
-                if (components.Length > 1)
-                {
-                    void OnItemSelected(int componentID)
-                    {
-                        property.serializedObject.Update();
-                        property.objectReferenceInstanceIDValue = componentID;
-                        property.serializedObject.ApplyModifiedProperties();
-                    }
 
-                    var dropdown = new ComponentResolverDropdown(components, OnItemSelected , new AdvancedDropdownState());
-                    dropdown.Show(_childResolveRect);
-                }
-                else
+            if (components.IsNullOrEmpty())
+            {
+                return;
+            }
+            
+            if (components.Length > 1)
+            {
+                void OnItemSelected(int componentID)
                 {
                     property.serializedObject.Update();
-                    property.objectReferenceValue = components[0];
+                    property.objectReferenceInstanceIDValue = componentID;
                     property.serializedObject.ApplyModifiedProperties();
                 }
+
+                var dropdown = new ComponentResolverDropdown(components, OnItemSelected , new AdvancedDropdownState());
+                dropdown.Show(_childResolveRect);
+            }
+            else
+            {
+                property.serializedObject.Update();
+                property.objectReferenceValue = components[0];
+                property.serializedObject.ApplyModifiedProperties();
             }
         }
 
@@ -161,9 +164,11 @@ namespace BForBoss
             _isContentInitialized = true;
         }
 
-        private void CreateRects(Rect propertyRect)
+        private void CreateRects(Rect propertyRect, int propertyDepth)
         {
-            _childResolveRect = new Rect(propertyRect.width + OBJECT_FIELD_BUTTON_WIDTH, propertyRect.y, RESOLVER_BUTTON_WIDTH, propertyRect.height);
+            float depthOffset = propertyDepth * ENUMERABLE_BOX_OFFSET;
+            
+            _childResolveRect = new Rect(propertyRect.width + OBJECT_FIELD_BUTTON_WIDTH + depthOffset, propertyRect.y, RESOLVER_BUTTON_WIDTH, propertyRect.height);
             _parentResolveRect = new Rect(_childResolveRect.x + _childResolveRect.width, propertyRect.y, RESOLVER_BUTTON_WIDTH, propertyRect.height);
             _selfResolveRect = new Rect(_parentResolveRect.x + _parentResolveRect.width, propertyRect.y, RESOLVER_BUTTON_WIDTH, propertyRect.height);
             _clearContentRect = new Rect(_selfResolveRect.x + _selfResolveRect.width, propertyRect.y, RESOLVER_BUTTON_WIDTH, propertyRect.height);
