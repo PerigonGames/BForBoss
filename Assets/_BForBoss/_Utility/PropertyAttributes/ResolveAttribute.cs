@@ -4,14 +4,14 @@ using UnityEngine;
 namespace BForBoss
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-    public class Resolve : PropertyAttribute
+    public class ResolveAttribute : PropertyAttribute
     {
         public bool IncludeInactive = false;
         
         /// <summary>
         /// Add Component Resolver for Field
         /// </summary>
-        public Resolve()
+        public ResolveAttribute()
         {
         }
 
@@ -21,7 +21,7 @@ namespace BForBoss
         /// <param name="includeInactive">
         /// Include components of Inactive GameObjects for relevant searches
         /// </param>
-        public Resolve(bool includeInactive)
+        public ResolveAttribute(bool includeInactive)
         {
             IncludeInactive = includeInactive;
         }

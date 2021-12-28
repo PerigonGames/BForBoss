@@ -3,11 +3,12 @@ using System.Linq;
 using System.Reflection;
 using PerigonGames;
 using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace BForBoss
 {
-    [CustomPropertyDrawer(typeof(Resolve))]
+    [CustomPropertyDrawer(typeof(ResolveAttribute))]
     public class ResolverPropertyDrawer : PropertyDrawer
     {
         private const float RESOLVER_WIDTH = 80f;
@@ -33,6 +34,13 @@ namespace BForBoss
         private Rect _selfResolveRect;
         private Rect _clearContentRect;
         
+        private enum ResolveType
+        {
+            FromChildren,
+            FromParent,
+            FromSelf
+        }
+        
         
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -46,8 +54,8 @@ namespace BForBoss
             {
                 InitializeContent();
 
-                Resolve resolveAttribute = (Resolve) attribute;
-                _includeInactiveGameObjects = resolveAttribute.IncludeInactive;
+                ResolveAttribute resolveAttributeAttribute = (ResolveAttribute) attribute;
+                _includeInactiveGameObjects = resolveAttributeAttribute.IncludeInactive;
             }
             
             position.Set(position.x, position.y, position.width - RESOLVER_WIDTH, position.height);
@@ -60,40 +68,80 @@ namespace BForBoss
 
         private void DrawResolverButtons(SerializedProperty property)
         {
+            //Todo: Work for nested Fields. Ideally for N levels Deep
+
             int depth = property.depth;
-            // Self (G) | Children (C) | (OPTIONAL) Parent (P) | (OPTIONAL) Sibilings (R) | None (X)
+            // Self (G) | Children (C) | Parent (P) | (OPTIONAL) Sibilings (R) | None (X)
             
             if (GUI.Button(_childResolveRect, _childResolveContent))
             {
-                MonoBehaviour mb = property.serializedObject.targetObject as MonoBehaviour;
-
-                var components = mb.GetComponentsInChildren(fieldInfo.FieldType, _includeInactiveGameObjects)
-                    .Where(component => component.gameObject != mb.gameObject).ToArray();
-                
-                property.objectReferenceValue = components.IsNullOrEmpty() ? null : components[0];
+                SetResolvedComponent(property, ResolveType.FromChildren);
             }
             
             if (GUI.Button(_parentResolveRect, _parentResolveContent))
             {
-                MonoBehaviour mb = property.serializedObject.targetObject as MonoBehaviour;
-
-                var components = mb.GetComponentsInParent(fieldInfo.FieldType, _includeInactiveGameObjects)
-                    .Where(component => component.gameObject != mb.gameObject).ToArray();
-                
-                property.objectReferenceValue = components.IsNullOrEmpty() ? null : components[0];
+                SetResolvedComponent(property, ResolveType.FromParent);
             }
             
             if (GUI.Button(_selfResolveRect, _selfResolveContent))
             {
-                MonoBehaviour mb = property.serializedObject.targetObject as MonoBehaviour;
-            
-                var components = mb.GetComponents(fieldInfo.FieldType);
-                property.objectReferenceValue = components.IsNullOrEmpty() ? null : components[0];
+                SetResolvedComponent(property, ResolveType.FromSelf);
             }
             
             if (GUI.Button(_clearContentRect, _clearContent))
             {
+                Undo.RegisterCompleteObjectUndo(property.serializedObject.targetObject, "Cleared Resolved Component");
                 property.objectReferenceValue = null;
+            }
+        }
+
+        private void SetResolvedComponent(SerializedProperty property, ResolveType resolveType)
+        {
+            Undo.RegisterCompleteObjectUndo(property.serializedObject.targetObject, "Auto Resolved Component");
+            MonoBehaviour mb = property.serializedObject.targetObject as MonoBehaviour;
+            Component[] components = null;
+
+            switch (resolveType)
+            {
+                case ResolveType.FromChildren:
+                {
+                    components = mb.GetComponentsInChildren(fieldInfo.FieldType, _includeInactiveGameObjects)
+                        .Where(component => component.gameObject != mb.gameObject).ToArray();
+                    break;
+                }
+                case ResolveType.FromParent:
+                {
+                    components = mb.GetComponentsInParent(fieldInfo.FieldType, _includeInactiveGameObjects)
+                        .Where(component => component.gameObject != mb.gameObject).ToArray();
+                    break;
+                }
+                case ResolveType.FromSelf:
+                {
+                    components = mb.GetComponents(fieldInfo.FieldType);
+                    break;
+                }
+            }
+            
+            if (!components.IsNullOrEmpty())
+            {
+                if (components.Length > 1)
+                {
+                    void OnItemSelected(int componentID)
+                    {
+                        property.serializedObject.Update();
+                        property.objectReferenceInstanceIDValue = componentID;
+                        property.serializedObject.ApplyModifiedProperties();
+                    }
+
+                    var dropdown = new ComponentResolverDropdown(components, OnItemSelected , new AdvancedDropdownState());
+                    dropdown.Show(_childResolveRect);
+                }
+                else
+                {
+                    property.serializedObject.Update();
+                    property.objectReferenceValue = components[0];
+                    property.serializedObject.ApplyModifiedProperties();
+                }
             }
         }
 
@@ -140,5 +188,37 @@ namespace BForBoss
             
             return isAppropriateType;
         }
+    }
+}
+
+public class ComponentResolverDropdown : AdvancedDropdown
+{
+    private Component[] _components;
+    private Action<int> _onItemSelected;
+
+    public ComponentResolverDropdown(Component[] components, Action<int> onItemSelected, AdvancedDropdownState state) : base(state)
+    {
+        _components = components;
+        _onItemSelected = onItemSelected;
+    }
+
+    protected override AdvancedDropdownItem BuildRoot()
+    {
+        AdvancedDropdownItem root = new AdvancedDropdownItem("Components");
+
+        foreach (Component component in _components)
+        {
+            AdvancedDropdownItem dropdownItem = new AdvancedDropdownItem($"{component.gameObject.name} : {component.GetType().Name}");
+            dropdownItem.id = component.GetInstanceID();
+            
+            root.AddChild(dropdownItem);
+        }
+        
+        return root;
+    }
+
+    protected override void ItemSelected(AdvancedDropdownItem item)
+    {
+        _onItemSelected?.Invoke(item.id);
     }
 }

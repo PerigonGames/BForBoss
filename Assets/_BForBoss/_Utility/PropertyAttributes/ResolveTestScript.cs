@@ -6,7 +6,7 @@ namespace BForBoss
     public class ResolveTestScript : MonoBehaviour
     {
         //[Resolve] public int Integer = 3;
-        [Resolve] [SerializeField] private BoxCollider BoxCollider;
+        [Resolve] [SerializeField] private Collider _collider;
 
         //[Resolve] public List<BoxCollider> boxColliders;
         //[Resolve] public string[] array_strings;
