@@ -17,6 +17,7 @@ namespace BForBoss
 
         private bool _isContentInitialized = false;
         private bool _includeInactiveGameObjects;
+        private bool _isEnumerable = false;
         
         //Button Content
         private GUIContent _childResolveContent;
@@ -58,9 +59,13 @@ namespace BForBoss
                 _includeInactiveGameObjects = resolveAttributeAttribute.IncludeInactive;
             }
             
+            //The way to tell if property is an array/list or not
+            //https://answers.unity.com/questions/603882/serializedproperty-isnt-being-detected-as-an-array.html
+            _isEnumerable = property.serializedObject.FindProperty(property.propertyPath.Split('.')[0]).isArray;
+
             position.Set(position.x, position.y, position.width - RESOLVER_WIDTH, position.height);
             EditorGUI.PropertyField(position,property,label);
-            
+
             CreateRects(position);
 
             DrawResolverButtons(property);
@@ -99,25 +104,26 @@ namespace BForBoss
         {
             Undo.RegisterCompleteObjectUndo(property.serializedObject.targetObject, "Auto Resolved Component");
             MonoBehaviour mb = property.serializedObject.targetObject as MonoBehaviour;
+            Type fieldType = _isEnumerable ? fieldInfo.FieldType.GetElementType() : fieldInfo.FieldType;
             Component[] components = null;
 
             switch (resolveType)
             {
                 case ResolveType.FromChildren:
                 {
-                    components = mb.GetComponentsInChildren(fieldInfo.FieldType, _includeInactiveGameObjects)
+                    components = mb.GetComponentsInChildren(fieldType, _includeInactiveGameObjects)
                         .Where(component => component.gameObject != mb.gameObject).ToArray();
                     break;
                 }
                 case ResolveType.FromParent:
                 {
-                    components = mb.GetComponentsInParent(fieldInfo.FieldType, _includeInactiveGameObjects)
+                    components = mb.GetComponentsInParent(fieldType, _includeInactiveGameObjects)
                         .Where(component => component.gameObject != mb.gameObject).ToArray();
                     break;
                 }
                 case ResolveType.FromSelf:
                 {
-                    components = mb.GetComponents(fieldInfo.FieldType);
+                    components = mb.GetComponents(fieldType);
                     break;
                 }
             }
