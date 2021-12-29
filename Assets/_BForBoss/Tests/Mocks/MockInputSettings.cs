@@ -5,8 +5,6 @@ namespace Tests
     public class MockInputSettings : IInputSettings
     {
         public int CalledRevertAllSettings = 0;
-        public int CalledEnableActions = 0;
-        public int CalledDisableActions = 0;
         
         public bool IsInverted { get; set; }
         public float MouseHorizontalSensitivity { get; set; }
@@ -18,14 +16,12 @@ namespace Tests
             CalledRevertAllSettings++;
         }
 
-        public void DisableActions()
+        public void SwapToUIActions()
         {
-            CalledDisableActions++;
         }
 
-        public void EnableActions()
+        public void SwapToPlayerActions()
         {
-            CalledEnableActions++;
         }
     }
 }

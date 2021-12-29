@@ -132,7 +132,7 @@ namespace BForBoss
             _currentState = _stateManager.GetState();
             _stateManager.SetState(State.Pause);
             IInputSettings input = FindObjectOfType<FirstPersonPlayer>();
-            input.DisableActions();
+            input.SwapToUIActions();
             GetCanvasRect();
             transform.localScale = Vector3.one;
             LockMouseUtility.Instance.UnlockMouse();
@@ -141,7 +141,7 @@ namespace BForBoss
         private void ClosePanel()
         {
             IInputSettings input = FindObjectOfType<FirstPersonPlayer>();
-            input.EnableActions();
+            input.SwapToPlayerActions();
             ResetView();
             transform.localScale = Vector3.zero;
             _stateManager.SetState(_currentState);
