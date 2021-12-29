@@ -223,11 +223,13 @@ public class ComponentResolverDropdown : AdvancedDropdown
 {
     private Component[] _components;
     private Action<int> _onItemSelected;
+    private readonly Vector2 MINIMUM_SIZE = new Vector2(40f,200f);
 
     public ComponentResolverDropdown(Component[] components, Action<int> onItemSelected, AdvancedDropdownState state) : base(state)
     {
         _components = components;
         _onItemSelected = onItemSelected;
+        minimumSize = MINIMUM_SIZE;
     }
 
     protected override AdvancedDropdownItem BuildRoot()
