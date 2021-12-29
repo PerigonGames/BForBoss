@@ -74,7 +74,10 @@ namespace BForBoss
             
             //Check if field is being declared within Struct
             Type declaringType = fieldInfo.DeclaringType;
-            _isDeclaredInStruct = declaringType != null && declaringType.IsValueType && !declaringType.IsPrimitive;
+            //https://stackoverflow.com/questions/1827425/how-to-check-programmatically-if-a-type-is-a-struct-or-a-class
+            _isDeclaredInStruct = declaringType != null && declaringType.IsValueType && !declaringType.IsPrimitive &&
+                                  declaringType != typeof(decimal) && declaringType != typeof(DateTime) &&
+                                  !declaringType.IsEnum;
 
             position.Set(position.x, position.y, position.width - RESOLVER_WIDTH, position.height);
             EditorGUI.PropertyField(position,property,label);
