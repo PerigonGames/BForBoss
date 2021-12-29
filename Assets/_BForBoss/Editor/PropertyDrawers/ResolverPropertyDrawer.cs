@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using PerigonGames;
@@ -12,13 +13,17 @@ namespace BForBoss
     public class ResolverPropertyDrawer : PropertyDrawer
     {
         private const float RESOLVER_WIDTH = 80f;
-        private const float OBJECT_FIELD_BUTTON_WIDTH = 18f; //Change depending on field Depth
+        private const float OBJECT_FIELD_BUTTON_WIDTH = 18f;
         private const float RESOLVER_BUTTON_WIDTH = 20f;
         private const float ENUMERABLE_BOX_OFFSET = 25f;
+        private const float STRUCT_OFFSET = 15f;
 
         private bool _isContentInitialized = false;
         private bool _includeInactiveGameObjects;
-        private bool _isEnumerable = false;
+        
+        private bool _isList = false;
+        private bool _isArray = false;
+        private bool _isDeclaredInStruct = false;
         
         //Button Content
         private GUIContent _childResolveContent;
@@ -60,23 +65,27 @@ namespace BForBoss
                 _includeInactiveGameObjects = resolveAttributeAttribute.IncludeInactive;
             }
             
-            //The way to tell if property is an array/list or not
+            //The way to tell if property is an array/list or not via property.propertypath
             //https://answers.unity.com/questions/603882/serializedproperty-isnt-being-detected-as-an-array.html
-            _isEnumerable = property.serializedObject.FindProperty(property.propertyPath.Split('.')[0]).isArray;
+
+            Type fieldType = fieldInfo.FieldType;
+            _isArray = fieldType.IsArray;
+            _isList = fieldType.IsGenericType && fieldType.GetGenericTypeDefinition() == typeof(List<>);
+            
+            //Check if field is being declared within Struct
+            Type declaringType = fieldInfo.DeclaringType;
+            _isDeclaredInStruct = declaringType != null && declaringType.IsValueType && !declaringType.IsPrimitive;
 
             position.Set(position.x, position.y, position.width - RESOLVER_WIDTH, position.height);
             EditorGUI.PropertyField(position,property,label);
 
-            CreateRects(position, property.depth);
+            CreateRects(position);
 
             DrawResolverButtons(property);
         }
 
         private void DrawResolverButtons(SerializedProperty property)
         {
-            //Todo: Work for nested Fields. Ideally for N levels Deep
-
-            int depth = property.depth;
             // Self (G) | Children (C) | Parent (P) | (OPTIONAL) Sibilings (R) | None (X)
             
             if (GUI.Button(_childResolveRect, _childResolveContent))
@@ -105,9 +114,10 @@ namespace BForBoss
         {
             Undo.RegisterCompleteObjectUndo(property.serializedObject.targetObject, "Auto Resolved Component");
             MonoBehaviour mb = property.serializedObject.targetObject as MonoBehaviour;
-            Type fieldType = _isEnumerable ? fieldInfo.FieldType.GetElementType() : fieldInfo.FieldType;
+            Type fieldType = _isArray ? fieldInfo.FieldType.GetElementType() :
+                _isList ? fieldInfo.FieldType.GetGenericArguments().Single() : fieldInfo.FieldType;
+            
             Component[] components = null;
-
             switch (resolveType)
             {
                 case ResolveType.FromChildren:
@@ -164,9 +174,11 @@ namespace BForBoss
             _isContentInitialized = true;
         }
 
-        private void CreateRects(Rect propertyRect, int propertyDepth)
+        private void CreateRects(Rect propertyRect)
         {
-            float depthOffset = propertyDepth * ENUMERABLE_BOX_OFFSET;
+            float depthOffset = (_isList || _isArray)
+                ? _isDeclaredInStruct ? ENUMERABLE_BOX_OFFSET + STRUCT_OFFSET : ENUMERABLE_BOX_OFFSET
+                : 0;
             
             _childResolveRect = new Rect(propertyRect.width + OBJECT_FIELD_BUTTON_WIDTH + depthOffset, propertyRect.y, RESOLVER_BUTTON_WIDTH, propertyRect.height);
             _parentResolveRect = new Rect(_childResolveRect.x + _childResolveRect.width, propertyRect.y, RESOLVER_BUTTON_WIDTH, propertyRect.height);
@@ -194,10 +206,15 @@ namespace BForBoss
         {
             Type fieldType = fieldInfo.FieldType;
             
+            //Todo: Find a long term solution to not allow attribute being placed on structs moving forward 
+            if (fieldType.IsValueType && !fieldType.IsPrimitive)
+            {
+                Debug.LogError("Unable to Resolve Struct Declared fields directly." +
+                               "\n Please add [Resolve] onto specific fields within the struct instead");
+            }
+
             //List/Array property.propertyType describes the element type not the IEnumerable Type (i.e. int instead of List<int>)
-            bool isAppropriateType = !fieldType.IsValueType && fieldType != typeof(string) && property.propertyType == SerializedPropertyType.ObjectReference;
-            
-            return isAppropriateType;
+            return !fieldType.IsValueType && property.propertyType == SerializedPropertyType.ObjectReference;
         }
     }
 }
