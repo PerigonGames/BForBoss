@@ -18,6 +18,12 @@ namespace Perigon.UserInterface
             BindAllTabs();
             OpenFirstTab();
         }
+
+        public void Reset()
+        {
+            TurnOffAllContent();
+            OpenFirstTab();
+        }
         
         public void TurnOffAllContent()
         {
