@@ -27,7 +27,7 @@ namespace Perigon.Leaderboard
 
         public bool IsUsernameAlreadySet()
         {
-            return PlayerPrefs.HasKey(PlayerPrefKeys.LeaderboardSettings.UserName);
+            return PlayerPrefs.HasKey(PlayerPrefKeys.LeaderboardSettings.USERNAME);
         }
 
         public void RemoveSubscribers()

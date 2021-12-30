@@ -11,10 +11,11 @@ namespace Tests.Character
 {
     public class CharacterWallRunTests : InputTestFixture
     {
+        private const float ON_GROUND_Y_POSITION = 0.5f;
+
         private Keyboard _keyboard = null;
         private Vector3 _narrowCorridor = new Vector3(0, 0.5f, -10);
         private Vector3 _wideCorridor = new Vector3(5, 0.5f, -10);
-        private const float OnGroundYPosition = 0.5f;
         
         [SetUp]
         public override void Setup()
@@ -138,7 +139,7 @@ namespace Tests.Character
             Release(_keyboard.spaceKey);
             yield return new WaitForSeconds(3f);
 
-            var yPositionWithinBounds = TestUtilities.WithinBounds(character.transform.position.y, OnGroundYPosition);
+            var yPositionWithinBounds = TestUtilities.WithinBounds(character.transform.position.y, ON_GROUND_Y_POSITION);
             Assert.Greater(character.transform.position.z, 0, "Should wall run over 0, 0, 0");
             Assert.IsTrue(yPositionWithinBounds, "Wall running hitting a wall should fall down");
         }

@@ -7,7 +7,7 @@ namespace Perigon.Weapons
     [RequireComponent(typeof(BulletSpawner))]
     public abstract class WeaponBehaviour : MonoBehaviour
     {
-        private const float FutherestDistanceToRayCast = 50f;
+        private const float RAYCAST_DISTANCE_LIMIT = 50f;
         private readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
         [SerializeField] protected Transform _firePoint = null;
         [SerializeField] private CrosshairBehaviour _crosshair = null;
@@ -88,7 +88,7 @@ namespace Perigon.Weapons
             }
             else
             {
-                targetPoint = camRay.GetPoint(FutherestDistanceToRayCast);
+                targetPoint = camRay.GetPoint(RAYCAST_DISTANCE_LIMIT);
             }
 
             return _weapon.GetShootDirection(_firePoint.position, targetPoint);

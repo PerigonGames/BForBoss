@@ -10,10 +10,10 @@ namespace BForBoss
 {
     public class DebugWindow : MonoBehaviour
     {
-        private const Key _keyCodeCharacter = Key.Backquote;
+        private const Key KEYCODE_CHARACTER = Key.Backquote;
 
-        private const float _canvasWidthMultiplier = 0.15f;
-        private const float _canvasHeightMultiplier = 0.5f;
+        private const float CANVAS_WIDTH_MULTIPLIER = 0.15f;
+        private const float CANVAS_HEIGHT_MULTIPLIER = 0.5f;
         
         //[SerializeField] private List<DebugOptions> _debugOptions;
         [SerializeField] private RectTransform _rectTransform;
@@ -56,7 +56,7 @@ namespace BForBoss
 
         private void Update()
         {
-            if (Keyboard.current[_keyCodeCharacter].wasPressedThisFrame)
+            if (Keyboard.current[KEYCODE_CHARACTER].wasPressedThisFrame)
             {
                 if (_isPanelShowing)
                 {
@@ -155,8 +155,8 @@ namespace BForBoss
                 Vector2 anchorMin = _rectTransform.anchorMin;
                 
                 _windowRect = new Rect(anchorMin.x * Screen.width,
-                    anchorMin.y * Screen.height, Screen.width * _canvasWidthMultiplier,
-                    Screen.height * _canvasHeightMultiplier);
+                    anchorMin.y * Screen.height, Screen.width * CANVAS_WIDTH_MULTIPLIER,
+                    Screen.height * CANVAS_HEIGHT_MULTIPLIER);
             }
         }
 

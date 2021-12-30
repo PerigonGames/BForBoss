@@ -11,7 +11,7 @@ namespace Perigon.Leaderboard
         public static readonly int CharacterLimit = 20;
         private readonly IPerigonAnalytics _analytics = null;
         
-        public string Username => PlayerPrefs.GetString(PlayerPrefKeys.LeaderboardSettings.UserName, "N/A");
+        public string Username => PlayerPrefs.GetString(PlayerPrefKeys.LeaderboardSettings.USERNAME, "N/A");
         
         public InputUsername(IPerigonAnalytics analytics = null)
         {
@@ -20,7 +20,7 @@ namespace Perigon.Leaderboard
 
         public void SetUserName(string username)
         {
-            PlayerPrefs.SetString(PlayerPrefKeys.LeaderboardSettings.UserName, username);
+            PlayerPrefs.SetString(PlayerPrefKeys.LeaderboardSettings.USERNAME, username);
             _analytics.SetUsername(username);
         }
 
