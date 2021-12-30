@@ -6,7 +6,7 @@ namespace BForBoss
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public class ResolveAttribute : PropertyAttribute
     {
-        public bool IncludeInactive = false;
+        public bool IncludeInactive = true;
         
         /// <summary>
         /// Add Component Resolver for Field

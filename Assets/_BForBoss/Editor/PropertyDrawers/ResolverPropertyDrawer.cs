@@ -40,6 +40,8 @@ namespace BForBoss
         // private Rect _siblingResolveRect;
         private Rect _selfResolveRect;
         private Rect _clearContentRect;
+
+        private GUIStyle _clearContentGUIStyle;
         
         private enum ResolveType
         {
@@ -106,7 +108,7 @@ namespace BForBoss
                 SetResolvedComponent(property, ResolveType.FromSelf);
             }
             
-            if (GUI.Button(_clearContentRect, _clearContent))
+            if (GUI.Button(_clearContentRect, _clearContent, _clearContentGUIStyle))
             {
                 Undo.RegisterCompleteObjectUndo(property.serializedObject.targetObject, "Cleared Resolved Component");
                 property.objectReferenceValue = null;
@@ -171,8 +173,14 @@ namespace BForBoss
         {
             _childResolveContent = new GUIContent("C", "Get Component from Children");
             _parentResolveContent = new GUIContent("P", "Get Component from Parent");
-            _selfResolveContent = new GUIContent("G", "Get Component from Self");
-            _clearContent = new GUIContent("X", "Clear Component");
+            _selfResolveContent = new GUIContent("S", "Get Component from Self");
+            _clearContent = EditorGUIUtility.IconContent("d_winbtn_mac_close_h@2x", "|Clear Component");
+
+            _clearContentGUIStyle = new GUIStyle()
+            {
+                stretchHeight = true,
+                stretchWidth = true
+            };
 
             _isContentInitialized = true;
         }
