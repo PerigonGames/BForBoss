@@ -9,31 +9,31 @@ namespace Perigon.Utility
     {
         public struct InputSettings
         {
-            public const string Is_Inverted = "is_inverted";
-            public const string Mouse_Horizontal_Sensitivity = "mouse_horizontal_sensitivity";
-            public const string Mouse_Vertical_Sensitivity = "mouse_vertical_sensitivity";
-            public const string Controller_Horizontal_Sensitivity = "controller_horizontal_sensitivity";
-            public const string Controller_Vertical_Sensitivity = "controller_vertical_sensitivity";
+            public const string IS_INVERTED = "is_inverted";
+            public const string MOUSE_HORIZONTAL_SENSITIVITY = "mouse_horizontal_sensitivity";
+            public const string MOUSE_VERTICAL_SENSITIVITY = "mouse_vertical_sensitivity";
+            public const string CONTROLLER_HORIZONTAL_SENSITIVITY = "controller_horizontal_sensitivity";
+            public const string CONTROLLER_VERTICAL_SENSITIVITY = "controller_vertical_sensitivity";
         }
 
         public struct ThirdPerson
         {
-            public const string IsThirdPerson = "is_third_person";
+            public const string IS_THIRD_PERSON = "is_third_person";
         }
 
         public struct GameplaySettings
         {
-            public const string ShowFPS = "ShowFPS";
-            public const string ShowRAMUsage = "ShowRAMUsage";
-            public const string ShowPCSpecs = "ShowPCSpecs";
+            public const string SHOW_FPS = "ShowFPS";
+            public const string SHOW_RAM_USAGE = "ShowRAMUsage";
+            public const string SHOW_PC_SPECS = "ShowPCSpecs";
         }
 
         public struct LeaderboardSettings
         {
-            public const string UserName = "UserName";
-            public const string Timer = "Timer";
-            public const string Input = "Input";
-            public const string ShouldUpload = "ShouldUpload";
+            public const string USERNAME = "UserName";
+            public const string TIMER = "Timer";
+            public const string INPUT = "Input";
+            public const string SHOULDUPLOAD = "ShouldUpload";
         }
 
         public static IList<string> GetAllKeys()
