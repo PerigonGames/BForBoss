@@ -6,6 +6,8 @@ using PerigonGames;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
+using UnityEngine.Rendering.VirtualTexturing;
+using Object = System.Object;
 
 namespace BForBoss
 {
@@ -121,51 +123,110 @@ namespace BForBoss
             MonoBehaviour mb = property.serializedObject.targetObject as MonoBehaviour;
             Type fieldType = _isArray ? fieldInfo.FieldType.GetElementType() :
                 _isList ? fieldInfo.FieldType.GetGenericArguments().Single() : fieldInfo.FieldType;
-            
+
+            bool isGameObjectType = fieldType == typeof(GameObject);
+
+            List<GameObject> gameObjects = new List<GameObject>();
             Component[] components = null;
+
             switch (resolveType)
             {
                 case ResolveType.FromChildren:
                 {
-                    components = mb.GetComponentsInChildren(fieldType, _includeInactiveGameObjects)
-                        .Where(component => component.gameObject != mb.gameObject).ToArray();
+                    if (isGameObjectType)
+                    {
+                        foreach (Transform child in mb.transform)
+                        {
+                            gameObjects.Add(child.gameObject);
+                        }
+                    }
+                    else
+                    {
+                        components = mb.GetComponentsInChildren(fieldType, _includeInactiveGameObjects)
+                            .Where(component => component.gameObject != mb.gameObject).ToArray();
+                    }
+                    
                     break;
                 }
                 case ResolveType.FromParent:
                 {
-                    components = mb.GetComponentsInParent(fieldType, _includeInactiveGameObjects)
-                        .Where(component => component.gameObject != mb.gameObject).ToArray();
+                    if (isGameObjectType)
+                    {
+                        Transform parent = mb.transform.parent;
+                        
+                        while (parent != null)
+                        {
+                            gameObjects.Add(parent.gameObject);
+                            parent = parent.parent;
+                        }
+                    }
+                    else
+                    {
+                        components = mb.GetComponentsInParent(fieldType, _includeInactiveGameObjects)
+                            .Where(component => component.gameObject != mb.gameObject).ToArray();
+                    }
+                    
                     break;
                 }
                 case ResolveType.FromSelf:
                 {
-                    components = mb.GetComponents(fieldType);
+                    if (isGameObjectType)
+                    {
+                        gameObjects = new List<GameObject>{mb.gameObject};
+                    }
+                    else
+                    {
+                        components = mb.GetComponents(fieldType);
+                    }
+                    
                     break;
                 }
             }
-
-            if (components.IsNullOrEmpty())
-            {
-                return;
-            }
             
-            if (components.Length > 1)
+            void OnItemSelected(int componentID)
             {
-                void OnItemSelected(int componentID)
+                property.serializedObject.Update();
+                property.objectReferenceInstanceIDValue = componentID;
+                property.serializedObject.ApplyModifiedProperties();
+            }
+
+            if (isGameObjectType)
+            {
+                if (gameObjects.IsNullOrEmpty())
                 {
-                    property.serializedObject.Update();
-                    property.objectReferenceInstanceIDValue = componentID;
-                    property.serializedObject.ApplyModifiedProperties();
+                    return;
                 }
 
-                var dropdown = new ComponentResolverDropdown(components, OnItemSelected , new AdvancedDropdownState());
-                dropdown.Show(_childResolveRect);
+                if (gameObjects.Count > 1)
+                {
+                    var dropdown = new GameObjectResolverDropdown(gameObjects, OnItemSelected, new AdvancedDropdownState());
+                    dropdown.Show(_childResolveRect);
+                }
+                else
+                {
+                    property.serializedObject.Update();
+                    property.objectReferenceValue = gameObjects[0];
+                    property.serializedObject.ApplyModifiedProperties();
+                }
             }
             else
             {
-                property.serializedObject.Update();
-                property.objectReferenceValue = components[0];
-                property.serializedObject.ApplyModifiedProperties();
+                if (components.IsNullOrEmpty())
+                {
+                    return;
+                }
+
+                if (components.Length > 1)
+                {
+                    var dropdown = new ComponentResolverDropdown(components, OnItemSelected , new AdvancedDropdownState());
+                    dropdown.Show(_childResolveRect);
+                }
+                else
+                {
+                    property.serializedObject.Update();
+                    property.objectReferenceValue = components[0];
+                    property.serializedObject.ApplyModifiedProperties();
+                }
             }
         }
 
@@ -230,17 +291,63 @@ namespace BForBoss
     }
 }
 
-public class ComponentResolverDropdown : AdvancedDropdown
+#region ResolverDropdown
+
+public class ResolverDropdown : AdvancedDropdown
 {
-    private Component[] _components;
     private Action<int> _onItemSelected;
     private readonly Vector2 MINIMUM_SIZE = new Vector2(40f,200f);
-
-    public ComponentResolverDropdown(Component[] components, Action<int> onItemSelected, AdvancedDropdownState state) : base(state)
+    
+    public ResolverDropdown(Action<int> onItemSelected, AdvancedDropdownState state) : base(state)
     {
-        _components = components;
         _onItemSelected = onItemSelected;
         minimumSize = MINIMUM_SIZE;
+    }
+
+    protected override AdvancedDropdownItem BuildRoot()
+    {
+        AdvancedDropdownItem root = new AdvancedDropdownItem("Objects");
+        return root;
+    }
+
+    protected override void ItemSelected(AdvancedDropdownItem item)
+    {
+        _onItemSelected?.Invoke(item.id);
+    }
+}
+
+public class GameObjectResolverDropdown : ResolverDropdown
+{
+    private List<GameObject> _gameObjects;
+    
+    public GameObjectResolverDropdown(List<GameObject> gameObjects, Action<int> onItemSelected, AdvancedDropdownState state) : base(onItemSelected, state)
+    {
+        _gameObjects = gameObjects;
+    }
+
+    protected override AdvancedDropdownItem BuildRoot()
+    {
+        AdvancedDropdownItem root = new AdvancedDropdownItem("GameObjects");
+
+        foreach (GameObject component in _gameObjects)
+        {
+            AdvancedDropdownItem dropdownItem = new AdvancedDropdownItem($"{component.gameObject.name} : {component.GetType().Name}");
+            dropdownItem.id = component.GetInstanceID();
+
+            root.AddChild(dropdownItem);
+        }
+        
+        return root;
+    }
+}
+
+public class ComponentResolverDropdown : ResolverDropdown
+{
+    private Component[] _components;
+    
+    public ComponentResolverDropdown(Component[] components, Action<int> onItemSelected, AdvancedDropdownState state) : base(onItemSelected, state)
+    {
+        _components = components;
     }
 
     protected override AdvancedDropdownItem BuildRoot()
@@ -257,9 +364,6 @@ public class ComponentResolverDropdown : AdvancedDropdown
         
         return root;
     }
-
-    protected override void ItemSelected(AdvancedDropdownItem item)
-    {
-        _onItemSelected?.Invoke(item.id);
-    }
 }
+
+#endregion

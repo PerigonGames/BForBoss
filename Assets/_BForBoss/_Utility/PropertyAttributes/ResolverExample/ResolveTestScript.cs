@@ -22,6 +22,8 @@ namespace BForBoss
         
         [SerializeField] private ResolveStructExample _struct;
 
+        [Resolve, SerializeField] private GameObject _go;
+
         //[Resolve, SerializeField] public ResolveStructExample _structThatWillBreakImplementation;
     }
 }
