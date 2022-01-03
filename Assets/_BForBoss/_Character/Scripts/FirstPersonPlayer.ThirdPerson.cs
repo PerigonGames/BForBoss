@@ -10,18 +10,18 @@ namespace Perigon.Character
     }
     public partial class FirstPersonPlayer : IThirdPerson
     {
-        private const int Default_Is_Third_Person = 0;
+        private const int DEFAULT_IS_THIRD_PERSON = 0;
         
         public void SetThirdPersonActive(bool isActive)
         {
             var isThirdPerson = isActive ? 1 : 0;
-            PlayerPrefs.SetInt(PlayerPrefKeys.ThirdPerson.IsThirdPerson, isThirdPerson);
+            PlayerPrefs.SetInt(PlayerPrefKeys.ThirdPerson.IS_THIRD_PERSON, isThirdPerson);
             IsThirdPerson = isActive;
         }
         
         private void SetupThirdPerson()
         {
-            IsThirdPerson = PlayerPrefs.GetInt(PlayerPrefKeys.ThirdPerson.IsThirdPerson, Default_Is_Third_Person) == 1;
+            IsThirdPerson = PlayerPrefs.GetInt(PlayerPrefKeys.ThirdPerson.IS_THIRD_PERSON, DEFAULT_IS_THIRD_PERSON) == 1;
             ToggleThirdPerson();
         }
         

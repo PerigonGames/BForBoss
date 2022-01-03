@@ -3,11 +3,6 @@ using UnityEngine.Rendering;
 
 namespace Perigon.Utility
 {
-    /// <summary>
-    /// Tool to distort the lens.
-    /// WARNING/NOTE - Post Processing > Volume > LensDistortion - make sure intensity is turned on
-    /// For some reason there's no built in function to enable this automatically. 
-    /// </summary>
     public class PostProcessingVolumeWeightTool
     {
         private readonly Volume _postProcessingVolume = null;

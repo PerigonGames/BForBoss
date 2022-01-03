@@ -6,8 +6,8 @@ namespace BForBoss
 {
     public class AmmunitionCountViewBehaviour : MonoBehaviour
     {
-        private const string DefaultAmmunitionLabel = "0 / 0";
-        private const string DefaultWeaponName = "Pistol";
+        private const string DEFAULT_AMMUNITION_TEXT = "0 / 0";
+        private const string DEFAULT_WEAPON_NAME = "Pistol";
         [SerializeField] private TMP_Text _ammunitionCountLabel = null;
         [SerializeField] private TMP_Text _weaponNameLabel = null;
 
@@ -20,8 +20,8 @@ namespace BForBoss
 
         public void Reset()
         {
-            _ammunitionCountLabel.text = DefaultAmmunitionLabel;
-            _weaponNameLabel.text = DefaultWeaponName;
+            _ammunitionCountLabel.text = DEFAULT_AMMUNITION_TEXT;
+            _weaponNameLabel.text = DEFAULT_WEAPON_NAME;
         }
         
         private void Update()
