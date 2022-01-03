@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
-namespace BForBoss
+namespace Perigon.Utility
 {
     [CustomPropertyDrawer(typeof(ResolveAttribute))]
     public class ResolverPropertyDrawer : PropertyDrawer
@@ -153,21 +153,24 @@ namespace BForBoss
             {
                 case ResolveType.FromChildren:
                 {
-                    foreach (Transform child in mb.transform)
+                    Transform[] transforms = mb.GetComponentsInChildren<Transform>(_includeInactiveGameObjects)
+                        .Where(transform => transform.gameObject != mb.gameObject).ToArray();
+
+                    foreach (Transform transform in transforms)
                     {
-                        components.Add(new ComponentInformation(child.gameObject));
+                        components.Add(new ComponentInformation(transform.gameObject));
                     }
                     
                     break;
                 }
                 case ResolveType.FromParent:
                 {
-                    Transform mbParent = mb.transform.parent;
+                    Transform[] transforms = mb.GetComponentsInParent<Transform>(_includeInactiveGameObjects)
+                        .Where(transform => transform.gameObject != mb.gameObject).ToArray();
 
-                    while (mbParent != null)
+                    foreach (Transform transform in transforms)
                     {
-                        components.Add(new ComponentInformation(mbParent.gameObject));
-                        mbParent = mbParent.parent;
+                        components.Add(new ComponentInformation(transform.gameObject));
                     }
                     
                     break;

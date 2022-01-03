@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace BForBoss
+namespace Perigon.Utility
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public class ResolveAttribute : PropertyAttribute

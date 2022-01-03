@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BForBoss
+namespace Perigon.Utility
 {
     [Serializable]
     public struct ResolveStructExample
