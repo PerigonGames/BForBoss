@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using PerigonGames;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
-using UnityEngine.Rendering.VirtualTexturing;
-using Object = System.Object;
 
 namespace BForBoss
 {
@@ -29,17 +28,13 @@ namespace BForBoss
         
         //Button Content
         private GUIContent _childResolveContent;
-        // private GUIContent _sceneResolveContent;
         private GUIContent _parentResolveContent;
-        // private GUIContent _siblingResolveContent;
         private GUIContent _selfResolveContent;
         private GUIContent _clearContent;
         
         //Button Rects
         private Rect _childResolveRect;
-        // private Rect _sceneResolveRect;
         private Rect _parentResolveRect;
-        // private Rect _siblingResolveRect;
         private Rect _selfResolveRect;
         private Rect _clearContentRect;
 
@@ -51,8 +46,7 @@ namespace BForBoss
             FromParent,
             FromSelf
         }
-        
-        
+
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             if (!IsResolvable(property))
@@ -93,8 +87,6 @@ namespace BForBoss
 
         private void DrawResolverButtons(SerializedProperty property)
         {
-            // Self (G) | Children (C) | Parent (P) | (OPTIONAL) Sibilings (R) | None (X)
-            
             if (GUI.Button(_childResolveRect, _childResolveContent))
             {
                 SetResolvedComponent(property, ResolveType.FromChildren);
@@ -119,68 +111,17 @@ namespace BForBoss
 
         private void SetResolvedComponent(SerializedProperty property, ResolveType resolveType)
         {
-            Undo.RegisterCompleteObjectUndo(property.serializedObject.targetObject, "Auto Resolved Component");
             MonoBehaviour mb = property.serializedObject.targetObject as MonoBehaviour;
             Type fieldType = _isArray ? fieldInfo.FieldType.GetElementType() :
                 _isList ? fieldInfo.FieldType.GetGenericArguments().Single() : fieldInfo.FieldType;
 
-            bool isGameObjectType = fieldType == typeof(GameObject);
+            ComponentInformation[] components = fieldType == typeof(GameObject)
+                ? GetResolvedGameObjects(mb, resolveType)
+                : GetResolvedComponents(mb, fieldType, resolveType);
 
-            List<GameObject> gameObjects = new List<GameObject>();
-            Component[] components = null;
-
-            switch (resolveType)
+            if (IListExtensions.IsNullOrEmpty(components))
             {
-                case ResolveType.FromChildren:
-                {
-                    if (isGameObjectType)
-                    {
-                        foreach (Transform child in mb.transform)
-                        {
-                            gameObjects.Add(child.gameObject);
-                        }
-                    }
-                    else
-                    {
-                        components = mb.GetComponentsInChildren(fieldType, _includeInactiveGameObjects)
-                            .Where(component => component.gameObject != mb.gameObject).ToArray();
-                    }
-                    
-                    break;
-                }
-                case ResolveType.FromParent:
-                {
-                    if (isGameObjectType)
-                    {
-                        Transform parent = mb.transform.parent;
-                        
-                        while (parent != null)
-                        {
-                            gameObjects.Add(parent.gameObject);
-                            parent = parent.parent;
-                        }
-                    }
-                    else
-                    {
-                        components = mb.GetComponentsInParent(fieldType, _includeInactiveGameObjects)
-                            .Where(component => component.gameObject != mb.gameObject).ToArray();
-                    }
-                    
-                    break;
-                }
-                case ResolveType.FromSelf:
-                {
-                    if (isGameObjectType)
-                    {
-                        gameObjects = new List<GameObject>{mb.gameObject};
-                    }
-                    else
-                    {
-                        components = mb.GetComponents(fieldType);
-                    }
-                    
-                    break;
-                }
+                return;
             }
             
             void OnItemSelected(int componentID)
@@ -189,46 +130,99 @@ namespace BForBoss
                 property.objectReferenceInstanceIDValue = componentID;
                 property.serializedObject.ApplyModifiedProperties();
             }
+            
+            Undo.RegisterCompleteObjectUndo(property.serializedObject.targetObject, "Auto Resolved Component");
 
-            if (isGameObjectType)
+            if (components.Length > 1)
             {
-                if (gameObjects.IsNullOrEmpty())
-                {
-                    return;
-                }
-
-                if (gameObjects.Count > 1)
-                {
-                    var dropdown = new GameObjectResolverDropdown(gameObjects, OnItemSelected, new AdvancedDropdownState());
-                    dropdown.Show(_childResolveRect);
-                }
-                else
-                {
-                    property.serializedObject.Update();
-                    property.objectReferenceValue = gameObjects[0];
-                    property.serializedObject.ApplyModifiedProperties();
-                }
+                var dropDown = new ResolverDropDown(components, OnItemSelected, new AdvancedDropdownState());
+                dropDown.Show(_childResolveRect);
             }
             else
             {
-                if (components.IsNullOrEmpty())
-                {
-                    return;
-                }
-
-                if (components.Length > 1)
-                {
-                    var dropdown = new ComponentResolverDropdown(components, OnItemSelected , new AdvancedDropdownState());
-                    dropdown.Show(_childResolveRect);
-                }
-                else
-                {
-                    property.serializedObject.Update();
-                    property.objectReferenceValue = components[0];
-                    property.serializedObject.ApplyModifiedProperties();
-                }
+                property.serializedObject.Update();
+                property.objectReferenceInstanceIDValue = components[0].instanceID;
+                property.serializedObject.ApplyModifiedProperties();
             }
         }
+
+        private ComponentInformation[] GetResolvedGameObjects(MonoBehaviour mb, ResolveType resolveType)
+        {
+            List<ComponentInformation> components = new List<ComponentInformation>();
+
+            switch (resolveType)
+            {
+                case ResolveType.FromChildren:
+                {
+                    foreach (Transform child in mb.transform)
+                    {
+                        components.Add(new ComponentInformation(child.gameObject));
+                    }
+                    
+                    break;
+                }
+                case ResolveType.FromParent:
+                {
+                    Transform mbParent = mb.transform.parent;
+
+                    while (mbParent != null)
+                    {
+                        components.Add(new ComponentInformation(mbParent.gameObject));
+                        mbParent = mbParent.parent;
+                    }
+                    
+                    break;
+                }
+                case ResolveType.FromSelf:
+                {
+                    components = new List<ComponentInformation>{new ComponentInformation(mb.gameObject)};
+                    break;
+                }
+            }
+
+            return components.ToArray();
+        }
+
+        private ComponentInformation[] GetResolvedComponents(MonoBehaviour mb, Type fieldType, ResolveType resolveType)
+        {
+            Component[] components = null;
+                
+            switch (resolveType)
+            {
+                case ResolveType.FromChildren:
+                {
+                    components = mb.GetComponentsInChildren(fieldType, _includeInactiveGameObjects)
+                        .Where(component => component.gameObject != mb.gameObject).ToArray();
+                    break;
+                }
+                case ResolveType.FromParent:
+                {
+                    components = mb.GetComponentsInParent(fieldType, _includeInactiveGameObjects)
+                        .Where(component => component.gameObject != mb.gameObject).ToArray();
+                    break;
+                }
+                case ResolveType.FromSelf:
+                {
+                    components = mb.GetComponents(fieldType);
+                    break;
+                }
+            }
+
+            if (components == null)
+            {
+                return null;
+            }
+            
+            ComponentInformation[] componentInformations = new ComponentInformation[components.Length];
+
+            for (int i = 0; i < componentInformations.Length; i++)
+            {
+                componentInformations[i] = new ComponentInformation(components[i]);
+            }
+
+            return componentInformations;
+        }
+        
 
         private void InitializeContent()
         {
@@ -281,89 +275,71 @@ namespace BForBoss
             //Todo: Find a long term solution to not allow attribute being placed on structs moving forward 
             if (fieldType.IsValueType && !fieldType.IsPrimitive)
             {
-                Debug.LogError("Unable to Resolve Struct Declared fields directly." +
+                Debug.LogWarning("Unable to Resolve Struct Declared fields directly." +
                                "\n Please add [Resolve] onto specific fields within the struct instead");
             }
 
+            bool isFieldDeclaredInScriptableObject = fieldInfo.DeclaringType.InheritsFrom<ScriptableObject>();
+
             //List/Array property.propertyType describes the element type not the IEnumerable Type (i.e. int instead of List<int>)
-            return !fieldType.IsValueType && property.propertyType == SerializedPropertyType.ObjectReference;
+            return !fieldType.IsValueType && !isFieldDeclaredInScriptableObject &&
+                   !fieldType.InheritsFrom<ScriptableObject>() &&
+                   property.propertyType == SerializedPropertyType.ObjectReference;
         }
     }
 }
 
-#region ResolverDropdown
-
-public class ResolverDropdown : AdvancedDropdown
+internal class ResolverDropDown : AdvancedDropdown
 {
-    private Action<int> _onItemSelected;
     private readonly Vector2 MINIMUM_SIZE = new Vector2(40f,200f);
+    private ComponentInformation[] _components;
+    private Action<int> _onItemSelected;
     
-    public ResolverDropdown(Action<int> onItemSelected, AdvancedDropdownState state) : base(state)
+    public ResolverDropDown(ComponentInformation[] components, Action<int> onItemSelected, AdvancedDropdownState state) : base(state)
     {
+        _components = components;
         _onItemSelected = onItemSelected;
         minimumSize = MINIMUM_SIZE;
     }
 
     protected override AdvancedDropdownItem BuildRoot()
     {
-        AdvancedDropdownItem root = new AdvancedDropdownItem("Objects");
+        AdvancedDropdownItem root = new AdvancedDropdownItem("Components");
+
+        foreach (ComponentInformation component in _components)
+        {
+            AdvancedDropdownItem dropDownItem = new AdvancedDropdownItem($"{component.name} : {component.type.Name}");
+            dropDownItem.id = component.instanceID;
+            
+            root.AddChild(dropDownItem);
+        }
+
         return root;
     }
 
     protected override void ItemSelected(AdvancedDropdownItem item)
     {
-        _onItemSelected?.Invoke(item.id);
+        _onItemSelected.Invoke(item.id);
     }
 }
 
-public class GameObjectResolverDropdown : ResolverDropdown
+internal readonly struct ComponentInformation
 {
-    private List<GameObject> _gameObjects;
+    public readonly string name;
+    public readonly Type type;
+    public readonly int instanceID;
     
-    public GameObjectResolverDropdown(List<GameObject> gameObjects, Action<int> onItemSelected, AdvancedDropdownState state) : base(onItemSelected, state)
+    public ComponentInformation(Component component)
     {
-        _gameObjects = gameObjects;
+        name = component.name;
+        type = component.GetType();
+        instanceID = component.GetInstanceID();
     }
 
-    protected override AdvancedDropdownItem BuildRoot()
+    public ComponentInformation(GameObject gameObject)
     {
-        AdvancedDropdownItem root = new AdvancedDropdownItem("GameObjects");
-
-        foreach (GameObject component in _gameObjects)
-        {
-            AdvancedDropdownItem dropdownItem = new AdvancedDropdownItem($"{component.gameObject.name} : {component.GetType().Name}");
-            dropdownItem.id = component.GetInstanceID();
-
-            root.AddChild(dropdownItem);
-        }
-        
-        return root;
+        name = gameObject.name;
+        type = gameObject.GetType();
+        instanceID = gameObject.GetInstanceID();
     }
 }
-
-public class ComponentResolverDropdown : ResolverDropdown
-{
-    private Component[] _components;
-    
-    public ComponentResolverDropdown(Component[] components, Action<int> onItemSelected, AdvancedDropdownState state) : base(onItemSelected, state)
-    {
-        _components = components;
-    }
-
-    protected override AdvancedDropdownItem BuildRoot()
-    {
-        AdvancedDropdownItem root = new AdvancedDropdownItem("Components");
-
-        foreach (Component component in _components)
-        {
-            AdvancedDropdownItem dropdownItem = new AdvancedDropdownItem($"{component.gameObject.name} : {component.GetType().Name}");
-            dropdownItem.id = component.GetInstanceID();
-            
-            root.AddChild(dropdownItem);
-        }
-        
-        return root;
-    }
-}
-
-#endregion
