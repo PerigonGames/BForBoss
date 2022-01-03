@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using PerigonGames;
 using Sirenix.Utilities;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
@@ -119,7 +118,7 @@ namespace BForBoss
                 ? GetResolvedGameObjects(mb, resolveType)
                 : GetResolvedComponents(mb, fieldType, resolveType);
 
-            if (IListExtensions.IsNullOrEmpty(components))
+            if (components.IsNullOrEmpty())
             {
                 return;
             }
