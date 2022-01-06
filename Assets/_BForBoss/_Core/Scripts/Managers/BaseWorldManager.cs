@@ -11,7 +11,7 @@ namespace BForBoss
         [SerializeField] protected FirstPersonPlayer _player = null;
 
         [Title("User Interface")] 
-        [SerializeField] private PauseMenu _pauseMenu;
+        [SerializeField] protected PauseMenu _pauseMenu;
         
         private ICharacterSpawn _character = null;
         protected readonly StateManager _stateManager = StateManager.Instance;
@@ -40,7 +40,7 @@ namespace BForBoss
         protected virtual void Start()
         {
             SetupSubManagers();
-            SetupUserInterface();
+            _pauseMenu.Initialize(_player, _player, _freezeActionsUtility);
             _stateManager.SetState(State.PreGame);
         }
         
@@ -53,11 +53,6 @@ namespace BForBoss
         protected virtual void OnDestroy()
         {
             _stateManager.OnStateChanged -= HandleStateChange;
-        }
-        
-        protected virtual void SetupUserInterface()
-        {
-            _pauseMenu.Initialize(_player, _player, _freezeActionsUtility);
         }
 
         private void HandleStateChange(State newState)
