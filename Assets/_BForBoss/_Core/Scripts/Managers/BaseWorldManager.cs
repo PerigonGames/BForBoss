@@ -43,6 +43,12 @@ namespace BForBoss
             SetupUserInterface();
             _stateManager.SetState(State.PreGame);
         }
+        
+        private void SetupSubManagers()
+        {
+            _player.Initialize();
+            _freezeActionsUtility = new FreezeActionsUtility(_player);
+        }
 
         protected virtual void OnDestroy()
         {
@@ -111,12 +117,6 @@ namespace BForBoss
         {
             _character.SpawnAt(SpawnLocation, SpawnLookDirection);
             _stateManager.SetState(State.Play);
-        }
-
-        private void SetupSubManagers()
-        {
-            _player.Initialize();
-            _freezeActionsUtility = new FreezeActionsUtility(_player);
         }
     }
 }
