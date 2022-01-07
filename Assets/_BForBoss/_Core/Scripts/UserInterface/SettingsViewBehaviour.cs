@@ -12,7 +12,7 @@ namespace BForBoss
     public class SettingsViewBehaviour : MonoBehaviour
     {
         [Title("Buttons")]
-        [SerializeField] private Button _backButton = null;
+        [Resolve][SerializeField] private Button _backButton = null;
         
         [Title("Panel")]
         [SerializeField] private InputSettingsViewBehaviour _mouseKeyboardInputSettingsView = null;
@@ -30,7 +30,7 @@ namespace BForBoss
         {
             _lockInput = lockInput;
             _mouseKeyboardInputSettingsView.Initialize(new MouseKeyboardInputSettingsViewModel(inputSettings));
-            _controllerInputSettingsView.Initialize(new ControllerInputSettingsViewModel(inputSettings));
+            _controllerInputSettingsView?.Initialize(new ControllerInputSettingsViewModel(inputSettings));
             _setUsernameView?.Initialize(lockInput);
             _tabbedPanelViews?.Initialize();
             _gameplaySettingsView?.Initialize(thirdPersonSettings);
