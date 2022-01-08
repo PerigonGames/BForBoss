@@ -23,16 +23,18 @@ namespace Perigon.Utility
     {
          [Resolve] public int Integer = 3;
          [Resolve] public Collider _collider;
-        
+         
          [Resolve, SerializeField] private List<Collider> _colliders_List;
          [Resolve, SerializeField] private Collider[] _colliders_Array;
-        
+         
          [SerializeField] private ResolveStructExample _struct;
-        
+         
          [Resolve, SerializeField] private GameObject _go;
          
          [Resolve(IncludeInactive = false)] public ResolverScriptableObject _so = null;
         
-        //[Resolve, SerializeField] public ResolveStructExample _structThatWillBreakImplementation;
+        [Resolve, SerializeField] public ResolveStructExample _structThatWillBreakImplementation;
+
+        //[Resolve, SerializeField] private List<ResolveStructExample> _listOfStructs;
     }
 }
