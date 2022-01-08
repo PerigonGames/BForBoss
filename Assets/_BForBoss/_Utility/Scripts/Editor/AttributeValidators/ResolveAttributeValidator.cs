@@ -11,7 +11,8 @@ namespace Perigon.Utility
         {
             Type fieldType = Property.Info.TypeOfValue;
 
-            //Check if field type is Struct
+           var isFieldTypeStruct = fieldType.IsValueType && !fieldType.IsPrimitive && fieldType != typeof(decimal) &&
+                fieldType != typeof(DateTime) && !fieldType.IsEnum
             if (fieldType.IsValueType && !fieldType.IsPrimitive && fieldType != typeof(decimal) &&
                 fieldType != typeof(DateTime) && !fieldType.IsEnum)
             {
