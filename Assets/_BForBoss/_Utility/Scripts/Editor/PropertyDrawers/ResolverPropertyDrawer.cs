@@ -274,13 +274,6 @@ namespace Perigon.Utility
         {
             Type fieldType = fieldInfo.FieldType;
             
-            //Todo: Find a long term solution to not allow attribute being placed on structs moving forward 
-            if (fieldType.IsValueType && !fieldType.IsPrimitive)
-            {
-                Debug.LogWarning("Unable to Resolve Struct Declared fields directly." +
-                               "\n Please add [Resolve] onto specific fields within the struct instead");
-            }
-
             bool isFieldDeclaredInScriptableObject = fieldInfo.DeclaringType.InheritsFrom<ScriptableObject>();
 
             //List/Array property.propertyType describes the element type not the IEnumerable Type (i.e. int instead of List<int>)
