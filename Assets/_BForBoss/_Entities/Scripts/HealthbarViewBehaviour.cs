@@ -1,21 +1,39 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Perigon.Entities
 {
+    [RequireComponent(typeof(Image))]
     public class HealthbarViewBehaviour : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
+        private Image _healthbarImage;
+        private ILifeCycle _lifeCycle = null;
+
+        private void Awake()
         {
-        
+            _healthbarImage = GetComponent<Image>();
         }
 
-        // Update is called once per frame
-        void Update()
+        public void Initialize(ILifeCycle lifeCycle)
         {
-        
+            _lifeCycle = lifeCycle;
+            
+            
+        }
+
+        private void Update()
+        {
+            _healthbarImage.fillAmount = GetHealthBarAmount();
+        }
+
+        private float GetHealthBarAmount()
+        {
+            if (_lifeCycle != null)
+            {
+                return _lifeCycle.CurrentHealth / _lifeCycle.MaxHealth;
+            }
+            return 1f;
         }
     }
 }

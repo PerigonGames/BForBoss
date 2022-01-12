@@ -5,7 +5,7 @@ namespace Perigon.Entities
 {
     public class DummyTargetBehaviour : LifeCycleBehaviour
     {
-        
+        [SerializeField] private HealthbarViewBehaviour _healthbar;
         private const string IS_DEAD = "IsDead";
         private const string HIT = "Hit";
         private const float MAX_DISSOLVE = 1f;
@@ -24,6 +24,8 @@ namespace Perigon.Entities
             base.Awake();
             _animator = GetComponentInChildren<Animator>();
             _renderer = GetComponentInChildren<Renderer>();
+            if(_healthbar != null) 
+                _healthbar.Initialize(_lifeCycle);
         }
 
         protected override void LifeCycleFinished()
