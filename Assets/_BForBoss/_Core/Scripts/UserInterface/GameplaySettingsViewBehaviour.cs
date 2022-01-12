@@ -77,9 +77,9 @@ namespace BForBoss
         private IThirdPerson _thirdPersonSettings = null;
         private readonly PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
         
-        public bool IsShowingFPS => PlayerPrefs.GetInt(PlayerPrefKeys.GameplaySettings.ShowFPS, 0) == 1;
-        public bool IsShowingRAM => PlayerPrefs.GetInt(PlayerPrefKeys.GameplaySettings.ShowRAMUsage, 0) == 1;
-        public bool IsShowingPCSpecs => PlayerPrefs.GetInt(PlayerPrefKeys.GameplaySettings.ShowPCSpecs, 0) == 1;
+        public bool IsShowingFPS => PlayerPrefs.GetInt(PlayerPrefKeys.GameplaySettings.SHOW_FPS, 0) == 1;
+        public bool IsShowingRAM => PlayerPrefs.GetInt(PlayerPrefKeys.GameplaySettings.SHOW_RAM_USAGE, 0) == 1;
+        public bool IsShowingPCSpecs => PlayerPrefs.GetInt(PlayerPrefKeys.GameplaySettings.SHOW_PC_SPECS, 0) == 1;
         public bool IsThirdPersonView => _thirdPersonSettings.IsThirdPerson;
 
         public GameplaySettingsViewModel(IThirdPerson thirdPersonSettings, ISpecification specification = null)
@@ -101,21 +101,21 @@ namespace BForBoss
         public void SetShowFPS(bool isOn)
         {
             var storedValue = isOn ? 1 : 0;
-            PlayerPrefs.SetInt(PlayerPrefKeys.GameplaySettings.ShowFPS, storedValue);
+            PlayerPrefs.SetInt(PlayerPrefKeys.GameplaySettings.SHOW_FPS, storedValue);
             _graphyManager.SetShowFPSActive(isOn);
         }
 
         public void SetShowRAMUsage(bool isOn)
         {
             var storedValue = isOn ? 1 : 0;
-            PlayerPrefs.SetInt(PlayerPrefKeys.GameplaySettings.ShowRAMUsage, storedValue);
+            PlayerPrefs.SetInt(PlayerPrefKeys.GameplaySettings.SHOW_RAM_USAGE, storedValue);
             _graphyManager.SetShowRAMUsageActive(isOn);
         }
 
         public void SetShowPCSpecifications(bool isOn)
         {
             var storedValue = isOn ? 1 : 0;
-            PlayerPrefs.SetInt(PlayerPrefKeys.GameplaySettings.ShowPCSpecs, storedValue);
+            PlayerPrefs.SetInt(PlayerPrefKeys.GameplaySettings.SHOW_PC_SPECS, storedValue);
             _graphyManager.SetShowPCSpecificationsActive(isOn);
         }
 

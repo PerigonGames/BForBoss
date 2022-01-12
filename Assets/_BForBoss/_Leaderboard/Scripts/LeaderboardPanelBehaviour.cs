@@ -36,7 +36,7 @@ namespace Perigon.Leaderboard
             {
                 Input = input,
                 Time = time / 1000,
-                Username = PlayerPrefs.GetString(PlayerPrefKeys.LeaderboardSettings.UserName)
+                Username = PlayerPrefs.GetString(PlayerPrefKeys.LeaderboardSettings.USERNAME)
             };
             _currentUserScores.SetField(0, score);
         }
