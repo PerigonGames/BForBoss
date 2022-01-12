@@ -3,7 +3,15 @@ using UnityEngine;
 
 namespace Perigon.Entities
 {
-    public class LifeCycle
+    public interface ILifeCycle
+    {
+        public float MaxHealth { get; }
+        public float CurrentHealth { get; }
+        public bool Alive { get; }
+    }
+    
+    
+    public class LifeCycle : ILifeCycle
     {
         private readonly float _maxHealth;
         private float _currentHealth;
@@ -13,6 +21,9 @@ namespace Perigon.Entities
         public event Action OnDeath;
 
         public bool Alive { get; private set; }
+
+        public float MaxHealth => _maxHealth;
+        public float CurrentHealth => _currentHealth;
 
         public LifeCycle(IHealth health)
         {
