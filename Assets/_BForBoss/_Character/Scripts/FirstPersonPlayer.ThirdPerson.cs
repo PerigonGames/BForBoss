@@ -10,7 +10,13 @@ namespace Perigon.Character
     }
     public partial class FirstPersonPlayer : IThirdPerson
     {
+        private const string PLAYER_MODEL_LAYER = "PlayerModel";
+        private const string FIRST_PERSON_WEAPON_LAYER = "FirstPersonWeapon";
         private const int DEFAULT_IS_THIRD_PERSON = 0;
+        
+        private int _thirdPersonMask;
+
+        private int FirstPersonMask => ~(1 << LayerMask.NameToLayer(PLAYER_MODEL_LAYER) | 1 << LayerMask.NameToLayer(FIRST_PERSON_WEAPON_LAYER));
         
         public void SetThirdPersonActive(bool isActive)
         {
@@ -31,6 +37,12 @@ namespace Perigon.Character
             cmWalkingCamera.gameObject.SetActive(!IsThirdPerson && !IsCrouching());
             cmThirdPersonCamera.gameObject.SetActive(IsThirdPerson);
             TogglePlayerModel();
+        }
+        
+        private void TogglePlayerModel()
+        {
+            animate = IsThirdPerson;
+            camera.cullingMask = IsThirdPerson ? _thirdPersonMask : FirstPersonMask;
         }
     }
 }

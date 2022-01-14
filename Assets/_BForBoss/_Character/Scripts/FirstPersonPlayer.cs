@@ -9,8 +9,6 @@ namespace Perigon.Character
 {
     public partial class FirstPersonPlayer : FirstPersonCharacter
     {
-        private const string PLAYER_MODEL_LAYER = "PlayerModel";
-
         [Header("Cinemachine")]
         public CinemachineVirtualCamera cmWalkingCamera;
         public CinemachineVirtualCamera cmCrouchedCamera;
@@ -20,9 +18,6 @@ namespace Perigon.Character
         private PlayerDashBehaviour _dashBehaviour = null;
         private PlayerWallRunBehaviour _wallRunBehaviour = null;
         private PlayerSlideBehaviour _slideBehaviour = null;
-
-        private int firstPersonMask;
-        private int thirdPersonMask;
 
         [SerializeField] private bool _isThirdPerson = false;
 
@@ -71,8 +66,7 @@ namespace Perigon.Character
             _wallRunBehaviour = GetComponent<PlayerWallRunBehaviour>();
             _slideBehaviour = GetComponent<PlayerSlideBehaviour>();
 
-            thirdPersonMask = camera.cullingMask;
-            firstPersonMask = ~(1 << LayerMask.NameToLayer(PLAYER_MODEL_LAYER));
+            _thirdPersonMask = camera.cullingMask;
 
             base.OnAwake();
         }
@@ -239,12 +233,6 @@ namespace Perigon.Character
             _jumpCount = count;
         }
         
-        private void TogglePlayerModel()
-        {
-            animate = IsThirdPerson;
-            camera.cullingMask = IsThirdPerson ? thirdPersonMask : firstPersonMask;
-        }
-
         protected override void OnOnValidate()
         {
             base.OnOnValidate();
