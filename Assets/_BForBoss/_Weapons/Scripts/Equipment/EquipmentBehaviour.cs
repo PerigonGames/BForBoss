@@ -19,8 +19,6 @@ namespace Perigon.Weapons
         public void Initialize()
         {
             EnableEquipmentPlayerInput();
-            SetupWeapons();
-            _swapWeaponInputAction.started += OnControllerSwapWeaponAction;
         }
 
         private void EnableEquipmentPlayerInput()
@@ -89,12 +87,13 @@ namespace Perigon.Weapons
         private void Awake()
         {
             SetupPlayerEquipmentInput();
-            
+            _swapWeaponInputAction.started += OnControllerSwapWeaponAction;
             _weaponBehaviours = GetComponentsInChildren<WeaponBehaviour>();
             if (_weaponBehaviours.IsNullOrEmpty())
             {
                 Debug.LogWarning("There are currently no WeaponBehaviour within the child of EquipmentBehaviour");
             }
+            SetupWeapons();
         }
 
         private void OnValidate()

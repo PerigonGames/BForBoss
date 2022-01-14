@@ -24,7 +24,7 @@ namespace Perigon.Character
         public bool IsThirdPerson
         {
             get => _isThirdPerson;
-            set
+            private set
             {
                 if (value == _isThirdPerson) return;
                 _isThirdPerson = value;
@@ -41,7 +41,12 @@ namespace Perigon.Character
         {
             return _dashBehaviour?.IsDashing ?? false;
         }
-
+        
+        public bool IsWallRunning()
+        {
+            return  _wallRunBehaviour?.IsWallRunning ?? false;
+        }
+        
         public void Initialize()
         {
             SetupInput();
@@ -258,14 +263,6 @@ namespace Perigon.Character
         {
             return cmThirdPersonCamera != null && cmThirdPersonCamera.gameObject.activeSelf;
         }
-
-
-
-        private bool IsWallRunning()
-        {
-            return _wallRunBehaviour != null && _wallRunBehaviour.IsWallRunning;
-        }
-
         #endregion
     }
 }

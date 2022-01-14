@@ -13,6 +13,7 @@ namespace BForBoss
         public bool IsGrounded => _player.IsOnGround();
         public bool IsSliding => _player.IsSliding();
         public bool IsDashing => _player.IsDashing();
+        public bool IsWallRunning => _player.IsWallRunning();
 
         public CharacterMovementWrapper(FirstPersonPlayer player)
         {

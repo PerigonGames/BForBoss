@@ -934,9 +934,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _weaponHolder: {fileID: 898031538}
-  _hipFireBobAmount: 0.05
-  _weaponBobFrequency: 10
-  _weaponBobSharpness: 10
+  _equipmentBehaviour: {fileID: 2053475647}
+  _hipFireBobAmount: 0.02
+  _weaponBobFrequency: 8
+  _weaponBobSharpness: 7
+  _recoilForce: 0.1
+  _maxRecoilDistance: 0.5
+  _recoilSharpness: 50
+  _recoilRestitutionSharpness: 10
 --- !u!1 &956328206
 GameObject:
   m_ObjectHideFlags: 0
@@ -2987,7 +2992,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2061070007434329460, guid: c7cd698ab65444f38b1e49e2e17d8e9f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000038820508
+      value: 0.0013470468
       objectReference: {fileID: 0}
     - target: {fileID: 3924296612012996776, guid: c7cd698ab65444f38b1e49e2e17d8e9f, type: 3}
       propertyPath: m_Name
