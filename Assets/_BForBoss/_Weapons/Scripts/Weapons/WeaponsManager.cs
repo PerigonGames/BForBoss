@@ -66,7 +66,7 @@ namespace Perigon.Weapons
 
         private void OnWeaponFired(int _)
         {
-            _accumulatedRecoil += Vector3.back * _recoilForce;
+            _accumulatedRecoil += Vector3.back * _equipmentBehaviour.CurrentWeapon.VisualRecoilForce;
             _accumulatedRecoil = Vector3.ClampMagnitude(_accumulatedRecoil, _maxRecoilDistance);
         }
 

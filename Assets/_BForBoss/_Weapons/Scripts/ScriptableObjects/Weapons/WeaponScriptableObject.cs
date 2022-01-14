@@ -12,6 +12,7 @@ namespace Perigon.Weapons
         float ReloadDuration { get; }
         int BulletsPerShot { get; }
         int AmmunitionAmount { get; }
+        float VisualRecoilForce { get; }
         BulletTypes TypeOfBullet { get; }
 
     }
@@ -28,15 +29,18 @@ namespace Perigon.Weapons
         [SerializeField] 
         [Range(1, 1000)] private int _ammunitionAmount = 20;
         [SerializeField] private BulletTypes _typeOfBullet = BulletTypes.NoPhysics;
+        [Title("Visuals")]
         [PreviewField]
         [SerializeField] private Sprite _crosshair = null;
 
+        [SerializeField] private float _visualRecoil = 0.5f;
         public string NameOfWeapon => _nameOfWeapon;
         public float RateOfFire => _rateOfFire;
         public float BulletSpread => _bulletSpread;
         public float ReloadDuration => _reloadDuration;
         public int BulletsPerShot => _bulletsPerShot;
         public int AmmunitionAmount => _ammunitionAmount;
+        public float VisualRecoilForce => _visualRecoil;
         public Sprite Crosshair => _crosshair;
         public BulletTypes TypeOfBullet => _typeOfBullet;
     }
