@@ -31,6 +31,16 @@ namespace Perigon.Character
                 ToggleThirdPerson();
             }
         }
+        
+        public bool IsSliding()
+        {
+            return _slideBehaviour?.IsSliding ?? false;
+        }
+
+        public bool IsDashing()
+        {
+            return _dashBehaviour?.IsDashing ?? false;
+        }
 
         public void Initialize()
         {
@@ -249,10 +259,7 @@ namespace Perigon.Character
             return cmThirdPersonCamera != null && cmThirdPersonCamera.gameObject.activeSelf;
         }
 
-        private bool IsSliding()
-        {
-            return _slideBehaviour != null && _slideBehaviour.IsSliding;
-        }
+
 
         private bool IsWallRunning()
         {

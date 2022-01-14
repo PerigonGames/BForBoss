@@ -1,3 +1,4 @@
+
 using Perigon.Character;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
@@ -53,6 +54,19 @@ namespace BForBoss
         protected virtual void OnDestroy()
         {
             _stateManager.OnStateChanged -= HandleStateChange;
+        }
+
+        protected virtual void OnValidate()
+        {
+            if (_player == null)
+            {
+                Debug.LogError("FirstPersonPlayer is missing from World Manager");
+            }
+            
+            if (_pauseMenu == null)
+            {
+                Debug.LogError("PauseMenu is missing from World Manager");
+            }
         }
 
         private void HandleStateChange(State newState)

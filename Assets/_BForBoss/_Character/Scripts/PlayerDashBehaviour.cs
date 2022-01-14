@@ -30,6 +30,7 @@ namespace Perigon.Character
         private ECM2.Characters.Character _baseCharacter = null;
         private InputAction _dashInputAction = null;
 
+        public bool IsDashing => _isDashing;
         private bool IsCoolDownOver => _dashCoolDownElapsedTime <= 0;
         
         public void Initialize(ECM2.Characters.Character baseCharacter, Func<Vector2> characterMovement)
