@@ -28,7 +28,7 @@ namespace Perigon.Entities
             {
                 return _lifeCycle.CurrentHealth / _lifeCycle.MaxHealth;
             }
-            return 1f;
+            return 0f;
         }
 
         private void OnHealthChanged()
