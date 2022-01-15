@@ -52,5 +52,10 @@ namespace Perigon.Entities
             base.OnDisable();
             _lifeCycle.OnDamageTaken -= TriggerHitAnimation;
         }
+
+        private void OnValidate()
+        {
+            if(_healthbar == null) Debug.LogWarning("A dummyTargetBehaviour is missing a health bar");
+        }
     }
 }

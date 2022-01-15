@@ -5,9 +5,13 @@ namespace Perigon.Entities
 {
     public interface ILifeCycle
     {
-        public float MaxHealth { get; }
-        public float CurrentHealth { get; }
-        public bool Alive { get; }
+        float MaxHealth { get; }
+        float CurrentHealth { get; }
+        bool IsAlive { get; }
+
+        event Action OnDamageTaken;
+        event Action OnHeal;
+        event Action OnDeath;
     }
     
     
@@ -20,7 +24,7 @@ namespace Perigon.Entities
         public event Action OnHeal;
         public event Action OnDeath;
 
-        public bool Alive { get; private set; }
+        public bool IsAlive { get; private set; }
 
         public float MaxHealth => _maxHealth;
         public float CurrentHealth => _currentHealth;
@@ -28,7 +32,7 @@ namespace Perigon.Entities
         public LifeCycle(IHealth health)
         {
             _maxHealth = _currentHealth = health.Health;
-            Alive = true;
+            IsAlive = true;
         }
         
         public void HealBy(float amount)
@@ -39,12 +43,12 @@ namespace Perigon.Entities
 
         public void DamageBy(float amount)
         {
-            if (!Alive) return;
+            if (!IsAlive) return;
             _currentHealth -= amount;
             OnDamageTaken?.Invoke();
             if (_currentHealth <= 0f)
             {
-                Alive = false;
+                IsAlive = false;
                 OnDeath?.Invoke();
             }
         }

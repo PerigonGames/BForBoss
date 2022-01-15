@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,13 +17,9 @@ namespace Perigon.Entities
         public void Initialize(ILifeCycle lifeCycle)
         {
             _lifeCycle = lifeCycle;
-            
-            
-        }
-
-        private void Update()
-        {
-            _healthbarImage.fillAmount = GetHealthBarAmount();
+            _lifeCycle.OnDamageTaken += OnHealthChanged;
+            _lifeCycle.OnHeal += OnHealthChanged;
+            OnHealthChanged();
         }
 
         private float GetHealthBarAmount()
@@ -34,6 +29,29 @@ namespace Perigon.Entities
                 return _lifeCycle.CurrentHealth / _lifeCycle.MaxHealth;
             }
             return 1f;
+        }
+
+        private void OnHealthChanged()
+        {
+            _healthbarImage.fillAmount = GetHealthBarAmount();
+        }
+        
+        private void OnEnable()
+        {
+            if (_lifeCycle != null)
+            {
+                _lifeCycle.OnHeal += OnHealthChanged;
+                _lifeCycle.OnDamageTaken += OnHealthChanged;
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (_lifeCycle != null)
+            {
+                _lifeCycle.OnHeal -= OnHealthChanged;
+                _lifeCycle.OnDamageTaken -= OnHealthChanged;
+            }
         }
     }
 }
