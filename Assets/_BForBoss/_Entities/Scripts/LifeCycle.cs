@@ -3,7 +3,19 @@ using UnityEngine;
 
 namespace Perigon.Entities
 {
-    public class LifeCycle
+    public interface ILifeCycle
+    {
+        float MaxHealth { get; }
+        float CurrentHealth { get; }
+        bool IsAlive { get; }
+
+        event Action OnDamageTaken;
+        event Action OnHeal;
+        event Action OnDeath;
+    }
+    
+    
+    public class LifeCycle : ILifeCycle
     {
         private readonly float _maxHealth;
         private float _currentHealth;
@@ -12,12 +24,15 @@ namespace Perigon.Entities
         public event Action OnHeal;
         public event Action OnDeath;
 
-        public bool Alive { get; private set; }
+        public bool IsAlive { get; private set; }
+
+        public float MaxHealth => _maxHealth;
+        public float CurrentHealth => _currentHealth;
 
         public LifeCycle(IHealth health)
         {
             _maxHealth = _currentHealth = health.Health;
-            Alive = true;
+            IsAlive = true;
         }
         
         public void HealBy(float amount)
@@ -28,12 +43,12 @@ namespace Perigon.Entities
 
         public void DamageBy(float amount)
         {
-            if (!Alive) return;
+            if (!IsAlive) return;
             _currentHealth -= amount;
             OnDamageTaken?.Invoke();
             if (_currentHealth <= 0f)
             {
-                Alive = false;
+                IsAlive = false;
                 OnDeath?.Invoke();
             }
         }
