@@ -26,6 +26,8 @@ namespace Perigon.Weapons
         [Title("Weapon Bob Properties")] 
         [SerializeField]
         private float _hipFireBobAmount = 0.05f;
+        [SerializeField] 
+        private float _wallRunningBobMultiplier = 0.5f;
         [InfoBox("Frequency at which weapon will move around screen when moving")]
         [SerializeField]
         private float _weaponBobFrequency = 10f;
@@ -96,10 +98,11 @@ namespace Perigon.Weapons
             }
             
             _weaponBobFactor = Mathf.Lerp(_weaponBobFactor, characterMovementFactor, _weaponBobSharpness * Time.deltaTime);
+            var bobAmount = _hipFireBobAmount * (_characterMovement.IsWallRunning ? _wallRunningBobMultiplier : 1);
             
-            var hBobValue = Mathf.Sin(Time.time * _weaponBobFrequency) * _hipFireBobAmount * _weaponBobFactor;
+            var hBobValue = Mathf.Sin(Time.time * _weaponBobFrequency) * bobAmount * _weaponBobFactor;
             /// Trignometric Graph Tranformation: y = A * Sin(b * x - c) + d
-            var vBobValue = (Mathf.Sin(Time.time * _weaponBobFrequency * 2f) * 0.5f + 0.5f) * _weaponBobFactor * _hipFireBobAmount;
+            var vBobValue = (Mathf.Sin(Time.time * _weaponBobFrequency * 2f) * 0.5f + 0.5f) * _weaponBobFactor * bobAmount;
             var xPosition = hBobValue;
             var yPosition = Mathf.Abs(vBobValue);
 
