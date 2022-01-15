@@ -18,6 +18,7 @@ namespace Tests
         public float ReloadDuration => _reloadDuration;
         public int BulletsPerShot => _bulletsPerShot;
         public int AmmunitionAmount => _ammoAmount;
+        public float VisualRecoilForce => 0;
         public BulletTypes TypeOfBullet => BulletTypes.NoPhysics;
 
         public MockWeaponProperties (

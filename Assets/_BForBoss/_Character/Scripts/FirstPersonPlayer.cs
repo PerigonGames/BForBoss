@@ -9,8 +9,6 @@ namespace Perigon.Character
 {
     public partial class FirstPersonPlayer : FirstPersonCharacter
     {
-        private const string PLAYER_MODEL_LAYER = "PlayerModel";
-
         [Header("Cinemachine")]
         public CinemachineVirtualCamera cmWalkingCamera;
         public CinemachineVirtualCamera cmCrouchedCamera;
@@ -21,22 +19,34 @@ namespace Perigon.Character
         private PlayerWallRunBehaviour _wallRunBehaviour = null;
         private PlayerSlideBehaviour _slideBehaviour = null;
 
-        private int firstPersonMask;
-        private int thirdPersonMask;
-
         [SerializeField] private bool _isThirdPerson = false;
 
         public bool IsThirdPerson
         {
             get => _isThirdPerson;
-            set
+            private set
             {
                 if (value == _isThirdPerson) return;
                 _isThirdPerson = value;
                 ToggleThirdPerson();
             }
         }
+        
+        public bool IsSliding()
+        {
+            return _slideBehaviour?.IsSliding ?? false;
+        }
 
+        public bool IsDashing()
+        {
+            return _dashBehaviour?.IsDashing ?? false;
+        }
+        
+        public bool IsWallRunning()
+        {
+            return  _wallRunBehaviour?.IsWallRunning ?? false;
+        }
+        
         public void Initialize()
         {
             SetupInput();
@@ -71,8 +81,7 @@ namespace Perigon.Character
             _wallRunBehaviour = GetComponent<PlayerWallRunBehaviour>();
             _slideBehaviour = GetComponent<PlayerSlideBehaviour>();
 
-            thirdPersonMask = camera.cullingMask;
-            firstPersonMask = ~(1 << LayerMask.NameToLayer(PLAYER_MODEL_LAYER));
+            _thirdPersonMask = camera.cullingMask;
 
             base.OnAwake();
         }
@@ -239,12 +248,6 @@ namespace Perigon.Character
             _jumpCount = count;
         }
         
-        private void TogglePlayerModel()
-        {
-            animate = IsThirdPerson;
-            camera.cullingMask = IsThirdPerson ? thirdPersonMask : firstPersonMask;
-        }
-
         protected override void OnOnValidate()
         {
             base.OnOnValidate();
@@ -260,17 +263,6 @@ namespace Perigon.Character
         {
             return cmThirdPersonCamera != null && cmThirdPersonCamera.gameObject.activeSelf;
         }
-
-        private bool IsSliding()
-        {
-            return _slideBehaviour != null && _slideBehaviour.IsSliding;
-        }
-
-        private bool IsWallRunning()
-        {
-            return _wallRunBehaviour != null && _wallRunBehaviour.IsWallRunning;
-        }
-
         #endregion
     }
 }
