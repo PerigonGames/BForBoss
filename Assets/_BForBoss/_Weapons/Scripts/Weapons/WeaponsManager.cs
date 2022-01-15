@@ -18,6 +18,7 @@ namespace Perigon.Weapons
     
     public class WeaponsManager : MonoBehaviour
     {
+        private const float ACCUMULATED_RECOIL_PERCENTAGE = 0.99F;
         [Resolve] [SerializeField] private GameObject _weaponHolder = null;
         [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
         private ICharacterMovement _characterMovement = null;
@@ -25,22 +26,20 @@ namespace Perigon.Weapons
         [Title("Weapon Bob Properties")] 
         [SerializeField]
         private float _hipFireBobAmount = 0.05f;
-        // Frequency at which weapon will move around screen when moving
+        [InfoBox("Frequency at which weapon will move around screen when moving")]
         [SerializeField]
         private float _weaponBobFrequency = 10f;
-        // How fast the weapon bob is applied, bigger value is faster
+        [InfoBox("How fast the weapon bob is applied, bigger value is faster")]
         [SerializeField] 
         private float _weaponBobSharpness = 10f;
 
         [Title("Recoil Properties")]
         [SerializeField] 
-        private float _recoilForce = 2f;
-        [SerializeField] 
         private float _maxRecoilDistance = 0.5f;
-        [Tooltip("This will affect how fast the recoil moves the weapon, the bigger the value, the fastest")]
+        [InfoBox("This will affect how fast the recoil moves the weapon, the bigger the value, the fastest")]
         [SerializeField]
         private float _recoilSharpness = 50f;
-        [Tooltip("How fast the weapon goes back to it's original position after the recoil is finished")]
+        [InfoBox("How fast the weapon goes back to it's original position after the recoil is finished")]
         [SerializeField]
         private float _recoilRestitutionSharpness = 10f;
 
@@ -99,6 +98,7 @@ namespace Perigon.Weapons
             _weaponBobFactor = Mathf.Lerp(_weaponBobFactor, characterMovementFactor, _weaponBobSharpness * Time.deltaTime);
             
             var hBobValue = Mathf.Sin(Time.time * _weaponBobFrequency) * _hipFireBobAmount * _weaponBobFactor;
+            /// Trignometric Graph Tranformation: y = A * Sin(b * x - c) + d
             var vBobValue = (Mathf.Sin(Time.time * _weaponBobFrequency * 2f) * 0.5f + 0.5f) * _weaponBobFactor * _hipFireBobAmount;
             var xPosition = hBobValue;
             var yPosition = Mathf.Abs(vBobValue);
@@ -115,7 +115,7 @@ namespace Perigon.Weapons
 
         private void UpdateWeaponRecoil()
         {
-            if (_weaponRecoilLocalPosition.z >= _accumulatedRecoil.z * 0.99f)
+            if (_weaponRecoilLocalPosition.z >= _accumulatedRecoil.z * ACCUMULATED_RECOIL_PERCENTAGE)
             {
                 _weaponRecoilLocalPosition = Vector3.Lerp(_weaponRecoilLocalPosition, _accumulatedRecoil,
                     _recoilSharpness * Time.deltaTime);
