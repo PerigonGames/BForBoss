@@ -4,8 +4,9 @@ using UnityEngine;
 
 namespace Perigon.Weapons
 {
-    public class Weapon 
-    {
+    public class Weapon
+    { 
+        private const float MIN_TO_MAX_RANGE_OF_SPREAD = 2;
          private readonly IRandomUtility _randomUtility;
          private readonly IWeaponProperties _weaponProperties;
 
@@ -78,7 +79,7 @@ namespace Perigon.Weapons
          public Vector3 GetShootDirection(Vector3 from, Vector3 to)
          {
              var directionWithoutSpread = to - from;
-             var directionWithSpread = directionWithoutSpread + GenerateSpreadAmount();
+             var directionWithSpread = GenerateSpreadAngle() * directionWithoutSpread;
              return directionWithSpread.normalized;
          }
          
@@ -110,14 +111,21 @@ namespace Perigon.Weapons
              OnFireWeapon?.Invoke(_weaponProperties.BulletsPerShot);
          }
 
-         private Vector3 GenerateSpreadAmount()
+         private Quaternion GenerateSpreadAngle()
          {
              var spread = _weaponProperties.BulletSpread;
-             var spreadRange = spread * 2;
-             var x = -spread + (float)_randomUtility.NextDouble() * spreadRange;
-             var y = -spread + (float)_randomUtility.NextDouble() * spreadRange;
-             var z = -spread + (float) _randomUtility.NextDouble() * spreadRange;
-             return new Vector3(x, y, z);
+             var spreadRange = spread * MIN_TO_MAX_RANGE_OF_SPREAD;
+             var randomizedSpread = -spread + (float)_randomUtility.NextDouble() * spreadRange;
+             var randomizedDirection = new Vector3(
+                 RandomDoubleIncludingNegative(), 
+                 RandomDoubleIncludingNegative(), 
+                 RandomDoubleIncludingNegative());
+             return Quaternion.AngleAxis(randomizedSpread, randomizedDirection);
+         }
+
+         private float RandomDoubleIncludingNegative()
+         {
+             return (float) _randomUtility.NextDouble() * (_randomUtility.CoinFlip() ? 1 : -1);
          }
          
          private void ResetRateOfFire()
