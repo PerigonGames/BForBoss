@@ -115,11 +115,11 @@ namespace Perigon.Weapons
              var spread = _weaponProperties.BulletSpread;
              var spreadRange = spread * 2;
              var randomizedSpread = -spread + (float)_randomUtility.NextDouble() * spreadRange;
-             var randomizedDirection = new Vector3(RandomDirection(), RandomDirection(), RandomDirection());
+             var randomizedDirection = new Vector3(RandomDouble(), RandomDouble(), RandomDouble());
              return Quaternion.AngleAxis(randomizedSpread, randomizedDirection);
          }
 
-         private float RandomDirection()
+         private float RandomDouble()
          {
              return (float) _randomUtility.NextDouble() * (_randomUtility.CoinFlip() ? 1 : -1);
          }
