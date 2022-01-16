@@ -77,7 +77,7 @@ namespace Perigon.Weapons
          
          public Vector3 GetShootDirection(Vector3 from, Vector3 to)
          {
-             Vector3 directionWithoutSpread = to - from;
+             var directionWithoutSpread = to - from;
              var directionWithSpread = GenerateSpreadAngle() * directionWithoutSpread;
              return directionWithSpread.normalized;
          }
@@ -115,11 +115,14 @@ namespace Perigon.Weapons
              var spread = _weaponProperties.BulletSpread;
              var spreadRange = spread * 2;
              var randomizedSpread = -spread + (float)_randomUtility.NextDouble() * spreadRange;
-             var randomizedDirection = new Vector3(RandomDouble(), RandomDouble(), RandomDouble());
+             var randomizedDirection = new Vector3(
+                 RandomDoubleIncludingNegative(), 
+                 RandomDoubleIncludingNegative(), 
+                 RandomDoubleIncludingNegative());
              return Quaternion.AngleAxis(randomizedSpread, randomizedDirection);
          }
 
-         private float RandomDouble()
+         private float RandomDoubleIncludingNegative()
          {
              return (float) _randomUtility.NextDouble() * (_randomUtility.CoinFlip() ? 1 : -1);
          }
