@@ -78,7 +78,8 @@ namespace Perigon.Weapons
          public Vector3 GetShootDirection(Vector3 from, Vector3 to)
          {
              Vector3 directionWithoutSpread = to - from;
-             return GenerateSpreadAngle() * directionWithoutSpread;
+             var directionWithSpread = GenerateSpreadAngle() * directionWithoutSpread;
+             return directionWithSpread.normalized;
          }
          
          public void FireIfPossible()
