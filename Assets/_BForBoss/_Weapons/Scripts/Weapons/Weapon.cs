@@ -4,8 +4,9 @@ using UnityEngine;
 
 namespace Perigon.Weapons
 {
-    public class Weapon 
-    {
+    public class Weapon
+    { 
+        private const float MIN_TO_MAX_RANGE_OF_SPREAD = 2;
          private readonly IRandomUtility _randomUtility;
          private readonly IWeaponProperties _weaponProperties;
 
@@ -113,7 +114,7 @@ namespace Perigon.Weapons
          private Quaternion GenerateSpreadAngle()
          {
              var spread = _weaponProperties.BulletSpread;
-             var spreadRange = spread * 2;
+             var spreadRange = spread * MIN_TO_MAX_RANGE_OF_SPREAD;
              var randomizedSpread = -spread + (float)_randomUtility.NextDouble() * spreadRange;
              var randomizedDirection = new Vector3(
                  RandomDoubleIncludingNegative(), 
