@@ -86,10 +86,10 @@ namespace BForBoss
 
         private void SetupViews()
         {
-            _setUsernameView =  GetComponentInChildren<SetUsernameViewBehaviour>();
-            _leaderboardView = GetComponentInChildren<LeaderboardPanelBehaviour>();
-            _tabbedPanelViews = GetComponentInChildren<TabbedPanelViewBehaviour>();
-            _gameplaySettingsView = GetComponentInChildren<GameplaySettingsViewBehaviour>();
+            _setUsernameView =  GetComponentInChildren<SetUsernameViewBehaviour>(true);
+            _leaderboardView = GetComponentInChildren<LeaderboardPanelBehaviour>(true);
+            _tabbedPanelViews = GetComponentInChildren<TabbedPanelViewBehaviour>(true);
+            _gameplaySettingsView = GetComponentInChildren<GameplaySettingsViewBehaviour>(true);
         }
 
         private void OnDestroy()

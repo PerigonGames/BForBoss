@@ -18,10 +18,14 @@ namespace Perigon.Entities
         
         private Animator _animator;
         private Renderer _renderer;
+        private Tween _deathTween;
+
+        private Transform _spawnLocation = null;
         
         protected override void Awake()
         {
             base.Awake();
+            _spawnLocation = transform;
             _animator = GetComponentInChildren<Animator>();
             _renderer = GetComponentInChildren<Renderer>();
             if(_healthbar != null) 
@@ -30,15 +34,28 @@ namespace Perigon.Entities
 
         protected override void LifeCycleFinished()
         {
-            _animator.SetBool(DEATH_ID, true);
-            var tween = _renderer.material.DOFloat(MAX_DISSOLVE, DISSOLVE_ID, _dissolveVFXDuration);
-            tween.OnComplete(() => Destroy(gameObject));
-            tween.Play();
+            _animator.SetBool(DEATH_ID, true); 
+            _deathTween = _renderer.material.DOFloat(MAX_DISSOLVE, DISSOLVE_ID, _dissolveVFXDuration)
+             .OnComplete(() => gameObject.SetActive(false));
         }
 
         private void TriggerHitAnimation()
         {
             _animator.SetTrigger(HIT_ID);
+        }
+
+        public override void Reset()
+        {
+            if (_deathTween.IsActive())
+            {
+                _deathTween.Kill();
+            }
+            _animator.SetBool(DEATH_ID, false); 
+            base.Reset();
+            gameObject.SetActive(true);
+            _renderer.material.SetFloat(DISSOLVE_ID, 0);
+            _healthbar.Reset();
+            gameObject.transform.position= _spawnLocation.position;
         }
 
         protected override void OnEnable()
