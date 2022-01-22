@@ -19,13 +19,10 @@ namespace Perigon.Entities
         private Animator _animator;
         private Renderer _renderer;
         private Tween _deathTween;
-
-        private Transform _spawnLocation = null;
         
         protected override void Awake()
         {
             base.Awake();
-            _spawnLocation = transform;
             _animator = GetComponentInChildren<Animator>();
             _renderer = GetComponentInChildren<Renderer>();
             if(_healthbar != null) 
@@ -55,7 +52,6 @@ namespace Perigon.Entities
             gameObject.SetActive(true);
             _renderer.material.SetFloat(DISSOLVE_ID, 0);
             _healthbar.Reset();
-            gameObject.transform.position= _spawnLocation.position;
         }
 
         protected override void OnEnable()

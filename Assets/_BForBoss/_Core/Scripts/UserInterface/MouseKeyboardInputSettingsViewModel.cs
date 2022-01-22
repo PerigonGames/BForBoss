@@ -14,8 +14,8 @@ namespace BForBoss
 
         public override void ApplySettings(float horizontal, float vertical, bool isInverted)
         {
-            _settings.MouseHorizontalSensitivity = horizontal / 10;
-            _settings.MouseVerticalSensitivity = vertical / 10;
+            _settings.MouseHorizontalSensitivity = horizontal;
+            _settings.MouseVerticalSensitivity = vertical;
             _settings.IsInverted = isInverted;
             SetInputSettingsAnalytics();
         }
