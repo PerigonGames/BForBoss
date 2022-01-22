@@ -13,6 +13,9 @@ namespace BForBoss
 {
     public class WeaponRaceCourseWorldManager: BaseWorldManager
     {
+        private const float RACE_COURSE_PENALTY_TIME = 5F;
+        private const float MAP_SECONDS_TO_MILLISECONDS = 1000f;
+        
         [Title("Component")] 
         [SerializeField] private TimeManager _timeManager = null;
         [SerializeField] private CheckpointManager _checkpointManager = null;
@@ -52,7 +55,7 @@ namespace BForBoss
         protected override void Awake()
         {
             base.Awake();
-            _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_deathVolume, 0.1f, 0f, 0.1f);
+            _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_deathVolume, duration:0.1f, startValue: 0f, endValue: 0.1f);
             _uploadPlayerScoreDataSource = new UploadPlayerScoreDataSource();
             _lifeCycleBehaviours = FindObjectsOfType<LifeCycleBehaviour>();
         }
@@ -80,9 +83,8 @@ namespace BForBoss
 
         protected override void HandleOnEndOfRace()
         {
-            var penaltyTime = 5f;
             _timeManagerViewModel.StopTimer();
-            var totalPenaltyTime = _lifeCycleBehaviours.Count(life => life.IsAlive) * penaltyTime * 1000;
+            var totalPenaltyTime = _lifeCycleBehaviours.Count(life => life.IsAlive) * RACE_COURSE_PENALTY_TIME * MAP_SECONDS_TO_MILLISECONDS;
             var gameTime = _timeManagerViewModel.CurrentGameTimeMilliSeconds + (int)totalPenaltyTime;
             var input = _detectInput.GetInput(); //Placeholder, remove this after finishing the timed leader board stuff
             _uploadPlayerScoreDataSource.UploadScoreIfPossible(gameTime, input);
