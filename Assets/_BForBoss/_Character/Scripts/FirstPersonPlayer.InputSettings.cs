@@ -11,8 +11,8 @@ namespace Perigon.Character
         private const string UIActionMapName = "UI";
         
         private const int Default_Is_Inverted = 0;
-        private const float Default_Mouse_Sensitivity = 0.4f;
-        private const float Default_Controller_Sensitivity = 0.4f;
+        private const float Default_Mouse_Sensitivity = 0.05f;
+        private const float Default_Controller_Sensitivity = 0.05f;
 
         private InputActionMap UIActionMap => actions.FindActionMap(UIActionMapName);
         private InputActionMap PlayerControllerActionMap => actions.FindActionMap(PlayerControlActionMapName);
