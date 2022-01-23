@@ -17,8 +17,8 @@ namespace Perigon.Character
         private int _thirdPersonMask;
 
         private int FirstPersonMask => ~(1 << LayerMask.NameToLayer(PLAYER_MODEL_LAYER) | 1 << LayerMask.NameToLayer(FIRST_PERSON_WEAPON_LAYER));
-        
-        public void SetThirdPersonActive(bool isActive)
+
+        void IThirdPerson.SetThirdPersonActive(bool isActive)
         {
             var isThirdPerson = isActive ? 1 : 0;
             PlayerPrefs.SetInt(PlayerPrefKeys.ThirdPerson.IS_THIRD_PERSON, isThirdPerson);

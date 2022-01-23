@@ -78,19 +78,19 @@ namespace Perigon.Analytics
         {
         }
 
-        public void SetUsername(String username)
+        void IPerigonAnalytics.SetUsername(String username)
         {
             Mixpanel.People.Set(Profile.Name, username);
         }
 
-        public void SetControllerSettings(float horizontal, float vertical, bool isInverted)
+        void IPerigonAnalytics.SetControllerSettings(float horizontal, float vertical, bool isInverted)
         {
             Mixpanel.People.Set(Profile.Controls.ControllerHorizontalSens, horizontal);
             Mixpanel.People.Set(Profile.Controls.ControllerVerticalSens, vertical);
             Mixpanel.People.Set(Profile.Controls.Inverted, isInverted);
         }
 
-        public void SetMouseKeyboardSettings(float horizontal, float vertical, bool isInverted)
+        void IPerigonAnalytics.SetMouseKeyboardSettings(float horizontal, float vertical, bool isInverted)
         {
             Mixpanel.People.Set(Profile.Controls.MouseHorizontalSens, horizontal);
             Mixpanel.People.Set(Profile.Controls.MouseVerticalSens, vertical);
@@ -103,7 +103,7 @@ namespace Perigon.Analytics
         }
         
         #endregion
-        
+
         public void StartSession(String uniqueId)
         {
             Mixpanel.Identify(uniqueId);
@@ -139,12 +139,12 @@ namespace Perigon.Analytics
         
         #endregion
 
-        public void LogEvent(String eventName)
+        void IPerigonAnalytics.LogEvent(String eventName)
         {
             Mixpanel.Track(eventName);
         }
 
-        public void LogEventWithParams(String eventName, Hashtable parameters)
+        void IPerigonAnalytics.LogEventWithParams(String eventName, Hashtable parameters)
         {
             // convert hashtable into MixPanel Value
             var props = new Value();
@@ -155,7 +155,7 @@ namespace Perigon.Analytics
             Mixpanel.Track(eventName, props);
         }
 
-        public void ForceSendEvents()
+        void IPerigonAnalytics.ForceSendEvents()
         {
             Mixpanel.Flush();
         }

@@ -26,8 +26,8 @@ namespace Perigon.Entities
 
         public bool IsAlive { get; private set; }
 
-        public float MaxHealth => _maxHealth;
-        public float CurrentHealth => _currentHealth;
+        float ILifeCycle.MaxHealth => _maxHealth;
+        float ILifeCycle.CurrentHealth => _currentHealth;
 
         public LifeCycle(IHealth health)
         {

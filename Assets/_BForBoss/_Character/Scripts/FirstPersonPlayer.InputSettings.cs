@@ -82,19 +82,19 @@ namespace Perigon.Character
             }  
         }
 
-        public void SwapToPlayerActions()
+        void IInputSettings.SwapToPlayerActions()
         {
             PlayerControllerActionMap.Enable();
             UIActionMap.Disable();
         }
-        
-        public void SwapToUIActions()
+
+        void IInputSettings.SwapToUIActions()
         {
             PlayerControllerActionMap.Disable();
             UIActionMap.Enable();
         }
 
-        public void RevertAllSettings()
+        void IInputSettings.RevertAllSettings()
         {
             IsInverted = Default_Is_Inverted == 1;
             MouseHorizontalSensitivity = Default_Mouse_Sensitivity;

@@ -11,12 +11,12 @@ namespace Perigon.Weapons
 
     public partial class EquipmentBehaviour: IEquipmentData
     {
-        public int AmmunitionAmount => CurrentWeapon.AmmunitionAmount;
-        public int MaxAmmunitionAmount => CurrentWeapon.MaxAmmunitionAmount;
-        public string NameOfWeapon => CurrentWeapon.NameOfWeapon;
+        int IEquipmentData.AmmunitionAmount => CurrentWeapon.AmmunitionAmount;
+        int IEquipmentData.MaxAmmunitionAmount => CurrentWeapon.MaxAmmunitionAmount;
+        string IEquipmentData.NameOfWeapon => CurrentWeapon.NameOfWeapon;
 
-        public float MaxReloadDuration => CurrentWeapon.MaxReloadDuration;
-        public float ElapsedReloadDuration => CurrentWeapon.ElapsedReloadDuration;
+        float IEquipmentData.MaxReloadDuration => CurrentWeapon.MaxReloadDuration;
+        float IEquipmentData.ElapsedReloadDuration => CurrentWeapon.ElapsedReloadDuration;
 
         public Weapon[] Weapons => _weapons;
         public Weapon CurrentWeapon => _weapons[_currentWeaponIndex];

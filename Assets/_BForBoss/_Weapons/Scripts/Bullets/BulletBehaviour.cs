@@ -36,7 +36,7 @@ namespace Perigon.Weapons
         public event Action OnBulletSpawn;
         public event Action OnBulletDeactivate;
 
-        public void SetSpawnAndDirection(Vector3 location, Vector3 normalizedDirection)
+        void IBullet.SetSpawnAndDirection(Vector3 location, Vector3 normalizedDirection)
         {
             if (normalizedDirection == Vector3.zero)
             {

@@ -15,6 +15,6 @@ namespace Perigon.Entities
     {
         [SerializeField] private float _health = 100f;
 
-        public float Health => _health;
+        float IHealth.Health => _health;
     }
 }
