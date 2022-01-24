@@ -15,6 +15,9 @@ namespace BForBoss
     {
         private const float RACE_COURSE_PENALTY_TIME = 5F;
         private const float MAP_SECONDS_TO_MILLISECONDS = 1000f;
+        private const float DEATH_POST_PROCESSING_DURATION = 0.1F;
+        private const float DEATH_POST_PROCESSING_START = 0F;
+        private const float DEATH_POST_PROCESSING_END = 0.1f;
         
         [Title("Component")] 
         [SerializeField] private TimeManager _timeManager = null;
@@ -55,7 +58,7 @@ namespace BForBoss
         protected override void Awake()
         {
             base.Awake();
-            _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_deathVolume, duration:0.1f, startValue: 0f, endValue: 0.1f);
+            _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_deathVolume, DEATH_POST_PROCESSING_DURATION, DEATH_POST_PROCESSING_START, DEATH_POST_PROCESSING_END);
             _uploadPlayerScoreDataSource = new UploadPlayerScoreDataSource();
             _lifeCycleBehaviours = FindObjectsOfType<LifeCycleBehaviour>();
         }
