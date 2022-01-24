@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -8,10 +5,12 @@ namespace Perigon.Entities
 {
     public abstract class LifeCycleBehaviour : MonoBehaviour
     {
-        [InlineEditor()]
+        [InlineEditor]
         [SerializeField] private HealthScriptableObject _health = null;
 
         protected LifeCycle _lifeCycle;
+
+        public bool IsAlive => _lifeCycle.IsAlive;
 
         [Button]
         public void Damage(float amount = 5f)
@@ -22,6 +21,11 @@ namespace Perigon.Entities
         public void Heal(float amount)
         {
             _lifeCycle.HealBy(amount);
+        }
+
+        public virtual void Reset()
+        {
+            _lifeCycle.Reset();
         }
 
         protected virtual void Awake()

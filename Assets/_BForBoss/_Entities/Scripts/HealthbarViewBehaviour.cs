@@ -33,7 +33,10 @@ namespace Perigon.Entities
 
         private void OnHealthChanged()
         {
-            _healthbarImage.fillAmount = GetHealthBarAmount();
+            if (_healthbarImage != null)
+            {
+                _healthbarImage.fillAmount = GetHealthBarAmount();
+            }
         }
         
         private void OnEnable()
@@ -52,6 +55,11 @@ namespace Perigon.Entities
                 _lifeCycle.OnHeal -= OnHealthChanged;
                 _lifeCycle.OnDamageTaken -= OnHealthChanged;
             }
+        }
+
+        public void Reset()
+        {
+            OnHealthChanged();
         }
     }
 }
