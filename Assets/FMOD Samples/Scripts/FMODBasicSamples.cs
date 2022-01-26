@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Perigon.FMODExamples
 {
-    public class FmodPlayOneShot : MonoBehaviour
+    public class FMODBasicSamples : MonoBehaviour
     {
         private const string PARAM_NAME = "Pitch";
         
@@ -35,6 +35,11 @@ namespace Perigon.FMODExamples
             var pitch = _pitchSlider.value;
             _emitter.Play(); // note - play clears cached parameter values. Call this, THEN set params!
             _emitter.SetParameter(PARAM_NAME, pitch);
+        }
+
+        public void OpenAdvancedSamples()
+        {
+            Application.OpenURL("https://www.fmod.com/resources/documentation-unity?version=2.02&page=examples.html");
         }
     }
 }
