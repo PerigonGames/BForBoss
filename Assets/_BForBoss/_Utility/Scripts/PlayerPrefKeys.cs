@@ -20,14 +20,7 @@ namespace Perigon.Utility
         {
             public const string IS_THIRD_PERSON = "is_third_person";
         }
-
-        public struct GameplaySettings
-        {
-            public const string SHOW_FPS = "ShowFPS";
-            public const string SHOW_RAM_USAGE = "ShowRAMUsage";
-            public const string SHOW_PC_SPECS = "ShowPCSpecs";
-        }
-
+        
         public struct LeaderboardSettings
         {
             public const string USERNAME = "UserName";
@@ -40,7 +33,6 @@ namespace Perigon.Utility
         {
             var keys = GetConstStringValuesFromStruct<InputSettings>().ToList();
             keys.AddRange(GetConstStringValuesFromStruct<ThirdPerson>());
-            keys.AddRange(GetConstStringValuesFromStruct<GameplaySettings>());
             keys.AddRange(GetConstStringValuesFromStruct<LeaderboardSettings>());
             return keys;
         }
