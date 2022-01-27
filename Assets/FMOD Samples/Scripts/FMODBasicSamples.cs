@@ -9,7 +9,8 @@ namespace Perigon.FMODExamples
     {
         private const string PARAM_NAME = "Pitch";
         
-        [SerializeField] Slider _pitchSlider;
+        [SerializeField]
+        private Slider _pitchSlider;
         
         private StudioEventEmitter _emitter;
 
