@@ -83,7 +83,7 @@ namespace Perigon.Weapons
         {
             var camRay = MainCamera.ViewportPointToRay(CenterOfCameraPosition);
             Vector3 targetPoint;
-            if (Physics.Raycast(camRay, out var hit, ~TagsAndLayers.Layers.TriggerArea))
+            if (Physics.Raycast(camRay, out var hit, Mathf.Infinity, ~TagsAndLayers.Layers.TriggerArea))
             {
                 targetPoint = hit.point;
             }
