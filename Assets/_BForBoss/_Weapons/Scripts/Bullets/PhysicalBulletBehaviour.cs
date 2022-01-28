@@ -13,7 +13,7 @@ namespace Perigon.Weapons
             _rb.velocity = transform.forward * _properties.Speed;
         }
         
-        private void ResetRigidbodyVelocity()
+        private void ResetRigidbodyVelocity(IBullet _)
         {
             _rb.velocity = Vector3.zero;
             _rb.angularVelocity = Vector3.zero;
