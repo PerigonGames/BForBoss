@@ -7,6 +7,9 @@ namespace Perigon.Weapons
 {
     public class CrosshairBehaviour : MonoBehaviour
     {
+        private readonly Color KillHitMarkerColor = Color.red;
+        private readonly Color HitMarkerColor = Color.white;
+        
         [SerializeField] private Sprite _defaultCrosshair = null;
         [Resolve][SerializeField] private Image _crosshair = null;
 
@@ -43,11 +46,11 @@ namespace Perigon.Weapons
             _elapsedKillMarkerTime -= Time.deltaTime;
             if (_elapsedKillMarkerTime > 0)
             {
-                _hitMarker.color = Color.red;
+                _hitMarker.color = KillHitMarkerColor;
             } 
             else if (_elapsedHitMarkerTime > 0)
             {
-                _hitMarker.color = Color.white;
+                _hitMarker.color = HitMarkerColor;
             }
             else
             {
