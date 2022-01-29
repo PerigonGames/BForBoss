@@ -10,7 +10,7 @@ namespace Perigon.Entities
 
         protected LifeCycle _lifeCycle;
 
-        public bool IsAlive => _lifeCycle.IsAlive;
+        public bool IsAlive => ((ILifeCycle)_lifeCycle).IsAlive;
 
         [Button]
         public void Damage(float amount = 5f)
