@@ -10,10 +10,22 @@ namespace Perigon.Leaderboard
         private int _milliseconds;
         private string _input;
 
-        public event Action OnSuccess;
-        public event Action OnFail;
+        private event Action _onSuccess;
+        private event Action _onFail;
 
-        public void SendScore(string username, int milliseconds, string input)
+        event Action ILeaderboardPostEndPoint.OnSuccess
+        {
+            add => _onSuccess += value;
+            remove => _onSuccess -= value;
+        }
+
+        event Action ILeaderboardPostEndPoint.OnFail
+        {
+            add => _onFail += value;
+            remove => _onFail -= value;
+        }
+
+        void ILeaderboardPostEndPoint.SendScore(string username, int milliseconds, string input)
         {
             _username = username;
             _score = -milliseconds;
@@ -30,11 +42,11 @@ namespace Perigon.Leaderboard
             var response = await client.GetAsync(Path);
             if (response.IsSuccessStatusCode)
             {
-                OnSuccess?.Invoke();
+                _onSuccess?.Invoke();
             }
             else
             {
-                OnFail?.Invoke();
+                _onFail?.Invoke();
             }
         }
     }
