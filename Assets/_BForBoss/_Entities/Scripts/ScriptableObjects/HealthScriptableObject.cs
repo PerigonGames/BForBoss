@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Perigon.Entities
@@ -15,6 +13,6 @@ namespace Perigon.Entities
     {
         [SerializeField] private float _health = 100f;
 
-        public float Health => _health;
+        float IHealth.Health => _health;
     }
 }
