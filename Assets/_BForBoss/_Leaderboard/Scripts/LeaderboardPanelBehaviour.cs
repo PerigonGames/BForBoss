@@ -16,7 +16,7 @@ namespace Perigon.Leaderboard
         [Title("Buttons")] 
         [SerializeField] private Button _reloadButton = null;
         
-        private readonly DreamloGetLeaderboardEndPoint _leaderboardEndpoint = new DreamloGetLeaderboardEndPoint();
+        private readonly ILeaderboardGetEndPoint _leaderboardEndpoint = new DreamloGetLeaderboardEndPoint();
 
         private void Awake()
         {

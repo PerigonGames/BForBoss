@@ -7,10 +7,22 @@ namespace Perigon.Leaderboard
 {
     public class DreamloGetLeaderboardEndPoint : ILeaderboardGetEndPoint
     {
-        public event Action<LeaderboardScore[]> OnSuccess;
-        public event Action OnFail;
+        private event Action<LeaderboardScore[]> _onSuccess;
+        private event Action _onFail;
 
-        public void GetLeaderboard()
+        event Action<LeaderboardScore[]> ILeaderboardGetEndPoint.OnSuccess
+        {
+            add => _onSuccess += value;
+            remove => _onSuccess -= value;
+        }
+
+        event Action ILeaderboardGetEndPoint.OnFail
+        {
+            add => _onFail += value;
+            remove => _onFail -= value;
+        }
+
+        void ILeaderboardGetEndPoint.GetLeaderboard()
         {
             Get();
         }
@@ -26,7 +38,7 @@ namespace Perigon.Leaderboard
             }
             else
             {
-                OnFail?.Invoke();
+                _onFail?.Invoke();
             }
         }
 
@@ -34,13 +46,13 @@ namespace Perigon.Leaderboard
         {
             if (responseBody.IsNullOrWhitespace())
             {
-                OnSuccess?.Invoke(new LeaderboardScore[]{});
+                _onSuccess?.Invoke(new LeaderboardScore[]{});
             }
             else
             {
                 var arrayOfEntryDTO = ParsingQuotedListToDTO(responseBody);
                 var leaderboardScores = MapDTOToLeaderboardScore(arrayOfEntryDTO);
-                OnSuccess?.Invoke(leaderboardScores);
+                _onSuccess?.Invoke(leaderboardScores);
             }
         }
 
