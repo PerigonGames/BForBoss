@@ -21,6 +21,7 @@ namespace Perigon.Weapons
 
         private Camera _mainCamera = null;
         private BulletSpawner _bulletSpawner;
+        private IWeaponProperties _weaponProperties;
 
         public Weapon WeaponViewModel => _weapon;
 
@@ -44,7 +45,8 @@ namespace Perigon.Weapons
         {
             _fireInputAction = fireInputAction;
             _reloadInputAction = reloadInputAction;
-            _weapon = new Weapon(properties ?? _weaponScriptableObject);
+            _weaponProperties = _weaponScriptableObject;
+            _weapon = new Weapon(properties ?? _weaponProperties);
             BindWeapon();
             SetCrosshairImage();
         }
@@ -73,7 +75,7 @@ namespace Perigon.Weapons
             for (int i = 0; i < numberOfBullets; i++)
             {
                 _bulletSpawner
-                    .SpawnBullet(_weaponScriptableObject.TypeOfBullet)
+                    .SpawnBullet(_weaponProperties.TypeOfBullet)
                     .SetSpawnAndDirection(_firePoint.position, GetDirectionOfShot());
             }
         }

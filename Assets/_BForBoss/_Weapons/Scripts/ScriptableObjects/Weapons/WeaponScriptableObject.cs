@@ -34,14 +34,14 @@ namespace Perigon.Weapons
         [SerializeField] private Sprite _crosshair = null;
 
         [SerializeField] private float _visualRecoil = 0.5f;
-        public string NameOfWeapon => _nameOfWeapon;
-        public float RateOfFire => _rateOfFire;
-        public float BulletSpread => _bulletSpread;
-        public float ReloadDuration => _reloadDuration;
-        public int BulletsPerShot => _bulletsPerShot;
-        public int AmmunitionAmount => _ammunitionAmount;
-        public float VisualRecoilForce => _visualRecoil;
-        public Sprite Crosshair => _crosshair;
-        public BulletTypes TypeOfBullet => _typeOfBullet;
+        string IWeaponProperties.NameOfWeapon => _nameOfWeapon;
+        float IWeaponProperties.RateOfFire => _rateOfFire;
+        float IWeaponProperties.BulletSpread => _bulletSpread;
+        float IWeaponProperties.ReloadDuration => _reloadDuration;
+        int IWeaponProperties.BulletsPerShot => _bulletsPerShot;
+        int IWeaponProperties.AmmunitionAmount => _ammunitionAmount;
+        float IWeaponProperties.VisualRecoilForce => _visualRecoil;
+        Sprite IWeaponProperties.Crosshair => _crosshair;
+        BulletTypes IWeaponProperties.TypeOfBullet => _typeOfBullet;
     }
 }
