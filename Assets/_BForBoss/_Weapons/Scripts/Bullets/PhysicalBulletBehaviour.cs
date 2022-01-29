@@ -7,6 +7,7 @@ namespace Perigon.Weapons
     public class PhysicalBulletBehaviour : BulletBehaviour
     {
         private Rigidbody _rb;
+        private IBullet _bulletBehaviour;
 
         private void SetRigidbodyVelocity()
         {
@@ -29,18 +30,19 @@ namespace Perigon.Weapons
         private void Awake()
         {
             _rb = GetComponent<Rigidbody>();
+            _bulletBehaviour = this;
         }
 
         private void OnEnable()
         {
-            OnBulletSpawn += SetRigidbodyVelocity;
-            OnBulletDeactivate += ResetRigidbodyVelocity;
+            _bulletBehaviour.OnBulletSpawn += SetRigidbodyVelocity;
+            _bulletBehaviour.OnBulletDeactivate += ResetRigidbodyVelocity;
         }
         
         private void OnDisable()
         {
-            OnBulletSpawn -= SetRigidbodyVelocity;
-            OnBulletDeactivate -= ResetRigidbodyVelocity;
+            _bulletBehaviour.OnBulletSpawn -= SetRigidbodyVelocity;
+            _bulletBehaviour.OnBulletDeactivate -= ResetRigidbodyVelocity;
         }
 
 

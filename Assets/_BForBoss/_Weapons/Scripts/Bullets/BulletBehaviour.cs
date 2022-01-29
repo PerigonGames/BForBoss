@@ -17,6 +17,10 @@ namespace Perigon.Weapons
         private ObjectPooler<BulletBehaviour> _pool = null;
         private Vector3 _startPosition;
         private IBulletProperties _bulletProperties;
+        
+        private event Action _onBulletSpawn;
+        private event Action<IBullet> _onBulletDeactivate;
+        private event Action<IBullet, bool> _onBulletHitEntity;
 
         private static ObjectPooler<WallHitVFX> _wallHitVFXObjectPool = null;
 
@@ -34,9 +38,23 @@ namespace Perigon.Weapons
             }
         }
 
-        public event Action OnBulletSpawn;
-        public event Action<IBullet> OnBulletDeactivate;
-        public event Action<IBullet, bool> OnBulletHitEntity;
+        event Action IBullet.OnBulletSpawn
+        {
+            add => this._onBulletSpawn += value;
+            remove => this._onBulletSpawn -= value;
+        }
+
+        event Action<IBullet> IBullet.OnBulletDeactivate
+        {
+            add => _onBulletDeactivate += value;
+            remove => _onBulletDeactivate -= value;
+        }
+
+        event Action<IBullet, bool> IBullet.OnBulletHitEntity
+        {
+            add => _onBulletHitEntity += value;
+            remove => _onBulletHitEntity -= value;
+        }
 
         protected IBulletProperties BulletProperties
         {
@@ -61,7 +79,7 @@ namespace Perigon.Weapons
             {
                 _startPosition = location;
                 transform.SetPositionAndRotation(location, Quaternion.LookRotation(normalizedDirection));
-                OnBulletSpawn?.Invoke();
+                _onBulletSpawn?.Invoke();
             }
         }
 
@@ -73,7 +91,7 @@ namespace Perigon.Weapons
                 return;
             }
             
-            OnBulletDeactivate?.Invoke(this);
+            _onBulletDeactivate?.Invoke(this);
             _pool.Reclaim(this);
         }
 

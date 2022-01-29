@@ -5,7 +5,7 @@ namespace Perigon.Weapons
     public class BulletTrail : MonoBehaviour
     {
         private TrailRenderer _trail;
-        private BulletBehaviour _bullet;
+        private IBullet _bullet;
         
         private void Awake()
         {
