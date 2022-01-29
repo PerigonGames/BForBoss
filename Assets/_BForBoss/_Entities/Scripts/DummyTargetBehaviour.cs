@@ -12,28 +12,28 @@ namespace Perigon.Entities
         private readonly int DEATH_ID = Animator.StringToHash(IS_DEAD);
         private readonly int HIT_ID = Animator.StringToHash(HIT);
         private readonly int DISSOLVE_ID = Shader.PropertyToID("_Dissolve");
-        
+
         [SerializeField]
         private float _dissolveVFXDuration = 7.5f;
-        
+
         private Animator _animator;
         private Renderer _renderer;
+        private Tween _deathTween;
 
         protected override void Awake()
         {
             base.Awake();
             _animator = GetComponentInChildren<Animator>();
             _renderer = GetComponentInChildren<Renderer>();
-            if(_healthbar != null) 
+            if(_healthbar != null)
                 _healthbar.Initialize(_lifeCycle);
         }
 
         protected override void LifeCycleFinished()
         {
             _animator.SetBool(DEATH_ID, true);
-            var tween = _renderer.material.DOFloat(MAX_DISSOLVE, DISSOLVE_ID, _dissolveVFXDuration);
-            tween.OnComplete(() => Destroy(gameObject));
-            tween.Play();
+            _deathTween = _renderer.material.DOFloat(MAX_DISSOLVE, DISSOLVE_ID, _dissolveVFXDuration)
+             .OnComplete(() => gameObject.SetActive(false));
         }
 
         private void TriggerHitAnimation()
@@ -41,12 +41,25 @@ namespace Perigon.Entities
             _animator.SetTrigger(HIT_ID);
         }
 
+        public override void Reset()
+        {
+            if (_deathTween.IsActive())
+            {
+                _deathTween.Kill();
+            }
+            _animator.SetBool(DEATH_ID, false);
+            base.Reset();
+            gameObject.SetActive(true);
+            _renderer.material.SetFloat(DISSOLVE_ID, 0);
+            _healthbar.Reset();
+        }
+
         protected override void OnEnable()
         {
             base.OnEnable();
             ((ILifeCycle) _lifeCycle).OnDamageTaken += TriggerHitAnimation;
         }
-        
+
         protected override void OnDisable()
         {
             base.OnDisable();

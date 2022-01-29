@@ -1,6 +1,5 @@
 using Perigon.Analytics;
 using Perigon.Character;
-using Perigon.Utility;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,7 +20,6 @@ namespace BForBoss
             _viewModel = new GameplaySettingsViewModel(thirdPersonSettings);
             SetViews();
             BindModel();
-            _viewModel.SetGraphy();
 #if !DEVELOPMENT_BUILD && !UNITY_EDITOR
             HideSettingsForProduction();
 #endif
@@ -56,9 +54,9 @@ namespace BForBoss
 
         private void SetViews()
         {
-            _showFPSToggle.isOn = _viewModel.IsShowingFPS;
-            _showPCSpecsToggle.isOn = _viewModel.IsShowingPCSpecs;
-            _showRAMToggle.isOn = _viewModel.IsShowingRAM;
+            _showFPSToggle.isOn = true;
+            _showPCSpecsToggle.isOn = false;
+            _showRAMToggle.isOn = false;
             _povDropdown.value = _viewModel.IsThirdPersonView ? 1 : 0;
         }
 
@@ -77,9 +75,6 @@ namespace BForBoss
         private IThirdPerson _thirdPersonSettings = null;
         private readonly PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
         
-        public bool IsShowingFPS => PlayerPrefs.GetInt(PlayerPrefKeys.GameplaySettings.SHOW_FPS, 0) == 1;
-        public bool IsShowingRAM => PlayerPrefs.GetInt(PlayerPrefKeys.GameplaySettings.SHOW_RAM_USAGE, 0) == 1;
-        public bool IsShowingPCSpecs => PlayerPrefs.GetInt(PlayerPrefKeys.GameplaySettings.SHOW_PC_SPECS, 0) == 1;
         public bool IsThirdPersonView => _thirdPersonSettings.IsThirdPerson;
 
         public GameplaySettingsViewModel(IThirdPerson thirdPersonSettings, ISpecification specification = null)
@@ -90,32 +85,18 @@ namespace BForBoss
             _perigonAnalytics.SetPOV(IsThirdPersonView);
         }
 
-        public void SetGraphy()
-        {
-            SetShowFPS(IsShowingFPS);
-            SetShowRAMUsage(IsShowingRAM);
-            SetShowPCSpecifications(IsShowingPCSpecs);
-            _graphyManager.SetAudioUsage(false);
-        }
-
         public void SetShowFPS(bool isOn)
         {
-            var storedValue = isOn ? 1 : 0;
-            PlayerPrefs.SetInt(PlayerPrefKeys.GameplaySettings.SHOW_FPS, storedValue);
             _graphyManager.SetShowFPSActive(isOn);
         }
 
         public void SetShowRAMUsage(bool isOn)
         {
-            var storedValue = isOn ? 1 : 0;
-            PlayerPrefs.SetInt(PlayerPrefKeys.GameplaySettings.SHOW_RAM_USAGE, storedValue);
             _graphyManager.SetShowRAMUsageActive(isOn);
         }
 
         public void SetShowPCSpecifications(bool isOn)
         {
-            var storedValue = isOn ? 1 : 0;
-            PlayerPrefs.SetInt(PlayerPrefKeys.GameplaySettings.SHOW_PC_SPECS, storedValue);
             _graphyManager.SetShowPCSpecificationsActive(isOn);
         }
 

@@ -936,9 +936,9 @@ MonoBehaviour:
   _weaponHolder: {fileID: 898031538}
   _equipmentBehaviour: {fileID: 2053475647}
   _hipFireBobAmount: 0.02
+  _wallRunningBobMultiplier: 0.5
   _weaponBobFrequency: 8
   _weaponBobSharpness: 7
-  _recoilForce: 0.1
   _maxRecoilDistance: 0.5
   _recoilSharpness: 50
   _recoilRestitutionSharpness: 10
@@ -1420,7 +1420,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1186343775}
   - component: {fileID: 1186343774}
-  - component: {fileID: 1186343773}
   - component: {fileID: 1186343776}
   - component: {fileID: 1186343779}
   m_Layer: 0
@@ -1430,14 +1429,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1186343773
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1186343772}
-  m_Enabled: 1
 --- !u!20 &1186343774
 Camera:
   m_ObjectHideFlags: 0
@@ -2992,7 +2983,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2061070007434329460, guid: c7cd698ab65444f38b1e49e2e17d8e9f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0013470468
+      value: 0.000008024527
       objectReference: {fileID: 0}
     - target: {fileID: 3924296612012996776, guid: c7cd698ab65444f38b1e49e2e17d8e9f, type: 3}
       propertyPath: m_Name

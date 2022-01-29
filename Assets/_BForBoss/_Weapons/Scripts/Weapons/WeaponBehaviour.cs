@@ -1,3 +1,4 @@
+using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,7 +14,7 @@ namespace Perigon.Weapons
         [SerializeField] private CrosshairBehaviour _crosshair = null;
         [InlineEditor]
         [SerializeField] private WeaponScriptableObject _weaponScriptableObject;
-        
+
         protected Weapon _weapon = null;
 
         private InputAction _fireInputAction = null;
@@ -84,7 +85,7 @@ namespace Perigon.Weapons
         {
             var camRay = MainCamera.ViewportPointToRay(CenterOfCameraPosition);
             Vector3 targetPoint;
-            if (Physics.Raycast(camRay, out var hit))
+            if (Physics.Raycast(camRay, out var hit, Mathf.Infinity, ~TagsAndLayers.Layers.TriggerArea))
             {
                 targetPoint = hit.point;
             }

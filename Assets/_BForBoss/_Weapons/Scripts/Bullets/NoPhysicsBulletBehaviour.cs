@@ -1,15 +1,15 @@
+using Perigon.Utility;
 using UnityEngine;
 
 namespace Perigon.Weapons
 {
     public class NoPhysicsBulletBehaviour : BulletBehaviour
     {
-        
         private bool TryMoveForward(out Vector3 translationForward)
         {
             var distance = BulletProperties.Speed * Time.deltaTime;
             translationForward = transform.forward * distance;
-            if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, distance))
+            if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, distance, ~TagsAndLayers.Layers.TriggerArea))
             {
                 HitObject(hit.collider, hit.point, hit.normal);
                 return false;

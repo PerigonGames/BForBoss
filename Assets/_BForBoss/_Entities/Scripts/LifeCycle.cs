@@ -55,6 +55,12 @@ namespace Perigon.Entities
             _isAlive = true;
             _lifeCycle = this;
         }
+
+        public void Reset()
+        {
+            _currentHealth = MaxHealth;
+            IsAlive = true;
+        }
         
         public void HealBy(float amount)
         {

@@ -8,12 +8,12 @@ namespace BForBoss
 {
     public abstract class BaseWorldManager : MonoBehaviour
     {
-        [Title("Component")] 
+        [Title("Base Component")] 
         [SerializeField] protected FirstPersonPlayer _player = null;
 
-        [Title("User Interface")] 
+        [Title("Base User Interface")] 
         [SerializeField] protected PauseMenu _pauseMenu;
-        
+
         private ICharacterSpawn _character = null;
         protected readonly IStateManager _stateManager = StateManager.Instance;
         protected FreezeActionsUtility _freezeActionsUtility = null;
