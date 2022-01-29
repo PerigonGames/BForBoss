@@ -10,7 +10,7 @@ namespace Perigon.Weapons
 
         private void SetRigidbodyVelocity()
         {
-            _rb.velocity = transform.forward * _properties.Speed;
+            _rb.velocity = transform.forward * BulletProperties.Speed;
         }
         
         private void ResetRigidbodyVelocity()

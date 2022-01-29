@@ -18,9 +18,9 @@ namespace Perigon.Weapons
         [SerializeField] private float _maxDistance = Mathf.Infinity;
         [SerializeField] private float _bulletHoleTimeToLive = 10f;
 
-        public float Damage => _damage;
-        public float Speed => _speed;
-        public float MaxDistance => _maxDistance;
-        public float BulletHoleTimeToLive => _bulletHoleTimeToLive;
+        float IBulletProperties.Damage => _damage;
+        float IBulletProperties.Speed => _speed;
+        float IBulletProperties.MaxDistance => _maxDistance;
+        float IBulletProperties.BulletHoleTimeToLive => _bulletHoleTimeToLive;
     }
 }

@@ -13,9 +13,10 @@ namespace Perigon.Weapons
         [SerializeField] protected BulletPropertiesScriptableObject _properties;
 
         [SerializeField] private WallHitVFX _wallHitVFXPrefab;
-        
+
         private ObjectPooler<BulletBehaviour> _pool = null;
         private Vector3 _startPosition;
+        private IBulletProperties _bulletProperties;
 
         private static ObjectPooler<WallHitVFX> _wallHitVFXObjectPool = null;
 
@@ -35,6 +36,19 @@ namespace Perigon.Weapons
 
         public event Action OnBulletSpawn;
         public event Action OnBulletDeactivate;
+
+        protected IBulletProperties BulletProperties
+        {
+            get
+            {
+                if (_bulletProperties == null)
+                {
+                    _bulletProperties = _properties;
+                }
+
+                return _bulletProperties;
+            }
+        }
 
         void IBullet.SetSpawnAndDirection(Vector3 location, Vector3 normalizedDirection)
         {
@@ -64,7 +78,7 @@ namespace Perigon.Weapons
 
         protected void Update()
         {
-            if(Vector3.Distance(transform.position, _startPosition) > _properties.MaxDistance)
+            if(Vector3.Distance(transform.position, _startPosition) > BulletProperties.MaxDistance)
             {
                 Deactivate();
             }
@@ -95,7 +109,7 @@ namespace Perigon.Weapons
             var vfx = _wallHitVFXObjectPool.Get();
             vfx.transform.SetPositionAndRotation(position, Quaternion.LookRotation(wallNormal));
             vfx.transform.Translate(0f, 0f, WALL_HIT_ZFIGHT_BUFFER, Space.Self);
-            vfx.Spawn(_properties.BulletHoleTimeToLive);
+            vfx.Spawn(BulletProperties.BulletHoleTimeToLive);
         }
     }
 }

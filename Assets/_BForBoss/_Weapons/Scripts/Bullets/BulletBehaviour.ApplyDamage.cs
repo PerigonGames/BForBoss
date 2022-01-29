@@ -9,7 +9,7 @@ namespace Perigon.Weapons
         {
             if(col.TryGetComponent(out LifeCycleBehaviour lifeCycle))
             {
-                lifeCycle.Damage(_properties.Damage);
+                lifeCycle.Damage(BulletProperties.Damage);
             }
             else
             {
