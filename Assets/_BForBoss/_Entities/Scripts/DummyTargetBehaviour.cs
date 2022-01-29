@@ -18,7 +18,7 @@ namespace Perigon.Entities
         
         private Animator _animator;
         private Renderer _renderer;
-        
+
         protected override void Awake()
         {
             base.Awake();
@@ -44,13 +44,13 @@ namespace Perigon.Entities
         protected override void OnEnable()
         {
             base.OnEnable();
-            _lifeCycle.OnDamageTaken += TriggerHitAnimation;
+            ((ILifeCycle) _lifeCycle).OnDamageTaken += TriggerHitAnimation;
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
-            _lifeCycle.OnDamageTaken -= TriggerHitAnimation;
+            ((ILifeCycle) _lifeCycle).OnDamageTaken -= TriggerHitAnimation;
         }
 
         private void OnValidate()

@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -33,12 +30,12 @@ namespace Perigon.Entities
 
         protected virtual void OnEnable()
         {
-            _lifeCycle.OnDeath += LifeCycleFinished;
+            ((ILifeCycle) _lifeCycle).OnDeath += LifeCycleFinished;
         }
 
         protected virtual void OnDisable()
         {
-            _lifeCycle.OnDeath -= LifeCycleFinished;
+            ((ILifeCycle) _lifeCycle).OnDeath -= LifeCycleFinished;
         }
     }
 }
