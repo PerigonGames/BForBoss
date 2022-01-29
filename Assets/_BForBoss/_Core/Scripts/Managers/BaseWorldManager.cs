@@ -15,7 +15,7 @@ namespace BForBoss
         [SerializeField] protected PauseMenu _pauseMenu;
         
         private ICharacterSpawn _character = null;
-        protected readonly StateManager _stateManager = StateManager.Instance;
+        protected readonly IStateManager _stateManager = StateManager.Instance;
         protected FreezeActionsUtility _freezeActionsUtility = null;
 
         protected abstract Vector3 SpawnLocation { get; }

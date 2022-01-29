@@ -19,7 +19,7 @@ namespace BForBoss
         [SerializeField] private RectTransform _rectTransform;
 
         //State Handling
-        private StateManager _stateManager = StateManager.Instance;
+        private readonly IStateManager _stateManager = StateManager.Instance;
         private State _currentState;
         
         private bool _isPanelShowing = false;

@@ -15,6 +15,8 @@ namespace BForBoss
     {
         State GetState();
         void SetState(State newState);
+        
+        Action<State> OnStateChanged { get; set; }
     }
     
     public class StateManager : IStateManager
@@ -22,9 +24,9 @@ namespace BForBoss
         private static readonly StateManager _instance = new StateManager();
         private State _currentState = State.PreGame;
 
-        public Action<State> OnStateChanged;
+        Action<State> IStateManager.OnStateChanged { get; set; }
 
-        public static StateManager Instance => _instance;
+        public static IStateManager Instance => _instance;
         
         // Explicit static constructor to tell C# compiler
         // not to mark type as beforefieldinit
@@ -36,15 +38,15 @@ namespace BForBoss
         {
         }
 
-        public State GetState()
+        State IStateManager.GetState()
         {
             return _currentState;
         }
-        
-        public void SetState(State newState)
+
+        void IStateManager.SetState(State newState)
         {
             _currentState = newState;
-            OnStateChanged?.Invoke(_currentState);
+            Instance.OnStateChanged?.Invoke(_currentState);
         }
     }
 }
