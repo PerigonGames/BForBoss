@@ -8,12 +8,12 @@ namespace BForBoss
     {
         private readonly FirstPersonPlayer _player = null;
 
-        public Vector3 CharacterVelocity => _player.GetVelocity();
-        public float CharacterMaxSpeed => _player.GetMaxSpeed();
-        public bool IsGrounded => _player.IsOnGround();
-        public bool IsSliding => _player.IsSliding();
-        public bool IsDashing => _player.IsDashing();
-        public bool IsWallRunning => _player.IsWallRunning();
+        Vector3 ICharacterMovement.CharacterVelocity => _player.GetVelocity();
+        float ICharacterMovement.CharacterMaxSpeed => _player.GetMaxSpeed();
+        bool ICharacterMovement.IsGrounded => _player.IsOnGround();
+        bool ICharacterMovement.IsSliding => _player.IsSliding();
+        bool ICharacterMovement.IsDashing => _player.IsDashing();
+        bool ICharacterMovement.IsWallRunning => _player.IsWallRunning();
 
         public CharacterMovementWrapper(FirstPersonPlayer player)
         {
