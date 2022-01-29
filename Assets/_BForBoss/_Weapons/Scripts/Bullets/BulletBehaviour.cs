@@ -35,7 +35,8 @@ namespace Perigon.Weapons
         }
 
         public event Action OnBulletSpawn;
-        public event Action OnBulletDeactivate;
+        public event Action<IBullet> OnBulletDeactivate;
+        public event Action<IBullet, bool> OnBulletHitEntity;
 
         protected IBulletProperties BulletProperties
         {
@@ -72,7 +73,7 @@ namespace Perigon.Weapons
                 return;
             }
             
-            OnBulletDeactivate?.Invoke();
+            OnBulletDeactivate?.Invoke(this);
             _pool.Reclaim(this);
         }
 

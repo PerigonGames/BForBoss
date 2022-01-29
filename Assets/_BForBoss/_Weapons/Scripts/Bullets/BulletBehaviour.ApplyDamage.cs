@@ -10,6 +10,7 @@ namespace Perigon.Weapons
             if(col.TryGetComponent(out LifeCycleBehaviour lifeCycle))
             {
                 lifeCycle.Damage(BulletProperties.Damage);
+                _onBulletHitEntity?.Invoke(this, !lifeCycle.IsAlive);
             }
             else
             {
