@@ -5,8 +5,8 @@ namespace BForBoss
     public class GraphyAdapter : ISpecification
     {
         private GraphyManager Manager => GraphyManager.Instance;
-
-        void ISpecification.SetShowFPSActive(bool isOn)
+        
+        public void SetShowFPSActive(bool isOn)
         {
             if (Manager != null)
             {
@@ -14,7 +14,7 @@ namespace BForBoss
             }
         }
 
-        void ISpecification.SetShowRAMUsageActive(bool isOn)
+        public void SetShowRAMUsageActive(bool isOn)
         {
             if (Manager != null)
             {
@@ -22,7 +22,7 @@ namespace BForBoss
             }
         }
 
-        void ISpecification.SetShowPCSpecificationsActive(bool isOn)
+        public void SetShowPCSpecificationsActive(bool isOn)
         {
             if (Manager != null)
             {
@@ -31,7 +31,7 @@ namespace BForBoss
         }
 
         // TODO - Implement when needed
-        void ISpecification.SetAudioUsage(bool isOn)
+        public void SetAudioUsage(bool isOn)
         {
             if (Manager != null)
             {

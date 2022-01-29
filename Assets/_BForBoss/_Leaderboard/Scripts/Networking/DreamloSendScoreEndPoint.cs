@@ -13,7 +13,7 @@ namespace Perigon.Leaderboard
         public event Action OnSuccess;
         public event Action OnFail;
 
-        void ILeaderboardPostEndPoint.SendScore(string username, int milliseconds, string input)
+        public void SendScore(string username, int milliseconds, string input)
         {
             _username = username;
             _score = -milliseconds;

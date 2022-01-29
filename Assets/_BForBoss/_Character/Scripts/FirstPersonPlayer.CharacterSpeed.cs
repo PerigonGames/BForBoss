@@ -7,6 +7,6 @@ namespace Perigon.Character
     
     public partial class FirstPersonPlayer : ICharacterSpeed
     {
-        float ICharacterSpeed.Speed => GetVelocity().magnitude;
+        public float Speed => GetVelocity().magnitude;
     }
 }

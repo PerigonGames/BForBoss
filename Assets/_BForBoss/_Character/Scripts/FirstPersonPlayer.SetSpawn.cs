@@ -9,7 +9,7 @@ namespace Perigon.Character
 
     public partial class FirstPersonPlayer: ICharacterSpawn
     {
-        void ICharacterSpawn.SpawnAt(Vector3 position, Quaternion facing)
+        public void SpawnAt(Vector3 position, Quaternion facing)
         {
             SetVelocity(Vector3.zero);
             SetPosition(position);
