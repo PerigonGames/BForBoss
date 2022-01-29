@@ -21,17 +21,8 @@ namespace Perigon.Character
 
         [SerializeField] private bool _isThirdPerson = false;
 
-        public bool IsThirdPerson
-        {
-            get => _isThirdPerson;
-            private set
-            {
-                if (value == _isThirdPerson) return;
-                _isThirdPerson = value;
-                ToggleThirdPerson();
-            }
-        }
-        
+        bool IThirdPerson.IsThirdPerson => _isThirdPerson;
+
         public bool IsSliding()
         {
             return _slideBehaviour?.IsSliding ?? false;
@@ -251,7 +242,8 @@ namespace Perigon.Character
         protected override void OnOnValidate()
         {
             base.OnOnValidate();
-            if(IsThirdPerson != IsThirdPersonCamActive())
+            IThirdPerson thirdPerson = this;
+            if(thirdPerson.IsThirdPerson != IsThirdPersonCamActive())
             {
                 ToggleThirdPerson();
             }
