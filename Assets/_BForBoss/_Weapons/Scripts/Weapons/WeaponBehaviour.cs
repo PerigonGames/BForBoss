@@ -73,10 +73,25 @@ namespace Perigon.Weapons
         {
             for (int i = 0; i < numberOfBullets; i++)
             {
-                _bulletSpawner
-                    .SpawnBullet(_weaponScriptableObject.TypeOfBullet)
-                    .SetSpawnAndDirection(_firePoint.position, GetDirectionOfShot());
+                var bullet = _bulletSpawner
+                    .SpawnBullet(_weaponScriptableObject.TypeOfBullet);
+                bullet.SetSpawnAndDirection(_firePoint.position, GetDirectionOfShot());
+                bullet.OnBulletHitEntity += HandleOnBulletHitEntity;
+                bullet.OnBulletDeactivate += HandleOnBulletDeactivate;
             }
+        }
+
+        private void HandleOnBulletHitEntity(IBullet bullet, bool isDead)
+        {
+            _crosshair.ActivateHitMarker(isDead);
+            bullet.OnBulletHitEntity -= HandleOnBulletHitEntity;
+            bullet.OnBulletDeactivate -= HandleOnBulletDeactivate;
+        }
+
+        private void HandleOnBulletDeactivate(IBullet bullet)
+        {
+            bullet.OnBulletHitEntity -= HandleOnBulletHitEntity;
+            bullet.OnBulletDeactivate -= HandleOnBulletDeactivate;
         }
 
         private Vector3 GetDirectionOfShot()
