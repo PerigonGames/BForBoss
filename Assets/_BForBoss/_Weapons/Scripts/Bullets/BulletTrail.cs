@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Perigon.Weapons
@@ -10,7 +7,7 @@ namespace Perigon.Weapons
         private TrailRenderer _trail;
         private BulletBehaviour _bullet;
         
-        void Awake()
+        private void Awake()
         {
             _trail = GetComponent<TrailRenderer>();
             _bullet = GetComponentInParent<BulletBehaviour>();
@@ -21,7 +18,7 @@ namespace Perigon.Weapons
             _trail.emitting = true;
         }
         
-        private void StopTrails()
+        private void StopTrails(IBullet bullet)
         {
             _trail.emitting = false;
             _trail.Clear();

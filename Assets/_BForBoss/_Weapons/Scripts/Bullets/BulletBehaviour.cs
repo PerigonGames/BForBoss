@@ -34,7 +34,8 @@ namespace Perigon.Weapons
         }
 
         public event Action OnBulletSpawn;
-        public event Action OnBulletDeactivate;
+        public event Action<IBullet> OnBulletDeactivate;
+        public event Action<IBullet, bool> OnBulletHitEntity;
 
         public void SetSpawnAndDirection(Vector3 location, Vector3 normalizedDirection)
         {
@@ -58,7 +59,7 @@ namespace Perigon.Weapons
                 return;
             }
             
-            OnBulletDeactivate?.Invoke();
+            OnBulletDeactivate?.Invoke(this);
             _pool.Reclaim(this);
         }
 
