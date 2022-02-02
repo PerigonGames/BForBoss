@@ -79,5 +79,15 @@ namespace Perigon.Character
             Time.timeScale = targetTimeScale;
             Time.fixedDeltaTime = _fixedDeltaTime * targetTimeScale;
         }
+        
+        public void OnOnEnable()
+        {
+            _slowMotionInputAction.Enable();
+        }
+        
+        public void OnOnDisable()
+        {
+            _slowMotionInputAction.Disable();
+        }
     }
 }

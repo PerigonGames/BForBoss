@@ -234,6 +234,10 @@ namespace Perigon.Character
             {
                 _dashBehaviour.OnOnDisable();
             }
+            if (_slowMotionBehaviour != null)
+            {
+                _slowMotionBehaviour.OnOnDisable();
+            }
         }
         
         protected override void OnOnEnable()
@@ -242,6 +246,10 @@ namespace Perigon.Character
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.OnOnEnable();
+            }
+            if (_slowMotionBehaviour != null)
+            {
+                _slowMotionBehaviour.OnOnEnable();
             }
         }
 
