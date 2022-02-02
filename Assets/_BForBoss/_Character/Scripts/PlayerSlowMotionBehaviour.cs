@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Perigon.Utility;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 namespace Perigon.Character
 {
@@ -15,17 +17,25 @@ namespace Perigon.Character
         private float _targetTimeScale = 0.25f;
 
         [SerializeField] private float _tweenDuration = 1.0f;
+        [SerializeField] private Volume _slowMotionPostProcessing;
         
         private InputAction _slowMotionInputAction;
         private bool _isSlowMotionActive = false;
         private float _fixedDeltaTime;
-        private Tween _timeScaleTween;
+        private Sequence _timeScaleTween;
 
         public float CurrentTimeScale => Time.timeScale;
+
+        private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
 
         private void Start()
         {
             _fixedDeltaTime = Time.fixedDeltaTime;
+            if (_slowMotionPostProcessing != null)
+            {
+                _postProcessingVolumeWeightTool =
+                    new PostProcessingVolumeWeightTool(_slowMotionPostProcessing, _tweenDuration);
+            }
         }
 
         public void SetupPlayerInput(InputAction slowMoInput)
@@ -54,10 +64,19 @@ namespace Perigon.Character
                 _timeScaleTween.Kill();
             }
 
-            _timeScaleTween = DOTween.To(() => CurrentTimeScale, 
-                SetTimeScale, 
+            _timeScaleTween = DOTween.Sequence();
+            _timeScaleTween.Append(DOTween.To(() => CurrentTimeScale,
+                SetTimeScale,
                 _targetTimeScale,
-                _tweenDuration);
+                _tweenDuration));
+            if (_postProcessingVolumeWeightTool != null)
+            {
+                _timeScaleTween.Join(_postProcessingVolumeWeightTool.Distort());
+            }
+
+            _timeScaleTween.timeScale = 1f;
+            _timeScaleTween.Play();
+
         }
 
         private void StopSlowMotion()
@@ -67,11 +86,17 @@ namespace Perigon.Character
             {
                 _timeScaleTween.Kill();
             }
-
-            _timeScaleTween = DOTween.To(() => CurrentTimeScale, 
+            _timeScaleTween = DOTween.Sequence();
+            _timeScaleTween.Append(DOTween.To(() => CurrentTimeScale, 
                 SetTimeScale, 
                 DEFAULT_TIME_SCALE,
-                _tweenDuration);
+                _tweenDuration));
+            if (_postProcessingVolumeWeightTool != null)
+            {
+                _timeScaleTween.Join(_postProcessingVolumeWeightTool.Revert());
+            }
+            _timeScaleTween.timeScale = 1f;
+            _timeScaleTween.Play();
         }
 
         private void SetTimeScale(float targetTimeScale)
