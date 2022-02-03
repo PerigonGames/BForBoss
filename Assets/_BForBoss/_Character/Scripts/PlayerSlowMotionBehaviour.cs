@@ -59,29 +59,17 @@ namespace Perigon.Character
         private void StartSlowMotion()
         {
             _isSlowMotionActive = true;
-            if (_timeScaleTween.IsActive())
-            {
-                _timeScaleTween.Kill();
-            }
-
-            _timeScaleTween = DOTween.Sequence();
-            _timeScaleTween.Append(DOTween.To(() => CurrentTimeScale,
-                SetTimeScale,
-                _targetTimeScale,
-                _tweenDuration));
-            if (_postProcessingVolumeWeightTool != null)
-            {
-                _timeScaleTween.Join(_postProcessingVolumeWeightTool.Distort());
-            }
-
-            _timeScaleTween.timeScale = 1f;
-            _timeScaleTween.Play();
-
+            SetupSlowMotionTweens(_targetTimeScale, tool => tool.Distort());
         }
 
         private void StopSlowMotion()
         {
             _isSlowMotionActive = false;
+            SetupSlowMotionTweens(DEFAULT_TIME_SCALE, tool => tool.Revert());
+        }
+
+        private void SetupSlowMotionTweens(float targetVal, Func<PostProcessingVolumeWeightTool, Tweener> postProcessingFunc)
+        {
             if (_timeScaleTween.IsActive())
             {
                 _timeScaleTween.Kill();
@@ -89,11 +77,11 @@ namespace Perigon.Character
             _timeScaleTween = DOTween.Sequence();
             _timeScaleTween.Append(DOTween.To(() => CurrentTimeScale, 
                 SetTimeScale, 
-                DEFAULT_TIME_SCALE,
+                targetVal,
                 _tweenDuration));
             if (_postProcessingVolumeWeightTool != null)
             {
-                _timeScaleTween.Join(_postProcessingVolumeWeightTool.Revert());
+                _timeScaleTween.Join(postProcessingFunc(_postProcessingVolumeWeightTool));
             }
             _timeScaleTween.timeScale = 1f;
             _timeScaleTween.Play();
