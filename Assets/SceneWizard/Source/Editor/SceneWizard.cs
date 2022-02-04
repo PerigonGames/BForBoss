@@ -9,8 +9,6 @@ using UnityEngine.SceneManagement;
 
 public class SceneWizard : EditorWindow
 {
-    private const string SCENEWIZARD_CONFIG_RELATIVE_PATH = "SceneWizard/SceneWizard_Config.asset";
-
     private static bool _needsToRefreshElements = false;
     
     private SceneWizardConfig _config;
@@ -19,18 +17,21 @@ public class SceneWizard : EditorWindow
     [MenuItem("BForBoss/SceneSwitcher")]
     private static void Init()
     {
-        SceneWizard window = (SceneWizard)EditorWindow.GetWindow(typeof(SceneWizard));
-        EditorSceneManager.newSceneCreated += OnNewSceneCreated;
-        EditorSceneManager.sceneDirtied += OnSceneDirtied;
+        SceneWizard window = (SceneWizard)GetWindow(typeof(SceneWizard));
         window.Show();
     }
 
-    private static void OnSceneDirtied(Scene scene)
+    private void OnSceneDirtied(Scene scene)
     {
         _needsToRefreshElements = true;
     }
 
-    private static void OnNewSceneCreated(Scene scene, NewSceneSetup setup, NewSceneMode mode)
+    private void OnNewSceneCreated(Scene scene, NewSceneSetup setup, NewSceneMode mode)
+    {
+        _needsToRefreshElements = true;
+    }
+    
+    private void OnSceneSaved(Scene scene)
     {
         _needsToRefreshElements = true;
     }
@@ -43,10 +44,10 @@ public class SceneWizard : EditorWindow
         }
         
         
-        if (!File.Exists(Application.dataPath + "/" + SCENEWIZARD_CONFIG_RELATIVE_PATH))
+        if (!File.Exists(Application.dataPath + "/SceneWizard/SceneWizard_Config.asset"))
         {
             SceneWizardConfig newConfig = ScriptableObject.CreateInstance<SceneWizardConfig>();
-            AssetDatabase.CreateAsset(newConfig, "Assets/" + SCENEWIZARD_CONFIG_RELATIVE_PATH);
+            AssetDatabase.CreateAsset(newConfig, "Assets/SceneWizard/SceneWizard_Config.asset");
             AssetDatabase.SaveAssets();
 
             AssetDatabase.Refresh();
@@ -104,11 +105,6 @@ public class SceneWizard : EditorWindow
                 LoadFromPath(dir);
             }
         }
-    }
-
-    private void OnEnable()
-    {
-        RefreshElements();
     }
 
     private void OnFocus()
@@ -235,7 +231,17 @@ public class SceneWizard : EditorWindow
                             
                             if (GUILayout.Button("Open Single"))
                             {
-                                EditorSceneManager.OpenScene(scene.path, OpenSceneMode.Single);
+                                if (SceneManager.GetActiveScene().isDirty)
+                                {
+                                    if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                                    {
+                                        EditorSceneManager.OpenScene(scene.path, OpenSceneMode.Single);
+                                    }
+                                }
+                                else
+                                {
+                                    EditorSceneManager.OpenScene(scene.path, OpenSceneMode.Single);
+                                }
                             }
 
                             if (GUILayout.Button("Open Additively"))
@@ -251,9 +257,18 @@ public class SceneWizard : EditorWindow
         GUI.skin.button.alignment = prevAlignment;
     }
 
+    private void OnEnable()
+    {
+        RefreshElements();
+        EditorSceneManager.newSceneCreated += OnNewSceneCreated;
+        EditorSceneManager.sceneDirtied += OnSceneDirtied;
+        EditorSceneManager.sceneSaved += OnSceneSaved;
+    }
+
     private void OnDestroy()
     {
         EditorSceneManager.newSceneCreated -= OnNewSceneCreated;
         EditorSceneManager.sceneDirtied -= OnSceneDirtied;
+        EditorSceneManager.sceneSaved -= OnSceneSaved;
     }
 }
