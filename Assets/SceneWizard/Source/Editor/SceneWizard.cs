@@ -21,17 +21,7 @@ public class SceneWizard : EditorWindow
         window.Show();
     }
 
-    private void OnSceneDirtied(Scene scene)
-    {
-        _needsToRefreshElements = true;
-    }
-
-    private void OnNewSceneCreated(Scene scene, NewSceneSetup setup, NewSceneMode mode)
-    {
-        _needsToRefreshElements = true;
-    }
-    
-    private void OnSceneSaved(Scene scene)
+    private void OnProjectChanged()
     {
         _needsToRefreshElements = true;
     }
@@ -42,7 +32,6 @@ public class SceneWizard : EditorWindow
         {
             return;
         }
-        
         
         if (!File.Exists(Application.dataPath + "/SceneWizard/SceneWizard_Config.asset"))
         {
@@ -260,15 +249,11 @@ public class SceneWizard : EditorWindow
     private void OnEnable()
     {
         RefreshElements();
-        EditorSceneManager.newSceneCreated += OnNewSceneCreated;
-        EditorSceneManager.sceneDirtied += OnSceneDirtied;
-        EditorSceneManager.sceneSaved += OnSceneSaved;
+        EditorApplication.projectChanged += OnProjectChanged;
     }
 
     private void OnDestroy()
     {
-        EditorSceneManager.newSceneCreated -= OnNewSceneCreated;
-        EditorSceneManager.sceneDirtied -= OnSceneDirtied;
-        EditorSceneManager.sceneSaved -= OnSceneSaved;
+        EditorApplication.projectChanged -= OnProjectChanged;
     }
 }
