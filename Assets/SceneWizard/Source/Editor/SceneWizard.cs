@@ -3,50 +3,70 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using PerigonGames;
+using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 
 public class SceneWizard : EditorWindow
 {
-    SceneWizardConfig config;
+    private const string SCENEWIZARD_CONFIG_RELATIVE_PATH = "SceneWizard/SceneWizard_Config.asset";
 
-    Vector2 scrollView;
+    private static bool _needsToRefreshElements = false;
+    
+    private SceneWizardConfig _config;
+    private Vector2 _scrollView;
 
-    [MenuItem("Window/EMD Tools/Scene Wizard")]
-    static void Init()
+    [MenuItem("BForBoss/SceneSwitcher")]
+    private static void Init()
     {
-        // Get existing open window or if none, make a new one:
         SceneWizard window = (SceneWizard)EditorWindow.GetWindow(typeof(SceneWizard));
+        EditorSceneManager.newSceneCreated += OnNewSceneCreated;
+        EditorSceneManager.sceneDirtied += OnSceneDirtied;
         window.Show();
     }
 
-    void RefreshConfig()
+    private static void OnSceneDirtied(Scene scene)
     {
-        if (config == null)
+        _needsToRefreshElements = true;
+    }
+
+    private static void OnNewSceneCreated(Scene scene, NewSceneSetup setup, NewSceneMode mode)
+    {
+        _needsToRefreshElements = true;
+    }
+
+    private void RefreshConfig()
+    {
+        if (_config != null)
         {
-            if (!File.Exists(Application.dataPath + "/SceneWizard/SceneWizard_Config.asset"))
-            {
-                SceneWizardConfig newConfig = ScriptableObject.CreateInstance<SceneWizardConfig>();
-                AssetDatabase.CreateAsset(newConfig, "Assets/SceneWizard/SceneWizard_Config.asset");
-                AssetDatabase.SaveAssets();
+            return;
+        }
+        
+        
+        if (!File.Exists(Application.dataPath + "/" + SCENEWIZARD_CONFIG_RELATIVE_PATH))
+        {
+            SceneWizardConfig newConfig = ScriptableObject.CreateInstance<SceneWizardConfig>();
+            AssetDatabase.CreateAsset(newConfig, "Assets/" + SCENEWIZARD_CONFIG_RELATIVE_PATH);
+            AssetDatabase.SaveAssets();
 
-                AssetDatabase.Refresh();
-            }
+            AssetDatabase.Refresh();
+        }
 
-            var foundAssets = AssetDatabase.FindAssets("SceneWizard_Config", new[] { "Assets/" });
-            if (foundAssets.Length > 0)
-            {
-                string path = AssetDatabase.GUIDToAssetPath(foundAssets[0]);
-                config = AssetDatabase.LoadAssetAtPath<SceneWizardConfig>(path);
-            }
+        string[] foundAssets = AssetDatabase.FindAssets("SceneWizard_Config", new[] { "Assets/" });
+        if (foundAssets.Length > 0)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(foundAssets[0]);
+            _config = AssetDatabase.LoadAssetAtPath<SceneWizardConfig>(path);
         }
     }
 
-    void ReloadScenes()
+    private void ReloadScenes()
     {
-        config.scenes = new List<SceneConfigSetup>();
-        LoadFromPath(config.folderPath);
+        _config.scenes = new List<SceneConfigSetup>();
+        LoadFromPath(_config.folderPath);
     }
 
-    void LoadFromPath(string path)
+    private void LoadFromPath(string path)
     {
         if (string.IsNullOrEmpty(path)) return;
 
@@ -55,7 +75,6 @@ public class SceneWizard : EditorWindow
         {
             if (fp.Contains(".unity"))
             {
-                //string[] splits = fp.Split(new string[] {"Assets"}, StringSplitOptions.None);
                 var assetPath = "Assets" + fp.Split(new string[] {"Assets"}, StringSplitOptions.None)[1];
 
                 var sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(assetPath);
@@ -71,16 +90,16 @@ public class SceneWizard : EditorWindow
                         parentFolder = pathSplit[pathSplit.Length - 2]
                     };
 
-                    config.scenes.Add(scs);
+                    _config.scenes.Add(scs);
                 }
             }
         }
 
 
-        if (config.allowSubfolders)
+        if (_config.allowSubfolders)
         {
             string[] dirs = Directory.GetDirectories(path);
-            foreach (var dir in dirs)
+            foreach (string dir in dirs)
             {
                 LoadFromPath(dir);
             }
@@ -89,11 +108,19 @@ public class SceneWizard : EditorWindow
 
     private void OnEnable()
     {
-        RefreshConfig();
-        ReloadScenes();
+        RefreshElements();
     }
 
     private void OnFocus()
+    {
+        if (_needsToRefreshElements)
+        {
+            RefreshElements();
+            _needsToRefreshElements = false;
+        }
+    }
+
+    private void RefreshElements()
     {
         RefreshConfig();
         ReloadScenes();
@@ -101,119 +128,132 @@ public class SceneWizard : EditorWindow
 
     private void OnGUI()
     {
+        if (_needsToRefreshElements)
+        {
+            RefreshElements();
+            _needsToRefreshElements = false;
+        }
+        
         GUILayout.Space(10);
         GUILayout.Label("Scene Wizard", EditorStyles.boldLabel);
 
         GUILayout.Space(20);
-        RefreshConfig();
-        ReloadScenes();
 
-        var prevAlignment = GUI.skin.button.alignment;
+        TextAnchor prevAlignment = GUI.skin.button.alignment;
         GUI.skin.button.alignment = TextAnchor.MiddleCenter;
-
-        EditorGUILayout.BeginVertical(GUI.skin.box);
-
-        EditorGUILayout.BeginHorizontal(GUI.skin.box);
-        if (config.folderPath == "" || config.folderPath == null)
+        
+        using (new EditorGUILayout.VerticalScope(GUI.skin.box))
         {
-            if (GUILayout.Button("Select a folder"))
-            {
-                // EditorUtility.DisplayDialog("Select Folder", "You must select a folder first!", "OK");
 
-                string path = EditorUtility.OpenFolderPanel("Select a folder to load Scenes from", "", "");
-                config.folderPath = path;
-            }
-        }
-        else
-        {
-            if (GUILayout.Button("Change folder"))
+            using (new EditorGUILayout.HorizontalScope(GUI.skin.box))
             {
-                // EditorUtility.DisplayDialog("Select Folder", "You must select a folder first!", "OK");
-                string path = EditorUtility.OpenFolderPanel("Select a folder to load Scenes from", "", "");
-
-                if (!string.IsNullOrEmpty(path))
+                if (string.IsNullOrEmpty(_config.folderPath))
                 {
-                    config.folderPath = path;
-                    config.scenes = new List<SceneConfigSetup>();
+                    if (GUILayout.Button("Select a folder"))
+                    {
+                        string path = EditorUtility.OpenFolderPanel("Select a folder to load Scenes from", "", "");
+                        _config.folderPath = path;
+                    }
+                }
+                else
+                {
+                    if (GUILayout.Button("Change folder"))
+                    {
+                        string path = EditorUtility.OpenFolderPanel("Select a folder to load Scenes from", "", "");
+
+                        if (!string.IsNullOrEmpty(path))
+                        {
+                            _config.folderPath = path;
+                            _config.scenes = new List<SceneConfigSetup>();
+                            _needsToRefreshElements = true;
+                        }
+                    }
+
+                    if (GUILayout.Button("Refresh"))
+                    {
+                        ReloadScenes();
+                    }
+
+                    if (GUILayout.Button("Clear"))
+                    {
+                        _config.folderPath = string.Empty;
+                        _config.scenes = new List<SceneConfigSetup>();
+                    }
                 }
             }
 
-            if (config.scenes == null || config.scenes.Count <= 0)
+            using (var changeCheckScope = new EditorGUI.ChangeCheckScope())
             {
-                ReloadScenes();
-            }
-            if (GUILayout.Button("Refresh"))
-            {
-                ReloadScenes();
-            }
+                _config.allowSubfolders = EditorGUILayout.Toggle("Allow Subfolders", _config.allowSubfolders);
 
-            if (GUILayout.Button("Clear"))
-            {
-                config.folderPath = "";
-                config.scenes = new List<SceneConfigSetup>();
+                if (changeCheckScope.changed)
+                {
+                    _needsToRefreshElements = true;
+                }
             }
         }
-
-
-        EditorGUILayout.EndHorizontal();
-
-        config.allowSubfolders = EditorGUILayout.Toggle("Allow Subfolders", config.allowSubfolders);
-
-        EditorGUILayout.EndVertical();
-
-
-        if (config.scenes != null && config.scenes.Count > 0)
+        
+        if (!_config.scenes.IsNullOrEmpty())
         {
-            string lastFolderName = "";
+            string lastFolderName = string.Empty;
             GUILayout.Space(15);
-
-            EditorGUILayout.BeginVertical(GUI.skin.box);
-            scrollView = EditorGUILayout.BeginScrollView(scrollView, GUILayout.Height(position.height * 0.6f));
-
-            EditorGUI.indentLevel++;
-            foreach (var scene in config.scenes)
+            
+            using (new EditorGUILayout.VerticalScope(GUI.skin.box))
             {
-                if (scene.parentFolder != lastFolderName)
+                using (var scrollViewScope = new EditorGUILayout.ScrollViewScope(_scrollView))
                 {
-                    if (lastFolderName != "")
-                        GUILayout.Space(8);
-
-                    EditorGUI.indentLevel--;
-
-                    EditorGUILayout.BeginHorizontal(GUI.skin.box);
-                    GUILayout.Label(scene.parentFolder, EditorStyles.boldLabel);
-                    EditorGUILayout.EndHorizontal();
-                    lastFolderName = scene.parentFolder;
+                    _scrollView = scrollViewScope.scrollPosition;
                     EditorGUI.indentLevel++;
+                    foreach (var scene in _config.scenes)
+                    {
+                        if (scene.parentFolder != lastFolderName)
+                        {
+                            if (string.IsNullOrEmpty(lastFolderName))
+                            {
+                                GUILayout.Space(8);
+                            }
+
+                            EditorGUI.indentLevel--;
+                            
+                            using (new EditorGUILayout.HorizontalScope(GUI.skin.box))
+                            {
+                                GUILayout.Label(scene.parentFolder, EditorStyles.boldLabel);
+                            }
+                            
+                            lastFolderName = scene.parentFolder;
+                            EditorGUI.indentLevel++;
+                        }
+                
+                        using (new EditorGUILayout.HorizontalScope())
+                        {
+                            SceneAsset sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(scene.path);
+                            
+                            using (new EditorGUI.DisabledGroupScope(true))
+                            {
+                                EditorGUILayout.ObjectField(GUIContent.none, sceneLoaded, typeof(SceneAsset), false);
+                            }
+                            
+                            if (GUILayout.Button("Open Single"))
+                            {
+                                EditorSceneManager.OpenScene(scene.path, OpenSceneMode.Single);
+                            }
+
+                            if (GUILayout.Button("Open Additively"))
+                            {
+                                EditorSceneManager.OpenScene(scene.path, OpenSceneMode.Additive);
+                            }
+                        }
+                    }
                 }
-
-                EditorGUILayout.BeginHorizontal();
-
-                //    EditorGUILayout.LabelField(scene.name + " : ");
-                var sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(scene.path);
-                EditorGUI.BeginDisabledGroup(true);
-                EditorGUILayout.ObjectField(GUIContent.none, sceneLoaded, typeof(SceneAsset), false);
-                EditorGUI.EndDisabledGroup();
-
-
-                if (GUILayout.Button("Open Single"))
-                {
-                    UnityEditor.SceneManagement.EditorSceneManager.OpenScene(scene.path, UnityEditor.SceneManagement.OpenSceneMode.Single);
-                }
-
-                if (GUILayout.Button("Open Additively"))
-                {
-                    UnityEditor.SceneManagement.EditorSceneManager.OpenScene(scene.path, UnityEditor.SceneManagement.OpenSceneMode.Additive);
-                }
-
-                EditorGUILayout.EndHorizontal();
-
             }
-
-            EditorGUILayout.EndScrollView();
-            EditorGUILayout.EndVertical();
         }
 
         GUI.skin.button.alignment = prevAlignment;
+    }
+
+    private void OnDestroy()
+    {
+        EditorSceneManager.newSceneCreated -= OnNewSceneCreated;
+        EditorSceneManager.sceneDirtied -= OnSceneDirtied;
     }
 }
