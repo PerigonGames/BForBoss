@@ -50,7 +50,8 @@ namespace Perigon.Character
             if (!_isSlowMotionActive && callbackContext.started)
             {
                 StartSlowMotion();
-            }else if (_isSlowMotionActive && callbackContext.canceled)
+            }
+            else if (_isSlowMotionActive && callbackContext.canceled)
             {
                 StopSlowMotion();
             }
