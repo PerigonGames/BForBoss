@@ -14,12 +14,12 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
     private bool _needsToRefreshElements = false;
     
     private SceneWizardConfig _config;
-    private List<SceneConfigSetup> _favouriteSceneConfigs = new List<SceneConfigSetup>();
+    private List<SceneConfigSetup> _favoriteSceneConfigs = new List<SceneConfigSetup>();
     private SceneConfigSetup _currentSceneConfig;
     private Vector2 _scrollView;
 
-    private Texture2D _notFavouritedSymbol;
-    private Texture2D _favouritedSymbol;
+    private Texture2D _notFavouriteSymbol;
+    private Texture2D _favouriteSymbol;
 
     [MenuItem("BForBoss/SceneSwitcher")]
     private static void Init()
@@ -67,6 +67,7 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
     private void ReloadScenes()
     {
         _config.scenes = new List<SceneConfigSetup>();
+        _favoriteSceneConfigs = new List<SceneConfigSetup>();
         LoadFromPath(Application.dataPath);
     }
 
@@ -99,6 +100,11 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
                     if (string.Equals(SceneManager.GetActiveScene().path.Replace('/', '\\'), assetPath))
                     {
                         _currentSceneConfig = scs;
+                    }
+
+                    if (EditorPrefs.GetBool(scs.path, false))
+                    {
+                        _favoriteSceneConfigs.Add(scs);
                     }
 
                     _config.scenes.Add(scs);
@@ -159,19 +165,19 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
             }
             GUILayout.Space(15f);
             
-            if (!_favouriteSceneConfigs.IsNullOrEmpty())
+            if (!_favoriteSceneConfigs.IsNullOrEmpty())
             {
                 using (new EditorGUILayout.HorizontalScope(GUI.skin.box))
                 {
-                    GUILayout.Label(new GUIContent("Favourite Scenes", _favouritedSymbol), EditorStyles.boldLabel,
+                    GUILayout.Label(new GUIContent("Favourite Scenes", _favouriteSymbol), EditorStyles.boldLabel,
                         GUILayout.Height(EditorGUIUtility.singleLineHeight));
                 }
 
-                foreach (SceneConfigSetup sceneConfig in _favouriteSceneConfigs)
+                foreach (SceneConfigSetup sceneConfig in _favoriteSceneConfigs)
                 {
                     DrawSceneElement(sceneConfig, true);
                 }
-                
+
                 GUILayout.Space(15f);
             }
 
@@ -199,8 +205,6 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
             }
         }
     }
-
-    private bool tryout;
     
     private void DrawSceneElement(SceneConfigSetup scene, bool disableFavouriteToggle)
     {
@@ -210,18 +214,20 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
 
             using (new EditorGUI.DisabledGroupScope(disableFavouriteToggle))
             {
-                if (GUILayout.Button(scene.IsFavouriteScene ? _favouritedSymbol : _notFavouritedSymbol, GUIStyle.none,
+                bool isFavoriteScene = EditorPrefs.GetBool(scene.path, false);
+                
+                if (GUILayout.Button(isFavoriteScene ? _favouriteSymbol : _notFavouriteSymbol, GUIStyle.none,
                     GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20f), GUILayout.ExpandHeight(true)))
                 {
-                    scene.IsFavouriteScene = !scene.IsFavouriteScene;
-
-                    if (scene.IsFavouriteScene)
+                    if (!isFavoriteScene)
                     {
-                        _favouriteSceneConfigs.Add(scene);
+                        EditorPrefs.SetBool(scene.path, true);
+                        _favoriteSceneConfigs.Add(scene);
                     }
                     else
                     {
-                        _favouriteSceneConfigs.Remove(scene);
+                        EditorPrefs.DeleteKey(scene.path);
+                        _favoriteSceneConfigs.Remove(scene);
                     }
                 }
             }
@@ -264,17 +270,17 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
 
     private void LoadSymbols()
     {
-        _notFavouritedSymbol = EditorGUIUtility.IconContent("d_Favorite On Icon").image as Texture2D;
-        _favouritedSymbol = EditorGUIUtility.IconContent("d_Favorite Icon").image as Texture2D;
+        _notFavouriteSymbol = EditorGUIUtility.IconContent("d_Favorite On Icon").image as Texture2D;
+        _favouriteSymbol = EditorGUIUtility.IconContent("d_Favorite Icon").image as Texture2D;
     }
-
+    
     private void OnEnable()
     {
         LoadSymbols();
         RefreshElements();
         EditorApplication.projectChanged += OnProjectChanged;
     }
-
+    
     private void OnDestroy()
     {
         EditorApplication.projectChanged -= OnProjectChanged;
