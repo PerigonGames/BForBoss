@@ -14,8 +14,12 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
     private bool _needsToRefreshElements = false;
     
     private SceneWizardConfig _config;
+    private List<SceneConfigSetup> _favouriteSceneConfigs = new List<SceneConfigSetup>();
     private SceneConfigSetup _currentSceneConfig;
     private Vector2 _scrollView;
+
+    private Texture2D _notFavouritedSymbol;
+    private Texture2D _favouritedSymbol;
 
     [MenuItem("BForBoss/SceneSwitcher")]
     private static void Init()
@@ -155,37 +159,73 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
             }
             GUILayout.Space(15f);
             
+            if (!_favouriteSceneConfigs.IsNullOrEmpty())
+            {
+                using (new EditorGUILayout.HorizontalScope(GUI.skin.box))
+                {
+                    GUILayout.Label(new GUIContent("Favourite Scenes", _favouritedSymbol), EditorStyles.boldLabel,
+                        GUILayout.Height(EditorGUIUtility.singleLineHeight));
+                }
+
+                foreach (SceneConfigSetup sceneConfig in _favouriteSceneConfigs)
+                {
+                    DrawSceneElement(sceneConfig, true);
+                }
+                
+                GUILayout.Space(15f);
+            }
+
             using (var scrollViewScope = new EditorGUILayout.ScrollViewScope(_scrollView))
             { 
                 _scrollView = scrollViewScope.scrollPosition;
-                EditorGUI.indentLevel++;
                 foreach (SceneConfigSetup scene in _config.scenes)
                 {
                     if (scene.parentFolder != lastFolderName)
                     {
-                        EditorGUI.indentLevel--;
+                        EditorGUI.indentLevel++;
                             
                         using (new EditorGUILayout.HorizontalScope(GUI.skin.box))
                         {
                             GUILayout.Label(scene.parentFolder, EditorStyles.boldLabel);
                         }
+
+                        EditorGUI.indentLevel--;
                             
                         lastFolderName = scene.parentFolder;
-                        EditorGUI.indentLevel++;
                     }
                     
-                    DrawSceneElement(scene);
+                    DrawSceneElement(scene, false);
                 }
             }
         }
     }
 
-    private void DrawSceneElement(SceneConfigSetup scene)
+    private bool tryout;
+    
+    private void DrawSceneElement(SceneConfigSetup scene, bool disableFavouriteToggle)
     {
         using (new EditorGUILayout.HorizontalScope())
         {
             SceneAsset sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(scene.path);
-                        
+
+            using (new EditorGUI.DisabledGroupScope(disableFavouriteToggle))
+            {
+                if (GUILayout.Button(scene.IsFavouriteScene ? _favouritedSymbol : _notFavouritedSymbol, GUIStyle.none,
+                    GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20f), GUILayout.ExpandHeight(true)))
+                {
+                    scene.IsFavouriteScene = !scene.IsFavouriteScene;
+
+                    if (scene.IsFavouriteScene)
+                    {
+                        _favouriteSceneConfigs.Add(scene);
+                    }
+                    else
+                    {
+                        _favouriteSceneConfigs.Remove(scene);
+                    }
+                }
+            }
+            
             using (new EditorGUI.DisabledGroupScope(true))
             {
                 Color defaultColor = GUI.color;
@@ -213,13 +253,6 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
             {
                 EditorSceneManager.OpenScene(scene.path, OpenSceneMode.Additive);
             }
-
-            if (GUILayout.Button("Ping Scene"))
-            {
-                Selection.activeObject = sceneLoaded;
-                EditorUtility.FocusProjectWindow();
-                EditorGUIUtility.PingObject(sceneLoaded);
-            }
         }
     }
     
@@ -229,8 +262,15 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
         _currentSceneConfig = sceneConfig;
     }
 
+    private void LoadSymbols()
+    {
+        _notFavouritedSymbol = EditorGUIUtility.IconContent("d_Favorite On Icon").image as Texture2D;
+        _favouritedSymbol = EditorGUIUtility.IconContent("d_Favorite Icon").image as Texture2D;
+    }
+
     private void OnEnable()
     {
+        LoadSymbols();
         RefreshElements();
         EditorApplication.projectChanged += OnProjectChanged;
     }

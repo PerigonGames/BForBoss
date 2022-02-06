@@ -7,6 +7,14 @@ public class SceneConfigSetup
     public string name;
     public string path;
     public string parentFolder;
+
+    private bool _isFavouriteScene = false;
+
+    public bool IsFavouriteScene
+    {
+        get => _isFavouriteScene;
+        set => _isFavouriteScene = value;
+    }
     
     public bool Equals(SceneConfigSetup other)
     {
