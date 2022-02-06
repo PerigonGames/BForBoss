@@ -9,10 +9,11 @@ using UnityEngine.SceneManagement;
 
 public class SceneWizard : EditorWindow, IHasCustomMenu
 {
-    private const string PROEJCT_NAME = "BForBoss/";
+    private const string PROEJCT_PARENT_FOLDER = "BForBoss/";
+    private const string PROJECT_NAME = "\\" + "_BForBoss";
     private const string SCENE_FILE_EXTENSION = ".unity";
+
     private bool _needsToRefreshElements = false;
-    
     private SceneWizardConfig _config;
     private List<SceneConfigSetup> _favoriteSceneConfigs = new List<SceneConfigSetup>();
     private SceneConfigSetup _currentSceneConfig;
@@ -26,7 +27,7 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
     {
         SceneWizard window = (SceneWizard)GetWindow(typeof(SceneWizard));
         window.titleContent = new GUIContent("Scene Switcher");
-        window.minSize = new Vector2(520, 600);
+        window.minSize = new Vector2(440, 350);
         window.Show();
     }
     
@@ -68,7 +69,7 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
     {
         _config.scenes = new List<SceneConfigSetup>();
         _favoriteSceneConfigs = new List<SceneConfigSetup>();
-        LoadFromPath(Application.dataPath);
+        LoadFromPath(Application.dataPath + PROJECT_NAME);
     }
 
     private void LoadFromPath(string path)
@@ -80,7 +81,7 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
         {
             if (fp.Contains(SCENE_FILE_EXTENSION))
             {
-                string assetPath = fp.Split(new string[] {PROEJCT_NAME}, StringSplitOptions.None)[1];
+                string assetPath = fp.Split(new string[] {PROEJCT_PARENT_FOLDER}, StringSplitOptions.None)[1];
                 
                 SceneAsset sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(assetPath);
 
@@ -203,6 +204,8 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
                     DrawSceneElement(scene, false);
                 }
             }
+            
+            GUILayout.Space(3f);
         }
     }
     
@@ -235,7 +238,7 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
             using (new EditorGUI.DisabledGroupScope(true))
             {
                 Color defaultColor = GUI.color;
-                GUI.color = _currentSceneConfig.Equals(scene) ? Color.green : defaultColor;
+                GUI.color = (_currentSceneConfig != null && _currentSceneConfig.Equals(scene)) ? Color.green : defaultColor;
                 EditorGUILayout.ObjectField(GUIContent.none, sceneLoaded, typeof(SceneAsset), false);
                 GUI.color = defaultColor;
             }
