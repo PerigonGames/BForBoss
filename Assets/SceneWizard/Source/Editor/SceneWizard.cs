@@ -9,9 +9,11 @@ using UnityEngine.SceneManagement;
 
 public class SceneWizard : EditorWindow
 {
-    private static bool _needsToRefreshElements = false;
+    private const string PROEJCT_NAME = "BForBoss/";
+    private bool _needsToRefreshElements = false;
     
     private SceneWizardConfig _config;
+    private SceneConfigSetup _currentSceneConfig;
     private Vector2 _scrollView;
 
     [MenuItem("BForBoss/SceneSwitcher")]
@@ -48,7 +50,7 @@ public class SceneWizard : EditorWindow
             string path = AssetDatabase.GUIDToAssetPath(foundAssets[0]);
             _config = AssetDatabase.LoadAssetAtPath<SceneWizardConfig>(path);
         }
-    }
+    }    
 
     private void ReloadScenes()
     {
@@ -61,24 +63,31 @@ public class SceneWizard : EditorWindow
         if (string.IsNullOrEmpty(path)) return;
 
         string[] files = Directory.GetFiles(path);
-        foreach (var fp in files)
+        foreach (string fp in files)
         {
             if (fp.Contains(".unity"))
             {
-                var assetPath = "Assets" + fp.Split(new string[] {"Assets"}, StringSplitOptions.None)[1];
-
-                var sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(assetPath);
+                string assetPath = fp.Split(new string[] {PROEJCT_NAME}, StringSplitOptions.None)[1];
+                
+                SceneAsset sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(assetPath);
 
                 if (sceneLoaded != null)
                 {
-                    var pathSplit = assetPath.Replace("\\", "/").Split('/');
+                    string relativeScenePathName = assetPath.Split(new string[] {"Assets" + "\\"}, StringSplitOptions.None)[1];
+                    int lastFolderCharacterIndex = relativeScenePathName.LastIndexOf('\\');
+                    string parentFolderName = relativeScenePathName.Remove(lastFolderCharacterIndex);
 
                     SceneConfigSetup scs = new SceneConfigSetup()
                     {
                         name = sceneLoaded.name,
                         path = assetPath,
-                        parentFolder = pathSplit[pathSplit.Length - 2]
+                        parentFolder = parentFolderName
                     };
+
+                    if (string.Equals(SceneManager.GetActiveScene().path.Replace('/', '\\'), assetPath))
+                    {
+                        _currentSceneConfig = scs;
+                    }
 
                     _config.scenes.Add(scs);
                 }
@@ -177,73 +186,84 @@ public class SceneWizard : EditorWindow
                 }
             }
         }
-        
-        if (!_config.scenes.IsNullOrEmpty())
+
+        if (_config.scenes.IsNullOrEmpty())
         {
-            string lastFolderName = string.Empty;
-            GUILayout.Space(15);
+            return;
+        }
+        
+        string lastFolderName = string.Empty;
+        GUILayout.Space(15);
             
-            using (new EditorGUILayout.VerticalScope(GUI.skin.box))
-            {
-                using (var scrollViewScope = new EditorGUILayout.ScrollViewScope(_scrollView))
+        using (new EditorGUILayout.VerticalScope(GUI.skin.box))
+        {
+            using (var scrollViewScope = new EditorGUILayout.ScrollViewScope(_scrollView))
+            { 
+                _scrollView = scrollViewScope.scrollPosition;
+                EditorGUI.indentLevel++;
+                foreach (SceneConfigSetup scene in _config.scenes)
                 {
-                    _scrollView = scrollViewScope.scrollPosition;
-                    EditorGUI.indentLevel++;
-                    foreach (var scene in _config.scenes)
+                    if (scene.parentFolder != lastFolderName)
                     {
-                        if (scene.parentFolder != lastFolderName)
+                        if (string.IsNullOrEmpty(lastFolderName))
                         {
-                            if (string.IsNullOrEmpty(lastFolderName))
-                            {
-                                GUILayout.Space(8);
-                            }
-
-                            EditorGUI.indentLevel--;
-                            
-                            using (new EditorGUILayout.HorizontalScope(GUI.skin.box))
-                            {
-                                GUILayout.Label(scene.parentFolder, EditorStyles.boldLabel);
-                            }
-                            
-                            lastFolderName = scene.parentFolder;
-                            EditorGUI.indentLevel++;
+                            GUILayout.Space(8);
                         }
-                
-                        using (new EditorGUILayout.HorizontalScope())
-                        {
-                            SceneAsset sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(scene.path);
-                            
-                            using (new EditorGUI.DisabledGroupScope(true))
-                            {
-                                EditorGUILayout.ObjectField(GUIContent.none, sceneLoaded, typeof(SceneAsset), false);
-                            }
-                            
-                            if (GUILayout.Button("Open Single"))
-                            {
-                                if (SceneManager.GetActiveScene().isDirty)
-                                {
-                                    if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
-                                    {
-                                        EditorSceneManager.OpenScene(scene.path, OpenSceneMode.Single);
-                                    }
-                                }
-                                else
-                                {
-                                    EditorSceneManager.OpenScene(scene.path, OpenSceneMode.Single);
-                                }
-                            }
 
-                            if (GUILayout.Button("Open Additively"))
-                            {
-                                EditorSceneManager.OpenScene(scene.path, OpenSceneMode.Additive);
+                        EditorGUI.indentLevel--;
+                            
+                        using (new EditorGUILayout.HorizontalScope(GUI.skin.box))
+                        {
+                            GUILayout.Label(scene.parentFolder, EditorStyles.boldLabel);
+                        }
+                            
+                        lastFolderName = scene.parentFolder;
+                        EditorGUI.indentLevel++;
+                    }
+                    
+                    using (new EditorGUILayout.HorizontalScope())
+                    {
+                        SceneAsset sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(scene.path);
+                        
+                        using (new EditorGUI.DisabledGroupScope(true))
+                        {
+                            Color defaultColor = GUI.color;
+                            GUI.color = _currentSceneConfig.Equals(scene) ? Color.green : defaultColor;
+                            EditorGUILayout.ObjectField(GUIContent.none, sceneLoaded, typeof(SceneAsset), false);
+                            GUI.color = defaultColor;
+                        }
+                            
+                        if (GUILayout.Button("Open Single"))
+                        { 
+                            if (SceneManager.GetActiveScene().isDirty) 
+                            { 
+                                if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) 
+                                { 
+                                   OpenSceneSingleMode(scene);
+                                }
                             }
+                            else
+                            {
+                                OpenSceneSingleMode(scene);
+                            }
+                        }
+
+                        if (GUILayout.Button("Open Additively"))
+                        {
+                            EditorSceneManager.OpenScene(scene.path, OpenSceneMode.Additive);
                         }
                     }
                 }
             }
         }
-
+        
         GUI.skin.button.alignment = prevAlignment;
+    }
+
+    private void OpenSceneSingleMode(SceneConfigSetup sceneConfig)
+    {
+        EditorSceneManager.OpenScene(sceneConfig.path, OpenSceneMode.Single);
+        _currentSceneConfig = sceneConfig;
     }
 
     private void OnEnable()
