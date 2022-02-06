@@ -16,7 +16,5 @@ public class SceneConfigSetup
 
 public class SceneWizardConfig : ScriptableObject
 {
-    public string folderPath;
-    public bool allowSubfolders;
     public List<SceneConfigSetup> scenes;
 }
