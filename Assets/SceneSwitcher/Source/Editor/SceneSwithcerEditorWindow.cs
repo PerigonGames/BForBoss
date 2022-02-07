@@ -7,14 +7,14 @@ using PerigonGames;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 
-public class SceneWizard : EditorWindow, IHasCustomMenu
+public class SceneSwithcerEditorWindow : EditorWindow, IHasCustomMenu
 {
     private const string PROEJCT_PARENT_FOLDER = "BForBoss/";
     private const string PROJECT_NAME = "\\" + "_BForBoss";
     private const string SCENE_FILE_EXTENSION = ".unity";
 
     private bool _needsToRefreshElements = false;
-    private SceneWizardConfig _config;
+    private List<SceneConfigSetup> _sceneConfigSetups = new List<SceneConfigSetup>();
     private List<SceneConfigSetup> _favoriteSceneConfigs = new List<SceneConfigSetup>();
     private SceneConfigSetup _currentSceneConfig;
     private Vector2 _scrollView;
@@ -25,7 +25,7 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
     [MenuItem("BForBoss/SceneSwitcher")]
     private static void Init()
     {
-        SceneWizard window = (SceneWizard)GetWindow(typeof(SceneWizard));
+        SceneSwithcerEditorWindow window = (SceneSwithcerEditorWindow)GetWindow(typeof(SceneSwithcerEditorWindow));
         window.titleContent = new GUIContent("Scene Switcher");
         window.minSize = new Vector2(440, 350);
         window.Show();
@@ -40,34 +40,10 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
     {
         _needsToRefreshElements = true;
     }
-
-    private void RefreshConfig()
-    {
-        if (_config != null)
-        {
-            return;
-        }
-        
-        if (!File.Exists(Application.dataPath + "/SceneWizard/SceneWizard_Config.asset"))
-        {
-            SceneWizardConfig newConfig = ScriptableObject.CreateInstance<SceneWizardConfig>();
-            AssetDatabase.CreateAsset(newConfig, "Assets/SceneWizard/SceneWizard_Config.asset");
-            AssetDatabase.SaveAssets();
-
-            AssetDatabase.Refresh();
-        }
-
-        string[] foundAssets = AssetDatabase.FindAssets("SceneWizard_Config", new[] { "Assets/" });
-        if (foundAssets.Length > 0)
-        {
-            string path = AssetDatabase.GUIDToAssetPath(foundAssets[0]);
-            _config = AssetDatabase.LoadAssetAtPath<SceneWizardConfig>(path);
-        }
-    }    
-
+    
     private void ReloadScenes()
     {
-        _config.scenes = new List<SceneConfigSetup>();
+        _sceneConfigSetups = new List<SceneConfigSetup>();
         _favoriteSceneConfigs = new List<SceneConfigSetup>();
         LoadFromPath(Application.dataPath + PROJECT_NAME);
     }
@@ -85,31 +61,32 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
                 
                 SceneAsset sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(assetPath);
 
-                if (sceneLoaded != null)
+                if (sceneLoaded == null)
                 {
-                    string relativeScenePathName = assetPath.Split(new string[] {"Assets" + "\\"}, StringSplitOptions.None)[1];
-                    int lastFolderCharacterIndex = relativeScenePathName.LastIndexOf('\\');
-                    string parentFolderName = relativeScenePathName.Remove(lastFolderCharacterIndex);
-
-                    SceneConfigSetup scs = new SceneConfigSetup()
-                    {
-                        name = sceneLoaded.name,
-                        path = assetPath,
-                        parentFolder = parentFolderName
-                    };
-
-                    if (string.Equals(SceneManager.GetActiveScene().path.Replace('/', '\\'), assetPath))
-                    {
-                        _currentSceneConfig = scs;
-                    }
-
-                    if (EditorPrefs.GetBool(scs.path, false))
-                    {
-                        _favoriteSceneConfigs.Add(scs);
-                    }
-
-                    _config.scenes.Add(scs);
+                    continue;
                 }
+                
+                string relativeScenePathName = assetPath.Split(new string[] {"Assets" + "\\"}, StringSplitOptions.None)[1];
+                int lastFolderCharacterIndex = relativeScenePathName.LastIndexOf('\\');
+                string parentFolderName = relativeScenePathName.Remove(lastFolderCharacterIndex);
+
+                SceneConfigSetup scs = new SceneConfigSetup()
+                {
+                    path = assetPath,
+                    parentFolder = parentFolderName
+                };
+
+                if (string.Equals(SceneManager.GetActiveScene().path.Replace('/', '\\'), assetPath))
+                {
+                    _currentSceneConfig = scs;
+                }
+
+                if (EditorPrefs.GetBool(scs.path, false))
+                {
+                    _favoriteSceneConfigs.Add(scs);
+                }
+                
+                _sceneConfigSetups.Add(scs);
             }
         }
 
@@ -124,26 +101,20 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
     {
         if (_needsToRefreshElements)
         {
-            RefreshElements();
+            ReloadScenes();
             _needsToRefreshElements = false;
         }
     }
-
-    private void RefreshElements()
-    {
-        RefreshConfig();
-        ReloadScenes();
-    }
-
+    
     private void OnGUI()
     {
         if (_needsToRefreshElements)
         {
-            RefreshElements();
+            ReloadScenes();
             _needsToRefreshElements = false;
         }
-        
-        if (_config.scenes.IsNullOrEmpty())
+
+        if (_sceneConfigSetups.IsNullOrEmpty())
         {
             return;
         }
@@ -185,7 +156,7 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
             using (var scrollViewScope = new EditorGUILayout.ScrollViewScope(_scrollView))
             { 
                 _scrollView = scrollViewScope.scrollPosition;
-                foreach (SceneConfigSetup scene in _config.scenes)
+                foreach (SceneConfigSetup scene in _sceneConfigSetups)
                 {
                     if (scene.parentFolder != lastFolderName)
                     {
@@ -280,7 +251,7 @@ public class SceneWizard : EditorWindow, IHasCustomMenu
     private void OnEnable()
     {
         LoadSymbols();
-        RefreshElements();
+        ReloadScenes();
         EditorApplication.projectChanged += OnProjectChanged;
     }
     
