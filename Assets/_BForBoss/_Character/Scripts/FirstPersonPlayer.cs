@@ -18,6 +18,7 @@ namespace Perigon.Character
         private PlayerDashBehaviour _dashBehaviour = null;
         private PlayerWallRunBehaviour _wallRunBehaviour = null;
         private PlayerSlideBehaviour _slideBehaviour = null;
+        private PlayerSlowMotionBehaviour _slowMotionBehaviour = null;
 
         [SerializeField] private bool _isThirdPerson = false;
 
@@ -80,6 +81,7 @@ namespace Perigon.Character
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();
             _wallRunBehaviour = GetComponent<PlayerWallRunBehaviour>();
             _slideBehaviour = GetComponent<PlayerSlideBehaviour>();
+            _slowMotionBehaviour = GetComponent<PlayerSlowMotionBehaviour>();
 
             _thirdPersonMask = camera.cullingMask;
 
@@ -97,7 +99,10 @@ namespace Perigon.Character
             {
                 _slideBehaviour.Initialize(this);
             }
-            _wallRunBehaviour?.Initialize(this, base.GetMovementInput, SetJumpCount);
+            if (_wallRunBehaviour != null)
+            {
+                _wallRunBehaviour.Initialize(this, base.GetMovementInput, SetJumpCount);
+            }
 
             TogglePlayerModel();
         }
@@ -109,6 +114,12 @@ namespace Perigon.Character
             {
                 InputAction dashInputAction = actions.FindAction("Dash");
                 _dashBehaviour.SetupPlayerInput(dashInputAction);
+            }
+
+            if (_slowMotionBehaviour != null)
+            {
+                var slowMoInput = actions.FindAction("SlowTime");
+                _slowMotionBehaviour.SetupPlayerInput(slowMoInput);
             }
         }
 
@@ -223,6 +234,10 @@ namespace Perigon.Character
             {
                 _dashBehaviour.OnOnDisable();
             }
+            if (_slowMotionBehaviour != null)
+            {
+                _slowMotionBehaviour.OnOnDisable();
+            }
         }
         
         protected override void OnOnEnable()
@@ -231,6 +246,10 @@ namespace Perigon.Character
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.OnOnEnable();
+            }
+            if (_slowMotionBehaviour != null)
+            {
+                _slowMotionBehaviour.OnOnEnable();
             }
         }
 
