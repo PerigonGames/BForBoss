@@ -66,7 +66,7 @@ public class SceneSwithcerEditorWindow : EditorWindow, IHasCustomMenu
                     continue;
                 }
                 
-                string relativeScenePathName = assetPath.Split(new string[] {"Assets" + "\\"}, StringSplitOptions.None)[1];
+                string relativeScenePathName = assetPath.Split(new string[] {"Assets" + PROJECT_NAME + "\\"}, StringSplitOptions.None)[1];
                 int lastFolderCharacterIndex = relativeScenePathName.LastIndexOf('\\');
                 string parentFolderName = relativeScenePathName.Remove(lastFolderCharacterIndex);
 
