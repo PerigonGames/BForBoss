@@ -37,19 +37,22 @@ namespace Perigon.Utility
 			this.buildObject = buildObject;
 			this.actionOnGet = actionOnGet;
 			this.actionOnRelease = actionOnRelease;
+			
+			SceneManager.activeSceneChanged += OnActiveSceneChanged;
 
 #if UNITY_2021_1_OR_NEWER
 			objectPool = new ObjectPool<T>(buildObject, actionOnGet, actionOnRelease);
 #endif
 		}
 
-        ~ObjectPooler()
+		~ObjectPooler()
         {
 #if UNITY_2021_1_OR_NEWER
 			objectPool.Dispose();
 #else
 			SceneManager.UnloadSceneAsync(poolScene); //destroys all objects in the pool
 			pool = null;
+			SceneManager.activeSceneChanged -= OnActiveSceneChanged;
 #endif
 		}
 
@@ -119,5 +122,10 @@ namespace Perigon.Utility
 			poolScene = SceneManager.CreateScene(name);
 		}
 #endif
+
+	    private void OnActiveSceneChanged(Scene oldScene, Scene newScene)
+	    {
+		    pool = null;
+	    }
 	}
 }
