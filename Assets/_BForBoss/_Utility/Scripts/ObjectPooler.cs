@@ -37,11 +37,11 @@ namespace Perigon.Utility
 			this.buildObject = buildObject;
 			this.actionOnGet = actionOnGet;
 			this.actionOnRelease = actionOnRelease;
-			
-			SceneManager.activeSceneChanged += OnActiveSceneChanged;
 
 #if UNITY_2021_1_OR_NEWER
 			objectPool = new ObjectPool<T>(buildObject, actionOnGet, actionOnRelease);
+#else 
+			SceneManager.activeSceneChanged += OnActiveSceneChanged;
 #endif
 		}
 
@@ -125,7 +125,9 @@ namespace Perigon.Utility
 
 	    private void OnActiveSceneChanged(Scene oldScene, Scene newScene)
 	    {
+#if !UNITY_2021_1_OR_NEWER
 		    pool = null;
+#endif
 	    }
 	}
 }
