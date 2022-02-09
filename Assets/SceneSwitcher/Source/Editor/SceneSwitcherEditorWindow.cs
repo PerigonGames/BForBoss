@@ -7,11 +7,13 @@ using PerigonGames;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 
-public class SceneSwithcerEditorWindow : EditorWindow, IHasCustomMenu
+public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
 {
-    private const string PROEJCT_PARENT_FOLDER = "BForBoss/";
+    private const string PROJECT_PARENT_FOLDER = "BForBoss/";
     private const string PROJECT_NAME = "\\" + "_BForBoss";
     private const string SCENE_FILE_EXTENSION = ".unity";
+    private const string NOT_FAVORITE_ICON_NAME = "d_Favorite On Icon";
+    private const string FAVORITE_ICON_NAME = "d_Favorite Icon";
 
     private bool _needsToRefreshElements = false;
     private List<SceneConfigSetup> _sceneConfigSetups = new List<SceneConfigSetup>();
@@ -25,7 +27,7 @@ public class SceneSwithcerEditorWindow : EditorWindow, IHasCustomMenu
     [MenuItem("BForBoss/SceneSwitcher")]
     private static void Init()
     {
-        SceneSwithcerEditorWindow window = (SceneSwithcerEditorWindow)GetWindow(typeof(SceneSwithcerEditorWindow));
+        SceneSwitcherEditorWindow window = (SceneSwitcherEditorWindow)GetWindow(typeof(SceneSwitcherEditorWindow));
         window.titleContent = new GUIContent("Scene Switcher");
         window.minSize = new Vector2(440, 350);
         window.Show();
@@ -57,7 +59,7 @@ public class SceneSwithcerEditorWindow : EditorWindow, IHasCustomMenu
         {
             if (fp.Contains(SCENE_FILE_EXTENSION))
             {
-                string assetPath = fp.Split(new string[] {PROEJCT_PARENT_FOLDER}, StringSplitOptions.None)[1];
+                string assetPath = fp.Split(new string[] {PROJECT_PARENT_FOLDER}, StringSplitOptions.None)[1];
                 
                 SceneAsset sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(assetPath);
 
@@ -244,8 +246,8 @@ public class SceneSwithcerEditorWindow : EditorWindow, IHasCustomMenu
 
     private void LoadSymbols()
     {
-        _notFavouriteSymbol = EditorGUIUtility.IconContent("d_Favorite On Icon").image as Texture2D;
-        _favouriteSymbol = EditorGUIUtility.IconContent("d_Favorite Icon").image as Texture2D;
+        _notFavouriteSymbol = EditorGUIUtility.IconContent(NOT_FAVORITE_ICON_NAME).image as Texture2D;
+        _favouriteSymbol = EditorGUIUtility.IconContent(FAVORITE_ICON_NAME).image as Texture2D;
     }
     
     private void OnEnable()
