@@ -24,7 +24,7 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
     private Texture2D _notFavouriteSymbol;
     private Texture2D _favouriteSymbol;
 
-    [MenuItem("BForBoss/SceneSwitcher")]
+    [MenuItem("Tools/SceneSwitcher")]
     private static void Init()
     {
         SceneSwitcherEditorWindow window = (SceneSwitcherEditorWindow)GetWindow(typeof(SceneSwitcherEditorWindow));
