@@ -46,6 +46,20 @@ namespace BForBoss
         {
             _timeManagerViewModel?.Update(Time.deltaTime);
         }
+
+        private void OnValidate()
+        {
+            if (_startingCheckpoint == null)
+            {
+                Debug.LogWarning("Starting Checkpoint missing from Time Manager");
+            }
+
+            if (_endingCheckpoint == null)
+            {
+                Debug.LogWarning("Ending Checkpoint missing from Time Manager");
+            }
+        }
+
         #endregion
     }
 
