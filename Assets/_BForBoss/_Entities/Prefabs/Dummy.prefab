@@ -276,7 +276,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _health: {fileID: 11400000, guid: 28e47defb68c3f1438ce87e9a9832e8a, type: 2}
   _healthbar: {fileID: 401769492}
-  _dissolveVFXDuration: 7.5
+  _dissolveVFXDuration: 1
 --- !u!143 &7367245696679564806
 CharacterController:
   m_ObjectHideFlags: 0
@@ -306,6 +306,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 9ea5627e0bd3bd945b61eb6e9a824fc2, type: 2}
+    - target: {fileID: -6057140222963153312, guid: 320b1c2af77554f99a1658df4a6d3d5c, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 320b1c2af77554f99a1658df4a6d3d5c, type: 3}
       propertyPath: m_RootOrder
       value: 0
