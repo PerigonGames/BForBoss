@@ -398,10 +398,10 @@ namespace ECM2.Characters
                 Vector2 controllerLookInput = GetControllerLookInput();
 
                 if (controllerLookInput.x != 0.0f)
-                    AddYawInput(controllerLookInput.x * characterLook.controllerHorizontalSensitivity * rotationRate * Time.deltaTime);
+                    AddYawInput(controllerLookInput.x * characterLook.controllerHorizontalSensitivity * rotationRate * Time.unscaledDeltaTime);
 
                 if (controllerLookInput.y != 0.0f)
-                    AddEyePitchInput(controllerLookInput.y * characterLook.controllerVerticalSensitivity * rotationRate * Time.deltaTime);
+                    AddEyePitchInput(controllerLookInput.y * characterLook.controllerVerticalSensitivity * rotationRate * Time.unscaledDeltaTime);
             }
         }
 

@@ -5,7 +5,7 @@ namespace BForBoss
 {
     public class TimeManager : MonoBehaviour
     {
-        [SerializeField] private Checkpoint _startingCheckpoint = null;
+        [SerializeField] private Checkpoint _timeStartingCheckpoint = null;
         [SerializeField] private Checkpoint _endingCheckpoint = null;
         private TimeManagerViewModel _timeManagerViewModel = null;
 
@@ -22,11 +22,11 @@ namespace BForBoss
         #region Mono
         private void Awake()
         {
-            _startingCheckpoint.OnEnterArea += HandleOnEnterStartingCheckpoint;
+            _timeStartingCheckpoint.OnEnterArea += HandleOnEnterTimeStartingCheckpoint;
             _endingCheckpoint.OnEnterArea += HandleOnEnterEndingCheckpoint;
         }
 
-        private void HandleOnEnterStartingCheckpoint(Checkpoint _)
+        private void HandleOnEnterTimeStartingCheckpoint(Checkpoint _)
         {
             _timeManagerViewModel.StartTimer();
         }
@@ -38,7 +38,7 @@ namespace BForBoss
 
         private void OnDestroy()
         {
-            _startingCheckpoint.OnEnterArea -= HandleOnEnterStartingCheckpoint;
+            _timeStartingCheckpoint.OnEnterArea -= HandleOnEnterTimeStartingCheckpoint;
             _endingCheckpoint.OnEnterArea -= HandleOnEnterEndingCheckpoint;
         }
 
@@ -46,6 +46,20 @@ namespace BForBoss
         {
             _timeManagerViewModel?.Update(Time.deltaTime);
         }
+
+        private void OnValidate()
+        {
+            if (_timeStartingCheckpoint == null)
+            {
+                Debug.LogWarning("Starting Checkpoint missing from Time Manager");
+            }
+
+            if (_endingCheckpoint == null)
+            {
+                Debug.LogWarning("Ending Checkpoint missing from Time Manager");
+            }
+        }
+
         #endregion
     }
 
