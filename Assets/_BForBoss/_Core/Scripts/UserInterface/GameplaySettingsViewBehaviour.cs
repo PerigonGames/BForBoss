@@ -1,5 +1,6 @@
 using Perigon.Analytics;
 using Perigon.Character;
+using Perigon.UserInterface;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,7 +9,7 @@ namespace BForBoss
 {
     public class GameplaySettingsViewBehaviour : MonoBehaviour
     {
-        [SerializeField] private TMP_Dropdown _povDropdown = null;
+        [SerializeField] private DropdownBehaviour _povDropdown = null;
         [SerializeField] private Toggle _showFPSToggle = null;
         [SerializeField] private Toggle _showRAMToggle = null;
         [SerializeField] private Toggle _showPCSpecsToggle = null;
@@ -64,6 +65,8 @@ namespace BForBoss
         {
             _viewModel.SetShowPCSpecifications(false);
             _viewModel.SetShowRAMUsage(false);
+            _viewModel.SetPOV(0);
+            _povDropdown.gameObject.SetActive(false);
             _showPCSpecsToggle.gameObject.SetActive(false);
             _showRAMToggle.gameObject.SetActive(false);
         }
