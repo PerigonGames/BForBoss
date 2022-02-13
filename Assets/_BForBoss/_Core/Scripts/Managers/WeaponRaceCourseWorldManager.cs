@@ -78,11 +78,6 @@ namespace BForBoss
             _timerView.Initialize(_timeManagerViewModel);
             _forcedUploadView.Initialize(_freezeActionsUtility);
         }
-        
-        private void OnApplicationQuit()
-        {
-            _perigonAnalytics.EndSession();
-        }
 
         protected override void HandleOnEndOfRace()
         {
@@ -122,6 +117,11 @@ namespace BForBoss
             {
                 Debug.LogWarning("Reload View missing from World Manager");
             }
+        }
+
+        private void OnApplicationQuit()
+        {
+            _perigonAnalytics.EndSession();
         }
     }
 }

@@ -1,13 +1,16 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
 public class LevelDesignFeedbackEditorWindow : EditorWindow
 {
-    private static LevelDesignFeedbackEditorWindow _window = null;
-
     private const float ELEMENT_SPACING = 5f;
     private const int NUMBER_OF_FEEDBACK_LINES = 5;
+
+    public Action OnWindowClose;
     
+    private static LevelDesignFeedbackEditorWindow _window = null;
+
     private Texture2D _image;
     private string _title;
     private string _feedback;
@@ -135,6 +138,11 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
         bool hasMouseClick = evt.GetTypeForControl(GUIUtility.GetControlID(FocusType.Passive, elementRect)) == EventType.MouseDown;
 
         return hasMouseClick && evt.button == 0 && evt.clickCount == 2 && elementRect.Contains(evt.mousePosition);
+    }
+
+    private void OnDestroy()
+    {
+        OnWindowClose?.Invoke();
     }
 }
 

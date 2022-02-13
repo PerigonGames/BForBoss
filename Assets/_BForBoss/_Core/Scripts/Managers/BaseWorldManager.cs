@@ -1,4 +1,5 @@
 
+using System;
 using Perigon.Character;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
@@ -127,5 +128,16 @@ namespace BForBoss
             _character.SpawnAt(SpawnLocation, SpawnLookDirection);
             _stateManager.SetState(State.Play);
         }
+
+#if UNITY_EDITOR
+        private void OnGUI()
+        {
+            Event evt = Event.current;
+            if (evt.isKey && evt.keyCode == LevelDesignFeedbackWindowListener.WindowKeyCode)
+            {
+                LevelDesignFeedbackWindowListener.OpenLevelDesignFeedbackWindow();
+            }
+        }
+#endif
     }
 }
