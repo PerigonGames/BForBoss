@@ -24,6 +24,8 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
         _window.maxSize = new Vector2(400, 700);
         _window.Show();
 
+        EditorApplication.isPaused = true;
+
         return _window;
     }
 
@@ -67,11 +69,11 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
 
             if (_image != null && WasElementDoubleClicked(previewImageRect))
             {
-                Debug.Log("How you Doing?");
                 // new SceneViewCameraWindow(SceneView.currentDrawingSceneView)
-                
-                PopupWindow.Show(previewImageRect, new FeedbackScreenshotEditContent(_image));
-                
+
+                FeedbackScreenShotEditContent imagePopupWindow = GetWindow<FeedbackScreenShotEditContent>();
+                imagePopupWindow.OnWindowClosed += OnImageEdited;
+                imagePopupWindow.OpenWindow(_image);
             }
             
             GUILayout.FlexibleSpace();
@@ -80,6 +82,11 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
 
         EditorGUILayout.Space(previewImageRect.y + previewImageRect.height);
         EditorGUILayout.Space(ELEMENT_SPACING);
+    }
+
+    private void OnImageEdited(Texture2D editedScreenShot)
+    {
+        _image = editedScreenShot;
     }
 
     private void DrawDescription()
@@ -138,28 +145,47 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
     }
 }
 
-public class FeedbackScreenshotEditContent : PopupWindowContent
+public class FeedbackScreenShotEditContent : EditorWindow
 {
-    private Texture2D _screenshot;
+    public Action<Texture2D> OnWindowClosed;
     
-    private readonly Vector2 _windowSize;
+    private Texture2D _screenShot = null;
+    private FeedbackScreenShotEditContent _window;
+    private bool _shouldCloseWindow = false;
 
-    public FeedbackScreenshotEditContent(Texture2D screenShot)
+    public void OpenWindow(Texture2D screenShot)
     {
-        _screenshot = screenShot;
-        
-        float popupWidth = ((float)Display.main.systemWidth / 2f) * EditorGUIUtility.pixelsPerPoint;
-        float popupHeight = ((float)Display.main.systemHeight / 2f) * EditorGUIUtility.pixelsPerPoint;
-        _windowSize = new Vector2(popupWidth, popupHeight);
+        _screenShot = screenShot;
+
+        _window = GetWindow<FeedbackScreenShotEditContent>();
+        _window.minSize = new Vector2(screenShot.width, screenShot.height);
+        _window.maxSize = _window.minSize;
+        _window.titleContent = new GUIContent("Edit ScreenShot");
+        _window.ShowPopup();
     }
 
-    public override void OnGUI(Rect rect)
+    private void OnGUI()
     {
+        if (_screenShot == null)
+        {
+            return;
+        }
+
+        if (_shouldCloseWindow)
+        {
+            Close();
+        }
         
+        EditorGUI.DrawPreviewTexture(new Rect(0,0,position.width,position.height), _screenShot);
     }
 
-    public override Vector2 GetWindowSize()
+    private void OnLostFocus()
     {
-        return _windowSize;
+        _shouldCloseWindow = true;
+    }
+
+    private void OnDestroy()
+    {
+        OnWindowClosed?.Invoke(_screenShot);
     }
 }

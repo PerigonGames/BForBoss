@@ -5,6 +5,8 @@ public static class LevelDesignFeedbackWindowListener
 {
     public static KeyCode WindowKeyCode = KeyCode.F10;
     private static LevelDesignFeedbackEditorWindow _window = null;
+
+    private static bool _isApplicationPaused = false;
     
     public static void OpenLevelDesignFeedbackWindow(Texture2D screenShot)
     {
@@ -20,10 +22,12 @@ public static class LevelDesignFeedbackWindowListener
     private static void OnWindowClosed()
     {
         _window = null;
+        EditorApplication.isPaused = _isApplicationPaused;
     }
 
     private static bool CanOpenFeedbackWindow()
     {
-        return (EditorApplication.isPlaying || EditorApplication.isPaused) && Application.isFocused;
+        _isApplicationPaused = EditorApplication.isPaused;
+        return (EditorApplication.isPlaying || _isApplicationPaused) && Application.isFocused;
     }
 }
