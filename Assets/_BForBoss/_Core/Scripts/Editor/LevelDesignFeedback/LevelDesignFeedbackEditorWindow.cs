@@ -7,22 +7,24 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
     private const float ELEMENT_SPACING = 5f;
     private const int NUMBER_OF_FEEDBACK_LINES = 5;
 
-    public Action OnWindowClose;
+    public Action OnWindowClosed;
     
     private static LevelDesignFeedbackEditorWindow _window = null;
 
-    private Texture2D _image;
+    private static Texture2D _image;
     private string _title;
     private string _feedback;
-
-    [MenuItem("BForBoss/Level Design/Add Feedback")]
-    public static void OpenWindow()
+    
+    public static LevelDesignFeedbackEditorWindow OpenWindow(Texture2D screenshot)
     {
+        _image = screenshot;
         _window = (LevelDesignFeedbackEditorWindow) GetWindow(typeof(LevelDesignFeedbackEditorWindow));
         _window.titleContent = new GUIContent("Add Level Design Feedback");
-        _window.minSize = new Vector2(250, 600);
-        _window.maxSize = new Vector2(400, 950);
+        _window.minSize = new Vector2(250, 500);
+        _window.maxSize = new Vector2(400, 700);
         _window.Show();
+
+        return _window;
     }
 
     private void OnGUI()
@@ -52,7 +54,7 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
         {
             GUILayout.FlexibleSpace();
                 
-            previewImageRect = new Rect(position.width * 0.05f,position.y, position.width * 0.9f, position.height * 0.4f);
+            previewImageRect = new Rect(position.width * 0.05f,position.height * 0.02f, position.width * 0.9f, position.height * 0.4f);
                 
             if (_image == null)
             {
@@ -60,10 +62,7 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
             }
             else
             {
-                Color guiColor = GUI.color;
-                GUI.color = Color.clear;
                 EditorGUI.DrawTextureTransparent(previewImageRect, _image, ScaleMode.ScaleToFit, 0);
-                GUI.color = guiColor;
             }
 
             if (_image != null && WasElementDoubleClicked(previewImageRect))
@@ -74,20 +73,13 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
                 PopupWindow.Show(previewImageRect, new FeedbackScreenshotEditContent(_image));
                 
             }
-
-            // if (Event.current.type == EventType.Repaint)
-            // {
-            //     previewImageRect = GUILayoutUtility.GetLastRect();
-            // }
-
+            
             GUILayout.FlexibleSpace();
         }
 
 
         EditorGUILayout.Space(previewImageRect.y + previewImageRect.height);
         EditorGUILayout.Space(ELEMENT_SPACING);
-
-        _image = (Texture2D) EditorGUILayout.ObjectField(_image, typeof(Texture2D), false);
     }
 
     private void DrawDescription()
@@ -142,7 +134,7 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
 
     private void OnDestroy()
     {
-        OnWindowClose?.Invoke();
+        OnWindowClosed?.Invoke();
     }
 }
 
