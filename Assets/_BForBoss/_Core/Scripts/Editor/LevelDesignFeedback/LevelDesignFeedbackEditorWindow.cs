@@ -151,7 +151,12 @@ public class FeedbackScreenShotEditContent : EditorWindow
     
     private Texture2D _screenShot = null;
     private FeedbackScreenShotEditContent _window;
+    
     private bool _shouldCloseWindow = false;
+    private bool _isBufferFrame = true;
+    
+    private Color _brushColor = Color.black;
+    private int _brushSize = 4;
 
     public void OpenWindow(Texture2D screenShot)
     {
@@ -161,6 +166,10 @@ public class FeedbackScreenShotEditContent : EditorWindow
         _window.minSize = new Vector2(screenShot.width, screenShot.height);
         _window.maxSize = _window.minSize;
         _window.titleContent = new GUIContent("Edit ScreenShot");
+
+        _window.wantsMouseMove = true;
+        _window.wantsMouseEnterLeaveWindow = true;
+        
         _window.ShowPopup();
     }
 
@@ -170,13 +179,55 @@ public class FeedbackScreenShotEditContent : EditorWindow
         {
             return;
         }
-
+        
+        if (_isBufferFrame)
+        {
+            _isBufferFrame = false;
+            return;
+        }
+        
         if (_shouldCloseWindow)
         {
             Close();
         }
         
         EditorGUI.DrawPreviewTexture(new Rect(0,0,position.width,position.height), _screenShot);
+
+        if (mouseOverWindow != this)
+        {
+            return;
+        }
+        
+        Event evt = Event.current;
+        if (evt.isMouse && evt.button == 0 && evt.type == EventType.MouseDrag)
+        {
+            Debug.Log(evt.mousePosition);
+            Vector2 mousePosition = evt.mousePosition;
+            Vector2Int relativeMousePosition = new Vector2Int((int)mousePosition.x, (int)(_screenShot.height - mousePosition.y));
+
+            for (int i = -2; i <= 2; i++)
+            {
+                if (i < 0 || i >= _screenShot.width)
+                {
+                    continue;
+                }
+                
+                for (int j = -2; j <= 2; j++)
+                {
+                    if (j < 0 || j >= _screenShot.height)
+                    {
+                        continue;
+                    }
+                    
+                    _screenShot.SetPixel(relativeMousePosition.x + i, relativeMousePosition.y + j, _brushColor);
+                }
+            }
+            
+            _screenShot.Apply();
+            
+            // _screenShot.SetPixel(relativeMousePosition.x, relativeMousePosition.y, _brushColor);
+            // _screenShot.Apply();
+        }
     }
 
     private void OnLostFocus()
