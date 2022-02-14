@@ -87,6 +87,7 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
     private void OnImageEdited(Texture2D editedScreenShot)
     {
         _image = editedScreenShot;
+        Repaint();
     }
 
     private void DrawDescription()
@@ -147,35 +148,47 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
 
 public class FeedbackScreenShotEditContent : EditorWindow
 {
+    private const int BRUSH_SIZE_OFFSET = 10;
+    private const float TOOLBAR_HEIGHT = 30f;
+    
     public Action<Texture2D> OnWindowClosed;
     
-    private Texture2D _screenShot = null;
+    private Texture2D _originalScreenShot = null;
+    private Texture2D _editedScreenShot = null;
     private FeedbackScreenShotEditContent _window;
     
     private bool _shouldCloseWindow = false;
     private bool _isBufferFrame = true;
-    
+    private bool _drawThisFrame = false;
+
+    private Rect _screenShotRect;
     private Color _brushColor = Color.black;
-    private int _brushSize = 4;
+    private int _currentBrushIndex = 0;
+    private readonly string[] _brushSelections = new string[3] {"Small", "Medium", "Large"};
 
     public void OpenWindow(Texture2D screenShot)
     {
-        _screenShot = screenShot;
+        _originalScreenShot = screenShot;
+        _editedScreenShot = new Texture2D(screenShot.width, screenShot.height, TextureFormat.ARGB32, false);
+        _editedScreenShot.SetPixels(screenShot.GetPixels());
+        _editedScreenShot.Apply();
 
         _window = GetWindow<FeedbackScreenShotEditContent>();
-        _window.minSize = new Vector2(screenShot.width, screenShot.height);
+        _window.minSize = new Vector2(screenShot.width, screenShot.height + TOOLBAR_HEIGHT);
         _window.maxSize = _window.minSize;
         _window.titleContent = new GUIContent("Edit ScreenShot");
 
         _window.wantsMouseMove = true;
         _window.wantsMouseEnterLeaveWindow = true;
         
+        _screenShotRect = new Rect(0,0,screenShot.width, screenShot.height);
+        
         _window.ShowPopup();
     }
 
     private void OnGUI()
     {
-        if (_screenShot == null)
+        if (_originalScreenShot == null)
         {
             return;
         }
@@ -190,8 +203,18 @@ public class FeedbackScreenShotEditContent : EditorWindow
         {
             Close();
         }
-        
-        EditorGUI.DrawPreviewTexture(new Rect(0,0,position.width,position.height), _screenShot);
+
+        using (new EditorGUILayout.VerticalScope())
+        {
+            DrawScreenShotToEdit();
+            EditorGUILayout.Space(_editedScreenShot.height + 5f);
+            DrawToolbar();
+        }
+    }
+
+    private void DrawScreenShotToEdit()
+    {
+        EditorGUI.DrawPreviewTexture(_screenShotRect, _editedScreenShot);
 
         if (mouseOverWindow != this)
         {
@@ -199,44 +222,105 @@ public class FeedbackScreenShotEditContent : EditorWindow
         }
         
         Event evt = Event.current;
-        if (evt.isMouse && evt.button == 0 && evt.type == EventType.MouseDrag)
-        {
-            Debug.Log(evt.mousePosition);
-            Vector2 mousePosition = evt.mousePosition;
-            Vector2Int relativeMousePosition = new Vector2Int((int)mousePosition.x, (int)(_screenShot.height - mousePosition.y));
 
-            for (int i = -2; i <= 2; i++)
+        if (evt.isMouse && evt.button == 0)
+        {
+            if (!_screenShotRect.Contains(evt.mousePosition))
             {
-                if (i < 0 || i >= _screenShot.width)
+                return;
+            }
+            
+            switch (evt.type)
+            {
+                case EventType.MouseDown:
+                {
+                    _drawThisFrame = true;
+                    break;
+                }
+                case EventType.MouseUp:
+                {
+                    _drawThisFrame = false;
+                    break;
+                }
+            }
+        }
+
+        if (!_drawThisFrame)
+        {
+            return;
+        }
+        
+        Debug.Log(evt.mousePosition);
+        Vector2 mousePosition = evt.mousePosition;
+        Vector2Int relativeMousePosition = new Vector2Int((int)mousePosition.x, (int)(_editedScreenShot.height - mousePosition.y));
+
+        for (int i = -BRUSH_SIZE_OFFSET; i <= BRUSH_SIZE_OFFSET; i++)
+        {
+            if (i < 0 || i >= _editedScreenShot.width)
+            {
+                continue;
+            }
+                
+            for (int j = -BRUSH_SIZE_OFFSET; j <= BRUSH_SIZE_OFFSET; j++)
+            {
+                if (j < 0 || j >= _editedScreenShot.height)
                 {
                     continue;
                 }
-                
-                for (int j = -2; j <= 2; j++)
-                {
-                    if (j < 0 || j >= _screenShot.height)
-                    {
-                        continue;
-                    }
                     
-                    _screenShot.SetPixel(relativeMousePosition.x + i, relativeMousePosition.y + j, _brushColor);
-                }
+                _editedScreenShot.SetPixel(relativeMousePosition.x + i, relativeMousePosition.y + j, _brushColor);
             }
+        }
+        
+        _editedScreenShot.Apply();
+        Repaint();
+    }
+
+    private void DrawToolbar()
+    {
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            float originalLabelWidth = EditorGUIUtility.labelWidth;
+            EditorGUIUtility.labelWidth = 10f;
+            _brushColor = EditorGUILayout.ColorField("Brush Color", _brushColor);
+            _currentBrushIndex = EditorGUILayout.Popup("Brush Size", _currentBrushIndex, _brushSelections);
+            EditorGUIUtility.labelWidth = originalLabelWidth;
             
-            _screenShot.Apply();
-            
-            // _screenShot.SetPixel(relativeMousePosition.x, relativeMousePosition.y, _brushColor);
-            // _screenShot.Apply();
+            GUILayout.FlexibleSpace();
+
+            if (GUILayout.Button("Save Changes"))
+            {
+                SaveEditedChanges();
+            }
+
+            if (GUILayout.Button("Reset"))
+            {
+                Reset();
+            }
         }
     }
 
+    private void SaveEditedChanges()
+    {
+        _originalScreenShot = _editedScreenShot;
+        Close();
+    }
+
+    private void Reset()
+    {
+        _editedScreenShot = _originalScreenShot;
+    }
+    
     private void OnLostFocus()
     {
-        _shouldCloseWindow = true;
+        if (!position.Contains(Event.current.mousePosition))
+        {
+            _shouldCloseWindow = true;
+        }
     }
 
     private void OnDestroy()
     {
-        OnWindowClosed?.Invoke(_screenShot);
+        OnWindowClosed?.Invoke(_originalScreenShot);
     }
 }
