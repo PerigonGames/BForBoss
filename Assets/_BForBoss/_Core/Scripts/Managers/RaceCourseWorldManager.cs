@@ -20,7 +20,7 @@ namespace BForBoss
         [Title("Effects")] 
         [SerializeField] private Volume _deathVolume = null;
 
-        private readonly PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
+        private readonly BForBossAnalytics _analytics = BForBossAnalytics.Instance;
         private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
         private DetectInput _detectInput = new DetectInput(); //Placeholder, remove this after finishing the timed leader board stuff
         private readonly TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
@@ -48,7 +48,7 @@ namespace BForBoss
         protected override void Start()
         {
             base.Start();
-            _perigonAnalytics.StartSession(SystemInfo.deviceUniqueIdentifier);
+            _analytics.StartSession(SystemInfo.deviceUniqueIdentifier);
             _checkpointManager.Initialize(_detectInput, _timeManagerViewModel);
             _timeManager.Initialize(_timeManagerViewModel);
             
@@ -58,7 +58,7 @@ namespace BForBoss
         
         private void OnApplicationQuit()
         {
-            _perigonAnalytics.EndSession();
+            _analytics.EndSession();
         }
 
         protected override void HandleOnEndOfRace()
