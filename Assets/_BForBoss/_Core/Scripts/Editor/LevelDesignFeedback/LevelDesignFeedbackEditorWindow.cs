@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -175,9 +176,10 @@ public class FeedbackScreenShotEditContent : EditorWindow
         }
         
         _originalScreenShot = screenShot;
-        _editedScreenShot = new Texture2D(screenShot.width, screenShot.height, TextureFormat.ARGB32, false);
-        _editedScreenShot.SetPixels(screenShot.GetPixels());
-        _editedScreenShot.Apply();
+        // _editedScreenShot = new Texture2D(screenShot.width, screenShot.height, TextureFormat.ARGB32, false);
+        // _editedScreenShot.SetPixels(screenShot.GetPixels());
+        // _editedScreenShot.Apply();
+        _editedScreenShot = CreateTextureCopy(_originalScreenShot);
 
         Undo.undoRedoPerformed += OnUndoBrushStroke;
         
@@ -309,6 +311,15 @@ public class FeedbackScreenShotEditContent : EditorWindow
         }
     }
 
+    private Texture2D CreateTextureCopy(Texture2D sourceTexture)
+    {
+        Texture2D textureCopy = new Texture2D(sourceTexture.width, sourceTexture.height, TextureFormat.ARGB32, false);
+        textureCopy.SetPixels(sourceTexture.GetPixels());
+        textureCopy.Apply();
+
+        return textureCopy;
+    }
+
     private void SaveEditedChanges()
     {
         _originalScreenShot = _editedScreenShot;
@@ -317,8 +328,7 @@ public class FeedbackScreenShotEditContent : EditorWindow
 
     private void Reset()
     {
-        //Todo: Set like the Start of the window frame
-        _editedScreenShot = _originalScreenShot;
+        _editedScreenShot = CreateTextureCopy(_originalScreenShot);
     }
     
     private void OnUndoBrushStroke()
