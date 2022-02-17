@@ -1426,6 +1426,7 @@ GameObject:
   - component: {fileID: 1186343774}
   - component: {fileID: 1186343776}
   - component: {fileID: 1186343779}
+  - component: {fileID: 1186343773}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1433,6 +1434,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1186343773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1186343772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attenuationObject: {fileID: 0}
+  ListenerNumber: -1
 --- !u!20 &1186343774
 Camera:
   m_ObjectHideFlags: 0
@@ -1490,6 +1505,7 @@ Transform:
   - {fileID: 1701299479}
   - {fileID: 1377916568}
   - {fileID: 932950509}
+  - {fileID: 2147060744}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2991,6 +3007,68 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00e5aee5687379f4bb2a74ad9eba584c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &2147060743
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1186343775}
+    m_Modifications:
+    - target: {fileID: 4487985935521556028, guid: 11573bddbb798ce4cbf679504c131558, type: 3}
+      propertyPath: m_Name
+      value: BackgroundAudio
+      objectReference: {fileID: 0}
+    - target: {fileID: 4854057009780574128, guid: 11573bddbb798ce4cbf679504c131558, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4854057009780574128, guid: 11573bddbb798ce4cbf679504c131558, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4854057009780574128, guid: 11573bddbb798ce4cbf679504c131558, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4854057009780574128, guid: 11573bddbb798ce4cbf679504c131558, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4854057009780574128, guid: 11573bddbb798ce4cbf679504c131558, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4854057009780574128, guid: 11573bddbb798ce4cbf679504c131558, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4854057009780574128, guid: 11573bddbb798ce4cbf679504c131558, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4854057009780574128, guid: 11573bddbb798ce4cbf679504c131558, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4854057009780574128, guid: 11573bddbb798ce4cbf679504c131558, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4854057009780574128, guid: 11573bddbb798ce4cbf679504c131558, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4854057009780574128, guid: 11573bddbb798ce4cbf679504c131558, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 11573bddbb798ce4cbf679504c131558, type: 3}
+--- !u!4 &2147060744 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4854057009780574128, guid: 11573bddbb798ce4cbf679504c131558, type: 3}
+  m_PrefabInstance: {fileID: 2147060743}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3924296612262643077
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3040,7 +3118,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2061070007434329460, guid: c7cd698ab65444f38b1e49e2e17d8e9f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 192.99617
+      value: 186.72015
       objectReference: {fileID: 0}
     - target: {fileID: 3924296612012996776, guid: c7cd698ab65444f38b1e49e2e17d8e9f, type: 3}
       propertyPath: m_Name
