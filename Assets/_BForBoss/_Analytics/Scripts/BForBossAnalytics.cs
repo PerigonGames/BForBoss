@@ -19,7 +19,8 @@ namespace Perigon.Analytics
     public readonly struct EventConstant
     {
         public const String MS1_RaceCourse = "ms1_racecourse";
-        public const String MS2_Racecourse = "ms2_racecourse";
+        public const String MS2_RaceCourse = "ms2_racecourse";
+        public const string Weapons_RaceCourse = "weapons_racecourse";
         public const String Unknown = "unknown";
     }
     public readonly struct Profile
@@ -37,8 +38,9 @@ namespace Perigon.Analytics
     
     public enum WorldNameAnalyticsName
     {
-        MS1_Racecourse,
-        MS2_Racecourse,
+        MS1_RaceCourse,
+        MS2_RaceCourse,
+        Weapons_RaceCourse,
         Unknown
     }
     #endregion
@@ -126,10 +128,12 @@ namespace Perigon.Analytics
         {
             switch (world)
             {
-                case WorldNameAnalyticsName.MS1_Racecourse:
+                case WorldNameAnalyticsName.MS1_RaceCourse:
                     return EventConstant.MS1_RaceCourse;
-                case WorldNameAnalyticsName.MS2_Racecourse:
-                    return EventConstant.MS2_Racecourse;
+                case WorldNameAnalyticsName.MS2_RaceCourse:
+                    return EventConstant.MS2_RaceCourse;
+                case WorldNameAnalyticsName.Weapons_RaceCourse:
+                    return EventConstant.Weapons_RaceCourse;
                 default:
                     return EventConstant.Unknown;
             }
