@@ -14,7 +14,7 @@ namespace BForBoss
 
         protected override Vector3 SpawnLocation => Vector3.zero;
         protected override Quaternion SpawnLookDirection => Quaternion.identity;
-
+        
         protected override void Start()
         {
             base.Start();
@@ -22,6 +22,11 @@ namespace BForBoss
             _equipmentBehaviour.Initialize();
             _ammunitionCountView.Initialize(_equipmentBehaviour);
             _reloadView.Initialize(_equipmentBehaviour);
+        }
+        
+        protected override void SetupAnalytics()
+        {
+            // Not needed
         }
 
         protected override void OnValidate()

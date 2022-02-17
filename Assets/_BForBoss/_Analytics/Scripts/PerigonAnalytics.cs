@@ -9,8 +9,7 @@ namespace Perigon.Analytics
     {
         void StartSession(String uniqueId);
         void EndSession();
-        void LogEvent(String eventName);
-        void LogEventWithParams(String eventName, Hashtable parameters);
+        void LogEventWithParams(String eventName, Hashtable parameters = null);
         void ForceSendEvents();
         void SetUserProperties(Hashtable properties);
     }
@@ -20,20 +19,6 @@ namespace Perigon.Analytics
         private const String SessionStart = "$session_start";
         private const String SessionEnd = "$session_end";
         
-        private static readonly PerigonAnalytics _instance = new PerigonAnalytics();
-
-        public static PerigonAnalytics Instance => _instance;
-
-        #region CONSTRUCTORS / SETTERS
-        static PerigonAnalytics()
-        {
-        }
-
-        private PerigonAnalytics()
-        {
-        }
-        #endregion
-
         public void StartSession(String uniqueId)
         {
             Mixpanel.Identify(uniqueId);
@@ -46,15 +31,10 @@ namespace Perigon.Analytics
             Mixpanel.Flush();
         }
 
-        public void LogEvent(String eventName)
-        {
-            Mixpanel.Track(eventName);
-        }
-        
-        public void LogEventWithParams(String eventName, Hashtable parameters)
+        public void LogEventWithParams(String eventName, Hashtable parameters = null)
         {
             var props = new Value();
-            foreach (DictionaryEntry pair in parameters)
+            foreach (DictionaryEntry pair in parameters ?? new Hashtable())
             {
                 props[pair.Key.ToString()] = pair.Value.ToString();
             }

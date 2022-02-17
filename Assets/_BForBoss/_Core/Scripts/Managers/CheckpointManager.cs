@@ -10,8 +10,9 @@ namespace BForBoss
         [SerializeField] private Checkpoint _spawnPoint = null;
         [SerializeField] private Checkpoint[] _checkpoints = null;
         [SerializeField] private Checkpoint _endPoint = null;
-        private TimeManagerViewModel _timeManagerViewModel = null;
         private readonly BForBossAnalytics _analytics = BForBossAnalytics.Instance;
+        private WorldNameAnalyticsName _worldNameAnalytics = WorldNameAnalyticsName.Unknown;
+        private TimeManagerViewModel _timeManagerViewModel = null;
         private Checkpoint _activeCheckpoint = null;
         
         private DetectInput _detectInput = null;
@@ -19,8 +20,9 @@ namespace BForBoss
         public Vector3 CheckpointPosition => _activeCheckpoint == null ? _spawnPoint.transform.position : _activeCheckpoint.transform.position;
         public Quaternion CheckpointRotation => _activeCheckpoint == null ? _spawnPoint.transform.rotation : _activeCheckpoint.transform.rotation;
 
-        public void Initialize(DetectInput detectInput, TimeManagerViewModel timeManagerViewModel)
+        public void Initialize(DetectInput detectInput, TimeManagerViewModel timeManagerViewModel, WorldNameAnalyticsName world = WorldNameAnalyticsName.Unknown)
         {
+            _worldNameAnalytics = world;
             _detectInput = detectInput;
             if (_checkpoints.IsNullOrEmpty())
             {
@@ -59,7 +61,7 @@ namespace BForBoss
             _activeCheckpoint = checkpoint;
             _activeCheckpoint.SetCheckpoint();
             
-            _analytics.LogCheckpointEvent(_timeManagerViewModel.CurrentGameTime, _activeCheckpoint.name);
+            _analytics.LogCheckpointEvent(_worldNameAnalytics, _timeManagerViewModel.CurrentGameTime, _activeCheckpoint.name);
         }
 
         private void OnEnteredLastPoint(Checkpoint _)

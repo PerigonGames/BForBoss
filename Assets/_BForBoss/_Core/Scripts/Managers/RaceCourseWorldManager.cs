@@ -2,6 +2,7 @@ using Perigon.Analytics;
 using Perigon.Leaderboard;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -49,11 +50,16 @@ namespace BForBoss
         {
             base.Start();
             _analytics.StartSession(SystemInfo.deviceUniqueIdentifier);
-            _checkpointManager.Initialize(_detectInput, _timeManagerViewModel);
+            _checkpointManager.Initialize(_detectInput, _timeManagerViewModel, _worldNameAnalytics);
             _timeManager.Initialize(_timeManagerViewModel);
-            
             _timerView.Initialize(_timeManagerViewModel);
             _forcedUploadView.Initialize(_freezeActionsUtility);
+            SetupAnalytics();
+        }
+
+        protected override void SetupAnalytics()
+        {
+            FindObjectsOfType<DeathAreaBehaviour>().ForEach(area => area.Initialize(_worldNameAnalytics));
         }
         
         private void OnApplicationQuit()

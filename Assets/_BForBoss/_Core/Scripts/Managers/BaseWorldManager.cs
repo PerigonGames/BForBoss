@@ -1,4 +1,5 @@
 
+using Perigon.Analytics;
 using Perigon.Character;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
@@ -8,6 +9,9 @@ namespace BForBoss
 {
     public abstract class BaseWorldManager : MonoBehaviour
     {
+        [Title("Analytics")] 
+        [SerializeField]
+        protected WorldNameAnalyticsName _worldNameAnalytics = WorldNameAnalyticsName.Unknown;
         [Title("Base Component")] 
         [SerializeField] protected FirstPersonPlayer _player = null;
 
@@ -20,6 +24,7 @@ namespace BForBoss
 
         protected abstract Vector3 SpawnLocation { get; }
         protected abstract Quaternion SpawnLookDirection { get; }
+        protected abstract void SetupAnalytics();
 
         protected virtual void CleanUp()
         {

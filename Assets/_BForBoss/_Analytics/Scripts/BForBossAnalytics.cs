@@ -18,7 +18,9 @@ namespace Perigon.Analytics
     }
     public readonly struct EventConstant
     {
-        public const String RaceCourse = "racecourse";
+        public const String MS1_RaceCourse = "ms1_racecourse";
+        public const String MS2_Racecourse = "ms2_racecourse";
+        public const String Unknown = "unknown";
     }
     public readonly struct Profile
     {
@@ -32,14 +34,19 @@ namespace Perigon.Analytics
             public const string Inverted = "inverted";
         }
     }
+    
+    public enum WorldNameAnalyticsName
+    {
+        MS1_Racecourse,
+        MS2_Racecourse,
+        Unknown
+    }
     #endregion
    
     public interface IBForBossAnalytics
     {
-        void StartSession(string uniqueId);
-        void EndSession();
-        void LogDeathEvent(string deathAreaName);
-        void LogCheckpointEvent(float time, string checkpointName);
+        void LogDeathEvent(WorldNameAnalyticsName world, string deathAreaName);
+        void LogCheckpointEvent(WorldNameAnalyticsName world, float time, string checkpointName);
         void SetUsername(string username);
         void SetMouseKeyboardSettings(float horizontal, float vertical, bool isInverted);
         void SetControllerSettings(float horizontal, float vertical, bool isInverted);
@@ -47,7 +54,7 @@ namespace Perigon.Analytics
 
     public class BForBossAnalytics : IBForBossAnalytics
     {
-        private IPerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
+        private readonly IPerigonAnalytics _perigonAnalytics = new PerigonAnalytics();
         private static readonly BForBossAnalytics _instance = new BForBossAnalytics();
         public static BForBossAnalytics Instance => _instance;
 
@@ -86,20 +93,20 @@ namespace Perigon.Analytics
             _perigonAnalytics.SetUserProperties(properties);
         }
 
-        public void LogDeathEvent(string deathAreaName)
+        public void LogDeathEvent(WorldNameAnalyticsName world, string deathAreaName)
         {
             var deathArea = new Hashtable();
-            deathArea[EventAttribute.Course] = EventConstant.RaceCourse;
+            deathArea[EventAttribute.Course] = WorldEnumToAnalyticsValueMapper(world);
             deathArea[EventAttribute.Name] = deathAreaName;
             
             _perigonAnalytics.LogEventWithParams(Event.PlayerDeath, deathArea);
         }
 
-        public void LogCheckpointEvent(float time, string checkpointName)
+        public void LogCheckpointEvent(WorldNameAnalyticsName world, float time, string checkpointName)
         {
             var checkpoint = new Hashtable();
             checkpoint[EventAttribute.Time] = time;
-            checkpoint[EventAttribute.Course] = EventConstant.RaceCourse;
+            checkpoint[EventAttribute.Course] = WorldEnumToAnalyticsValueMapper(world);
             checkpoint[EventAttribute.Name] = checkpointName;
             
             _perigonAnalytics.LogEventWithParams(Event.CheckpointReached, checkpoint);
@@ -113,6 +120,19 @@ namespace Perigon.Analytics
         public void EndSession()
         {
             _perigonAnalytics.EndSession();
+        }
+
+        private string WorldEnumToAnalyticsValueMapper(WorldNameAnalyticsName world)
+        {
+            switch (world)
+            {
+                case WorldNameAnalyticsName.MS1_Racecourse:
+                    return EventConstant.MS1_RaceCourse;
+                case WorldNameAnalyticsName.MS2_Racecourse:
+                    return EventConstant.MS2_Racecourse;
+                default:
+                    return EventConstant.Unknown;
+            }
         }
     }
 }
