@@ -3,7 +3,7 @@ using Perigon.Analytics;
 
 namespace Tests
 {
-    public class MockAnalytics : IPerigonAnalytics
+    public class MockAnalytics : IBForBossAnalytics
     {
         public void StartSession(string uniqueId) {}
 
@@ -26,7 +26,6 @@ namespace Tests
         {
         }
 
-        public void SetControlSettings(float horizontalMouse, float verticalMouse, float horizontalController,
-            float verticalController, bool isInverted) { }
+        public void LogCheckpointEvent(float time, string checkpointName) { }
     }
 }

@@ -5,7 +5,7 @@ namespace BForBoss
 {
     public abstract class BaseInputSettingsViewModel
     {        
-        private readonly IPerigonAnalytics _perigonAnalytics = null;
+        private readonly IBForBossAnalytics _analytics = null;
         protected readonly IInputSettings _settings = null;
         
         public abstract float GetHorizontal { get; }
@@ -13,9 +13,9 @@ namespace BForBoss
         
         public bool GetIsInverted => _settings.IsInverted;
 
-        protected BaseInputSettingsViewModel(IInputSettings settings, IPerigonAnalytics analytics = null)
+        protected BaseInputSettingsViewModel(IInputSettings settings, IBForBossAnalytics analytics = null)
         {
-            _perigonAnalytics = analytics ?? PerigonAnalytics.Instance;
+            _analytics = analytics ?? BForBossAnalytics.Instance;
             _settings = settings;
             SetInputSettingsAnalytics();
         }
@@ -30,7 +30,7 @@ namespace BForBoss
         
         protected void SetInputSettingsAnalytics()
         {
-            _perigonAnalytics.SetMouseKeyboardSettings(
+            _analytics.SetMouseKeyboardSettings(
                 GetHorizontal,
                 GetVertical,
                 GetIsInverted);
