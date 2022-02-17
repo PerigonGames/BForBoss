@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -163,7 +162,7 @@ public class FeedbackScreenShotEditContent : EditorWindow
 
     private Rect _screenShotRect;
     private Color _brushColor = Color.black;
-    private int _currentBrushIndex = 0;
+    private int _currentBrushIndex = 1;
     private int _brushSize;
     private readonly string[] _brushSelections = new string[3] {"Small", "Medium", "Large"};
     private readonly int[] _brushSizes = new int[3] {4, 7, 10};
@@ -189,7 +188,7 @@ public class FeedbackScreenShotEditContent : EditorWindow
         _window.wantsMouseEnterLeaveWindow = true;
 
         _screenShotRect = new Rect(0,0,screenShot.width, screenShot.height);
-        
+
         _window.ShowPopup();
     }
 
@@ -226,6 +225,7 @@ public class FeedbackScreenShotEditContent : EditorWindow
             switch (evt.type)
             {
                 case EventType.MouseDown:
+                case EventType.MouseDrag:
                 {
                     _drawThisFrame = true;
                     break;
@@ -246,6 +246,7 @@ public class FeedbackScreenShotEditContent : EditorWindow
         Undo.RecordObject(_editedScreenShot, "ScreenShot Edit");
         
         _brushSize = _brushSizes[_currentBrushIndex];
+        Color[] pixels = _editedScreenShot.GetPixels();
         Vector2 mousePosition = evt.mousePosition;
         Vector2Int relativeMousePosition = new Vector2Int((int)mousePosition.x, (int)(_editedScreenShot.height - mousePosition.y));
         
@@ -256,12 +257,12 @@ public class FeedbackScreenShotEditContent : EditorWindow
             {
                 continue;
             }
-
+        
             if (centreXPoint >= _editedScreenShot.width)
             {
                 break;
             }
-
+        
             for (int j = -_brushSize; j <= _brushSize; j++)
             {
                 int centreYPoint = relativeMousePosition.y + j;
@@ -269,18 +270,19 @@ public class FeedbackScreenShotEditContent : EditorWindow
                 {
                     continue;
                 }
-
+        
                 if (centreYPoint >= _editedScreenShot.height)
                 {
                     break;
                 }
-                    
-                _editedScreenShot.SetPixel(centreXPoint, centreYPoint, _brushColor);
+
+                pixels[centreXPoint + (centreYPoint * _editedScreenShot.width)] = _brushColor;
             }
         }
         
+        _editedScreenShot.SetPixels(pixels);
         _editedScreenShot.Apply();
-        //Repaint();
+
         _forceRepaint = true;
     }
 
