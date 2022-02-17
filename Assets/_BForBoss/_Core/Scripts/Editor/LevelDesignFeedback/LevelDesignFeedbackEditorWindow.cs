@@ -176,9 +176,6 @@ public class FeedbackScreenShotEditContent : EditorWindow
         }
         
         _originalScreenShot = screenShot;
-        // _editedScreenShot = new Texture2D(screenShot.width, screenShot.height, TextureFormat.ARGB32, false);
-        // _editedScreenShot.SetPixels(screenShot.GetPixels());
-        // _editedScreenShot.Apply();
         _editedScreenShot = CreateTextureCopy(_originalScreenShot);
 
         Undo.undoRedoPerformed += OnUndoBrushStroke;
@@ -255,17 +252,27 @@ public class FeedbackScreenShotEditContent : EditorWindow
         for (int i = -_brushSize; i <= _brushSize; i++)
         {
             int centreXPoint = relativeMousePosition.x + i;
-            if (centreXPoint < 0 || centreXPoint >= _editedScreenShot.width)
+            if (centreXPoint < 0)
             {
                 continue;
             }
-                
+
+            if (centreXPoint >= _editedScreenShot.width)
+            {
+                break;
+            }
+
             for (int j = -_brushSize; j <= _brushSize; j++)
             {
                 int centreYPoint = relativeMousePosition.y + j;
-                if (centreYPoint < 0 || centreYPoint >= _editedScreenShot.height)
+                if (centreYPoint < 0)
                 {
                     continue;
+                }
+
+                if (centreYPoint >= _editedScreenShot.height)
+                {
+                    break;
                 }
                     
                 _editedScreenShot.SetPixel(centreXPoint, centreYPoint, _brushColor);
