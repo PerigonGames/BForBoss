@@ -5,7 +5,6 @@ namespace BForBoss
 {
     public class DeathAreaBehaviour : MonoBehaviour
     {
-        public const string PlayerDeath = "Player - Death";
         [SerializeField] private string _deathAreaName = "deathArea";
 
         private void OnCollisionEnter(Collision other)
