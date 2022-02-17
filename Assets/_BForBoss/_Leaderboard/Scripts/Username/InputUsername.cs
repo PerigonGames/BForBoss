@@ -9,13 +9,13 @@ namespace Perigon.Leaderboard
     public class InputUsername
     {
         public static readonly int CharacterLimit = 20;
-        private readonly IPerigonAnalytics _analytics = null;
+        private readonly IBForBossAnalytics _analytics = null;
         
         public string Username => PlayerPrefs.GetString(PlayerPrefKeys.LeaderboardSettings.USERNAME, "N/A");
         
-        public InputUsername(IPerigonAnalytics analytics = null)
+        public InputUsername(IBForBossAnalytics analytics = null)
         {
-            _analytics = analytics ?? PerigonAnalytics.Instance;
+            _analytics = analytics ?? BForBossAnalytics.Instance;
         }
 
         public void SetUserName(string username)
