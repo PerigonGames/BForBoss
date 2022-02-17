@@ -8,7 +8,7 @@ namespace BForBoss
         public override float GetHorizontal => _settings.ControllerHorizontalSensitivity;
         public override float GetVertical => _settings.ControllerVerticalSensitivity;
         
-        public ControllerInputSettingsViewModel(IInputSettings settings, IPerigonAnalytics analytics = null) : base(settings, analytics)
+        public ControllerInputSettingsViewModel(IInputSettings settings, IBForBossAnalytics analytics = null) : base(settings, analytics)
         {
         }
 

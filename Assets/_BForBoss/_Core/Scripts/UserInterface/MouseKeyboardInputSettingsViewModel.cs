@@ -8,7 +8,7 @@ namespace BForBoss
         public override float GetHorizontal => _settings.MouseHorizontalSensitivity;
         public override float GetVertical => _settings.MouseVerticalSensitivity;
         
-        public MouseKeyboardInputSettingsViewModel(IInputSettings settings, IPerigonAnalytics analytics = null) : base(settings, analytics)
+        public MouseKeyboardInputSettingsViewModel(IInputSettings settings, IBForBossAnalytics analytics = null) : base(settings, analytics)
         {
         }
 
