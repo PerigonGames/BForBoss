@@ -76,7 +76,6 @@ namespace BForBoss
     {
         private ISpecification _graphyManager = null;
         private IThirdPerson _thirdPersonSettings = null;
-        private readonly PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
         
         public bool IsThirdPersonView => _thirdPersonSettings.IsThirdPerson;
 
@@ -84,8 +83,6 @@ namespace BForBoss
         {
             _thirdPersonSettings = thirdPersonSettings;
             _graphyManager = specification ?? new GraphyAdapter();
-            
-            _perigonAnalytics.SetPOV(IsThirdPersonView);
         }
 
         public void SetShowFPS(bool isOn)
@@ -107,8 +104,6 @@ namespace BForBoss
         {
             var isThirdPerson = DropDownToIsThirdPerson(dropDownValue);
             _thirdPersonSettings.SetThirdPersonActive(isThirdPerson);
-            
-            _perigonAnalytics.SetPOV(isThirdPerson);
         }
 
         private bool DropDownToIsThirdPerson(int value)
