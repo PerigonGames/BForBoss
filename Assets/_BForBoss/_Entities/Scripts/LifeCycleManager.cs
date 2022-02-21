@@ -1,21 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace Perigon.Entities
 {
     public class LifeCycleManager : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
+        private LifeCycleBehaviour[] _lifeCycleBehaviours = null;
+
+        public int LivingEntities => _lifeCycleBehaviours.Count(life => life.IsAlive);
+
+        public void Initialize()
         {
-        
+            _lifeCycleBehaviours = FindObjectsOfType<LifeCycleBehaviour>();
         }
 
-        // Update is called once per frame
-        void Update()
+        public void Reset()
         {
-        
+            if (_lifeCycleBehaviours == null) return;
+            foreach (var lifeCycle in _lifeCycleBehaviours)
+            {
+                lifeCycle.Reset();
+            }
         }
     }
 }
