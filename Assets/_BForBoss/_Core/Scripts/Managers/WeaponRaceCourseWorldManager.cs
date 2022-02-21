@@ -1,11 +1,9 @@
-using System.Linq;
 using Perigon.Analytics;
 using Perigon.Entities;
 using Perigon.Leaderboard;
 using Perigon.Utility;
 using Perigon.Weapons;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.Rendering;
 
