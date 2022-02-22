@@ -5,8 +5,6 @@ namespace Perigon.Weapons
 {
     public class AutomaticWeaponBehaviour : WeaponBehaviour
     {
-        private bool _isFiring;
-        
         protected override void OnFireInputAction(InputAction.CallbackContext context)
         {
             if (context.started)
@@ -17,6 +15,7 @@ namespace Perigon.Weapons
             if (context.canceled)
             {
                 _isFiring = false;
+                _timeSinceFire = 0;
             }
         }
 
@@ -24,6 +23,7 @@ namespace Perigon.Weapons
         {
             if (_isFiring)
             {
+                _timeSinceFire += Time.deltaTime;
                 _weapon.FireIfPossible();
             }
             _weapon.DecrementElapsedTimeRateOfFire(Time.deltaTime);

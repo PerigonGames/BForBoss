@@ -15,6 +15,66 @@ MonoBehaviour:
   _nameOfWeapon: Scout Rifle
   _rateOfFire: 0.5
   _bulletSpread: 0
+  _bulletSpreadMultipler:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.31231806
+      value: 0.008393014
+      inSlope: 0.018632138
+      outSlope: 0.018632138
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.22391437
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.68578434
+      value: 0.102045976
+      inSlope: 0.55986863
+      outSlope: 0.55986863
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.5509575
+    - serializedVersion: 3
+      time: 0.82976824
+      value: 0.46065673
+      inSlope: 3.054532
+      outSlope: 3.054532
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.23981246
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 4.0127854
+      outSlope: 4.0127854
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.14646319
+    - serializedVersion: 3
+      time: 1.2116721
+      value: 0.680973
+      inSlope: 1.6267445
+      outSlope: 1.6267445
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   _reloadDuration: 2
   _bulletsPerShot: 1
   _ammunitionAmount: 20

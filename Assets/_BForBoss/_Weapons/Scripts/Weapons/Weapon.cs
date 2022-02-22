@@ -76,22 +76,24 @@ namespace Perigon.Weapons
              }
          }
          
-         public Vector3 GetShootDirection(Vector3 from, Vector3 to)
+         public Vector3 GetShootDirection(Vector3 from, Vector3 to, float timeSinceFiring)
          {
              var directionWithoutSpread = to - from;
-             var directionWithSpread = GenerateSpreadAngle() * directionWithoutSpread;
+             var directionWithSpread = GenerateSpreadAngle(timeSinceFiring) * directionWithoutSpread;
              return directionWithSpread.normalized;
          }
          
          public void FireIfPossible()
          {
-             if (CanShoot)
+             if (!CanShoot)
              {
-                 StopReloading();
-                 _ammunitionAmount--;
-                 ResetRateOfFire();
-                 Fire();
+                 return;
              }
+             
+             StopReloading();
+             _ammunitionAmount--;
+             ResetRateOfFire();
+             Fire();
          }
 
          private void ResetWeaponState()
@@ -111,9 +113,9 @@ namespace Perigon.Weapons
              OnFireWeapon?.Invoke(_weaponProperties.BulletsPerShot);
          }
 
-         private Quaternion GenerateSpreadAngle()
+         private Quaternion GenerateSpreadAngle(float timeSinceFiring)
          {
-             var spread = _weaponProperties.BulletSpread;
+             var spread = _weaponProperties.BulletSpread * _weaponProperties.GetBulletSpreadWeight(timeSinceFiring);
              var spreadRange = spread * MIN_TO_MAX_RANGE_OF_SPREAD;
              var randomizedSpread = -spread + (float)_randomUtility.NextDouble() * spreadRange;
              var randomizedDirection = new Vector3(
