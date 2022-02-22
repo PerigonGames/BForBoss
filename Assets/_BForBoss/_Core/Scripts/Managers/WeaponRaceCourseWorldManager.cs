@@ -67,7 +67,7 @@ namespace BForBoss
         {
             base.Start();
             _analytics.StartSession(SystemInfo.deviceUniqueIdentifier);
-            _checkpointManager.Initialize(_detectInput, _timeManagerViewModel, _worldNameAnalytics);
+            _checkpointManager.Initialize(_detectInput, _timeManagerViewModel);
             _timeManager.Initialize(_timeManagerViewModel);
             
             _weaponsManager.Initialize(new CharacterMovementWrapper(_player));

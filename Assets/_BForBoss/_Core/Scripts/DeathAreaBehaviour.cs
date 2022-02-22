@@ -6,7 +6,6 @@ namespace BForBoss
     public class DeathAreaBehaviour : MonoBehaviour
     {
         [SerializeField] private string _deathAreaName = "deathArea";
-        private WorldNameAnalyticsName _worldNameAnalytics = WorldNameAnalyticsName.Unknown;
         
         private void OnCollisionEnter(Collision other)
         {

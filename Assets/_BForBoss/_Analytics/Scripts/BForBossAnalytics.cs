@@ -35,14 +35,6 @@ namespace Perigon.Analytics
             public const string Inverted = "inverted";
         }
     }
-    
-    public enum WorldNameAnalyticsName
-    {
-        MS1RaceCourse,
-        MS2RaceCourse,
-        WeaponsRaceCourse,
-        Unknown
-    }
     #endregion
    
     public interface IBForBossAnalytics

@@ -2,7 +2,6 @@ using Perigon.Analytics;
 using Perigon.Utility;
 using PerigonGames;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace BForBoss
 {
@@ -12,7 +11,6 @@ namespace BForBoss
         [SerializeField] private Checkpoint[] _checkpoints = null;
         [SerializeField] private Checkpoint _endPoint = null;
         private readonly BForBossAnalytics _analytics = BForBossAnalytics.Instance;
-        private WorldNameAnalyticsName _worldNameAnalytics = WorldNameAnalyticsName.Unknown;
         private TimeManagerViewModel _timeManagerViewModel = null;
         private Checkpoint _activeCheckpoint = null;
         
@@ -21,9 +19,8 @@ namespace BForBoss
         public Vector3 CheckpointPosition => _activeCheckpoint == null ? _spawnPoint.transform.position : _activeCheckpoint.transform.position;
         public Quaternion CheckpointRotation => _activeCheckpoint == null ? _spawnPoint.transform.rotation : _activeCheckpoint.transform.rotation;
 
-        public void Initialize(DetectInput detectInput, TimeManagerViewModel timeManagerViewModel, WorldNameAnalyticsName world = WorldNameAnalyticsName.Unknown)
+        public void Initialize(DetectInput detectInput, TimeManagerViewModel timeManagerViewModel)
         {
-            _worldNameAnalytics = world;
             _detectInput = detectInput;
             if (_checkpoints.IsNullOrEmpty())
             {
