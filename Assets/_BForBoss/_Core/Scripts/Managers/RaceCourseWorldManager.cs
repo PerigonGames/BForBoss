@@ -51,10 +51,11 @@ namespace BForBoss
             _analytics.StartSession(SystemInfo.deviceUniqueIdentifier);
             _checkpointManager.Initialize(_detectInput, _timeManagerViewModel);
             _timeManager.Initialize(_timeManagerViewModel);
+            
             _timerView.Initialize(_timeManagerViewModel);
             _forcedUploadView.Initialize(_freezeActionsUtility);
         }
-
+        
         private void OnApplicationQuit()
         {
             _analytics.EndSession();

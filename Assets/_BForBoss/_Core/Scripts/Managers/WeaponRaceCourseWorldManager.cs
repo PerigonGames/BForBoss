@@ -78,7 +78,7 @@ namespace BForBoss
             _timerView.Initialize(_timeManagerViewModel);
             _forcedUploadView.Initialize(_freezeActionsUtility);
         }
-
+        
         private void OnApplicationQuit()
         {
             _analytics.EndSession();
