@@ -22,7 +22,6 @@ namespace BForBoss
             base.Start();
             _weaponsManager.Initialize(new CharacterMovementWrapper(_player));
             _equipmentBehaviour.Initialize();
-            _lifeCycleManager.Initialize();
             _ammunitionCountView.Initialize(_equipmentBehaviour);
             _reloadView.Initialize(_equipmentBehaviour);
         }

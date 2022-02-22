@@ -9,14 +9,17 @@ namespace Perigon.Entities
 
         public int LivingEntities => _lifeCycleBehaviours.Count(life => life.IsAlive);
 
-        public void Initialize()
+        private void Awake()
         {
             _lifeCycleBehaviours = FindObjectsOfType<LifeCycleBehaviour>();
         }
 
         public void Reset()
         {
-            if (_lifeCycleBehaviours == null) return;
+            if (_lifeCycleBehaviours == null) 
+            {
+                return;
+            }
             foreach (var lifeCycle in _lifeCycleBehaviours)
             {
                 lifeCycle.Reset();
