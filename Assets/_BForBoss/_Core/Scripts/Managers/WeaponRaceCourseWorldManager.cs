@@ -77,14 +77,8 @@ namespace BForBoss
             
             _timerView.Initialize(_timeManagerViewModel);
             _forcedUploadView.Initialize(_freezeActionsUtility);
-            SetupAnalytics();
         }
 
-        protected override void SetupAnalytics()
-        {
-            FindObjectsOfType<DeathAreaBehaviour>().ForEach(area => area.Initialize(_worldNameAnalytics));
-        }
-        
         private void OnApplicationQuit()
         {
             _analytics.EndSession();

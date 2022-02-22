@@ -2,6 +2,7 @@ using Perigon.Analytics;
 using Perigon.Utility;
 using PerigonGames;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace BForBoss
 {
@@ -61,7 +62,7 @@ namespace BForBoss
             _activeCheckpoint = checkpoint;
             _activeCheckpoint.SetCheckpoint();
             
-            _analytics.LogCheckpointEvent(_worldNameAnalytics, _timeManagerViewModel.CurrentGameTime, _activeCheckpoint.name);
+            _analytics.LogCheckpointEvent(gameObject.scene.name, _timeManagerViewModel.CurrentGameTime, _activeCheckpoint.name);
         }
 
         private void OnEnteredLastPoint(Checkpoint _)

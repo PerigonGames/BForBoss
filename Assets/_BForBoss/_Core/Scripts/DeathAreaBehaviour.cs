@@ -7,11 +7,6 @@ namespace BForBoss
     {
         [SerializeField] private string _deathAreaName = "deathArea";
         private WorldNameAnalyticsName _worldNameAnalytics = WorldNameAnalyticsName.Unknown;
-
-        public void Initialize(WorldNameAnalyticsName worldNameAnalytics)
-        {
-            _worldNameAnalytics = worldNameAnalytics;
-        }
         
         private void OnCollisionEnter(Collision other)
         {
@@ -23,7 +18,7 @@ namespace BForBoss
                     break;
                 default:
                     state.SetState(State.Death);
-                    BForBossAnalytics.Instance.LogDeathEvent(_worldNameAnalytics, _deathAreaName);
+                    BForBossAnalytics.Instance.LogDeathEvent(gameObject.scene.name, _deathAreaName);
                     break;
             }
         }

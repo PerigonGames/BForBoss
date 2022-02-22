@@ -23,11 +23,6 @@ namespace BForBoss
             _ammunitionCountView.Initialize(_equipmentBehaviour);
             _reloadView.Initialize(_equipmentBehaviour);
         }
-        
-        protected override void SetupAnalytics()
-        {
-            // Not needed
-        }
 
         protected override void OnValidate()
         {

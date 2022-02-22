@@ -47,8 +47,8 @@ namespace Perigon.Analytics
    
     public interface IBForBossAnalytics
     {
-        void LogDeathEvent(WorldNameAnalyticsName world, string deathAreaName);
-        void LogCheckpointEvent(WorldNameAnalyticsName world, float time, string checkpointName);
+        void LogDeathEvent(string world, string deathAreaName);
+        void LogCheckpointEvent(string world, float time, string checkpointName);
         void SetUsername(string username);
         void SetMouseKeyboardSettings(float horizontal, float vertical, bool isInverted);
         void SetControllerSettings(float horizontal, float vertical, bool isInverted);
@@ -95,20 +95,20 @@ namespace Perigon.Analytics
             _perigonAnalytics.SetUserProperties(properties);
         }
 
-        public void LogDeathEvent(WorldNameAnalyticsName world, string deathAreaName)
+        public void LogDeathEvent(string world, string deathAreaName)
         {
             var deathArea = new Hashtable();
-            deathArea[EventAttribute.Course] = WorldEnumToAnalyticsValueMapper(world);
+            deathArea[EventAttribute.Course] = world.ToLower();
             deathArea[EventAttribute.Name] = deathAreaName;
             
             _perigonAnalytics.LogEventWithParams(Event.PlayerDeath, deathArea);
         }
 
-        public void LogCheckpointEvent(WorldNameAnalyticsName world, float time, string checkpointName)
+        public void LogCheckpointEvent(string world, float time, string checkpointName)
         {
             var checkpoint = new Hashtable();
             checkpoint[EventAttribute.Time] = time;
-            checkpoint[EventAttribute.Course] = WorldEnumToAnalyticsValueMapper(world);
+            checkpoint[EventAttribute.Course] = world.ToLower();
             checkpoint[EventAttribute.Name] = checkpointName;
             
             _perigonAnalytics.LogEventWithParams(Event.CheckpointReached, checkpoint);
@@ -122,21 +122,6 @@ namespace Perigon.Analytics
         public void EndSession()
         {
             _perigonAnalytics.EndSession();
-        }
-
-        private string WorldEnumToAnalyticsValueMapper(WorldNameAnalyticsName world)
-        {
-            switch (world)
-            {
-                case WorldNameAnalyticsName.MS1RaceCourse:
-                    return EventConstant.MS1RaceCourse;
-                case WorldNameAnalyticsName.MS2RaceCourse:
-                    return EventConstant.MS2RaceCourse;
-                case WorldNameAnalyticsName.WeaponsRaceCourse:
-                    return EventConstant.WeaponsRaceCourse;
-                default:
-                    return EventConstant.Unknown;
-            }
         }
     }
 }

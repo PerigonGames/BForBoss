@@ -9,9 +9,5 @@ namespace BForBoss
         
         protected override Vector3 SpawnLocation => _spawnLocation.position;
         protected override Quaternion SpawnLookDirection => _spawnLocation.rotation;
-        protected override void SetupAnalytics()
-        {
-            // Not Implement
-        }
     }
 }

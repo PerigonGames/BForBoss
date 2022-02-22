@@ -24,7 +24,6 @@ namespace BForBoss
 
         protected abstract Vector3 SpawnLocation { get; }
         protected abstract Quaternion SpawnLookDirection { get; }
-        protected abstract void SetupAnalytics();
 
         protected virtual void CleanUp()
         {
