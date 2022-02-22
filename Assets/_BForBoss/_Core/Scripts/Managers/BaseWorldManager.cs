@@ -1,4 +1,3 @@
-
 using Perigon.Character;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
@@ -41,7 +40,7 @@ namespace BForBoss
         protected virtual void Start()
         {
             SetupSubManagers();
-            _pauseMenu.Initialize(_player, _player, _freezeActionsUtility);
+            _pauseMenu.Initialize(_player, _freezeActionsUtility);
             _stateManager.SetState(State.PreGame);
         }
         
