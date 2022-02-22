@@ -16,13 +16,7 @@ namespace Perigon.Analytics
         public const String Name = "name";
         public const String Time = "timer";
     }
-    public readonly struct EventConstant
-    {
-        public const String MS1RaceCourse = "ms1_racecourse";
-        public const String MS2RaceCourse = "ms2_racecourse";
-        public const string WeaponsRaceCourse = "weapons_racecourse";
-        public const String Unknown = "unknown";
-    }
+
     public readonly struct Profile
     {
         public const string Name = "$name";
