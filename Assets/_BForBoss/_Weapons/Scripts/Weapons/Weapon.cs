@@ -79,7 +79,8 @@ namespace Perigon.Weapons
          public Vector3 GetShootDirection(Vector3 from, Vector3 to, float timeSinceFiring)
          {
              var directionWithoutSpread = to - from;
-             var directionWithSpread = GenerateSpreadAngle(timeSinceFiring) * directionWithoutSpread;
+             var spread = GenerateSpread(timeSinceFiring);
+             var directionWithSpread = GenerateSpreadAngle(spread) * directionWithoutSpread;
              return directionWithSpread.normalized;
          }
          
@@ -112,11 +113,9 @@ namespace Perigon.Weapons
          { 
              OnFireWeapon?.Invoke(_weaponProperties.BulletsPerShot);
          }
-
-         private Quaternion GenerateSpreadAngle(float timeSinceFiring)
+         
+         private Quaternion GenerateSpreadAngle(float spread)
          {
-             var spreadRate = GetBulletSpreadRate(timeSinceFiring);
-             var spread = _weaponProperties.BulletSpread * spreadRate;
              var spreadRange = spread * MIN_TO_MAX_RANGE_OF_SPREAD;
              var randomizedSpread = -spread + (float)_randomUtility.NextDouble() * spreadRange;
              var randomizedDirection = new Vector3(
@@ -125,12 +124,13 @@ namespace Perigon.Weapons
                  RandomDoubleIncludingNegative());
              return Quaternion.AngleAxis(randomizedSpread, randomizedDirection);
          }
-
-         private float GetBulletSpreadRate(float timeSinceFiring)
+         
+         private float GenerateSpread(float timeSinceFiring)
          {
-             return _weaponProperties.GetBulletSpreadRate(timeSinceFiring);
+             float spreadRate = _weaponProperties.GetBulletSpreadRate(timeSinceFiring);
+             return _weaponProperties.BulletSpread * spreadRate;
          }
-
+         
          private float RandomDoubleIncludingNegative()
          {
              return (float) _randomUtility.NextDouble() * (_randomUtility.CoinFlip() ? 1 : -1);
