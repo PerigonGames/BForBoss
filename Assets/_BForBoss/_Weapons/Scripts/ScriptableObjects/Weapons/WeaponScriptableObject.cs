@@ -24,7 +24,7 @@ namespace Perigon.Weapons
         [SerializeField] private string _nameOfWeapon = "";
         [SerializeField] private float _rateOfFire = 0.1f;
         [SerializeField] private float _bulletSpread = 1f;
-        [SerializeField] private AnimationCurve _bulletSpreadMultipler;
+        [SerializeField] private AnimationCurve _bulletSpreadMultipler = AnimationCurve.Linear(0,0,1,1);
         [SerializeField]
         [Range(0.01f, 10f)] private float _reloadDuration = 0.5f;
         [SerializeField] private int _bulletsPerShot = 1;
