@@ -24,7 +24,6 @@ namespace BForBoss
         private ILockInput _lockInput = null;
         
         public void Initialize(
-            IThirdPerson thirdPersonSettings,
             IInputSettings inputSettings, 
             ILockInput lockInput)
         {
@@ -33,7 +32,7 @@ namespace BForBoss
             _controllerInputSettingsView?.Initialize(new ControllerInputSettingsViewModel(inputSettings));
             _setUsernameView?.Initialize(lockInput);
             _tabbedPanelViews?.Initialize();
-            _gameplaySettingsView?.Initialize(thirdPersonSettings);
+            _gameplaySettingsView?.Initialize();
         }
 
         public void OpenPanel()
