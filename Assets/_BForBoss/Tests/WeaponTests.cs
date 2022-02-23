@@ -80,7 +80,7 @@ namespace Tests.Weapons
             
             
             //When
-            var actualResult = weapon.GetShootDirection(from, to);
+            var actualResult = weapon.GetShootDirection(from, to, 0f);
             
             //Then
             Assert.AreEqual(Vector3.forward, actualResult, "Should shoot forward");
@@ -100,7 +100,7 @@ namespace Tests.Weapons
             
             
             //When
-            var actualResult = weapon.GetShootDirection(from, to);
+            var actualResult = weapon.GetShootDirection(from, to, 0f);
             
             //Then
             Assert.IsTrue(TestUtilities.WithinBounds(normalizedExpectedResult, actualResult), "Should shoot forward with spread up right and normalized");
