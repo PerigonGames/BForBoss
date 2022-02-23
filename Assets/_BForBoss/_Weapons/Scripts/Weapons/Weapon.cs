@@ -115,7 +115,8 @@ namespace Perigon.Weapons
 
          private Quaternion GenerateSpreadAngle(float timeSinceFiring)
          {
-             var spread = _weaponProperties.BulletSpread * _weaponProperties.GetBulletSpreadWeight(timeSinceFiring);
+             var spreadRate = GetBulletSpreadRate(timeSinceFiring);
+             var spread = _weaponProperties.BulletSpread * spreadRate;
              var spreadRange = spread * MIN_TO_MAX_RANGE_OF_SPREAD;
              var randomizedSpread = -spread + (float)_randomUtility.NextDouble() * spreadRange;
              var randomizedDirection = new Vector3(
@@ -123,6 +124,11 @@ namespace Perigon.Weapons
                  RandomDoubleIncludingNegative(), 
                  RandomDoubleIncludingNegative());
              return Quaternion.AngleAxis(randomizedSpread, randomizedDirection);
+         }
+
+         private float GetBulletSpreadRate(float timeSinceFiring)
+         {
+             return _weaponProperties.GetBulletSpreadRate(timeSinceFiring);
          }
 
          private float RandomDoubleIncludingNegative()
