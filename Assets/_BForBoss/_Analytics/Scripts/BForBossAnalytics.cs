@@ -16,10 +16,7 @@ namespace Perigon.Analytics
         public const String Name = "name";
         public const String Time = "timer";
     }
-    public readonly struct EventConstant
-    {
-        public const String RaceCourse = "racecourse";
-    }
+
     public readonly struct Profile
     {
         public const string Name = "$name";
@@ -36,10 +33,8 @@ namespace Perigon.Analytics
    
     public interface IBForBossAnalytics
     {
-        void StartSession(string uniqueId);
-        void EndSession();
-        void LogDeathEvent(string deathAreaName);
-        void LogCheckpointEvent(float time, string checkpointName);
+        void LogDeathEvent(string world, string deathAreaName);
+        void LogCheckpointEvent(string world, float time, string checkpointName);
         void SetUsername(string username);
         void SetMouseKeyboardSettings(float horizontal, float vertical, bool isInverted);
         void SetControllerSettings(float horizontal, float vertical, bool isInverted);
@@ -47,7 +42,7 @@ namespace Perigon.Analytics
 
     public class BForBossAnalytics : IBForBossAnalytics
     {
-        private IPerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
+        private readonly IPerigonAnalytics _perigonAnalytics = new PerigonAnalytics();
         private static readonly BForBossAnalytics _instance = new BForBossAnalytics();
         public static BForBossAnalytics Instance => _instance;
 
@@ -86,20 +81,20 @@ namespace Perigon.Analytics
             _perigonAnalytics.SetUserProperties(properties);
         }
 
-        public void LogDeathEvent(string deathAreaName)
+        public void LogDeathEvent(string world, string deathAreaName)
         {
             var deathArea = new Hashtable();
-            deathArea[EventAttribute.Course] = EventConstant.RaceCourse;
+            deathArea[EventAttribute.Course] = world.ToLower();
             deathArea[EventAttribute.Name] = deathAreaName;
             
             _perigonAnalytics.LogEventWithParams(Event.PlayerDeath, deathArea);
         }
 
-        public void LogCheckpointEvent(float time, string checkpointName)
+        public void LogCheckpointEvent(string world, float time, string checkpointName)
         {
             var checkpoint = new Hashtable();
             checkpoint[EventAttribute.Time] = time;
-            checkpoint[EventAttribute.Course] = EventConstant.RaceCourse;
+            checkpoint[EventAttribute.Course] = world.ToLower();
             checkpoint[EventAttribute.Name] = checkpointName;
             
             _perigonAnalytics.LogEventWithParams(Event.CheckpointReached, checkpoint);
