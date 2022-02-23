@@ -76,22 +76,25 @@ namespace Perigon.Weapons
              }
          }
          
-         public Vector3 GetShootDirection(Vector3 from, Vector3 to)
+         public Vector3 GetShootDirection(Vector3 from, Vector3 to, float timeSinceFiring)
          {
              var directionWithoutSpread = to - from;
-             var directionWithSpread = GenerateSpreadAngle() * directionWithoutSpread;
+             var spread = GenerateSpread(timeSinceFiring);
+             var directionWithSpread = GenerateSpreadAngle(spread) * directionWithoutSpread;
              return directionWithSpread.normalized;
          }
          
          public void FireIfPossible()
          {
-             if (CanShoot)
+             if (!CanShoot)
              {
-                 StopReloading();
-                 _ammunitionAmount--;
-                 ResetRateOfFire();
-                 Fire();
+                 return;
              }
+             
+             StopReloading();
+             _ammunitionAmount--;
+             ResetRateOfFire();
+             Fire();
          }
 
          private void ResetWeaponState()
@@ -110,10 +113,9 @@ namespace Perigon.Weapons
          { 
              OnFireWeapon?.Invoke(_weaponProperties.BulletsPerShot);
          }
-
-         private Quaternion GenerateSpreadAngle()
+         
+         private Quaternion GenerateSpreadAngle(float spread)
          {
-             var spread = _weaponProperties.BulletSpread;
              var spreadRange = spread * MIN_TO_MAX_RANGE_OF_SPREAD;
              var randomizedSpread = -spread + (float)_randomUtility.NextDouble() * spreadRange;
              var randomizedDirection = new Vector3(
@@ -122,7 +124,13 @@ namespace Perigon.Weapons
                  RandomDoubleIncludingNegative());
              return Quaternion.AngleAxis(randomizedSpread, randomizedDirection);
          }
-
+         
+         private float GenerateSpread(float timeSinceFiring)
+         {
+             float spreadRate = _weaponProperties.GetBulletSpreadRate(timeSinceFiring);
+             return _weaponProperties.BulletSpread * spreadRate;
+         }
+         
          private float RandomDoubleIncludingNegative()
          {
              return (float) _randomUtility.NextDouble() * (_randomUtility.CoinFlip() ? 1 : -1);
