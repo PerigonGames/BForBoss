@@ -23,12 +23,11 @@ namespace BForBoss
         private State _stateWhenPaused;
         
         public void Initialize(
-            IThirdPerson thirdPersonSettings, 
             IInputSettings inputSettings,
             ILockInput lockInput)
         {
             _lockInput = lockInput;
-            _settingsView?.Initialize(thirdPersonSettings, inputSettings, lockInput);
+            _settingsView?.Initialize(inputSettings, lockInput);
             _resumeButton.onClick.AddListener(ResumeGame);
             _resetButton.onClick.AddListener(ResetGame);
             _quitButton.onClick.AddListener(QuitGame);
