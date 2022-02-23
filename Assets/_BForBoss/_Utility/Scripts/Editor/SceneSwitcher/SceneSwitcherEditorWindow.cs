@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
 {
     private const string PROJECT_PARENT_FOLDER = "BForBoss/";
-    private const string PROJECT_NAME = "\\" + "_BForBoss";
+    private readonly string PROJECT_NAME = Path.DirectorySeparatorChar + "_BForBoss";
     private const string SCENE_FILE_EXTENSION = ".unity";
     private const string NOT_FAVORITE_ICON_NAME = "d_Favorite On Icon";
     private const string FAVORITE_ICON_NAME = "d_Favorite Icon";
@@ -68,8 +68,8 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
                     continue;
                 }
                 
-                string relativeScenePathName = assetPath.Split(new string[] {"Assets" + PROJECT_NAME + "\\"}, StringSplitOptions.None)[1];
-                int lastFolderCharacterIndex = relativeScenePathName.LastIndexOf('\\');
+                string relativeScenePathName = assetPath.Split(new string[] {"Assets" + PROJECT_NAME + Path.DirectorySeparatorChar}, StringSplitOptions.None)[1];
+                int lastFolderCharacterIndex = relativeScenePathName.LastIndexOf(Path.DirectorySeparatorChar);
                 string parentFolderName = relativeScenePathName.Remove(lastFolderCharacterIndex);
 
                 SceneConfigSetup scs = new SceneConfigSetup()
