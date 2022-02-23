@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nameOfWeapon: Assault Rifle
   _rateOfFire: 0.05
-  _bulletSpread: 0.1
+  _bulletSpread: 15
   _bulletSpreadMultipler:
     serializedVersion: 2
     m_Curve:
@@ -77,7 +77,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   _reloadDuration: 1.5
   _bulletsPerShot: 1
-  _ammunitionAmount: 20
+  _ammunitionAmount: 700
   _typeOfBullet: 0
   _crosshair: {fileID: 21300000, guid: 30381596fec2d5a4781da94a833fdf75, type: 3}
   _visualRecoil: 0.05
