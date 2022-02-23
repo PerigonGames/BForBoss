@@ -1,21 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
 
 namespace Perigon.Character
 {
     public class CharacterMovementAudio : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
+        [SerializeField] private EventReference _dashAudio;
+        [SerializeField] private EventReference _slideAudio;
+        [SerializeField] private EventReference _jumpAudio;
 
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
+        [SerializeField] private EventReference _runningAudio;
+        [SerializeField] private EventReference _wallrunAudio;
     }
 }
