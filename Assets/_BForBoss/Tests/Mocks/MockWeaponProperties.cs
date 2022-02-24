@@ -7,6 +7,7 @@ namespace Tests
     {
         private float _rateOfFire;
         private float _bulletSpread;
+        private float _bulletSpreadRate;
         private float _reloadDuration;
         private int _bulletsPerShot;
         private int _ammoAmount;
@@ -15,6 +16,12 @@ namespace Tests
         public float RateOfFire => _rateOfFire;
         public Sprite Crosshair => null;
         public float BulletSpread => _bulletSpread;
+        
+        public float GetBulletSpreadRate(float timeSinceFiring)
+        {
+            return _bulletSpreadRate;
+        }
+
         public float ReloadDuration => _reloadDuration;
         public int BulletsPerShot => _bulletsPerShot;
         public int AmmunitionAmount => _ammoAmount;
