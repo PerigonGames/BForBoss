@@ -1,3 +1,4 @@
+using System;
 using ECM2.Common;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace Perigon.Character
         private ECM2.Characters.Character _baseCharacter = null;
 
         public bool IsSliding => _isSliding;
+        public event Action StartSliding;
 
         public float MaxWalkSpeedSliding => _maxWalkSpeedSliding;
         public float brakingDecelerationSliding => _brakingDecelerationSliding;
@@ -33,6 +35,7 @@ namespace Perigon.Character
             }
 
             _isSliding = true;
+            StartSliding?.Invoke();
             
             _baseCharacter.brakingFriction = _groundFrictionSliding;
             _baseCharacter.useSeparateBrakingFriction = true;
