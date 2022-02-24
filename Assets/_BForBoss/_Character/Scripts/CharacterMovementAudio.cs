@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using FMODUnity;
 
@@ -11,5 +12,12 @@ namespace Perigon.Character
 
         [SerializeField] private EventReference _runningAudio;
         [SerializeField] private EventReference _wallrunAudio;
+
+        private FirstPersonPlayer _player;
+        
+        private void Awake()
+        {
+            _player = GetComponent<FirstPersonPlayer>();
+        }
     }
 }
