@@ -26,20 +26,20 @@ namespace Perigon.Character
 
         private void Update()
         {
+            var oldState = _state;
             switch (_state)
             {
                 case MovementSoundState.NotPlaying:
-                    _state = CheckNotPlaying();
+                    _state = GetNextStateFromNotPlaying();
                     break;
                 case MovementSoundState.Running:
-                    _state = CheckRunning();
+                    _state = GetNextStateFromRunning();
                     break;
                 case MovementSoundState.WallRunning:
-                    _state = CheckWallRunning();
-                    break;
-                default:
+                    _state = GetNextStateFromWallRunning();
                     break;
             }
+            PlayStateAudio(_state, oldState);
         }
 
         private void OnEnable()
@@ -77,63 +77,52 @@ namespace Perigon.Character
             RuntimeManager.PlayOneShot(_dashAudio, transform.position);
         }
 
-        private MovementSoundState CheckNotPlaying()
+        private MovementSoundState GetNextStateFromNotPlaying()
         {
             if (_player.Speed < _minSpeed) 
                 return MovementSoundState.NotPlaying;
             if (_player.IsWallRunning())
             {
-                var newState = MovementSoundState.WallRunning;
-                PlayState(newState);
-                return newState;
+                return MovementSoundState.WallRunning;
             }
             else if (_player.IsWalking())
             {
-                var newState = MovementSoundState.Running;
-                PlayState(newState);
-                return newState;
+                return MovementSoundState.Running;
             }
             return MovementSoundState.NotPlaying;
-            }
+        }
         
-        private MovementSoundState CheckRunning()
+        private MovementSoundState GetNextStateFromRunning()
         {
             bool isWalkingOrWallRunning = _player.IsWallRunning() || _player.IsWalking();
             if (_player.Speed < _minSpeed || !isWalkingOrWallRunning)
             {
-                var newState = MovementSoundState.NotPlaying;
-                PlayState(newState);
-                return newState;
+                return MovementSoundState.NotPlaying;
             }
             if (_player.IsWallRunning())
             {
-                var newState = MovementSoundState.WallRunning;
-                PlayState(newState);
-                return newState;
+                return MovementSoundState.WallRunning;
             }
             return MovementSoundState.Running;
         }
         
-        private MovementSoundState CheckWallRunning()
+        private MovementSoundState GetNextStateFromWallRunning()
         {
             bool isWalkingOrWallRunning = _player.IsWallRunning() || _player.IsWalking();
             if (_player.Speed < _minSpeed || !isWalkingOrWallRunning)
             {
-                var newState = MovementSoundState.NotPlaying;
-                PlayState(newState);
-                return newState;
+                return MovementSoundState.NotPlaying;
             }
             if (!_player.IsWallRunning())
             {
-                var newState = MovementSoundState.Running;
-                PlayState(newState);
-                return newState;
+                return MovementSoundState.Running;
             }
             return MovementSoundState.WallRunning;
         }
 
-        private void PlayState(MovementSoundState state)
+        private void PlayStateAudio(MovementSoundState state, MovementSoundState oldState)
         {
+            if (oldState == state) return;
             switch (state)
             {
                 case MovementSoundState.NotPlaying:
@@ -147,8 +136,6 @@ namespace Perigon.Character
                 case MovementSoundState.WallRunning:
                     _runningAudio.Stop();
                     _wallrunAudio.Play();
-                    break;
-                default:
                     break;
             }
         }
