@@ -16,9 +16,9 @@ namespace Perigon.Character
 
         private ECM2.Characters.Character _baseCharacter = null;
 
-        public bool IsSliding => _isSliding;
         public event Action StartSliding;
-
+        
+        public bool IsSliding => _isSliding;
         public float MaxWalkSpeedSliding => _maxWalkSpeedSliding;
         public float brakingDecelerationSliding => _brakingDecelerationSliding;
 
