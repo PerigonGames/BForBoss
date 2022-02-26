@@ -32,6 +32,8 @@ namespace Perigon.Character
 
         public bool IsDashing => _isDashing;
         private bool IsCoolDownOver => _dashCoolDownElapsedTime <= 0;
+
+        public event Action StartDashing;
         
         public void Initialize(ECM2.Characters.Character baseCharacter, Func<Vector2> characterMovement)
         {
@@ -122,6 +124,7 @@ namespace Perigon.Character
             }
 
             PlayerDashVisuals();
+            StartDashing?.Invoke();
             _isDashing = true;
             
             _baseCharacter.brakingFriction = 0.0f;
