@@ -27,9 +27,10 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
     [MenuItem("Tools/SceneSwitcher")]
     private static void Init()
     {
-        SceneSwitcherEditorWindow window = (SceneSwitcherEditorWindow)GetWindow(typeof(SceneSwitcherEditorWindow));
+        SceneSwitcherEditorWindow window = (SceneSwitcherEditorWindow) GetWindow(typeof(SceneSwitcherEditorWindow));
         window.titleContent = new GUIContent("Scene Switcher");
         window.minSize = new Vector2(440, 350);
+
         window.Show();
     }
     
