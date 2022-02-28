@@ -9,11 +9,10 @@ using UnityEngine.SceneManagement;
 
 public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
 {
-    private const string PROJECT_PARENT_FOLDER = "BForBoss/";
-    private readonly string PROJECT_NAME = Path.DirectorySeparatorChar + "_BForBoss";
     private const string SCENE_FILE_EXTENSION = ".unity";
     private const string NOT_FAVORITE_ICON_NAME = "d_Favorite On Icon";
     private const string FAVORITE_ICON_NAME = "d_Favorite Icon";
+    private const string ASSETS_PATH = "Assets";
 
     private bool _needsToRefreshElements = false;
     private List<SceneConfigSetup> _sceneConfigSetups = new List<SceneConfigSetup>();
@@ -48,19 +47,23 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
     {
         _sceneConfigSetups = new List<SceneConfigSetup>();
         _favoriteSceneConfigs = new List<SceneConfigSetup>();
-        LoadFromPath(Application.dataPath + PROJECT_NAME);
+        LoadFromPath(SceneSwitcherProjectSettings.GetOrCreateSettings().baseSearchFolder);
     }
 
     private void LoadFromPath(string path)
     {
-        if (string.IsNullOrEmpty(path)) return;
+        if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
+        {
+            return;
+        }
 
         string[] files = Directory.GetFiles(path);
         foreach (string fp in files)
         {
             if (fp.Contains(SCENE_FILE_EXTENSION))
             {
-                string assetPath = fp.Split(new string[] {PROJECT_PARENT_FOLDER}, 2, StringSplitOptions.None)[1];
+                string[] relativeAssetPath =  fp.Split(new string[] {Application.dataPath}, 2, StringSplitOptions.None);
+                string assetPath = ASSETS_PATH + (path == Application.dataPath ? Path.DirectorySeparatorChar.ToString() : relativeAssetPath[1]);
 
                 SceneAsset sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(assetPath);
 
@@ -69,22 +72,21 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
                     continue;
                 }
                 
-                string relativeScenePathName = assetPath.Split(new string[] {"Assets" + PROJECT_NAME + Path.DirectorySeparatorChar}, StringSplitOptions.None)[1];
-                int lastFolderCharacterIndex = relativeScenePathName.LastIndexOf(Path.DirectorySeparatorChar);
-                string parentFolderName = relativeScenePathName.Remove(lastFolderCharacterIndex);
+                int lastFolderCharacterIndex = assetPath.LastIndexOf(Path.DirectorySeparatorChar);
+                string parentFolderName = assetPath.Remove(lastFolderCharacterIndex);
 
                 SceneConfigSetup scs = new SceneConfigSetup()
                 {
                     path = assetPath,
                     parentFolder = parentFolderName
                 };
-
-                if (string.Equals(SceneManager.GetActiveScene().path.Replace('/', '\\'), assetPath))
+                
+                if (string.Equals(GetHomogeneousPath(SceneManager.GetActiveScene().path), GetHomogeneousPath(assetPath)))
                 {
                     _currentSceneConfig = scs;
                 }
 
-                if (EditorPrefs.GetBool(scs.path, false))
+                if (EditorPrefs.GetBool(GetHomogeneousPath(scs.path), false))
                 {
                     _favoriteSceneConfigs.Add(scs);
                 }
@@ -187,11 +189,12 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
     {
         using (new EditorGUILayout.HorizontalScope())
         {
-            SceneAsset sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(scene.path);
+            string scenePath = scene.path;
+            SceneAsset sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(scenePath);
 
             using (new EditorGUI.DisabledGroupScope(disableFavouriteToggle))
             {
-                bool isFavoriteScene = EditorPrefs.GetBool(scene.path, false);
+                bool isFavoriteScene = EditorPrefs.GetBool(GetHomogeneousPath(scenePath), false);
                 
                 if (GUILayout.Button(isFavoriteScene ? _favouriteSymbol : _notFavouriteSymbol, GUIStyle.none,
                     GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20f), GUILayout.ExpandHeight(true)))
@@ -243,6 +246,11 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
     {
         EditorSceneManager.OpenScene(sceneConfig.path, OpenSceneMode.Single);
         _currentSceneConfig = sceneConfig;
+    }
+
+    private string GetHomogeneousPath(string path)
+    {
+        return path.Replace('/', '\\');
     }
 
     private void LoadSymbols()

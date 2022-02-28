@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
+using UnityEngine;
 
 public static class SceneSwitcherSettingsProvider
 {
@@ -16,19 +18,44 @@ public static class SceneSwitcherSettingsProvider
             guiHandler = searchContext =>
             {
                 _settings = SceneSwitcherProjectSettings.GetOrCreateSettings();
-                
-                using (var changeCheck = new EditorGUI.ChangeCheckScope())
+
+                using (new EditorGUILayout.HorizontalScope())
                 {
-                    _settings.baseSearchFolder = EditorGUILayout.TextField("Root Folder", _settings.baseSearchFolder);
-    
-                    if (changeCheck.changed)
+                    EditorGUILayout.PrefixLabel("Root Search Folder");
+
+                    if (GUILayout.Button("Choose Directory"))
                     {
+                        string currentRootFolder = _settings.baseSearchFolder;
+                        _settings.baseSearchFolder = EditorUtility.OpenFolderPanel("Choose Root Folder", _settings.baseSearchFolder, string.Empty);
+
+                        if (!IsValidRootFolder(_settings.baseSearchFolder))
+                        {
+                            Debug.LogError("Invalid Directory Choice");
+                            _settings.baseSearchFolder = currentRootFolder;
+                        }
+                        
                         SceneSwitcherProjectSettings.SaveSettings(_settings);
                     }
+                    
+                    EditorGUILayout.Space();
                 }
+
+                using (new EditorGUI.DisabledScope(true))
+                {
+                    EditorGUILayout.LabelField(_settings.baseSearchFolder);
+                }
+
+                EditorGUILayout.HelpBox("A valid directory must be located within the main Assets Folder",
+                    MessageType.Info, true);
             }
         };
     
         return provider;
+    }
+
+    private static bool IsValidRootFolder(string rootFolderPath)
+    {
+        return !string.IsNullOrEmpty(rootFolderPath) && Directory.Exists(rootFolderPath) &&
+               rootFolderPath.StartsWith(Application.dataPath);
     }
 }

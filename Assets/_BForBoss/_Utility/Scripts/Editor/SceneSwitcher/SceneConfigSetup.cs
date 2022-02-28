@@ -27,13 +27,12 @@ public static class SceneSwitcherProjectSettings
     }
 
     private const string FILE_NAME = "SceneSwitcherSettings.json";
-    private const string ROOT_FOLDER = "Assets";
+    private static readonly string ROOT_FOLDER = Application.dataPath;
     private static readonly string SETTINGS_FOLDER = Directory.GetParent(Application.dataPath).FullName +
                                                      Path.DirectorySeparatorChar + "ProjectSettings" +
                                                      Path.DirectorySeparatorChar;
     private static readonly string SETTINGS_FILE = SETTINGS_FOLDER + FILE_NAME;
-    private static Settings _settings;
-    
+
     public static void SaveSettings(Settings settings)
     {
         string rawSettings = EditorJsonUtility.ToJson(settings, true);
@@ -50,7 +49,6 @@ public static class SceneSwitcherProjectSettings
     public static Settings GetOrCreateSettings()
     {
         Settings settings;
-
         if (AreSettingsAvailable())
         {
             string settingsJson = File.ReadAllText(SETTINGS_FILE);
@@ -58,7 +56,7 @@ public static class SceneSwitcherProjectSettings
         }
         else
         {
-            settings =new Settings(ROOT_FOLDER);
+            settings = new Settings(ROOT_FOLDER);
             SaveSettings(settings);
             AssetDatabase.RefreshSettings();
         }
@@ -66,7 +64,7 @@ public static class SceneSwitcherProjectSettings
         return settings;
     }
 
-    public static bool AreSettingsAvailable()
+    private static bool AreSettingsAvailable()
     {
         return File.Exists(SETTINGS_FILE);
     }
