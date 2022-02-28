@@ -63,7 +63,7 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
             if (fp.Contains(SCENE_FILE_EXTENSION))
             {
                 string[] relativeAssetPath =  fp.Split(new string[] {Application.dataPath}, 2, StringSplitOptions.None);
-                string assetPath = ASSETS_PATH + (path == Application.dataPath ? Path.DirectorySeparatorChar.ToString() : relativeAssetPath[1]);
+                string assetPath = ASSETS_PATH + relativeAssetPath[1];
 
                 SceneAsset sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(assetPath);
 
