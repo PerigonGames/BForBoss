@@ -38,14 +38,20 @@ namespace Perigon.Entities
             _lifeCycle = new LifeCycle(_health);
         }
 
-        protected virtual void LifeCycleFinished()
-        {
-            _enemyKillAudio.Play();
-        }
+        protected abstract void LifeCycleFinished();
 
         protected virtual void LifeCycleDamageTaken()
         {
-            //_enemyHitAudio.Play();
+            if (_lifeCycle.IsAlive)
+            {
+                Debug.Log("Enemy Hit");
+                _enemyHitAudio.Play();
+            }
+            else
+            {
+                Debug.Log("Enemy Kill");
+                _enemyKillAudio.Play();
+            }
         }
 
         protected virtual void OnEnable()

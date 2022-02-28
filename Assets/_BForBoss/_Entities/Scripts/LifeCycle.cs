@@ -49,14 +49,18 @@ namespace Perigon.Entities
 
         public void DamageBy(float amount)
         {
-            if (!IsAlive) return;
+            if (!IsAlive)
+            {
+                return;
+            }
             _currentHealth -= amount;
-            OnDamageTaken?.Invoke();
             if (_currentHealth <= 0f)
             {
                 IsAlive = false;
                 OnDeath?.Invoke();
             }
+            
+            OnDamageTaken?.Invoke();
         }
     }
 }
