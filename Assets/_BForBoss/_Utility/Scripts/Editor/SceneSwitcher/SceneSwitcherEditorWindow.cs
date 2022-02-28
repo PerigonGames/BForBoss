@@ -63,7 +63,7 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
             if (fp.Contains(SCENE_FILE_EXTENSION))
             {
                 string[] relativeAssetPath =  fp.Split(new string[] {Application.dataPath}, 2, StringSplitOptions.None);
-                string assetPath = ASSETS_PATH + relativeAssetPath[1];
+                string assetPath = ASSETS_PATH + Path.DirectorySeparatorChar + relativeAssetPath[1].Substring(1);
 
                 SceneAsset sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(assetPath);
 
@@ -81,12 +81,12 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
                     parentFolder = parentFolderName
                 };
                 
-                if (string.Equals(GetHomogeneousPath(SceneManager.GetActiveScene().path), GetHomogeneousPath(assetPath)))
+                if (string.Equals(SceneManager.GetActiveScene().path.Replace('/', '\\'), assetPath))
                 {
                     _currentSceneConfig = scs;
                 }
 
-                if (EditorPrefs.GetBool(GetHomogeneousPath(scs.path), false))
+                if (EditorPrefs.GetBool(scs.path, false))
                 {
                     _favoriteSceneConfigs.Add(scs);
                 }
@@ -194,7 +194,7 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
 
             using (new EditorGUI.DisabledGroupScope(disableFavouriteToggle))
             {
-                bool isFavoriteScene = EditorPrefs.GetBool(GetHomogeneousPath(scenePath), false);
+                bool isFavoriteScene = EditorPrefs.GetBool(scenePath, false);
                 
                 if (GUILayout.Button(isFavoriteScene ? _favouriteSymbol : _notFavouriteSymbol, GUIStyle.none,
                     GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20f), GUILayout.ExpandHeight(true)))
@@ -246,11 +246,6 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
     {
         EditorSceneManager.OpenScene(sceneConfig.path, OpenSceneMode.Single);
         _currentSceneConfig = sceneConfig;
-    }
-
-    private string GetHomogeneousPath(string path)
-    {
-        return path.Replace('/', '\\');
     }
 
     private void LoadSymbols()
