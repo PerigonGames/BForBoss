@@ -29,6 +29,8 @@ Transform:
   m_Children:
   - {fileID: 616281459703929699}
   - {fileID: 6610595906298944545}
+  - {fileID: 5065797157005125452}
+  - {fileID: 5723533237668237294}
   m_Father: {fileID: 616281459798487502}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -76,6 +78,7 @@ GameObject:
   - component: {fileID: 616281459798487499}
   - component: {fileID: 616281459798487498}
   - component: {fileID: 7177967516030943659}
+  - component: {fileID: 9197045308489517486}
   - component: {fileID: 910638773}
   - component: {fileID: 910638779}
   - component: {fileID: 910638780}
@@ -244,6 +247,42 @@ MonoBehaviour:
   cmCrouchedCamera: {fileID: 7120097270423081095}
   cmThirdPersonCamera: {fileID: 6616338655368687051}
   _isThirdPerson: 0
+--- !u!114 &9197045308489517486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616281459798487496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68ee7d58af38987449a3c3362215c4f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dashAudio:
+    Guid:
+      Data1: 353035528
+      Data2: 1245393561
+      Data3: -787360879
+      Data4: -297358858
+    Path: event:/AudioEvents/Player/Player_Dash
+  _slideAudio:
+    Guid:
+      Data1: 353035528
+      Data2: 1245393561
+      Data3: -787360879
+      Data4: -297358858
+    Path: event:/AudioEvents/Player/Player_Dash
+  _jumpAudio:
+    Guid:
+      Data1: 922470053
+      Data2: 1157482912
+      Data3: 318784652
+      Data4: 1767707304
+    Path: event:/AudioEvents/Player/Player_Jump
+  _runningAudio: {fileID: 5539074930188504104}
+  _wallrunAudio: {fileID: 323123171183198421}
+  _minSpeed: 0.1
 --- !u!114 &910638773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -318,6 +357,68 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _targetTimeScale: 0.25
   _tweenDuration: 1
+  _slowMotionPostProcessing: {fileID: 0}
+--- !u!1 &1356894597320797795
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5723533237668237294}
+  - component: {fileID: 323123171183198421}
+  m_Layer: 0
+  m_Name: WallrunFootSteps
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5723533237668237294
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1356894597320797795}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 616281458356855404}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &323123171183198421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1356894597320797795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1826366146
+      Data2: 1242979528
+      Data3: 1720018838
+      Data4: 2026298674
+    Path: event:/AudioEvents/Player/Player_WallRun
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &2217804275963747574
 GameObject:
   m_ObjectHideFlags: 0
@@ -350,6 +451,67 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2220188201307373184
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5065797157005125452}
+  - component: {fileID: 5539074930188504104}
+  m_Layer: 0
+  m_Name: FootSteps
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5065797157005125452
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2220188201307373184}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 616281458356855404}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5539074930188504104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2220188201307373184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -1671864939
+      Data2: 1149934722
+      Data3: -1675051855
+      Data4: -313421823
+    Path: event:/AudioEvents/Player/Player_BaseRun
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &3688003910640791289
 GameObject:
   m_ObjectHideFlags: 0

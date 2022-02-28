@@ -10,8 +10,8 @@ namespace BForBoss
         [SerializeField] private Checkpoint _spawnPoint = null;
         [SerializeField] private Checkpoint[] _checkpoints = null;
         [SerializeField] private Checkpoint _endPoint = null;
+        private readonly BForBossAnalytics _analytics = BForBossAnalytics.Instance;
         private TimeManagerViewModel _timeManagerViewModel = null;
-        private readonly PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
         private Checkpoint _activeCheckpoint = null;
         
         private DetectInput _detectInput = null;
@@ -59,7 +59,7 @@ namespace BForBoss
             _activeCheckpoint = checkpoint;
             _activeCheckpoint.SetCheckpoint();
             
-            _perigonAnalytics.LogCheckpointEvent(_timeManagerViewModel.CurrentGameTime, _activeCheckpoint.name);
+            _analytics.LogCheckpointEvent(gameObject.scene.name, _timeManagerViewModel.CurrentGameTime, _activeCheckpoint.name);
         }
 
         private void OnEnteredLastPoint(Checkpoint _)

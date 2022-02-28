@@ -14,7 +14,7 @@ namespace Perigon.Weapons
         int AmmunitionAmount { get; }
         float VisualRecoilForce { get; }
         BulletTypes TypeOfBullet { get; }
-
+        float GetBulletSpreadRate(float timeSinceFiring);
     }
 
     [CreateAssetMenu(fileName = "WeaponProperties", menuName = "PerigonGames/Weapon", order = 1)]
@@ -23,7 +23,8 @@ namespace Perigon.Weapons
         [SerializeField] private string _nameOfWeapon = "";
         [SerializeField] private float _rateOfFire = 0.1f;
         [SerializeField] private float _bulletSpread = 1f;
-        [SerializeField]
+        [SerializeField] private AnimationCurve _bulletSpreadRateCurve = AnimationCurve.Linear(0,0,1,1);
+        [SerializeField] 
         [Range(0.01f, 10f)] private float _reloadDuration = 0.5f;
         [SerializeField] private int _bulletsPerShot = 1;
         [SerializeField] 
@@ -43,5 +44,11 @@ namespace Perigon.Weapons
         public float VisualRecoilForce => _visualRecoil;
         public Sprite Crosshair => _crosshair;
         public BulletTypes TypeOfBullet => _typeOfBullet;
+
+        public float GetBulletSpreadRate(float timeSinceFiring)
+        {
+            float clampedTimeSinceFiring = Mathf.Clamp(timeSinceFiring, 0, 1);
+            return _bulletSpreadRateCurve.Evaluate(clampedTimeSinceFiring);
+        }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using Perigon.Analytics;
 using UnityEngine;
 
@@ -6,7 +5,8 @@ namespace BForBoss
 {
     public class DeathAreaBehaviour : MonoBehaviour
     {
-        [SerializeField] private String _deathAreaName = "deathArea";
+        [SerializeField] private string _deathAreaName = "deathArea";
+        
         private void OnCollisionEnter(Collision other)
         {
             var state = StateManager.Instance;
@@ -17,7 +17,7 @@ namespace BForBoss
                     break;
                 default:
                     state.SetState(State.Death);
-                    PerigonAnalytics.Instance.LogDeathEvent(_deathAreaName);
+                    BForBossAnalytics.Instance.LogDeathEvent(gameObject.scene.name, _deathAreaName);
                     break;
             }
         }

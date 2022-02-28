@@ -16,7 +16,9 @@ namespace Perigon.Weapons
         [SerializeField] private WeaponScriptableObject _weaponScriptableObject;
 
         protected Weapon _weapon = null;
-
+        protected bool _isFiring = false;
+        protected float _timeSinceFire = 0f;
+        
         private InputAction _fireInputAction = null;
         private InputAction _reloadInputAction = null;
 
@@ -62,6 +64,7 @@ namespace Perigon.Weapons
         }
 
         protected abstract void OnFireInputAction(InputAction.CallbackContext context);
+
         protected abstract void Update();
 
         private void OnReloadInputAction(InputAction.CallbackContext context)
@@ -107,7 +110,7 @@ namespace Perigon.Weapons
                 targetPoint = camRay.GetPoint(RAYCAST_DISTANCE_LIMIT);
             }
 
-            return _weapon.GetShootDirection(_firePoint.position, targetPoint);
+            return _weapon.GetShootDirection(_firePoint.position, targetPoint, _timeSinceFire);
         }
         
         private void SetupPlayerInput()

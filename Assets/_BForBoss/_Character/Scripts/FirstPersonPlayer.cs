@@ -1,3 +1,4 @@
+using System;
 using Cinemachine;
 using ECM2.Characters;
 using ECM2.Components;
@@ -21,6 +22,9 @@ namespace Perigon.Character
         private PlayerSlowMotionBehaviour _slowMotionBehaviour = null;
 
         [SerializeField] private bool _isThirdPerson = false;
+        
+        public event Action Dashed;
+        public event Action Slid;
 
         public bool IsThirdPerson
         {
@@ -233,10 +237,15 @@ namespace Perigon.Character
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.OnOnDisable();
+                _dashBehaviour.StartDashing -= Dashed;
             }
             if (_slowMotionBehaviour != null)
             {
                 _slowMotionBehaviour.OnOnDisable();
+            }
+            if (_slideBehaviour != null)
+            {
+                _slideBehaviour.StartSliding -= Slid;
             }
         }
         
@@ -246,10 +255,15 @@ namespace Perigon.Character
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.OnOnEnable();
+                _dashBehaviour.StartDashing += Dashed;
             }
             if (_slowMotionBehaviour != null)
             {
                 _slowMotionBehaviour.OnOnEnable();
+            }
+            if (_slideBehaviour != null)
+            {
+                _slideBehaviour.StartSliding += Slid;
             }
         }
 
