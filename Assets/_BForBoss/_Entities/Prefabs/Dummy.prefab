@@ -239,6 +239,8 @@ GameObject:
   - component: {fileID: 7367245696679564808}
   - component: {fileID: 7367245696679564807}
   - component: {fileID: 7367245696679564806}
+  - component: {fileID: 6681927712669361719}
+  - component: {fileID: 5650969820584284441}
   m_Layer: 0
   m_Name: Dummy
   m_TagString: Untagged
@@ -274,6 +276,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61afec44d0414484d98112d6bc849be6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enemyHitAudio: {fileID: 6681927712669361719}
+  _enemyKillAudio: {fileID: 5650969820584284441}
   _health: {fileID: 11400000, guid: 28e47defb68c3f1438ce87e9a9832e8a, type: 2}
   _healthbar: {fileID: 401769492}
   _dissolveVFXDuration: 1
@@ -295,6 +299,66 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &6681927712669361719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7367245696679564805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -302788556
+      Data2: 1301997779
+      Data3: 1319143076
+      Data4: -1910586928
+    Path: event:/AudioEvents/Enemy/Enemy_Hit
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!114 &5650969820584284441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7367245696679564805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1252079714
+      Data2: 1136051915
+      Data3: 982433429
+      Data4: 1002477761
+    Path: event:/AudioEvents/Enemy/Enemy_KillConfirm
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 0
+  OverrideMaxDistance: 1.8000001
 --- !u!1001 &7367245696939243828
 PrefabInstance:
   m_ObjectHideFlags: 0

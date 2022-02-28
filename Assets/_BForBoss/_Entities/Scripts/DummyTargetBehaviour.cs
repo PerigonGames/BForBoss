@@ -31,6 +31,7 @@ namespace Perigon.Entities
 
         protected override void LifeCycleFinished()
         {
+            base.LifeCycleFinished();
             _animator.SetBool(DEATH_ID, true); 
             _deathTween = _renderer.material.DOFloat(MAX_DISSOLVE, DISSOLVE_ID, _dissolveVFXDuration)
              .OnComplete(() => gameObject.SetActive(false));
