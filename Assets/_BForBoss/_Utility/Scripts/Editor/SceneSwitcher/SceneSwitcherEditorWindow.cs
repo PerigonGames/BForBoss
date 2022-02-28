@@ -32,10 +32,18 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
 
         window.Show();
     }
+
+    public void OnSettingsProviderChanged()
+    {
+        _needsToRefreshElements = true;
+        Repaint();
+    }
     
     public void AddItemsToMenu(GenericMenu menu)
     {
         menu.AddItem(new GUIContent("Refresh Scenes"), false, ReloadScenes);
+        menu.AddItem(new GUIContent("Change Settings"), false,
+            () => SettingsService.OpenProjectSettings(SceneSwitcherSettingsProvider.SETTINGS_PATH));
     }
 
     private void OnProjectChanged()

@@ -6,13 +6,14 @@ using UnityEngine;
 public static class SceneSwitcherSettingsProvider
 {
     private const string PROVIDER_LABEL = "Scene Switcher Settings";
+    public static readonly string SETTINGS_PATH = "Project/SceneSwitcherSettings";
     private static readonly IEnumerable<string> _keyWords = new List<string>{"Scene", "Switch", "Change"};
     private static SceneSwitcherProjectSettings.Settings _settings;
     
     [SettingsProvider]
     public static SettingsProvider CreateSceneSwitcherSettingsProvider()
     {
-        SettingsProvider provider = new SettingsProvider("Project/SceneSwitcherSettings", SettingsScope.Project, _keyWords)
+        SettingsProvider provider = new SettingsProvider(SETTINGS_PATH, SettingsScope.Project, _keyWords)
         {
             label = PROVIDER_LABEL,
             guiHandler = searchContext =>
@@ -35,6 +36,7 @@ public static class SceneSwitcherSettingsProvider
                         }
                         
                         SceneSwitcherProjectSettings.SaveSettings(_settings);
+                        RefreshEditorWindowIfOpen();
                     }
                     
                     EditorGUILayout.Space();
@@ -57,5 +59,16 @@ public static class SceneSwitcherSettingsProvider
     {
         return !string.IsNullOrEmpty(rootFolderPath) && Directory.Exists(rootFolderPath) &&
                rootFolderPath.StartsWith(Application.dataPath);
+    }
+
+    private static void RefreshEditorWindowIfOpen()
+    {
+        if (!EditorWindow.HasOpenInstances<SceneSwitcherEditorWindow>())
+        {
+            return;
+        }
+        
+        SceneSwitcherEditorWindow window = EditorWindow.GetWindow<SceneSwitcherEditorWindow>();
+        window.OnSettingsProviderChanged();
     }
 }
