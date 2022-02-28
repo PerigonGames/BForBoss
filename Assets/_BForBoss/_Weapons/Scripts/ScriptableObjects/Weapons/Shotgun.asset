@@ -15,33 +15,40 @@ MonoBehaviour:
   _nameOfWeapon: Shotgun
   _rateOfFire: 0.8
   _bulletSpread: 3.5
-  _bulletSpreadMultipler:
+  _bulletSpreadRateCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0
       inSlope: 0
-      outSlope: 0
-      tangentMode: 34
+      outSlope: 1
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0
+      inSlope: 1
       outSlope: 0
-      tangentMode: 34
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
-    m_PreInfinity: 1
-    m_PostInfinity: 1
+    m_PreInfinity: 2
+    m_PostInfinity: 2
     m_RotationOrder: 4
   _reloadDuration: 2
   _bulletsPerShot: 10
   _ammunitionAmount: 118
   _typeOfBullet: 0
+  _weaponShotAudio:
+    Guid:
+      Data1: -1062985099
+      Data2: 1194150322
+      Data3: 155197095
+      Data4: -1921996218
+    Path: event:/AudioEvents/Weapons/Weapon_ShotGun
   _crosshair: {fileID: 21300000, guid: 5975143319e80f243aeae9a363a6e34f, type: 3}
   _visualRecoil: 0.5

@@ -17,7 +17,6 @@ namespace Perigon.Entities
 
         public bool IsAlive => _lifeCycle.IsAlive;
 
-        [Button]
         public void Damage(float amount = 5f)
         {
             _lifeCycle.DamageBy(amount);
@@ -44,12 +43,10 @@ namespace Perigon.Entities
         {
             if (_lifeCycle.IsAlive)
             {
-                Debug.Log("Enemy Hit");
                 _enemyHitAudio.Play();
             }
             else
             {
-                Debug.Log("Enemy Kill");
                 _enemyKillAudio.Play();
             }
         }
