@@ -6,14 +6,14 @@ using UnityEngine;
 public static class SceneSwitcherSettingsProvider
 {
     private const string PROVIDER_LABEL = "Scene Switcher Settings";
-    public static readonly string SETTINGS_PATH = "Project/SceneSwitcherSettings";
+    public static readonly string SETTINGS_PATH = "Preferences/SceneSwitcherSettings";
     private static readonly IEnumerable<string> _keyWords = new List<string>{"Scene", "Switch", "Change"};
     private static SceneSwitcherProjectSettings.Settings _settings;
     
     [SettingsProvider]
     public static SettingsProvider CreateSceneSwitcherSettingsProvider()
     {
-        SettingsProvider provider = new SettingsProvider(SETTINGS_PATH, SettingsScope.Project, _keyWords)
+        SettingsProvider provider = new SettingsProvider(SETTINGS_PATH, SettingsScope.User, _keyWords)
         {
             label = PROVIDER_LABEL,
             guiHandler = searchContext =>

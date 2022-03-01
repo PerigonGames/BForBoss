@@ -43,7 +43,7 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
     {
         menu.AddItem(new GUIContent("Refresh Scenes"), false, ReloadScenes);
         menu.AddItem(new GUIContent("Change Settings"), false,
-            () => SettingsService.OpenProjectSettings(SceneSwitcherSettingsProvider.SETTINGS_PATH));
+            () => SettingsService.OpenUserPreferences(SceneSwitcherSettingsProvider.SETTINGS_PATH));
     }
 
     private void OnProjectChanged()
