@@ -8,11 +8,7 @@ namespace Perigon.UserInterface
 {
     public class SliderBehaviour : MonoBehaviour
     {
-        /// <summary>
-        /// ECM2's sensitivity normally goes through 0.01 -> 2.0
-        /// It looks too small and sensitive, so multiplying by 10 to go through 0.1 -> 25 
-        /// </summary>
-        private const float MAPPED_SENSITIVITY_MULTIPLIER = 100f;
+
         private Slider _customSlider = null;
         private TMP_InputField _inputField = null;
 
@@ -44,9 +40,9 @@ namespace Perigon.UserInterface
 
         public float SliderValue
         {
-             get=> CustomSlider.value / MAPPED_SENSITIVITY_MULTIPLIER;
+             get=> CustomSlider.value;
              
-             set => CustomSlider.value = value * MAPPED_SENSITIVITY_MULTIPLIER;
+             set => CustomSlider.value = value;
         }
 
         public Action OnValueChangedAction;
