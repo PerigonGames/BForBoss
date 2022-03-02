@@ -1,4 +1,5 @@
 using System;
+using FMODUnity;
 using PerigonGames;
 using UnityEngine;
 
@@ -35,6 +36,7 @@ namespace Perigon.Weapons
          public string NameOfWeapon => _weaponProperties?.NameOfWeapon;
          public Sprite Crosshair => _weaponProperties?.Crosshair;
          public float VisualRecoilForce => _weaponProperties.VisualRecoilForce;
+         public EventReference ShotAudio => _weaponProperties.WeaponShotAudio;
          private bool CanShoot => _elapsedRateOfFire <= 0 && _ammunitionAmount > 0;
          
          public Weapon(IWeaponProperties weaponProperties, IRandomUtility randomUtility = null)
