@@ -29,11 +29,19 @@ namespace Perigon.Utility
             public const string SHOULDUPLOAD = "should_upload";
         }
 
+        public struct AudioSettings
+        {
+            public const string MAIN_VOLUME = "main_volume";
+            public const string MUSIC_VOLUME = "music_volume";
+            public const string SFX_VOLUME = "sfx_volume";
+        }
+
         public static IList<string> GetAllKeys()
         {
             var keys = GetConstStringValuesFromStruct<InputSettings>().ToList();
             keys.AddRange(GetConstStringValuesFromStruct<ThirdPerson>());
             keys.AddRange(GetConstStringValuesFromStruct<LeaderboardSettings>());
+            keys.AddRange(GetConstStringValuesFromStruct<AudioSettings>());
             return keys;
         }
 

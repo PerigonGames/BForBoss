@@ -5,7 +5,7 @@ namespace BForBoss
 {
     public class AudioSettingsViewBehaviour : MonoBehaviour
     {
-        private void Start()
+        public void Initialize()
         {
             
         }
