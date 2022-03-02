@@ -44,8 +44,8 @@ namespace Tests.Input
             var viewModel = new ControllerInputSettingsViewModel(inputSettings, new MockAnalytics());
             
             //Then
-            Assert.AreEqual(viewModel.GetHorizontal, 30f, "Controller Horizontal value should be the same as input settings");
-            Assert.AreEqual(viewModel.GetVertical, 40f, "Controller Vertical value should be the same as input settings");
+            Assert.IsTrue(TestUtilities.WithinBounds(viewModel.GetHorizontal, 30f), "Controller Horizontal value should be the same as input settings");
+            Assert.IsTrue(TestUtilities.WithinBounds(viewModel.GetVertical, 40f), "Controller Vertical value should be the same as input settings");
             Assert.IsTrue(viewModel.GetIsInverted, "Input should be inverted");
         }
         
