@@ -1,3 +1,4 @@
+using FMODUnity;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ namespace Perigon.Weapons
         int BulletsPerShot { get; }
         int AmmunitionAmount { get; }
         float VisualRecoilForce { get; }
+        EventReference WeaponShotAudio { get; } 
         BulletTypes TypeOfBullet { get; }
         float GetBulletSpreadRate(float timeSinceFiring);
     }
@@ -30,7 +32,8 @@ namespace Perigon.Weapons
         [SerializeField] 
         [Range(1, 1000)] private int _ammunitionAmount = 20;
         [SerializeField] private BulletTypes _typeOfBullet = BulletTypes.NoPhysics;
-        [Title("Visuals")]
+        [Title("Effects")] 
+        [SerializeField] private EventReference _weaponShotAudio = new EventReference();
         [PreviewField]
         [SerializeField] private Sprite _crosshair = null;
 
@@ -42,6 +45,7 @@ namespace Perigon.Weapons
         public int BulletsPerShot => _bulletsPerShot;
         public int AmmunitionAmount => _ammunitionAmount;
         public float VisualRecoilForce => _visualRecoil;
+        public EventReference WeaponShotAudio => _weaponShotAudio;
         public Sprite Crosshair => _crosshair;
         public BulletTypes TypeOfBullet => _typeOfBullet;
 

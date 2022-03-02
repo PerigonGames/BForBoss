@@ -1,3 +1,4 @@
+using FMODUnity;
 using Perigon.Weapons;
 using UnityEngine;
 
@@ -26,6 +27,7 @@ namespace Tests
         public int BulletsPerShot => _bulletsPerShot;
         public int AmmunitionAmount => _ammoAmount;
         public float VisualRecoilForce => 0;
+        public EventReference WeaponShotAudio => new EventReference();
         public BulletTypes TypeOfBullet => BulletTypes.NoPhysics;
 
         public MockWeaponProperties (
