@@ -1,3 +1,5 @@
+using FMODUnity;
+
 namespace Perigon.Weapons
 {
     public interface IEquipmentData
@@ -7,6 +9,7 @@ namespace Perigon.Weapons
         string NameOfWeapon { get; }
         float MaxReloadDuration { get; }
         float ElapsedReloadDuration { get; }
+        EventReference WeaponShotAudio { get; }
     }
 
     public partial class EquipmentBehaviour: IEquipmentData
@@ -17,6 +20,7 @@ namespace Perigon.Weapons
 
         public float MaxReloadDuration => CurrentWeapon.MaxReloadDuration;
         public float ElapsedReloadDuration => CurrentWeapon.ElapsedReloadDuration;
+        public EventReference WeaponShotAudio => CurrentWeapon.ShotAudio;
 
         public Weapon[] Weapons => _weapons;
         public Weapon CurrentWeapon => _weapons[_currentWeaponIndex];
