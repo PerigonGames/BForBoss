@@ -9,11 +9,10 @@ using UnityEngine.SceneManagement;
 
 public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
 {
-    private const string PROJECT_PARENT_FOLDER = "BForBoss/";
-    private readonly string PROJECT_NAME = Path.DirectorySeparatorChar + "_BForBoss";
     private const string SCENE_FILE_EXTENSION = ".unity";
     private const string NOT_FAVORITE_ICON_NAME = "d_Favorite On Icon";
     private const string FAVORITE_ICON_NAME = "d_Favorite Icon";
+    private const string ASSETS_PATH = "Assets";
 
     private bool _needsToRefreshElements = false;
     private List<SceneConfigSetup> _sceneConfigSetups = new List<SceneConfigSetup>();
@@ -27,15 +26,24 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
     [MenuItem("Tools/SceneSwitcher")]
     private static void Init()
     {
-        SceneSwitcherEditorWindow window = (SceneSwitcherEditorWindow)GetWindow(typeof(SceneSwitcherEditorWindow));
+        SceneSwitcherEditorWindow window = (SceneSwitcherEditorWindow) GetWindow(typeof(SceneSwitcherEditorWindow));
         window.titleContent = new GUIContent("Scene Switcher");
         window.minSize = new Vector2(440, 350);
+
         window.Show();
+    }
+
+    public void OnSettingsProviderChanged()
+    {
+        _needsToRefreshElements = true;
+        Repaint();
     }
     
     public void AddItemsToMenu(GenericMenu menu)
     {
         menu.AddItem(new GUIContent("Refresh Scenes"), false, ReloadScenes);
+        menu.AddItem(new GUIContent("Change Settings"), false,
+            () => SettingsService.OpenUserPreferences(SceneSwitcherSettingsProvider.SETTINGS_PATH));
     }
 
     private void OnProjectChanged()
@@ -47,19 +55,23 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
     {
         _sceneConfigSetups = new List<SceneConfigSetup>();
         _favoriteSceneConfigs = new List<SceneConfigSetup>();
-        LoadFromPath(Application.dataPath + PROJECT_NAME);
+        LoadFromPath(SceneSwitcherProjectSettings.GetOrCreateSettings().baseSearchFolder);
     }
 
     private void LoadFromPath(string path)
     {
-        if (string.IsNullOrEmpty(path)) return;
+        if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
+        {
+            return;
+        }
 
         string[] files = Directory.GetFiles(path);
         foreach (string fp in files)
         {
             if (fp.Contains(SCENE_FILE_EXTENSION))
             {
-                string assetPath = fp.Split(new string[] {PROJECT_PARENT_FOLDER}, 2, StringSplitOptions.None)[1];
+                string[] relativeAssetPath =  fp.Split(new string[] {Application.dataPath}, 2, StringSplitOptions.None);
+                string assetPath = ASSETS_PATH + Path.DirectorySeparatorChar + relativeAssetPath[1].Substring(1);
 
                 SceneAsset sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(assetPath);
 
@@ -68,16 +80,15 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
                     continue;
                 }
                 
-                string relativeScenePathName = assetPath.Split(new string[] {"Assets" + PROJECT_NAME + Path.DirectorySeparatorChar}, StringSplitOptions.None)[1];
-                int lastFolderCharacterIndex = relativeScenePathName.LastIndexOf(Path.DirectorySeparatorChar);
-                string parentFolderName = relativeScenePathName.Remove(lastFolderCharacterIndex);
+                int lastFolderCharacterIndex = assetPath.LastIndexOf(Path.DirectorySeparatorChar);
+                string parentFolderName = assetPath.Remove(lastFolderCharacterIndex);
 
                 SceneConfigSetup scs = new SceneConfigSetup()
                 {
                     path = assetPath,
                     parentFolder = parentFolderName
                 };
-
+                
                 if (string.Equals(SceneManager.GetActiveScene().path.Replace('/', '\\'), assetPath))
                 {
                     _currentSceneConfig = scs;
@@ -186,11 +197,12 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
     {
         using (new EditorGUILayout.HorizontalScope())
         {
-            SceneAsset sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(scene.path);
+            string scenePath = scene.path;
+            SceneAsset sceneLoaded = AssetDatabase.LoadAssetAtPath<SceneAsset>(scenePath);
 
             using (new EditorGUI.DisabledGroupScope(disableFavouriteToggle))
             {
-                bool isFavoriteScene = EditorPrefs.GetBool(scene.path, false);
+                bool isFavoriteScene = EditorPrefs.GetBool(scenePath, false);
                 
                 if (GUILayout.Button(isFavoriteScene ? _favouriteSymbol : _notFavouriteSymbol, GUIStyle.none,
                     GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20f), GUILayout.ExpandHeight(true)))
