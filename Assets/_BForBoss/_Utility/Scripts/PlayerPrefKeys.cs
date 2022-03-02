@@ -23,10 +23,10 @@ namespace Perigon.Utility
         
         public struct LeaderboardSettings
         {
-            public const string USERNAME = "UserName";
-            public const string TIMER = "Timer";
-            public const string INPUT = "Input";
-            public const string SHOULDUPLOAD = "ShouldUpload";
+            public const string USERNAME = "user_name";
+            public const string TIMER = "timer";
+            public const string INPUT = "input";
+            public const string SHOULDUPLOAD = "should_upload";
         }
 
         public static IList<string> GetAllKeys()
