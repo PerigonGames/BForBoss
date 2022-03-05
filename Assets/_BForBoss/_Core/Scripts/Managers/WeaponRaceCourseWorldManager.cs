@@ -30,6 +30,7 @@ namespace BForBoss
         [Title("User Interface")]
         [SerializeField] private TimerViewBehaviour _timerView = null;
         [SerializeField] private ForcedSetUsernameViewBehaviour _forcedUploadView = null;
+        [SerializeField] private EntityCounterViewBehaviour _entityCounterView = null;
 
         [Title("Effects")] 
         [SerializeField] private Volume _deathVolume = null;
@@ -51,6 +52,7 @@ namespace BForBoss
             _timeManager.Reset();
             _timerView.Reset();
             _lifeCycleManager.Reset();
+            _entityCounterView.Reset();
         }
 
         protected override void Awake()
@@ -73,6 +75,7 @@ namespace BForBoss
             _reloadView.Initialize(_equipmentBehaviour);
             
             _timerView.Initialize(_timeManagerViewModel);
+            _entityCounterView.Initialize(_lifeCycleManager);
             _forcedUploadView.Initialize(_freezeActionsUtility);
         }
         
