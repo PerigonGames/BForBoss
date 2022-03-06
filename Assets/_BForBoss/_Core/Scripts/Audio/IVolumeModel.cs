@@ -7,6 +7,6 @@ namespace BForBoss
     public interface IVolumeModel
     {
         void SetVolume(float volume);
-        bool GetVolume(out float volume);
+        float GetVolume();
     }
 }

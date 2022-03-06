@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using FMOD;
 using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace BForBoss
 {
@@ -11,28 +13,45 @@ namespace BForBoss
     {
         private const string BUS_PREFIX = "bus:/";
         private Bus _bus;
+
+        private string _name;
+
+        protected virtual string DebugString => _name + " is not a valid audio bus";
         
         public BusVolumeModel(string name)
         {
+            _name = name;
             _bus = RuntimeManager.GetBus(BUS_PREFIX + name);
         }
 
         public void SetVolume(float volume)
         {
             if (!_bus.isValid())
+            {
+                Debug.LogWarning(DebugString);
                 return;
+            }
             _bus.setVolume(volume);
         }
 
-        public bool GetVolume(out float volume)
+        public float GetVolume()
         {
-            if (_bus.isValid() && _bus.getVolume(out float _, out float finalVolume) == RESULT.OK)
+            if (_bus.isValid() && _bus.getVolume(out float volume) == RESULT.OK)
             {
-                volume = finalVolume;
-                return true;
+                return volume;
             }
-            volume = 0f;
-            return false;
+            Debug.LogWarning(DebugString);
+            return 0f;
         }
+    }
+
+    public class MasterVolumeModel : BusVolumeModel
+    {
+        public MasterVolumeModel() : base("")
+        {
+            
+        }
+
+        protected override string DebugString => "The master bus is not valid";
     }
 }
