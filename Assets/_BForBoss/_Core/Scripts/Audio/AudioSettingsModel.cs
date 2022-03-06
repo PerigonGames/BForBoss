@@ -9,8 +9,9 @@ namespace BForBoss
     public class AudioSettingsModel
     {
         private const float DEFAULT_VOLUME = 1f;
-        private const string MASTER_BUS_NAME = ""; // bus:/ is the fmod master bus
-        
+        private const string MUSIC_BUS_NAME = "Music";
+        private const string SFX_BUS_NAME = "SFX";
+
         private IVolumeModel _masterVolume;
         private IVolumeModel _musicVolume;
         private IVolumeModel _sfxVolume;
@@ -48,8 +49,8 @@ namespace BForBoss
         public AudioSettingsModel()
         {
             _masterVolume = new MasterVolumeModel();
-            _sfxVolume = new VCAVolumeModel("SFX");
-            _musicVolume = new VCAVolumeModel("Music");
+            _sfxVolume = new VCAVolumeModel(SFX_BUS_NAME);
+            _musicVolume = new VCAVolumeModel(MUSIC_BUS_NAME);
             SetValues();
         }
 

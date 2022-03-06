@@ -27,7 +27,6 @@ namespace BForBoss
 
         private void SetUI()
         {
-            Debug.Log(_audioSettingsModel.MusicVolume);
             _mainVolumeSlider.SliderValue = _audioSettingsModel.MainVolume * MULTIPLIER_VALUE;
             _musicVolumeSlider.SliderValue = _audioSettingsModel.MusicVolume * MULTIPLIER_VALUE;
             _sfxVolumeSlider.SliderValue = _audioSettingsModel.SFXVolume * MULTIPLIER_VALUE;
