@@ -35,15 +35,26 @@ namespace BForBoss
 
         private void BindUI()
         {
+            _mainVolumeSlider.OnValueChangedAction -= AllowApplying;
+            _musicVolumeSlider.OnValueChangedAction -= AllowApplying;
+            _sfxVolumeSlider.OnValueChangedAction -= AllowApplying;
+            _applyButton.onClick.RemoveAllListeners();
+            _revertButton.onClick.RemoveAllListeners();
+            
             _applyButton.onClick.AddListener(ApplyValues);
             _revertButton.onClick.AddListener(() =>
             {
                 _audioSettingsModel.RevertToDefault();
                 SetUI();
             });
-            _mainVolumeSlider.OnValueChangedAction += () => _applyButton.interactable = true;
-            _musicVolumeSlider.OnValueChangedAction += () => _applyButton.interactable = true;
-            _sfxVolumeSlider.OnValueChangedAction += () => _applyButton.interactable = true;
+            _mainVolumeSlider.OnValueChangedAction += AllowApplying;
+            _musicVolumeSlider.OnValueChangedAction += AllowApplying;
+            _sfxVolumeSlider.OnValueChangedAction += AllowApplying;
+        }
+
+        private void AllowApplying()
+        {
+            _applyButton.interactable = true;
         }
 
         private void ApplyValues()
