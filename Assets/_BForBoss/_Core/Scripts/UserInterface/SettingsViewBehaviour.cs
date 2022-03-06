@@ -22,6 +22,7 @@ namespace BForBoss
         private TabbedPanelViewBehaviour _tabbedPanelViews = null;
         private GameplaySettingsViewBehaviour _gameplaySettingsView = null;
         private ILockInput _lockInput = null;
+        private AudioSettingsViewBehaviour _audioSettingsView = null;
         
         public void Initialize(
             IInputSettings inputSettings, 
@@ -33,6 +34,7 @@ namespace BForBoss
             _setUsernameView?.Initialize(lockInput);
             _tabbedPanelViews?.Initialize();
             _gameplaySettingsView?.Initialize();
+            _audioSettingsView?.Initialize();
         }
 
         public void OpenPanel()
@@ -89,6 +91,7 @@ namespace BForBoss
             _leaderboardView = GetComponentInChildren<LeaderboardPanelBehaviour>(true);
             _tabbedPanelViews = GetComponentInChildren<TabbedPanelViewBehaviour>(true);
             _gameplaySettingsView = GetComponentInChildren<GameplaySettingsViewBehaviour>(true);
+            _audioSettingsView = GetComponentInChildren<AudioSettingsViewBehaviour>(true);
         }
 
         private void OnDestroy()

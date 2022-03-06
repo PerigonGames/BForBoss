@@ -12,6 +12,8 @@ namespace Perigon.UserInterface
         private Slider _customSlider = null;
         private TMP_InputField _inputField = null;
 
+        [SerializeField] bool _wholeNumbers = false;
+
         private Slider CustomSlider
         {
             get
@@ -45,12 +47,18 @@ namespace Perigon.UserInterface
              set => CustomSlider.value = value;
         }
 
+        private string FormatString => _wholeNumbers ? "F0" : "F";
+
         public Action OnValueChangedAction;
 
         private void Awake()
         {
             CustomSlider.onValueChanged.AddListener(HandleOnSliderValueChanged);
             CustomInputField.onEndEdit.AddListener(HandleOnInputFieldEnded);
+            CustomSlider.wholeNumbers = _wholeNumbers;
+            CustomInputField.contentType = _wholeNumbers
+                ? TMP_InputField.ContentType.IntegerNumber
+                : TMP_InputField.ContentType.DecimalNumber;
         }
 
         private void OnDestroy()
@@ -61,7 +69,7 @@ namespace Perigon.UserInterface
 
         private void HandleOnSliderValueChanged(float value)
         {
-            CustomInputField.text = value.ToString("F");
+            CustomInputField.text = value.ToString(FormatString);
             OnValueChangedAction?.Invoke();
         }
 
@@ -69,13 +77,21 @@ namespace Perigon.UserInterface
         {
             if (value.IsNullOrWhitespace())
             {
-                CustomInputField.text = CustomSlider.value.ToString("F");
+                CustomInputField.text = CustomSlider.value.ToString(FormatString);
             }
             else
             {
                 CustomSlider.value = float.Parse(value);
                 OnValueChangedAction?.Invoke();
             }
+        }
+
+        private void OnValidate()
+        {
+            CustomSlider.wholeNumbers = _wholeNumbers;
+            CustomInputField.contentType = _wholeNumbers
+                ? TMP_InputField.ContentType.IntegerNumber
+                : TMP_InputField.ContentType.DecimalNumber;
         }
     }
 }
