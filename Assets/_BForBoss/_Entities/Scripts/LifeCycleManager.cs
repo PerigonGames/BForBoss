@@ -6,14 +6,16 @@ namespace Perigon.Entities
 {
     public class LifeCycleManager : MonoBehaviour
     {
-        public Action OnLivingEntitiesAmountChanged;
+        public Action<int> OnLivingEntityEliminated;
         private LifeCycleBehaviour[] _lifeCycleBehaviours = null;
-
+        private int _totalEnemiesEliminated = 0;
+        
         public int LivingEntities => _lifeCycleBehaviours.Count(life => life.IsAlive);
 
-        public void LivingEntitiesAmountChanged()
+        public void EliminateLivingEntity()
         {
-            OnLivingEntitiesAmountChanged?.Invoke();
+            _totalEnemiesEliminated++;
+            OnLivingEntityEliminated?.Invoke(_totalEnemiesEliminated);
         }
         
         public void Reset()
@@ -26,6 +28,9 @@ namespace Perigon.Entities
             {
                 lifeCycle.Reset();
             }
+
+            _totalEnemiesEliminated = 0;
+            OnLivingEntityEliminated?.Invoke(_totalEnemiesEliminated);
         }
 
         private void Awake()
@@ -37,9 +42,9 @@ namespace Perigon.Entities
                 return;
             }
 
-            foreach (LifeCycleBehaviour lifeCycle in _lifeCycleBehaviours)
+            foreach (LifeCycleBehaviour behaviour in _lifeCycleBehaviours)
             {
-                lifeCycle.AddLifeCycleSubscriber(this);
+                behaviour.NotifyOnDeath(this);
             }
         }
     }

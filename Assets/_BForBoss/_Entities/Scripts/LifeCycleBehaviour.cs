@@ -18,9 +18,9 @@ namespace Perigon.Entities
 
         public bool IsAlive => _lifeCycle.IsAlive;
 
-        public void AddLifeCycleSubscriber(LifeCycleManager manager)
+        public void NotifyOnDeath(LifeCycleManager manager)
         {
-            _lifeCycle.OnDeath += manager.LivingEntitiesAmountChanged;
+            _lifeCycle.NotifyOnDeath(manager);
         }
 
         public void Damage(float amount = 5f)
