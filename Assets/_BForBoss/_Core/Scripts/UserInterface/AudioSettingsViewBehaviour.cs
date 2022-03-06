@@ -2,6 +2,7 @@ using FMODUnity;
 using Perigon.UserInterface;
 using UnityEngine;
 using UnityEngine.UI;
+using BForBoss.Audio;
 
 namespace BForBoss
 {

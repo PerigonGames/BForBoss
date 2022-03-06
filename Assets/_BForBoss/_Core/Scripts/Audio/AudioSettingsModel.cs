@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using Perigon.Utility;
 using UnityEngine;
 
-namespace BForBoss
+namespace BForBoss.Audio
 {
-    
     public class AudioSettingsModel
     {
         private const float DEFAULT_VOLUME = 1f;
@@ -45,6 +42,14 @@ namespace BForBoss
                 PlayerPrefs.SetFloat(PlayerPrefKeys.AudioSettings.SFX_VOLUME, value);
             }
         }
+        
+        
+        public void RevertToDefault()
+        {
+            MainVolume = DEFAULT_VOLUME;
+            MusicVolume = DEFAULT_VOLUME;
+            SFXVolume = DEFAULT_VOLUME;
+        }
 
         public AudioSettingsModel()
         {
@@ -59,13 +64,6 @@ namespace BForBoss
             _masterVolume.SetVolume(PlayerPrefs.GetFloat(PlayerPrefKeys.AudioSettings.MAIN_VOLUME, DEFAULT_VOLUME));
             _musicVolume.SetVolume(PlayerPrefs.GetFloat(PlayerPrefKeys.AudioSettings.MUSIC_VOLUME, DEFAULT_VOLUME));
             _sfxVolume.SetVolume(PlayerPrefs.GetFloat(PlayerPrefKeys.AudioSettings.SFX_VOLUME, DEFAULT_VOLUME));
-        }
-
-        public void RevertToDefault()
-        {
-            MainVolume = DEFAULT_VOLUME;
-            MusicVolume = DEFAULT_VOLUME;
-            SFXVolume = DEFAULT_VOLUME;
         }
     }
 }

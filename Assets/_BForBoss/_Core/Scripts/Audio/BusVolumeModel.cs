@@ -1,20 +1,16 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using FMOD;
 using FMOD.Studio;
 using FMODUnity;
-using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace BForBoss
+namespace BForBoss.Audio
 {
     public class BusVolumeModel : IVolumeModel
     {
         private const string BUS_PREFIX = "bus:/";
         private Bus _bus;
 
-        private string _name;
+        private readonly string _name;
 
         protected virtual string DebugString => _name + " is not a valid audio bus";
         

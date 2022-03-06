@@ -1,19 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using FMOD;
 using FMOD.Studio;
 using FMODUnity;
-using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace BForBoss
+namespace BForBoss.Audio
 {
     public class VCAVolumeModel : IVolumeModel
     {
         private const string VCA_PREFIX = "vca:/";
         private VCA _vca;
 
-        private string _name;
+        private readonly string _name;
         
         public VCAVolumeModel(string name)
         {
