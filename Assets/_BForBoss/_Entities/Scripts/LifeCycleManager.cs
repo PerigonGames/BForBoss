@@ -11,12 +11,6 @@ namespace Perigon.Entities
         private int _totalEnemiesEliminated = 0;
         
         public int LivingEntities => _lifeCycleBehaviours.Count(life => life.IsAlive);
-
-        public void EliminateLivingEntity()
-        {
-            _totalEnemiesEliminated++;
-            OnLivingEntityEliminated?.Invoke(_totalEnemiesEliminated);
-        }
         
         public void Reset()
         {
@@ -44,7 +38,11 @@ namespace Perigon.Entities
 
             foreach (LifeCycleBehaviour behaviour in _lifeCycleBehaviours)
             {
-                behaviour.NotifyOnDeath(this);
+                behaviour.NotifyOnDeath(() =>
+                {
+                    _totalEnemiesEliminated++;
+                    OnLivingEntityEliminated?.Invoke(_totalEnemiesEliminated);
+                });
             }
         }
     }

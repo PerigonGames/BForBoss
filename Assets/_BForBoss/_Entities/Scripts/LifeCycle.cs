@@ -47,9 +47,9 @@ namespace Perigon.Entities
             _currentHealth = Mathf.Min(_maxHealth, _currentHealth + amount);
         }
         
-        public void NotifyOnDeath(LifeCycleManager manager)
+        public void NotifyOnDeath(Action onDeathCallback)
         {
-            OnDeath += manager.EliminateLivingEntity;
+            OnDeath += onDeathCallback.Invoke;
         }
 
         public void DamageBy(float amount)
