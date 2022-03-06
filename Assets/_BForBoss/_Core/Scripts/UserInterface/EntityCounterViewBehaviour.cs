@@ -7,10 +7,12 @@ namespace BForBoss
     public class EntityCounterViewBehaviour : MonoBehaviour
     {
         [SerializeField] private TMP_Text _entityCounterLabel = null;
+        private LifeCycleManager _lifeCycleManager = null;
 
         public void Initialize(LifeCycleManager lifeCycleManager)
         {
-            lifeCycleManager.OnLivingEntityEliminated += HandleLivingEntitiesAmountChanged;
+            _lifeCycleManager = lifeCycleManager;
+            _lifeCycleManager.OnLivingEntityEliminated += HandleLivingEntitiesAmountChanged;
         }
 
         public void Reset()
@@ -22,6 +24,10 @@ namespace BForBoss
         {
             _entityCounterLabel.text = amount.ToString();
         }
-        
+
+        private void OnDestroy()
+        {
+            _lifeCycleManager.OnLivingEntityEliminated -= HandleLivingEntitiesAmountChanged;
+        }
     }
 }
