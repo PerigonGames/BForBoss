@@ -1,3 +1,4 @@
+using System;
 using FMODUnity;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
@@ -16,6 +17,11 @@ namespace Perigon.Entities
         protected LifeCycle _lifeCycle;
 
         public bool IsAlive => _lifeCycle.IsAlive;
+
+        public void NotifyOnDeath(Action onDeathCallback)
+        {
+            _lifeCycle.NotifyOnDeath(onDeathCallback);
+        }
 
         public void Damage(float amount = 5f)
         {

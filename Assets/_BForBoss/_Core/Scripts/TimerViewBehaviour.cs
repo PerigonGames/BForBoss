@@ -10,15 +10,15 @@ namespace BForBoss
         {
             timeManagerViewModel.OnTimeChanged += HandleOnTimeChanged;
         }
+        
+        public void Reset()
+        {
+            _timeLabel.text = "0.0";
+        }
 
         private void HandleOnTimeChanged(float time)
         {
             _timeLabel.text = time.ToString("F");
-        }
-
-        public void Reset()
-        {
-            _timeLabel.text = "0.0";
         }
     }
 }
