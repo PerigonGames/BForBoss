@@ -23,10 +23,17 @@ namespace Perigon.Utility
         
         public struct LeaderboardSettings
         {
-            public const string USERNAME = "UserName";
-            public const string TIMER = "Timer";
-            public const string INPUT = "Input";
-            public const string SHOULDUPLOAD = "ShouldUpload";
+            public const string USERNAME = "user_name";
+            public const string TIMER = "timer";
+            public const string INPUT = "input";
+            public const string SHOULD_UPLOAD = "should_upload";
+        }
+
+        public struct AudioSettings
+        {
+            public const string MAIN_VOLUME = "main_volume";
+            public const string MUSIC_VOLUME = "music_volume";
+            public const string SFX_VOLUME = "sfx_volume";
         }
 
         public static IList<string> GetAllKeys()
@@ -34,6 +41,7 @@ namespace Perigon.Utility
             var keys = GetConstStringValuesFromStruct<InputSettings>().ToList();
             keys.AddRange(GetConstStringValuesFromStruct<ThirdPerson>());
             keys.AddRange(GetConstStringValuesFromStruct<LeaderboardSettings>());
+            keys.AddRange(GetConstStringValuesFromStruct<AudioSettings>());
             return keys;
         }
 

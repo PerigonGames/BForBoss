@@ -8,13 +8,11 @@ namespace Perigon.UserInterface
 {
     public class SliderBehaviour : MonoBehaviour
     {
-        /// <summary>
-        /// ECM2's sensitivity normally goes through 0.01 -> 2.0
-        /// It looks too small and sensitive, so multiplying by 10 to go through 0.1 -> 25 
-        /// </summary>
-        private const float MAPPED_SENSITIVITY_MULTIPLIER = 100f;
+
         private Slider _customSlider = null;
         private TMP_InputField _inputField = null;
+
+        [SerializeField] bool _wholeNumbers = false;
 
         private Slider CustomSlider
         {
@@ -44,10 +42,12 @@ namespace Perigon.UserInterface
 
         public float SliderValue
         {
-             get=> CustomSlider.value / MAPPED_SENSITIVITY_MULTIPLIER;
+             get=> CustomSlider.value;
              
-             set => CustomSlider.value = value * MAPPED_SENSITIVITY_MULTIPLIER;
+             set => CustomSlider.value = value;
         }
+
+        private string FormatString => _wholeNumbers ? "F0" : "F";
 
         public Action OnValueChangedAction;
 
@@ -55,6 +55,10 @@ namespace Perigon.UserInterface
         {
             CustomSlider.onValueChanged.AddListener(HandleOnSliderValueChanged);
             CustomInputField.onEndEdit.AddListener(HandleOnInputFieldEnded);
+            CustomSlider.wholeNumbers = _wholeNumbers;
+            CustomInputField.contentType = _wholeNumbers
+                ? TMP_InputField.ContentType.IntegerNumber
+                : TMP_InputField.ContentType.DecimalNumber;
         }
 
         private void OnDestroy()
@@ -65,7 +69,7 @@ namespace Perigon.UserInterface
 
         private void HandleOnSliderValueChanged(float value)
         {
-            CustomInputField.text = value.ToString("F");
+            CustomInputField.text = value.ToString(FormatString);
             OnValueChangedAction?.Invoke();
         }
 
@@ -73,13 +77,21 @@ namespace Perigon.UserInterface
         {
             if (value.IsNullOrWhitespace())
             {
-                CustomInputField.text = CustomSlider.value.ToString("F");
+                CustomInputField.text = CustomSlider.value.ToString(FormatString);
             }
             else
             {
                 CustomSlider.value = float.Parse(value);
                 OnValueChangedAction?.Invoke();
             }
+        }
+
+        private void OnValidate()
+        {
+            CustomSlider.wholeNumbers = _wholeNumbers;
+            CustomInputField.contentType = _wholeNumbers
+                ? TMP_InputField.ContentType.IntegerNumber
+                : TMP_InputField.ContentType.DecimalNumber;
         }
     }
 }

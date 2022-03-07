@@ -22,8 +22,8 @@ namespace Tests.Input
             var viewModel = new MouseKeyboardInputSettingsViewModel(inputSettings, new MockAnalytics());
             
             //Then
-            Assert.AreEqual(viewModel.GetHorizontal, 0.1f, "Mouse Horizontal value should be the same as input settings");
-            Assert.AreEqual(viewModel.GetVertical, 0.2f, "Mouse Vertical value should be the same as input settings");
+            Assert.AreEqual(viewModel.GetHorizontal, 10f, "Mouse Horizontal value should be the same as input settings");
+            Assert.AreEqual(viewModel.GetVertical, 20f, "Mouse Vertical value should be the same as input settings");
             Assert.IsTrue(viewModel.GetIsInverted, "Input should be inverted");
         }
         
@@ -44,8 +44,8 @@ namespace Tests.Input
             var viewModel = new ControllerInputSettingsViewModel(inputSettings, new MockAnalytics());
             
             //Then
-            Assert.AreEqual(viewModel.GetHorizontal, 0.3f, "Controller Horizontal value should be the same as input settings");
-            Assert.AreEqual(viewModel.GetVertical, 0.4f, "Controller Vertical value should be the same as input settings");
+            Assert.IsTrue(TestUtilities.WithinBounds(viewModel.GetHorizontal, 30f), "Controller Horizontal value should be the same as input settings");
+            Assert.IsTrue(TestUtilities.WithinBounds(viewModel.GetVertical, 40f), "Controller Vertical value should be the same as input settings");
             Assert.IsTrue(viewModel.GetIsInverted, "Input should be inverted");
         }
         
