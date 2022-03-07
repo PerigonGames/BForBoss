@@ -49,6 +49,11 @@ namespace Perigon.Entities
         
         public void NotifyOnDeath(Action onDeathCallback)
         {
+            if (onDeathCallback == null)
+            {
+                return;
+            }
+            
             OnDeath += onDeathCallback.Invoke;
         }
 
