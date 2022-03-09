@@ -38,7 +38,7 @@ namespace Perigon.Entities
 
             foreach (LifeCycleBehaviour behaviour in _lifeCycleBehaviours)
             {
-                behaviour.NotifyOnDeath(() =>
+                behaviour.Initialize(() =>
                 {
                     _totalEnemiesEliminated++;
                     OnLivingEntityEliminated?.Invoke(_totalEnemiesEliminated);

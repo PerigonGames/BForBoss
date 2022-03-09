@@ -18,8 +18,11 @@ namespace Perigon.Entities
 
         public bool IsAlive => _lifeCycle.IsAlive;
 
-        public void NotifyOnDeath(Action onDeathCallback)
+        public virtual void Initialize(Action onDeathCallback)
         {
+            _lifeCycle = new LifeCycle(_health);
+            _lifeCycle.OnDeath += LifeCycleFinished;
+            _lifeCycle.OnDamageTaken += LifeCycleDamageTaken;
             _lifeCycle.NotifyOnDeath(onDeathCallback);
         }
 
@@ -35,12 +38,9 @@ namespace Perigon.Entities
 
         public virtual void Reset()
         {
-            _lifeCycle.Reset();
-        }
-
-        protected virtual void Awake()
-        {
-            _lifeCycle = new LifeCycle(_health);
+            _lifeCycle.Reset(); 
+            _lifeCycle.OnDeath += LifeCycleFinished;
+            _lifeCycle.OnDamageTaken += LifeCycleDamageTaken;
         }
 
         protected abstract void LifeCycleFinished();
@@ -56,13 +56,7 @@ namespace Perigon.Entities
                 _enemyKillAudio.Play();
             }
         }
-
-        protected virtual void OnEnable()
-        {
-            _lifeCycle.OnDeath += LifeCycleFinished;
-            _lifeCycle.OnDamageTaken += LifeCycleDamageTaken;
-        }
-
+        
         protected virtual void OnDisable()
         {
             _lifeCycle.OnDeath -= LifeCycleFinished;
