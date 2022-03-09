@@ -68,7 +68,7 @@ namespace Perigon.Weapons
         {
             _accumulatedRecoil += Vector3.back * _equipmentBehaviour.CurrentWeapon.VisualRecoilForce;
             _accumulatedRecoil = Vector3.ClampMagnitude(_accumulatedRecoil, _maxRecoilDistance);
-            FMODUnity.RuntimeManager.PlayOneShot(_equipmentBehaviour.WeaponShotAudio);
+            FMODUnity.RuntimeManager.PlayOneShot(_equipmentBehaviour.WeaponShotAudio, transform.position);
         }
 
         private void OnValidate()
