@@ -58,13 +58,13 @@ namespace Perigon.Entities
             _renderer.material.SetFloat(DISSOLVE_ID, 0);
             _healthbar.Reset();
         }
-        
-        protected override void OnDisable()
+
+        protected override void CleanUp()
         {
-            base.OnDisable();
+            base.CleanUp();
             _lifeCycle.OnDamageTaken -= TriggerHitAnimation;
         }
-
+        
         private void OnValidate()
         {
             if(_healthbar == null) Debug.LogWarning("A dummyTargetBehaviour is missing a health bar");

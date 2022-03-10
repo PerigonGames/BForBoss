@@ -56,11 +56,16 @@ namespace Perigon.Entities
                 _enemyKillAudio.Play();
             }
         }
-        
-        protected virtual void OnDisable()
+
+        protected virtual void CleanUp()
         {
             _lifeCycle.OnDeath -= LifeCycleFinished;
             _lifeCycle.OnDamageTaken -= LifeCycleDamageTaken;
+        }
+
+        protected void OnDisable()
+        {
+            CleanUp();
         }
     }
 }
