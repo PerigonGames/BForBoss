@@ -5,6 +5,11 @@ namespace BForBoss
 {
     public abstract class BaseInputSettingsViewModel
     {        
+        /// <summary>
+        /// ECM2's sensitivity normally goes through 0.01 -> 2.0
+        /// It looks too small and sensitive, so multiplying by 10 to go through 0.1 -> 25 
+        /// </summary>
+        protected const float MAPPED_SENSITIVITY_MULTIPLIER = 100f;
         private readonly IBForBossAnalytics _analytics = null;
         protected readonly IInputSettings _settings = null;
         

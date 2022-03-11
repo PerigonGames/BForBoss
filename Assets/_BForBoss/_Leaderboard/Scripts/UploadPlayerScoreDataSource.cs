@@ -38,7 +38,7 @@ namespace Perigon.Leaderboard
                 _input = value;
             }
         }
-        private bool ShouldUploadScores => PlayerPrefs.GetInt(PlayerPrefKeys.LeaderboardSettings.SHOULDUPLOAD, 0) == 1;
+        private bool ShouldUploadScores => PlayerPrefs.GetInt(PlayerPrefKeys.LeaderboardSettings.SHOULD_UPLOAD, 0) == 1;
 
         public UploadPlayerScoreDataSource(ILeaderboardPostEndPoint endpoint = null)
         {
@@ -78,7 +78,7 @@ namespace Perigon.Leaderboard
 
         private void Upload()
         {
-            PlayerPrefs.SetInt(PlayerPrefKeys.LeaderboardSettings.SHOULDUPLOAD, 1);
+            PlayerPrefs.SetInt(PlayerPrefKeys.LeaderboardSettings.SHOULD_UPLOAD, 1);
             _endpoint.SendScore(Username, _time, _input);
         }
 
@@ -95,7 +95,7 @@ namespace Perigon.Leaderboard
             _numberOfRetries = 0;
             PlayerPrefs.DeleteKey(PlayerPrefKeys.LeaderboardSettings.TIMER);
             PlayerPrefs.DeleteKey(PlayerPrefKeys.LeaderboardSettings.INPUT);
-            PlayerPrefs.DeleteKey(PlayerPrefKeys.LeaderboardSettings.SHOULDUPLOAD);
+            PlayerPrefs.DeleteKey(PlayerPrefKeys.LeaderboardSettings.SHOULD_UPLOAD);
             StopLoading?.Invoke();
         }
 

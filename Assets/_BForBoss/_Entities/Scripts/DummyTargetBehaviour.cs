@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
 
@@ -19,16 +20,19 @@ namespace Perigon.Entities
         private Animator _animator;
         private Renderer _renderer;
         private Tween _deathTween;
-        
-        protected override void Awake()
+
+        public override void Initialize(Action onDeathCallback)
         {
-            base.Awake();
+            base.Initialize(onDeathCallback);
             _animator = GetComponentInChildren<Animator>();
             _renderer = GetComponentInChildren<Renderer>();
-            if(_healthbar != null) 
+            if (_healthbar != null)
+            {
                 _healthbar.Initialize(_lifeCycle);
+            }
+            _lifeCycle.OnDamageTaken += TriggerHitAnimation;
         }
-
+        
         protected override void LifeCycleFinished()
         {
             _animator.SetBool(DEATH_ID, true); 
@@ -49,23 +53,18 @@ namespace Perigon.Entities
             }
             _animator.SetBool(DEATH_ID, false); 
             base.Reset();
+            _lifeCycle.OnDamageTaken += TriggerHitAnimation;
             gameObject.SetActive(true);
             _renderer.material.SetFloat(DISSOLVE_ID, 0);
             _healthbar.Reset();
         }
 
-        protected override void OnEnable()
+        protected override void CleanUp()
         {
-            base.OnEnable();
-            _lifeCycle.OnDamageTaken += TriggerHitAnimation;
-        }
-        
-        protected override void OnDisable()
-        {
-            base.OnDisable();
+            base.CleanUp();
             _lifeCycle.OnDamageTaken -= TriggerHitAnimation;
         }
-
+        
         private void OnValidate()
         {
             if(_healthbar == null) Debug.LogWarning("A dummyTargetBehaviour is missing a health bar");
