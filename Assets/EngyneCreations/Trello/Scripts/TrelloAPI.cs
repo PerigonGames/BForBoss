@@ -207,9 +207,10 @@ namespace Trello
 			post.AddField("due", card.due);
 			post.AddField("idList", card.idList);
 			post.AddField("urlSource", card.urlSource);
-			if (card.fileSource != null && card.fileName != null) 
+			if (card.attachment.IsValid())
 			{
-				post.AddBinaryData("fileSource", card.fileSource, card.fileName);
+				TrelloCard.Attachment attachment = card.attachment;
+				post.AddBinaryData("fileSource", attachment.FileSource, attachment.FileName);
 			}
 
 			using (UnityWebRequest request = UnityWebRequest.Post(string.Format("{0}?key={1}&token={2}", CARD_BASE_URL, _key, _token), post))
