@@ -23,8 +23,19 @@ namespace Trello {
         /// <summary>
         /// Base class for a Trello card.
         /// </summary>
-        public TrelloCard() {
-			
-        }		
+        public TrelloCard() 
+        {
+        }
+
+        /// <summary>
+        /// Check if TrelloCard is Valid
+        /// </summary>
+        /// <returns></returns>
+        public bool IsValid()
+        {
+            return !string.IsNullOrEmpty(name);
+        }
+
+
     }
 }

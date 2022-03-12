@@ -11,42 +11,44 @@
 
 using System;
 
-namespace Trello {
-	public class TrelloException : Exception {
+namespace Trello 
+{
+	public class TrelloException : Exception
+	{
 
         /// <summary>
         /// Throw an Exception.
         /// </summary>
-        public TrelloException()
-            : base() {
+        public TrelloException() : base()
+        {
         }
 
         /// <summary>
         /// Throw an Exception.
         /// </summary>
-        public TrelloException(string message)
-            : base(message) {		
+        public TrelloException(string message) : base(message)
+        {		
 		}
 
         /// <summary>
         /// Throw an Exception.
         /// </summary>
-        public TrelloException(string format, params object[] args)
-            : base(string.Format(format, args)) {		
+        public TrelloException(string format, params object[] args) : base(string.Format(format, args))
+        {		
 		}
 
         /// <summary>
         /// Throw an Exception.
         /// </summary>
-        public TrelloException(string message, Exception innerException)
-            : base(message, innerException) {		
+        public TrelloException(string message, Exception innerException) : base(message, innerException)
+        {		
 		}
 
         /// <summary>
         /// Throw an Exception.
         /// </summary>
-        public TrelloException(string format, Exception innerException, params object[] args)
-            : base(string.Format(format, args), innerException) {	
+        public TrelloException(string format, Exception innerException, params object[] args) : base(string.Format(format, args), innerException) 
+        {	
 		}
 	}
 }

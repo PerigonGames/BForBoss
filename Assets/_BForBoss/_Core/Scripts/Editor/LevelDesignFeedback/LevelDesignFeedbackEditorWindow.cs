@@ -123,13 +123,18 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
                 
             if (GUILayout.Button("Create Feedback"))
             {
-                Debug.Log("Feedback added");
+                SendFeedback();
             }
 
             GUI.enabled = true;
 
             EditorGUILayout.Space(ELEMENT_SPACING);
         }
+    }
+
+    private void SendFeedback()
+    {
+        Debug.Log("Feedback added");
     }
 
     private bool WasElementDoubleClicked(Rect elementRect)
