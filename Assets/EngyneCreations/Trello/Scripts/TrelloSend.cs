@@ -32,10 +32,9 @@ namespace Trello
             await api.PopulateBoards();
             api.SetCurrentBoard(string.IsNullOrEmpty(board) ? DEFAULT_BOARD : board);
 
-            await api.PopulateLists();
-            api.SetCurrentList(list);
-
-            card.idList = api.GetCurrentListId();
+            //await api.PopulateLists();
+            string listId = await api.SetCurrentList(list);
+            card.listId = listId;
 
             await api.UploadCard(card);
         }

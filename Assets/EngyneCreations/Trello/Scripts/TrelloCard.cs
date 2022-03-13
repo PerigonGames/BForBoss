@@ -44,7 +44,7 @@ namespace Trello
         public string name = "";
         public string desc = "";
         public string due = "null";
-        public string idList = "";
+        public string listId = "";
         public string urlSource = "null";
         public Attachment attachment;
 

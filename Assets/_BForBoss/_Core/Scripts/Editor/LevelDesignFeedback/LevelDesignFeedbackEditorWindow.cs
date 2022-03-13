@@ -142,7 +142,7 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
             desc = _feedback,
             attachment = new TrelloCard.Attachment(_image, "Attachment")
         };
-        TrelloSend.SendNewCard(card, "Feedback");
+        TrelloSend.SendNewCard(card, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 
     private bool WasElementDoubleClicked(Rect elementRect)

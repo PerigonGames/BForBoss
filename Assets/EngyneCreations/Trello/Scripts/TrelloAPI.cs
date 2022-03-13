@@ -123,34 +123,78 @@ namespace Trello
 		/// Sets the given list to upload cards to.
 		/// </summary>
 		/// <param name="name">Name of the list.</param>
-		public void SetCurrentList(string name)
+		public async Task<string> SetCurrentList(string name)
 		{
-			if (_lists == null)
+			await PopulateLists();
+			
+			if (_lists == null || string.IsNullOrEmpty(name))
 			{
 				throw new TrelloException("There are no lists available. Either the board does not contain lists or PopulateLists() wasn't called.");
 			}
 
-			for (int i = 0; i < _lists.Count; i++)
+			string currentListId = GetListID(name);
+
+			if (!string.IsNullOrEmpty(currentListId))
 			{
-				var list = (Dictionary<string, object>)_lists[i];
-				if ((string)list["name"] == name)
-				{
-					_currentListId = (string)list["id"];
-					return;
-				}
+				_currentListId = currentListId;
+				return currentListId;
 			}
 			
-			_currentListId = null;
-			throw new TrelloException("A list with the name " + name + " was not found.");
+			//if list name does not exist, create new Trello List with given name
+			await CreateNewList(name);
+			await PopulateLists();
+
+			currentListId = GetListID(name);
+
+			if (string.IsNullOrEmpty(currentListId))
+			{
+				throw new TrelloException("A list with the name " + name + " was not found.");
+			}
+			
+			_currentListId = currentListId;
+			return currentListId;
 		}
 		
 		/// <summary>
-		/// Creates a new Trell List for current Board ID
+		/// Uploads a given TrelloCard object to the Trello server.
 		/// </summary>
-		/// <param name="name">name of the Trello List</param>
-		/// <returns></returns>
+		/// <param name="card">Trello card to upload.</param>
 		/// <exception cref="TrelloException"></exception>
-		public async Task CreateNewList(string name)
+		public async Task UploadCard(TrelloCard card) 
+		{
+			if (!card.IsValid())
+			{
+				throw new TrelloException("Invalid Trello Card, unable to upload");
+			}
+			
+			WWWForm post = new WWWForm();
+			post.AddField("name", card.name);
+			post.AddField("desc", card.desc);
+			post.AddField("due", card.due);
+			post.AddField("idList", card.listId);
+			post.AddField("urlSource", card.urlSource);
+			if (card.attachment.IsValid())
+			{
+				TrelloCard.Attachment attachment = card.attachment;
+				post.AddBinaryData("fileSource", attachment.FileSource, attachment.FileName);
+			}
+
+			using (UnityWebRequest request = UnityWebRequest.Post(string.Format("{0}?key={1}&token={2}", CARD_BASE_URL, KEY, TOKEN), post))
+			{
+				await request.SendWebRequest();
+
+				if (request.result == UnityWebRequest.Result.Success)
+				{
+					Debug.Log($"Trello Card \"{card.name}\" was successfully uploaded");
+				}
+				else
+				{
+					throw new TrelloException($"Unable to upload Trello Card: {request.error}");
+				}
+			}
+		}
+		
+		private async Task CreateNewList(string name)
 		{
 			if (string.IsNullOrEmpty(name))
 			{
@@ -173,56 +217,24 @@ namespace Trello
 			}
 		}
 
-		/// <summary>
-		/// Returns the selected Trello list id.
-		/// </summary>
-		/// <returns>The list id.</returns>
-		public string GetCurrentListId()
+		private string GetListID(string listName)
 		{
-			if (_currentListId == null)
+			if (string.IsNullOrEmpty(listName))
 			{
-				throw new TrelloException("A list has not been selected. Call SetCurrentList() first.");
-			}
-			return _currentListId;
-		}
-		
-		/// <summary>
-		/// Uploads a given TrelloCard object to the Trello server.
-		/// </summary>
-		/// <param name="card">Trello card to upload.</param>
-		/// <exception cref="TrelloException"></exception>
-		public async Task UploadCard(TrelloCard card) 
-		{
-			if (!card.IsValid())
-			{
-				throw new TrelloException("Invalid Trello Card, unable to upload");
+				return null;
 			}
 			
-			WWWForm post = new WWWForm();
-			post.AddField("name", card.name);
-			post.AddField("desc", card.desc);
-			post.AddField("due", card.due);
-			post.AddField("idList", card.idList);
-			post.AddField("urlSource", card.urlSource);
-			if (card.attachment.IsValid())
+			for (int i = 0, count = _lists.Count; i < count; i++)
 			{
-				TrelloCard.Attachment attachment = card.attachment;
-				post.AddBinaryData("fileSource", attachment.FileSource, attachment.FileName);
-			}
-
-			using (UnityWebRequest request = UnityWebRequest.Post(string.Format("{0}?key={1}&token={2}", CARD_BASE_URL, KEY, TOKEN), post))
-			{
-				await request.SendWebRequest();
-
-				if (request.result == UnityWebRequest.Result.Success)
+				var list = (Dictionary<string, object>)_lists[i];
+				
+				if ((string)list["name"] == listName)
 				{
-					Debug.Log($"Trello Card \"{card.name}\" was successfully uploaded");
-				}
-				else
-				{
-					throw new TrelloException($"Unable to upload Trello Card: {request.error}");
+					return (string)list["id"];
 				}
 			}
+
+			return null;
 		}
 	}
 }
