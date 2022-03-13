@@ -1,5 +1,6 @@
 using System;
 using BForBoss;
+using Trello;
 using UnityEditor;
 using UnityEngine;
 
@@ -135,7 +136,13 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
 
     private void SendFeedback()
     {
-        Debug.Log("Feedback added");
+        TrelloCard card = new TrelloCard
+        {
+            name = _title,
+            desc = _feedback,
+            attachment = new TrelloCard.Attachment(_image, "Attachment")
+        };
+        TrelloSend.SendNewCard(card, "Feedback");
     }
 
     private bool WasElementDoubleClicked(Rect elementRect)

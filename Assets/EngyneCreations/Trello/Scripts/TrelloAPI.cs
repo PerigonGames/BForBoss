@@ -9,8 +9,9 @@
  * https://github.com/AdamEC/Unity-Trello
  */
 
-using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using UnityEngine;
 using MiniJSON;
 using UnityEngine.Networking;
@@ -19,13 +20,15 @@ namespace Trello
 {
 	public class TrelloAPI 
 	{
+		private const string KEY = "b5d764e33331c58cfad14460e32def9f";
+		private const string TOKEN = "d9f41075b982196531f134319f960281ec1024df209d16e8b1c01d4bc7ae4dc8";
+		private const string DEFAULT_BOARD = "Level Design Board 1";
+		
 		private const string MEMBER_BASE_URL = "https://api.trello.com/1/members/me";
 		private const string BOARD_BASE_URL = "https://api.trello.com/1/boards/";
 		private const string LIST_BASE_URL = "https://api.trello.com/1/lists/";
 		private const string CARD_BASE_URL = "https://api.trello.com/1/cards/";
 		
-		private string _token;
-		private string _key;
 		private List<object> _boards;
 		private List<object> _lists;
 		private string _currentBoardId = null;
@@ -35,26 +38,21 @@ namespace Trello
 		/// <summary>
 		/// Generate new Trello API instance.
 		/// </summary>
-		/// <param name="key">Trello API key, keep it private.</param>
-		/// <param name="token">Trello API token, keep it private.</param>
-		public TrelloAPI(string key, string token)
+		public TrelloAPI()
 		{
-			_key = key;
-			_token = token;
 		}
 
 		/// <summary>
 		/// Download the list of available boards for the user and store them.
 		/// </summary>
 		/// <returns>Downloaded boards.</returns>
-		public IEnumerator PopulateBoards()
+		public async Task PopulateBoards()
 		{
-			_boards = null;
-
-			using (UnityWebRequest request = UnityWebRequest.Get(string.Format("{0}?key={1}&token={2}&boards=all", MEMBER_BASE_URL, _key, _token)))
+			using (UnityWebRequest request = UnityWebRequest.Get(string.Format("{0}?key={1}&token={2}&boards=all", MEMBER_BASE_URL, KEY, TOKEN)))
 			{
-				yield return request.SendWebRequest();
-			
+				await request.SendWebRequest();
+
+				_boards = null;
 				if (request.result == UnityWebRequest.Result.Success && request.downloadHandler != null)
 				{
 					var dict = Json.Deserialize(request.downloadHandler.text) as Dictionary<string,object>;
@@ -64,7 +62,6 @@ namespace Trello
 				{
 					throw new TrelloException($"Unable to populate board from Trello : {request.error}");
 				}
-				
 			}
 		}
 		
@@ -97,7 +94,7 @@ namespace Trello
 		/// Download all the lists of the selected board and store them.
 		/// </summary>
 		/// <returns>Downloaded list.</returns>
-		public IEnumerator PopulateLists()
+		public async Task PopulateLists()
 		{
 			_lists = null;
 			
@@ -106,9 +103,9 @@ namespace Trello
 				throw new TrelloException("Cannot retreive the lists, there isn't a selected board yet.");
 			}
 
-			using (UnityWebRequest request = UnityWebRequest.Get(string.Format("{0}{1}?key={2}&token={3}&lists=all", BOARD_BASE_URL, _currentBoardId, _key, _token)))
+			using (UnityWebRequest request = UnityWebRequest.Get(string.Format("{0}{1}?key={2}&token={3}&lists=all", BOARD_BASE_URL, _currentBoardId, KEY, TOKEN)))
 			{
-				yield return request.SendWebRequest();
+				await request.SendWebRequest();
 
 				if (request.result == UnityWebRequest.Result.Success && request.downloadHandler != null)
 				{
@@ -146,14 +143,14 @@ namespace Trello
 			_currentListId = null;
 			throw new TrelloException("A list with the name " + name + " was not found.");
 		}
-
+		
 		/// <summary>
 		/// Creates a new Trell List for current Board ID
 		/// </summary>
 		/// <param name="name">name of the Trello List</param>
 		/// <returns></returns>
 		/// <exception cref="TrelloException"></exception>
-		public IEnumerator CreateNewList(string name)
+		public async Task CreateNewList(string name)
 		{
 			if (string.IsNullOrEmpty(name))
 			{
@@ -164,9 +161,9 @@ namespace Trello
 			post.AddField("name", name);
 			post.AddField("idBoard", _currentBoardId);
 
-			using (UnityWebRequest request = UnityWebRequest.Post(string.Format("{0}?key={1}&token={2}", LIST_BASE_URL, _key, _token), post))
+			using (UnityWebRequest request = UnityWebRequest.Post(string.Format("{0}?key={1}&token={2}", LIST_BASE_URL, KEY, TOKEN), post))
 			{
-				yield return request.SendWebRequest();
+				await request.SendWebRequest();
 				
 				if (request.result != UnityWebRequest.Result.Success)
 				{
@@ -175,7 +172,7 @@ namespace Trello
 				
 			}
 		}
-		
+
 		/// <summary>
 		/// Returns the selected Trello list id.
 		/// </summary>
@@ -194,7 +191,7 @@ namespace Trello
 		/// </summary>
 		/// <param name="card">Trello card to upload.</param>
 		/// <exception cref="TrelloException"></exception>
-		public IEnumerator UploadCard(TrelloCard card) 
+		public async Task UploadCard(TrelloCard card) 
 		{
 			if (!card.IsValid())
 			{
@@ -213,9 +210,9 @@ namespace Trello
 				post.AddBinaryData("fileSource", attachment.FileSource, attachment.FileName);
 			}
 
-			using (UnityWebRequest request = UnityWebRequest.Post(string.Format("{0}?key={1}&token={2}", CARD_BASE_URL, _key, _token), post))
+			using (UnityWebRequest request = UnityWebRequest.Post(string.Format("{0}?key={1}&token={2}", CARD_BASE_URL, KEY, TOKEN), post))
 			{
-				yield return request.SendWebRequest();
+				await request.SendWebRequest();
 
 				if (request.result == UnityWebRequest.Result.Success)
 				{
@@ -227,5 +224,14 @@ namespace Trello
 				}
 			}
 		}
+	}
+}
+public static class AsyncOperationExtensionMethods
+{
+	public static TaskAwaiter GetAwaiter(this AsyncOperation asyncOp)
+	{
+		var tcs = new TaskCompletionSource<object>();
+		asyncOp.completed += obj => { tcs.SetResult(null); };
+		return ((Task)tcs.Task).GetAwaiter();
 	}
 }

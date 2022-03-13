@@ -6,72 +6,38 @@
  * https://github.com/AdamEC/Unity-Trello
  */
 
-using System.Collections;
 using UnityEngine;
 
 namespace Trello
 {
     public class TrelloSend : MonoBehaviour
     {
-
-        [Header("Trello Auth")]
-        [SerializeField] private string _key;
-        [SerializeField] private string _token;
-        [Header("Trello Settings")]
-        [SerializeField] private string _defaultBoard;
-        [SerializeField] private string _defaultList;
-
-        public string key { set => _key = value; }
-        public string token { set => _token = value; }
-
-        private void Start() {
-
-            if (_key == "" || _token == "")
-            {
-                throw new TrelloException("The Trello API key or token are missing!");
-            }
-        }
-
+        private const string DEFAULT_BOARD = "Level Design Board 1";
+        
         /// <summary>
         /// Sends a given Trello card using the authorization settings.
         /// </summary>
         /// <param name="card">Trello card to send.</param>
-        /// <param name="list">Overrides default list.</param>
+        /// <param name="list">Trello list to upload card to</param>
         /// <param name="board">Overrides default board.</param>
-        public void SendNewCard(TrelloCard card, string list = null, string board = null)
+        public static void SendNewCard(TrelloCard card, string list, string board = null)
         {
-            if (board == null)
-            {
-                board = _defaultBoard;
-            }
-            if (list == null)
-            {
-                list = _defaultList;
-            }
-
-            StartCoroutine(Send_Internal(card, list, board));
+            Send_Internal(card, list, board);
         }
 
-        private IEnumerator Send_Internal(TrelloCard card, string list, string board)
+        private static async void Send_Internal(TrelloCard card, string list, string board = null)
         {
-            // Create an API instance
-            TrelloAPI api = new TrelloAPI(_key, _token);
+            TrelloAPI api = new TrelloAPI();
+            
+            await api.PopulateBoards();
+            api.SetCurrentBoard(string.IsNullOrEmpty(board) ? DEFAULT_BOARD : board);
 
-            // Wait for the Trello boards
-            yield return api.PopulateBoards();
-            api.SetCurrentBoard(board);
-
-            // Wait for the Trello lists
-            yield return api.PopulateLists();
+            await api.PopulateLists();
             api.SetCurrentList(list);
 
-            yield return api.CreateNewList("New List");
-
-            // Set the current ID of the selected list
             card.idList = api.GetCurrentListId();
 
-            // Upload to the server
-            yield return api.UploadCard(card);
+            await api.UploadCard(card);
         }
     }
 }
