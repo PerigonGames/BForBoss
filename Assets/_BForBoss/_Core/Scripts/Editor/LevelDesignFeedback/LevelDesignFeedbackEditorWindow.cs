@@ -13,13 +13,15 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
     
     private static LevelDesignFeedbackEditorWindow _window = null;
 
+    private static Texture2D _originalImage;
     private static Texture2D _image;
     private string _title;
     private string _feedback;
     
     public static LevelDesignFeedbackEditorWindow OpenWindow(Texture2D screenshot)
     {
-        _image = screenshot;
+        _originalImage = screenshot;
+        _image = CreateTextureCopy(_originalImage);
         _window = (LevelDesignFeedbackEditorWindow) GetWindow(typeof(LevelDesignFeedbackEditorWindow));
         _window.titleContent = new GUIContent("Add Level Design Feedback");
         _window.minSize = new Vector2(250, 500);
@@ -54,35 +56,50 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
         Rect previewImageRect;
         EditorGUILayout.Space(ELEMENT_SPACING);
 
-        using (new EditorGUILayout.HorizontalScope())
+        using (new EditorGUILayout.VerticalScope())
         {
-            GUILayout.FlexibleSpace();
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                GUILayout.FlexibleSpace();
                 
-            previewImageRect = new Rect(position.width * 0.05f,position.height * 0.02f, position.width * 0.9f, position.height * 0.4f);
+                previewImageRect = new Rect(position.width * 0.05f,position.height * 0.02f, position.width * 0.9f, position.height * 0.4f);
                 
-            if (_image == null)
-            {
-                EditorGUI.DrawRect(previewImageRect, Color.gray);
-            }
-            else
-            {
-                EditorGUI.DrawTextureTransparent(previewImageRect, _image, ScaleMode.ScaleToFit, 0);
-            }
+                if (_image == null)
+                {
+                    EditorGUI.DrawRect(previewImageRect, Color.gray);
+                }
+                else
+                {
+                    EditorGUI.DrawTextureTransparent(previewImageRect, _image, ScaleMode.ScaleToFit, 0);
+                }
 
-            if (_image != null && WasElementDoubleClicked(previewImageRect))
-            {
-                // new SceneViewCameraWindow(SceneView.currentDrawingSceneView)
+                if (_image != null && WasElementDoubleClicked(previewImageRect))
+                {
+                    // new SceneViewCameraWindow(SceneView.currentDrawingSceneView)
 
-                ImageEditorWindow imagePopupWindow = GetWindow<ImageEditorWindow>();
-                imagePopupWindow.OnWindowClosed += OnImageEdited;
-                imagePopupWindow.OpenWindow(_image);
+                    ImageEditorWindow imagePopupWindow = GetWindow<ImageEditorWindow>();
+                    imagePopupWindow.OnWindowClosed += OnImageEdited;
+                    imagePopupWindow.OpenWindow(_image);
+                }
+            
+                GUILayout.FlexibleSpace();
             }
             
-            GUILayout.FlexibleSpace();
+            EditorGUILayout.Space(previewImageRect.y + previewImageRect.height);
+            
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                GUILayout.FlexibleSpace();
+
+                if (GUILayout.Button("Reset"))
+                {
+                    _image = CreateTextureCopy(_originalImage);
+                }
+                
+                EditorGUILayout.Space(position.width * 0.05f);
+            }
         }
-
-
-        EditorGUILayout.Space(previewImageRect.y + previewImageRect.height);
+        
         EditorGUILayout.Space(ELEMENT_SPACING);
     }
 
@@ -151,6 +168,15 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
         bool hasMouseClick = evt.GetTypeForControl(GUIUtility.GetControlID(FocusType.Passive, elementRect)) == EventType.MouseDown;
 
         return hasMouseClick && evt.button == 0 && evt.clickCount == 2 && elementRect.Contains(evt.mousePosition);
+    }
+    
+    private static Texture2D CreateTextureCopy(Texture2D sourceTexture)
+    {
+        Texture2D textureCopy = new Texture2D(sourceTexture.width, sourceTexture.height, TextureFormat.ARGB32, false);
+        textureCopy.SetPixels(sourceTexture.GetPixels());
+        textureCopy.Apply();
+
+        return textureCopy;
     }
 
     private void OnDestroy()
