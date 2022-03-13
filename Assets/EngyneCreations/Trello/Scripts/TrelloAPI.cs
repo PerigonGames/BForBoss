@@ -9,6 +9,7 @@
  * https://github.com/AdamEC/Unity-Trello
  */
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -41,84 +42,42 @@ namespace Trello
 		public TrelloAPI()
 		{
 		}
-
-		/// <summary>
-		/// Download the list of available boards for the user and store them.
-		/// </summary>
-		/// <returns>Downloaded boards.</returns>
-		public async Task PopulateBoards()
-		{
-			using (UnityWebRequest request = UnityWebRequest.Get(string.Format("{0}?key={1}&token={2}&boards=all", MEMBER_BASE_URL, KEY, TOKEN)))
-			{
-				await request.SendWebRequest();
-
-				_boards = null;
-				if (request.result == UnityWebRequest.Result.Success && request.downloadHandler != null)
-				{
-					var dict = Json.Deserialize(request.downloadHandler.text) as Dictionary<string,object>;
-					_boards = (List<object>)dict["boards"];
-				}
-				else
-				{
-					throw new TrelloException($"Unable to populate board from Trello : {request.error}");
-				}
-			}
-		}
 		
 		/// <summary>
 		/// Sets the given board to search for lists in.
 		/// </summary>
 		/// <param name="name">Name of the board.</param>
-		public void SetCurrentBoard(string name)
+		public async Task SetCurrentBoard(string name)
 		{
-			if (_boards == null)
+			if (string.IsNullOrEmpty(name))
 			{
 				throw new TrelloException("There are no boards available. Either the user does not have access to a board or PopulateBoards() wasn't called.");
 			}
+
+			await PopulateBoards();
 			
-			for (int i = 0; i < _boards.Count; i++)
+			string currentBoardId = GetBoardId(name);
+
+			if (!string.IsNullOrEmpty(currentBoardId))
 			{
-				var board = (Dictionary<string, object>)_boards[i];
-				if ((string)board["name"] == name)
-				{
-					_currentBoardId = (string)board["id"];
-					return;
-				}
+				_currentBoardId = currentBoardId;
+				return;
 			}
 			
-			_currentBoardId = null;
-			throw new TrelloException("A board with the name " + name + " was not found.");
+			//if board name does not exist, create new Trello board with given name
+			await CreateNewBoard(name);
+			await PopulateBoards();
+
+			currentBoardId = GetBoardId(name);
+
+			if (string.IsNullOrEmpty(currentBoardId))
+			{
+				throw new TrelloException("A board with the name " + name + " was not found.");
+			}
+
+			_currentBoardId = currentBoardId;
 		}
-
-		/// <summary>
-		/// Download all the lists of the selected board and store them.
-		/// </summary>
-		/// <returns>Downloaded list.</returns>
-		public async Task PopulateLists()
-		{
-			_lists = null;
-			
-			if (_currentBoardId == null)
-			{
-				throw new TrelloException("Cannot retreive the lists, there isn't a selected board yet.");
-			}
-
-			using (UnityWebRequest request = UnityWebRequest.Get(string.Format("{0}{1}?key={2}&token={3}&lists=all", BOARD_BASE_URL, _currentBoardId, KEY, TOKEN)))
-			{
-				await request.SendWebRequest();
-
-				if (request.result == UnityWebRequest.Result.Success && request.downloadHandler != null)
-				{
-					var dict = Json.Deserialize(request.downloadHandler.text) as Dictionary<string,object>;
-					_lists = (List<object>)dict["lists"];
-				}
-				else
-				{
-					throw new TrelloException($"Unable to retrieve the lists : {request.error}");
-				}
-			}
-		}
-
+		
 		/// <summary>
 		/// Sets the given list to upload cards to.
 		/// </summary>
@@ -131,8 +90,8 @@ namespace Trello
 			{
 				throw new TrelloException("There are no lists available. Either the board does not contain lists or PopulateLists() wasn't called.");
 			}
-
-			string currentListId = GetListID(name);
+			
+			string currentListId = GetListId(name);
 
 			if (!string.IsNullOrEmpty(currentListId))
 			{
@@ -144,7 +103,7 @@ namespace Trello
 			await CreateNewList(name);
 			await PopulateLists();
 
-			currentListId = GetListID(name);
+			currentListId = GetListId(name);
 
 			if (string.IsNullOrEmpty(currentListId))
 			{
@@ -194,15 +153,88 @@ namespace Trello
 			}
 		}
 		
-		private async Task CreateNewList(string name)
+		/// <summary>
+		/// Download the list of available boards for the user and store them.
+		/// </summary>
+		/// <returns>Downloaded boards.</returns>
+		private async Task PopulateBoards()
 		{
-			if (string.IsNullOrEmpty(name))
+			using (UnityWebRequest request = UnityWebRequest.Get(string.Format("{0}?key={1}&token={2}&boards=all", MEMBER_BASE_URL, KEY, TOKEN)))
+			{
+				await request.SendWebRequest();
+
+				_boards = null;
+				if (request.result == UnityWebRequest.Result.Success && request.downloadHandler != null)
+				{
+					var dict = Json.Deserialize(request.downloadHandler.text) as Dictionary<string,object>;
+					_boards = (List<object>)dict["boards"];
+				}
+				else
+				{
+					throw new TrelloException($"Unable to populate board from Trello : {request.error}");
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Download all the lists of the selected board and store them.
+		/// </summary>
+		/// <returns>Downloaded list.</returns>
+		private async Task PopulateLists()
+		{
+			_lists = null;
+			
+			if (_currentBoardId == null)
+			{
+				throw new TrelloException("Cannot retrieve the lists, there isn't a selected board yet.");
+			}
+
+			using (UnityWebRequest request = UnityWebRequest.Get(string.Format("{0}{1}?key={2}&token={3}&lists=all", BOARD_BASE_URL, _currentBoardId, KEY, TOKEN)))
+			{
+				await request.SendWebRequest();
+
+				if (request.result == UnityWebRequest.Result.Success && request.downloadHandler != null)
+				{
+					var dict = Json.Deserialize(request.downloadHandler.text) as Dictionary<string,object>;
+					_lists = (List<object>)dict["lists"];
+				}
+				else
+				{
+					throw new TrelloException($"Unable to retrieve the lists : {request.error}");
+				}
+			}
+		}
+
+		private async Task CreateNewBoard(string boardName)
+		{
+			if (string.IsNullOrEmpty(boardName))
+			{
+				throw new TrelloException("Unable to create the new board");
+			}
+			
+			WWWForm post = new WWWForm();
+			post.AddField("name",boardName);
+
+			using (UnityWebRequest request = UnityWebRequest.Post(string.Format(string.Format("{0}?key={1}&token={2}", BOARD_BASE_URL, KEY, TOKEN)), post))
+			{
+				await request.SendWebRequest();
+
+				if (request.result != UnityWebRequest.Result.Success)
+				{
+					throw new Exception($"Unable to create new Trello Board : {request.error}");
+				}
+			}
+		}
+		
+		private async Task CreateNewList(string listName)
+		{
+			if (string.IsNullOrEmpty(listName))
 			{
 				throw new TrelloException("Unable to name the new list.");
 			}
 
 			WWWForm post = new WWWForm();
-			post.AddField("name", name);
+			post.AddField("name", listName);
 			post.AddField("idBoard", _currentBoardId);
 
 			using (UnityWebRequest request = UnityWebRequest.Post(string.Format("{0}?key={1}&token={2}", LIST_BASE_URL, KEY, TOKEN), post))
@@ -217,7 +249,26 @@ namespace Trello
 			}
 		}
 
-		private string GetListID(string listName)
+		private string GetBoardId(string boardName)
+		{
+			if (string.IsNullOrEmpty(boardName))
+			{
+				return null;
+			}
+			
+			for (int i = 0, count = _boards.Count; i < count; i++)
+			{
+				var board = (Dictionary<string, object>)_boards[i];
+				if ((string)board["name"] == boardName)
+				{
+					return (string)board["id"];
+				}
+			}
+
+			return null;
+		}
+
+		private string GetListId(string listName)
 		{
 			if (string.IsNullOrEmpty(listName))
 			{

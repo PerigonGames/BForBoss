@@ -29,13 +29,8 @@ namespace Trello
         {
             TrelloAPI api = new TrelloAPI();
             
-            await api.PopulateBoards();
-            api.SetCurrentBoard(string.IsNullOrEmpty(board) ? DEFAULT_BOARD : board);
-
-            //await api.PopulateLists();
-            string listId = await api.SetCurrentList(list);
-            card.listId = listId;
-
+            await api.SetCurrentBoard(string.IsNullOrEmpty(board) ? DEFAULT_BOARD : board);
+            card.listId = await api.SetCurrentList(list);
             await api.UploadCard(card);
         }
     }
