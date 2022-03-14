@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using BForBoss;
 using Trello;
 using UnityEditor;
@@ -31,6 +32,15 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
         EditorApplication.isPaused = true;
 
         return _window;
+    }
+    
+    private static Texture2D CreateTextureCopy(Texture2D sourceTexture)
+    {
+        Texture2D textureCopy = new Texture2D(sourceTexture.width, sourceTexture.height, TextureFormat.ARGB32, false);
+        textureCopy.SetPixels(sourceTexture.GetPixels());
+        textureCopy.Apply();
+
+        return textureCopy;
     }
 
     private void OnGUI()
@@ -156,8 +166,8 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
         TrelloCard card = new TrelloCard
         {
             name = _title,
-            desc = _feedback,
-            attachment = new TrelloCard.Attachment(_image, "Attachment")
+            desc = GenerateDescription(_feedback),
+            attachment = new TrelloCard.Attachment(_image, "Attachment.jpg")
         };
         TrelloSend.SendNewCard(card, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
@@ -169,14 +179,25 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
 
         return hasMouseClick && evt.button == 0 && evt.clickCount == 2 && elementRect.Contains(evt.mousePosition);
     }
-    
-    private static Texture2D CreateTextureCopy(Texture2D sourceTexture)
-    {
-        Texture2D textureCopy = new Texture2D(sourceTexture.width, sourceTexture.height, TextureFormat.ARGB32, false);
-        textureCopy.SetPixels(sourceTexture.GetPixels());
-        textureCopy.Apply();
 
-        return textureCopy;
+    private string GenerateDescription(string feedback)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.AppendLine("#Feedback");
+        stringBuilder.AppendLine("___");
+        stringBuilder.AppendLine("###User Description");
+        stringBuilder.AppendLine("```");
+        stringBuilder.AppendLine(feedback);
+        stringBuilder.AppendLine("```");
+        stringBuilder.AppendLine("___");
+        
+        if (Camera.main != null)
+        {
+            stringBuilder.AppendLine("###Additional Details");
+            stringBuilder.AppendLine($"Main Camera Position : {Camera.main.transform.position}");
+        }
+
+        return stringBuilder.ToString();
     }
 
     private void OnDestroy()
