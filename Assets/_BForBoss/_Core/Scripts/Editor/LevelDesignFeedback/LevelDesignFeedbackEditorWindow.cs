@@ -169,7 +169,13 @@ public class LevelDesignFeedbackEditorWindow : EditorWindow
             desc = GenerateDescription(_feedback),
             attachment = new TrelloCard.Attachment(_image, "Attachment.jpg")
         };
-        TrelloSend.SendNewCard(card, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        TrelloSend.SendNewCard(card, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, null, OnFeedbackSent);
+    }
+
+    private void OnFeedbackSent(bool success)
+    {
+        string message = $"The Trello Card {_title} was {(success ? "successfully" : "unsuccessfully")} created";
+        EditorUtility.DisplayDialog("Level Design Feedback Window", message, "Sounds good");
     }
 
     private bool WasElementDoubleClicked(Rect elementRect)

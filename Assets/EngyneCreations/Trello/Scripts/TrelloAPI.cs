@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using MiniJSON;
@@ -21,26 +22,32 @@ namespace Trello
 {
 	public class TrelloAPI 
 	{
-		private const string KEY = "b5d764e33331c58cfad14460e32def9f";
-		private const string TOKEN = "d9f41075b982196531f134319f960281ec1024df209d16e8b1c01d4bc7ae4dc8";
-		private const string DEFAULT_BOARD = "Level Design Board 1";
-		
+		private const string HASHEDKEY = "YjVkNzY0ZTMzMzMxYzU4Y2ZhZDE0NDYwZTMyZGVmOWY=";
+		private const string HASHEDTOKEN = "ZDlmNDEwNzViOTgyMTk2NTMxZjEzNDMxOWY5NjAyODFlYzEwMjRkZjIwOWQxNmU4YjFjMDFkNGJjN2FlNGRjOA==";
+
 		private const string MEMBER_BASE_URL = "https://api.trello.com/1/members/me";
 		private const string BOARD_BASE_URL = "https://api.trello.com/1/boards/";
 		private const string LIST_BASE_URL = "https://api.trello.com/1/lists/";
 		private const string CARD_BASE_URL = "https://api.trello.com/1/cards/";
+
+		private readonly string KEY;
+		private readonly string TOKEN;
 		
 		private List<object> _boards;
 		private List<object> _lists;
 		private string _currentBoardId = null;
 		private string _currentListId = null;
 
-
+		private Action _onFailure;
+		
 		/// <summary>
 		/// Generate new Trello API instance.
 		/// </summary>
-		public TrelloAPI()
+		public TrelloAPI(Action onFailure)
 		{
+			KEY = Encoding.UTF8.GetString(Convert.FromBase64String(HASHEDKEY));
+			TOKEN = Encoding.UTF8.GetString(Convert.FromBase64String(HASHEDTOKEN));
+			_onFailure = onFailure;
 		}
 		
 		/// <summary>
@@ -51,7 +58,7 @@ namespace Trello
 		{
 			if (string.IsNullOrEmpty(name))
 			{
-				throw new TrelloException("There are no boards available. Either the user does not have access to a board or PopulateBoards() wasn't called.");
+				CatchException("There are no boards available. Either the user does not have access to a board or PopulateBoards() wasn't called.");
 			}
 
 			await PopulateBoards();
@@ -72,7 +79,7 @@ namespace Trello
 
 			if (string.IsNullOrEmpty(currentBoardId))
 			{
-				throw new TrelloException("A board with the name " + name + " was not found.");
+				CatchException($"A board with the name {name} was not found");
 			}
 
 			_currentBoardId = currentBoardId;
@@ -88,7 +95,7 @@ namespace Trello
 			
 			if (_lists == null || string.IsNullOrEmpty(name))
 			{
-				throw new TrelloException("There are no lists available. Either the board does not contain lists or PopulateLists() wasn't called.");
+				CatchException("There are no lists available. Either the board does not contain lists or PopulateLists() wasn't called.");
 			}
 			
 			string currentListId = GetListId(name);
@@ -107,7 +114,7 @@ namespace Trello
 
 			if (string.IsNullOrEmpty(currentListId))
 			{
-				throw new TrelloException("A list with the name " + name + " was not found.");
+				CatchException($"A list with th name {name} was not found");
 			}
 			
 			_currentListId = currentListId;
@@ -123,7 +130,7 @@ namespace Trello
 		{
 			if (!card.IsValid())
 			{
-				throw new TrelloException("Invalid Trello Card, unable to upload");
+				CatchException("Invalid Trello Card, unable to upload");
 			}
 			
 			WWWForm post = new WWWForm();
@@ -148,7 +155,7 @@ namespace Trello
 				}
 				else
 				{
-					throw new TrelloException($"Unable to upload Trello Card: {request.error}");
+					CatchException($"Unable to upload Trello Card: {request.error}");
 				}
 			}
 		}
@@ -171,7 +178,7 @@ namespace Trello
 				}
 				else
 				{
-					throw new TrelloException($"Unable to populate board from Trello : {request.error}");
+					CatchException($"Unable to populate board from Trello : {request.error}");
 				}
 			}
 		}
@@ -186,7 +193,7 @@ namespace Trello
 			
 			if (_currentBoardId == null)
 			{
-				throw new TrelloException("Cannot retrieve the lists, there isn't a selected board yet.");
+				CatchException("Cannot retrieve the lists, there isn't a selected board yet.");
 			}
 
 			using (UnityWebRequest request = UnityWebRequest.Get(string.Format("{0}{1}?key={2}&token={3}&lists=all", BOARD_BASE_URL, _currentBoardId, KEY, TOKEN)))
@@ -200,7 +207,7 @@ namespace Trello
 				}
 				else
 				{
-					throw new TrelloException($"Unable to retrieve the lists : {request.error}");
+					CatchException($"Unable to retrieve the lists : {request.error}");
 				}
 			}
 		}
@@ -209,7 +216,7 @@ namespace Trello
 		{
 			if (string.IsNullOrEmpty(boardName))
 			{
-				throw new TrelloException("Unable to create the new board");
+				CatchException("Unable to create the new board");
 			}
 			
 			WWWForm post = new WWWForm();
@@ -221,7 +228,7 @@ namespace Trello
 
 				if (request.result != UnityWebRequest.Result.Success)
 				{
-					throw new Exception($"Unable to create new Trello Board : {request.error}");
+					CatchException($"Unable to create new Trello Board : {request.error}");
 				}
 			}
 		}
@@ -243,7 +250,7 @@ namespace Trello
 				
 				if (request.result != UnityWebRequest.Result.Success)
 				{
-					throw new TrelloException($"Unable to create new Trello List : {request.error}");
+					CatchException($"Unable to create new Trello List : {request.error}");
 				}
 				
 			}
@@ -286,6 +293,12 @@ namespace Trello
 			}
 
 			return null;
+		}
+
+		private void CatchException(string errorMessage)
+		{
+			_onFailure?.Invoke();
+			throw new TrelloException(errorMessage);
 		}
 	}
 }
