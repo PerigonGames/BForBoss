@@ -12,7 +12,7 @@ namespace Tests.Character
         public void GetNextStateFromNotPlaying_whenSpeedMagnitudeHigherThanMinSpeed_whenIsWallRunningTrue_resultingStateWallRunning()
         {
             // Given
-            var dummyCharacterMovement = new DummyCharacterMovement();
+            var dummyCharacterMovement = new MockCharacterMovement();
             var minSpeed = 1;
             var currentSpeed = 10;
             dummyCharacterMovement.IsWallRunning = true;
@@ -35,7 +35,7 @@ namespace Tests.Character
         public void GetNextStateFromNotPlaying_whenSpeedMagnitudeLowerThanMinSpeed_resultingStateNotPlaying()
         {
             // Given
-            var dummyCharacterMovement = new DummyCharacterMovement();
+            var dummyCharacterMovement = new MockCharacterMovement();
             var minSpeed = 10;
             var currentSpeed = 1;
             dummyCharacterMovement.IsWallRunning = true;
@@ -58,7 +58,7 @@ namespace Tests.Character
         public void GetNextStateFromNotPlaying_whenWalking_resultingStateRunning()
         {
             // Given
-            var dummyCharacterMovement = new DummyCharacterMovement();
+            var dummyCharacterMovement = new MockCharacterMovement();
             var minSpeed = 1;
             var currentSpeed = 10;
             dummyCharacterMovement.IsWallRunning = false;
@@ -82,7 +82,7 @@ namespace Tests.Character
         public void GetNextStateFromNotPlaying_nothingPasses_resultingNotPlaying()
         {
             // Given
-            var dummyCharacterMovement = new DummyCharacterMovement();
+            var dummyCharacterMovement = new MockCharacterMovement();
             var currentSpeed = 10;
             dummyCharacterMovement.IsWallRunning = false;
             dummyCharacterMovement._isWalking = false;
@@ -105,7 +105,7 @@ namespace Tests.Character
         public void GetNextStateFromRunning_whenNotWalkingOrWallRunning_whenLowSpeed_thenNotPlaying()
         {
             // Given
-            var dummyCharacterMovement = new DummyCharacterMovement();
+            var dummyCharacterMovement = new MockCharacterMovement();
             var movementAudio = GenerateCharacterMovementAudio(dummyCharacterMovement, MovementSoundState.Running);
             dummyCharacterMovement.IsWallRunning = false;
             dummyCharacterMovement._isWalking = false;
@@ -127,7 +127,7 @@ namespace Tests.Character
         public void GetNextStateFromRunning_whenWallRunning_thenPlayWallRun()
         {
             // Given
-            var dummyCharacterMovement = new DummyCharacterMovement();
+            var dummyCharacterMovement = new MockCharacterMovement();
             var movementAudio = GenerateCharacterMovementAudio(dummyCharacterMovement, MovementSoundState.Running);
             dummyCharacterMovement.IsWallRunning = true;
             dummyCharacterMovement._isWalking = false;
@@ -149,7 +149,7 @@ namespace Tests.Character
         public void GetNextStateFromRunning_whenNothingPasses_thenPlayRunning()
         {
             // Given
-            var dummyCharacterMovement = new DummyCharacterMovement();
+            var dummyCharacterMovement = new MockCharacterMovement();
             var movementAudio = GenerateCharacterMovementAudio(dummyCharacterMovement, MovementSoundState.Running);
             dummyCharacterMovement.IsWallRunning = false;
             dummyCharacterMovement._isWalking = true;
@@ -171,7 +171,7 @@ namespace Tests.Character
         public void GetNextStateFromWallRunning_whenNotWallRunningOrWalking_thenNotPlaying()
         {
             // Given
-            var dummyCharacterMovement = new DummyCharacterMovement();
+            var dummyCharacterMovement = new MockCharacterMovement();
             var movementAudio = GenerateCharacterMovementAudio(dummyCharacterMovement, MovementSoundState.WallRunning);
             dummyCharacterMovement.IsWallRunning = false;
             dummyCharacterMovement._isWalking = false;
@@ -193,7 +193,7 @@ namespace Tests.Character
         public void GetNextStateFromWallRunning_whenNoSpeed_thenNotPlaying()
         {
             // Given
-            var dummyCharacterMovement = new DummyCharacterMovement();
+            var dummyCharacterMovement = new MockCharacterMovement();
             var movementAudio = GenerateCharacterMovementAudio(dummyCharacterMovement, MovementSoundState.WallRunning);
             dummyCharacterMovement.IsWallRunning = true;
             dummyCharacterMovement._isWalking = true;
@@ -215,7 +215,7 @@ namespace Tests.Character
         public void GetNextStateFromWallRunning_whenNotWallRunningWithSpeed_thenPlayRunning()
         {
             // Given
-            var dummyCharacterMovement = new DummyCharacterMovement();
+            var dummyCharacterMovement = new MockCharacterMovement();
             var movementAudio = GenerateCharacterMovementAudio(dummyCharacterMovement, MovementSoundState.WallRunning);
             dummyCharacterMovement.IsWallRunning = false;
             dummyCharacterMovement._isWalking = true;
@@ -237,7 +237,7 @@ namespace Tests.Character
         public void GetNextStateFromWallRunning_whenWallRunningWithSpeed_thenPlayWallRun()
         {
             // Given
-            var dummyCharacterMovement = new DummyCharacterMovement();
+            var dummyCharacterMovement = new MockCharacterMovement();
             var movementAudio = GenerateCharacterMovementAudio(dummyCharacterMovement, MovementSoundState.WallRunning);
             dummyCharacterMovement.IsWallRunning = true;
             dummyCharacterMovement._isWalking = true;
@@ -255,7 +255,7 @@ namespace Tests.Character
             Assert.AreEqual(MovementSoundState.NotPlaying, resultingState, "There isn't supposed to be a state change since it's the same as past value");
         }
 
-        private CharacterMovementAudio GenerateCharacterMovementAudio(DummyCharacterMovement movement, MovementSoundState state)
+        private CharacterMovementAudio GenerateCharacterMovementAudio(MockCharacterMovement movement, MovementSoundState state)
         {
             if (state == MovementSoundState.WallRunning)
             {
@@ -274,22 +274,5 @@ namespace Tests.Character
             return movementAudio;
 
         }
-    }
-
-    public class DummyCharacterMovement : ICharacterMovement
-    {
-        public bool _isWalking = false;
-        public Vector3 CharacterVelocity { get; set; }
-        public float CharacterMaxSpeed { get; set; }
-        public bool IsGrounded { get; set; }
-        public bool IsDashing { get; set; }
-        public bool IsSliding { get; set; }
-        public bool IsWallRunning { get; set; }
-        public float SpeedMagnitude { get; set; }
-        public bool IsWalking()
-        {
-            return _isWalking;
-        }
-        
     }
 }
