@@ -24,7 +24,7 @@ Inspirations:
 [![Milestone 1 - Demo](https://img.youtube.com/vi/aA634B6ljI4/0.jpg)](https://www.youtube.com/watch?v=aA634B6ljI4)
 
 
-## Milestone 2 - Gunplay
+## Milestone 2 - Gunplay - DONE
 - Created Weapons Iteration 1
 - Created Race Course for MS2 with weapons
 - Added in FMOD for Audio
