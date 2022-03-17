@@ -1,4 +1,5 @@
 using System;
+using Perigon.Utility;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -6,15 +7,7 @@ namespace Perigon.Leaderboard
 {
     public class UploadPlayerScoreDataSource
     {
-        public struct PlayerPrefKey
-        {
-            public const string UserName = "UserName";
-            public const string Timer = "Timer";
-            public const string Input = "Input";
-            public const string ShouldUpload = "ShouldUpload";
-        }
-
-        private const int MaxNumberOfRetries = 3;
+        private const int MAX_NUMBER_OF_RETRIES = 3;
         private readonly ILeaderboardPostEndPoint _endpoint = null;
         private int _numberOfRetries = 0;
 
@@ -24,14 +17,14 @@ namespace Perigon.Leaderboard
         public event Action StartUploading;
         public event Action StopLoading;
 
-        private string Username => PlayerPrefs.GetString(PlayerPrefKey.UserName, "");
+        private string Username => PlayerPrefs.GetString(PlayerPrefKeys.LeaderboardSettings.USERNAME, "");
 
         private int Time
         {
             get => _time;
             set
             {
-                PlayerPrefs.SetFloat(PlayerPrefKey.Timer, value);
+                PlayerPrefs.SetFloat(PlayerPrefKeys.LeaderboardSettings.TIMER, value);
                 _time = value;
             }
         }
@@ -41,11 +34,11 @@ namespace Perigon.Leaderboard
             get => _input;
             set
             {
-                PlayerPrefs.SetString(PlayerPrefKey.Input, value);
+                PlayerPrefs.SetString(PlayerPrefKeys.LeaderboardSettings.INPUT, value);
                 _input = value;
             }
         }
-        private bool ShouldUploadScores => PlayerPrefs.GetInt(PlayerPrefKey.ShouldUpload, 0) == 1;
+        private bool ShouldUploadScores => PlayerPrefs.GetInt(PlayerPrefKeys.LeaderboardSettings.SHOULD_UPLOAD, 0) == 1;
 
         public UploadPlayerScoreDataSource(ILeaderboardPostEndPoint endpoint = null)
         {
@@ -78,14 +71,14 @@ namespace Perigon.Leaderboard
         {
             if (ShouldUploadScores)
             {
-                _time = PlayerPrefs.GetInt(PlayerPrefKey.Timer, int.MaxValue);
-                _input = PlayerPrefs.GetString(PlayerPrefKey.Input, "");
+                _time = PlayerPrefs.GetInt(PlayerPrefKeys.LeaderboardSettings.TIMER, int.MaxValue);
+                _input = PlayerPrefs.GetString(PlayerPrefKeys.LeaderboardSettings.INPUT, "");
             }
         }
 
         private void Upload()
         {
-            PlayerPrefs.SetInt(PlayerPrefKey.ShouldUpload, 1);
+            PlayerPrefs.SetInt(PlayerPrefKeys.LeaderboardSettings.SHOULD_UPLOAD, 1);
             _endpoint.SendScore(Username, _time, _input);
         }
 
@@ -100,9 +93,9 @@ namespace Perigon.Leaderboard
         private void HandleEndPointOnSuccess()
         {
             _numberOfRetries = 0;
-            PlayerPrefs.DeleteKey(PlayerPrefKey.Timer);
-            PlayerPrefs.DeleteKey(PlayerPrefKey.Input);
-            PlayerPrefs.DeleteKey(PlayerPrefKey.ShouldUpload);
+            PlayerPrefs.DeleteKey(PlayerPrefKeys.LeaderboardSettings.TIMER);
+            PlayerPrefs.DeleteKey(PlayerPrefKeys.LeaderboardSettings.INPUT);
+            PlayerPrefs.DeleteKey(PlayerPrefKeys.LeaderboardSettings.SHOULD_UPLOAD);
             StopLoading?.Invoke();
         }
 
@@ -110,7 +103,7 @@ namespace Perigon.Leaderboard
         {
             _numberOfRetries++;
             Debug.Log("Number of Tries: "+_numberOfRetries);
-            var isNumberOfRetriesWithinLimit = _numberOfRetries < MaxNumberOfRetries;
+            var isNumberOfRetriesWithinLimit = _numberOfRetries < MAX_NUMBER_OF_RETRIES;
             if (isNumberOfRetriesWithinLimit)
             {
                 UploadIfPossible();

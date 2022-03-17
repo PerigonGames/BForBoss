@@ -9,30 +9,39 @@ namespace Perigon.Utility
     {
         public struct InputSettings
         {
-            public const string Is_Inverted = "is_inverted";
-            public const string Mouse_Horizontal_Sensitivity = "mouse_horizontal_sensitivity";
-            public const string Mouse_Vertical_Sensitivity = "mouse_vertical_sensitivity";
-            public const string Controller_Horizontal_Sensitivity = "controller_horizontal_sensitivity";
-            public const string Controller_Vertical_Sensitivity = "controller_vertical_sensitivity";
+            public const string IS_INVERTED = "is_inverted";
+            public const string MOUSE_HORIZONTAL_SENSITIVITY = "mouse_horizontal_sensitivity";
+            public const string MOUSE_VERTICAL_SENSITIVITY = "mouse_vertical_sensitivity";
+            public const string CONTROLLER_HORIZONTAL_SENSITIVITY = "controller_horizontal_sensitivity";
+            public const string CONTROLLER_VERTICAL_SENSITIVITY = "controller_vertical_sensitivity";
         }
 
         public struct ThirdPerson
         {
-            public const string IsThirdPerson = "is_third_person";
+            public const string IS_THIRD_PERSON = "is_third_person";
+        }
+        
+        public struct LeaderboardSettings
+        {
+            public const string USERNAME = "user_name";
+            public const string TIMER = "timer";
+            public const string INPUT = "input";
+            public const string SHOULD_UPLOAD = "should_upload";
         }
 
-        public struct GameplaySettings
+        public struct AudioSettings
         {
-            public const string ShowFPS = "ShowFPS";
-            public const string ShowRAMUsage = "ShowRAMUsage";
-            public const string ShowPCSpecs = "ShowPCSpecs";
+            public const string MAIN_VOLUME = "main_volume";
+            public const string MUSIC_VOLUME = "music_volume";
+            public const string SFX_VOLUME = "sfx_volume";
         }
 
         public static IList<string> GetAllKeys()
         {
             var keys = GetConstStringValuesFromStruct<InputSettings>().ToList();
             keys.AddRange(GetConstStringValuesFromStruct<ThirdPerson>());
-            keys.AddRange(GetConstStringValuesFromStruct<GameplaySettings>());
+            keys.AddRange(GetConstStringValuesFromStruct<LeaderboardSettings>());
+            keys.AddRange(GetConstStringValuesFromStruct<AudioSettings>());
             return keys;
         }
 

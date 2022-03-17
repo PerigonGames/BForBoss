@@ -12,13 +12,13 @@ namespace Perigon.Utility
         public void LockInput()
         {
             LockMouseUtility.Instance.UnlockMouse();
-            _input.DisableActions();
+            _input.SwapToUIActions();
         }
 
         public void UnlockInput()
         {
             LockMouseUtility.Instance.LockMouse();
-            _input.EnableActions();
+            _input.SwapToPlayerActions();
         }
     }
 }

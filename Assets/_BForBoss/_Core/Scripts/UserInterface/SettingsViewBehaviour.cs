@@ -3,6 +3,7 @@ using Perigon.Leaderboard;
 using Perigon.UserInterface;
 using Perigon.Utility;
 using PerigonGames;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,30 +11,35 @@ namespace BForBoss
 {
     public class SettingsViewBehaviour : MonoBehaviour
     {
-        [SerializeField] private Button _backButton = null;
-
-        private InputSettingsViewBehaviour _inputSettingsView = null;
+        [Title("Buttons")]
+        [Resolve][SerializeField] private Button _backButton = null;
+        
+        [Title("Panel")]
+        [SerializeField] private InputSettingsViewBehaviour _mouseKeyboardInputSettingsView = null;
+        [SerializeField] private InputSettingsViewBehaviour _controllerInputSettingsView = null;
         private SetUsernameViewBehaviour _setUsernameView = null;
         private LeaderboardPanelBehaviour _leaderboardView = null;
         private TabbedPanelViewBehaviour _tabbedPanelViews = null;
         private GameplaySettingsViewBehaviour _gameplaySettingsView = null;
-
         private ILockInput _lockInput = null;
+        private AudioSettingsViewBehaviour _audioSettingsView = null;
         
         public void Initialize(
-            IThirdPerson thirdPersonSettings,
             IInputSettings inputSettings, 
             ILockInput lockInput)
         {
             _lockInput = lockInput;
-            _inputSettingsView.Initialize(new InputSettingsViewModel(inputSettings));
-            _setUsernameView.Initialize(lockInput);
-            _tabbedPanelViews.Initialize();
-            _gameplaySettingsView.Initialize(thirdPersonSettings);
+            _mouseKeyboardInputSettingsView.Initialize(new MouseKeyboardInputSettingsViewModel(inputSettings));
+            _controllerInputSettingsView?.Initialize(new ControllerInputSettingsViewModel(inputSettings));
+            _setUsernameView?.Initialize(lockInput);
+            _tabbedPanelViews?.Initialize();
+            _gameplaySettingsView?.Initialize();
+            _audioSettingsView?.Initialize();
         }
 
         public void OpenPanel()
         {
+            _tabbedPanelViews.Reset();
             transform.ResetScale();
         }
 
@@ -57,7 +63,20 @@ namespace BForBoss
             _backButton.onClick.AddListener(ClosePanel);
             SetupViews();
         }
-        
+
+        private void OnValidate()
+        {
+            if (_mouseKeyboardInputSettingsView == null)
+            {
+                Debug.LogWarning("MouseAndKeyboardInputSettingsView is missing from SettingsViewBehaviour ");
+            }
+            
+            if (_controllerInputSettingsView == null)
+            {
+                Debug.LogWarning("ControllerInputSettingsView is missing from SettingsViewBehaviour ");
+            }
+        }
+
         private void UnlockInputIfEndRaceState()
         {
             if (StateManager.Instance.GetState() == State.EndRace)
@@ -68,11 +87,11 @@ namespace BForBoss
 
         private void SetupViews()
         {
-            _inputSettingsView = GetComponentInChildren<InputSettingsViewBehaviour>();
-            _setUsernameView =  GetComponentInChildren<SetUsernameViewBehaviour>();
-            _leaderboardView = GetComponentInChildren<LeaderboardPanelBehaviour>();
-            _tabbedPanelViews = GetComponentInChildren<TabbedPanelViewBehaviour>();
-            _gameplaySettingsView = GetComponentInChildren<GameplaySettingsViewBehaviour>();
+            _setUsernameView =  GetComponentInChildren<SetUsernameViewBehaviour>(true);
+            _leaderboardView = GetComponentInChildren<LeaderboardPanelBehaviour>(true);
+            _tabbedPanelViews = GetComponentInChildren<TabbedPanelViewBehaviour>(true);
+            _gameplaySettingsView = GetComponentInChildren<GameplaySettingsViewBehaviour>(true);
+            _audioSettingsView = GetComponentInChildren<AudioSettingsViewBehaviour>(true);
         }
 
         private void OnDestroy()

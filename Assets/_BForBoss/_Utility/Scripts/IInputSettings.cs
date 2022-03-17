@@ -8,7 +8,7 @@ namespace Perigon.Utility
         float ControllerHorizontalSensitivity { get; set; }
         float ControllerVerticalSensitivity { get; set; }
         void RevertAllSettings();
-        void DisableActions();
-        void EnableActions();
+        void SwapToUIActions();
+        void SwapToPlayerActions();
     }
 }

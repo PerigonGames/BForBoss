@@ -31,7 +31,7 @@ namespace BForBoss
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!_hasBeenActivated && other.CompareTag(Tags.Player))
+            if (!_hasBeenActivated && other.CompareTag(TagsAndLayers.Tags.Player))
             {
                 OnEnterArea?.Invoke(this);
             }

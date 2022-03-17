@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using Perigon.Analytics;
+using Perigon.Utility;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -8,18 +9,18 @@ namespace Perigon.Leaderboard
     public class InputUsername
     {
         public static readonly int CharacterLimit = 20;
-        private readonly IPerigonAnalytics _analytics = null;
+        private readonly IBForBossAnalytics _analytics = null;
         
-        public string Username => PlayerPrefs.GetString(UploadPlayerScoreDataSource.PlayerPrefKey.UserName, "N/A");
+        public string Username => PlayerPrefs.GetString(PlayerPrefKeys.LeaderboardSettings.USERNAME, "N/A");
         
-        public InputUsername(IPerigonAnalytics analytics = null)
+        public InputUsername(IBForBossAnalytics analytics = null)
         {
-            _analytics = analytics ?? PerigonAnalytics.Instance;
+            _analytics = analytics ?? BForBossAnalytics.Instance;
         }
 
         public void SetUserName(string username)
         {
-            PlayerPrefs.SetString(UploadPlayerScoreDataSource.PlayerPrefKey.UserName, username);
+            PlayerPrefs.SetString(PlayerPrefKeys.LeaderboardSettings.USERNAME, username);
             _analytics.SetUsername(username);
         }
 

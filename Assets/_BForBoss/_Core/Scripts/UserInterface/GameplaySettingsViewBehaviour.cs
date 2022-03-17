@@ -1,7 +1,4 @@
-using Perigon.Analytics;
 using Perigon.Character;
-using Perigon.Utility;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,19 +6,17 @@ namespace BForBoss
 {
     public class GameplaySettingsViewBehaviour : MonoBehaviour
     {
-        [SerializeField] private TMP_Dropdown _povDropdown = null;
         [SerializeField] private Toggle _showFPSToggle = null;
         [SerializeField] private Toggle _showRAMToggle = null;
         [SerializeField] private Toggle _showPCSpecsToggle = null;
 
         private GameplaySettingsViewModel _viewModel = null;
         
-        public void Initialize(IThirdPerson thirdPersonSettings)
+        public void Initialize()
         {
-            _viewModel = new GameplaySettingsViewModel(thirdPersonSettings);
+            _viewModel = new GameplaySettingsViewModel();
             SetViews();
             BindModel();
-            _viewModel.SetGraphy();
 #if !DEVELOPMENT_BUILD && !UNITY_EDITOR
             HideSettingsForProduction();
 #endif
@@ -46,20 +41,13 @@ namespace BForBoss
             {
                 _viewModel.SetShowPCSpecifications(isOn);
             });
-            
-            _povDropdown.onValueChanged.RemoveAllListeners();
-            _povDropdown.onValueChanged.AddListener(value =>
-            {
-                _viewModel.SetPOV(value);
-            });
         }
 
         private void SetViews()
         {
-            _showFPSToggle.isOn = _viewModel.IsShowingFPS;
-            _showPCSpecsToggle.isOn = _viewModel.IsShowingPCSpecs;
-            _showRAMToggle.isOn = _viewModel.IsShowingRAM;
-            _povDropdown.value = _viewModel.IsThirdPersonView ? 1 : 0;
+            _showFPSToggle.isOn = true;
+            _showPCSpecsToggle.isOn = false;
+            _showRAMToggle.isOn = false;
         }
 
         private void HideSettingsForProduction()
@@ -74,62 +62,25 @@ namespace BForBoss
     public class GameplaySettingsViewModel
     {
         private ISpecification _graphyManager = null;
-        private IThirdPerson _thirdPersonSettings = null;
-        private readonly PerigonAnalytics _perigonAnalytics = PerigonAnalytics.Instance;
         
-        public bool IsShowingFPS => PlayerPrefs.GetInt(PlayerPrefKeys.GameplaySettings.ShowFPS, 0) == 1;
-        public bool IsShowingRAM => PlayerPrefs.GetInt(PlayerPrefKeys.GameplaySettings.ShowRAMUsage, 0) == 1;
-        public bool IsShowingPCSpecs => PlayerPrefs.GetInt(PlayerPrefKeys.GameplaySettings.ShowPCSpecs, 0) == 1;
-        public bool IsThirdPersonView => _thirdPersonSettings.IsThirdPerson;
-
-        public GameplaySettingsViewModel(IThirdPerson thirdPersonSettings, ISpecification specification = null)
+        public GameplaySettingsViewModel(ISpecification specification = null)
         {
-            _thirdPersonSettings = thirdPersonSettings;
             _graphyManager = specification ?? new GraphyAdapter();
-            
-            _perigonAnalytics.SetPOV(IsThirdPersonView);
-        }
-
-        public void SetGraphy()
-        {
-            SetShowFPS(IsShowingFPS);
-            SetShowRAMUsage(IsShowingRAM);
-            SetShowPCSpecifications(IsShowingPCSpecs);
-            _graphyManager.SetAudioUsage(false);
         }
 
         public void SetShowFPS(bool isOn)
         {
-            var storedValue = isOn ? 1 : 0;
-            PlayerPrefs.SetInt(PlayerPrefKeys.GameplaySettings.ShowFPS, storedValue);
             _graphyManager.SetShowFPSActive(isOn);
         }
 
         public void SetShowRAMUsage(bool isOn)
         {
-            var storedValue = isOn ? 1 : 0;
-            PlayerPrefs.SetInt(PlayerPrefKeys.GameplaySettings.ShowRAMUsage, storedValue);
             _graphyManager.SetShowRAMUsageActive(isOn);
         }
 
         public void SetShowPCSpecifications(bool isOn)
         {
-            var storedValue = isOn ? 1 : 0;
-            PlayerPrefs.SetInt(PlayerPrefKeys.GameplaySettings.ShowPCSpecs, storedValue);
             _graphyManager.SetShowPCSpecificationsActive(isOn);
-        }
-
-        public void SetPOV(int dropDownValue)
-        {
-            var isThirdPerson = DropDownToIsThirdPerson(dropDownValue);
-            _thirdPersonSettings.SetThirdPersonActive(isThirdPerson);
-            
-            _perigonAnalytics.SetPOV(isThirdPerson);
-        }
-
-        private bool DropDownToIsThirdPerson(int value)
-        {
-            return value != 0;
         }
     }
 }

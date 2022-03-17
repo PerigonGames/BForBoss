@@ -1,3 +1,4 @@
+using System;
 using Cinemachine;
 using ECM2.Characters;
 using ECM2.Components;
@@ -9,8 +10,6 @@ namespace Perigon.Character
 {
     public partial class FirstPersonPlayer : FirstPersonCharacter
     {
-        private const string PLAYER_MODEL_LAYER = "PlayerModel";
-
         [Header("Cinemachine")]
         public CinemachineVirtualCamera cmWalkingCamera;
         public CinemachineVirtualCamera cmCrouchedCamera;
@@ -20,23 +19,39 @@ namespace Perigon.Character
         private PlayerDashBehaviour _dashBehaviour = null;
         private PlayerWallRunBehaviour _wallRunBehaviour = null;
         private PlayerSlideBehaviour _slideBehaviour = null;
-
-        private int firstPersonMask;
-        private int thirdPersonMask;
+        private PlayerSlowMotionBehaviour _slowMotionBehaviour = null;
 
         [SerializeField] private bool _isThirdPerson = false;
+        
+        public event Action Dashed;
+        public event Action Slid;
 
         public bool IsThirdPerson
         {
             get => _isThirdPerson;
-            set
+            private set
             {
                 if (value == _isThirdPerson) return;
                 _isThirdPerson = value;
                 ToggleThirdPerson();
             }
         }
+        
+        public bool IsSliding()
+        {
+            return _slideBehaviour?.IsSliding ?? false;
+        }
 
+        public bool IsDashing()
+        {
+            return _dashBehaviour?.IsDashing ?? false;
+        }
+        
+        public bool IsWallRunning()
+        {
+            return  _wallRunBehaviour?.IsWallRunning ?? false;
+        }
+        
         public void Initialize()
         {
             SetupInput();
@@ -70,9 +85,9 @@ namespace Perigon.Character
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();
             _wallRunBehaviour = GetComponent<PlayerWallRunBehaviour>();
             _slideBehaviour = GetComponent<PlayerSlideBehaviour>();
+            _slowMotionBehaviour = GetComponent<PlayerSlowMotionBehaviour>();
 
-            thirdPersonMask = camera.cullingMask;
-            firstPersonMask = ~(1 << LayerMask.NameToLayer(PLAYER_MODEL_LAYER));
+            _thirdPersonMask = camera.cullingMask;
 
             base.OnAwake();
         }
@@ -88,7 +103,10 @@ namespace Perigon.Character
             {
                 _slideBehaviour.Initialize(this);
             }
-            _wallRunBehaviour?.Initialize(this, base.GetMovementInput, SetJumpCount);
+            if (_wallRunBehaviour != null)
+            {
+                _wallRunBehaviour.Initialize(this, base.GetMovementInput, SetJumpCount);
+            }
 
             TogglePlayerModel();
         }
@@ -100,6 +118,12 @@ namespace Perigon.Character
             {
                 InputAction dashInputAction = actions.FindAction("Dash");
                 _dashBehaviour.SetupPlayerInput(dashInputAction);
+            }
+
+            if (_slowMotionBehaviour != null)
+            {
+                var slowMoInput = actions.FindAction("SlowTime");
+                _slowMotionBehaviour.SetupPlayerInput(slowMoInput);
             }
         }
 
@@ -213,6 +237,15 @@ namespace Perigon.Character
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.OnOnDisable();
+                _dashBehaviour.StartDashing -= Dashed;
+            }
+            if (_slowMotionBehaviour != null)
+            {
+                _slowMotionBehaviour.OnOnDisable();
+            }
+            if (_slideBehaviour != null)
+            {
+                _slideBehaviour.StartSliding -= Slid;
             }
         }
         
@@ -222,6 +255,15 @@ namespace Perigon.Character
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.OnOnEnable();
+                _dashBehaviour.StartDashing += Dashed;
+            }
+            if (_slowMotionBehaviour != null)
+            {
+                _slowMotionBehaviour.OnOnEnable();
+            }
+            if (_slideBehaviour != null)
+            {
+                _slideBehaviour.StartSliding += Slid;
             }
         }
 
@@ -239,12 +281,6 @@ namespace Perigon.Character
             _jumpCount = count;
         }
         
-        private void TogglePlayerModel()
-        {
-            animate = IsThirdPerson;
-            camera.cullingMask = IsThirdPerson ? thirdPersonMask : firstPersonMask;
-        }
-
         protected override void OnOnValidate()
         {
             base.OnOnValidate();
@@ -260,17 +296,6 @@ namespace Perigon.Character
         {
             return cmThirdPersonCamera != null && cmThirdPersonCamera.gameObject.activeSelf;
         }
-
-        private bool IsSliding()
-        {
-            return _slideBehaviour != null && _slideBehaviour.IsSliding;
-        }
-
-        private bool IsWallRunning()
-        {
-            return _wallRunBehaviour != null && _wallRunBehaviour.IsWallRunning;
-        }
-
         #endregion
     }
 }
