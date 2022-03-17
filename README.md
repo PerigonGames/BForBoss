@@ -25,4 +25,8 @@ Inspirations:
 
 
 ## Milestone 2 - Gunplay
-TBD
+- Created Weapons Iteration 1
+- Created Race Course for MS2 with weapons
+- Added in FMOD for Audio
+
+[![Milestone 2 - Demo](https://img.youtube.com/vi/SH9xvqlBY68/0.jpg)](https://youtu.be/SH9xvqlBY68)
