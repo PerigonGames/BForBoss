@@ -10,7 +10,7 @@ namespace Perigon.Character
     public class CharacterMovementAudio
     {
         private readonly ICharacterMovement _characterMovement = null;
-        private MovementSoundState _state;
+        private MovementSoundState _state = MovementSoundState.NotPlaying;
         private float _minSpeed = 0;
 
         public event Action<MovementSoundState> OnSoundStateChange;
