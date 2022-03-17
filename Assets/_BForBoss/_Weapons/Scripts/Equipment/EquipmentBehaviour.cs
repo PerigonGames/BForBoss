@@ -1,3 +1,5 @@
+using System;
+using Perigon.Utility;
 using PerigonGames;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -89,10 +91,6 @@ namespace Perigon.Weapons
             SetupPlayerEquipmentInput();
             _swapWeaponInputAction.started += OnControllerSwapWeaponAction;
             _weaponBehaviours = GetComponentsInChildren<WeaponBehaviour>();
-            if (_weaponBehaviours.IsNullOrEmpty())
-            {
-                Debug.LogWarning("There are currently no WeaponBehaviour within the child of EquipmentBehaviour");
-            }
             SetupWeapons();
         }
 
@@ -100,7 +98,12 @@ namespace Perigon.Weapons
         {
             if (_inputActions == null)
             {
-                Debug.LogWarning("Input Action Asset is missing from Equipment Behaviour");
+                PanicHelper.Panic(new Exception("Input Action Asset is missing from Equipment Behaviour"));
+            }
+            
+            if (_weaponBehaviours.IsNullOrEmpty())
+            {
+                PanicHelper.Panic(new Exception("There are currently no WeaponBehaviour within the child of EquipmentBehaviour"));
             }
         }
 

@@ -1,3 +1,4 @@
+using System;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
@@ -75,7 +76,7 @@ namespace Perigon.Weapons
         {
             if (_equipmentBehaviour == null)
             {
-                Debug.LogWarning("Equipment Behaviour missing from WeaponsManager");
+                PanicHelper.Panic(new Exception("Equipment Behaviour missing from WeaponsManager"));
             }
         }
 
