@@ -20,11 +20,11 @@ using UnityEngine.Networking;
 
 namespace Trello 
 {
-	public class TrelloAPI 
+	public class TrelloAPI
 	{
-		private const string HASHEDKEY = "YjVkNzY0ZTMzMzMxYzU4Y2ZhZDE0NDYwZTMyZGVmOWY=";
-		private const string HASHEDTOKEN = "ZDlmNDEwNzViOTgyMTk2NTMxZjEzNDMxOWY5NjAyODFlYzEwMjRkZjIwOWQxNmU4YjFjMDFkNGJjN2FlNGRjOA==";
-
+		private const string HASHEDKEY = "NmZiZDU4M2VmMzkxZjU1ZjFjZTgyODJlNWRmMDUxYjU=";
+		private const string HASHEDTOKEN = "ZWYxZWJhYTI4YmVkNjc1ZDI1ZjgxMmI1ZjFmYmQ5ODMxMDk5YTlkZGI5ZjA3YWE3N2I1MGZkYjlhZjUyYWM4Zg==";
+		private const string DEFAULT_BOARD = "LevelDesignFeedbackBoard";
 		private const string MEMBER_BASE_URL = "https://api.trello.com/1/members/me";
 		private const string BOARD_BASE_URL = "https://api.trello.com/1/boards/";
 		private const string LIST_BASE_URL = "https://api.trello.com/1/lists/";
@@ -58,7 +58,7 @@ namespace Trello
 		{
 			if (string.IsNullOrEmpty(name))
 			{
-				CatchException("There are no boards available. Either the user does not have access to a board or PopulateBoards() wasn't called.");
+				name = DEFAULT_BOARD;
 			}
 
 			await PopulateBoards();

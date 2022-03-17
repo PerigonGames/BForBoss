@@ -13,8 +13,6 @@ namespace Trello
 {
     public class TrelloSend : MonoBehaviour
     {
-        private const string DEFAULT_BOARD = "Level Design Board 1";
-
         /// <summary>
         /// Sends a given Trello card using the authorization settings.
         /// </summary>
@@ -31,7 +29,7 @@ namespace Trello
         {
             TrelloAPI api = new TrelloAPI(() => onComplete?.Invoke(false));
             
-            await api.SetCurrentBoard(string.IsNullOrEmpty(board) ? DEFAULT_BOARD : board);
+            await api.SetCurrentBoard(board);
             card.listId = await api.SetCurrentList(list);
             await api.UploadCard(card);
             onComplete?.Invoke(true);
