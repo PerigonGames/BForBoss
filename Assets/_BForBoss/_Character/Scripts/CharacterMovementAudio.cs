@@ -1,30 +1,27 @@
 using System;
-using UnityEngine;
-using FMODUnity;
 
 namespace Perigon.Character
 {
-    public class CharacterMovementAudio : MonoBehaviour
+    public enum MovementSoundState
     {
-        [SerializeField] private EventReference _dashAudio;
-        [SerializeField] private EventReference _slideAudio;
-        [SerializeField] private EventReference _jumpAudio;
-
-        [SerializeField] private StudioEventEmitter _runningAudio;
-        [SerializeField] private StudioEventEmitter _wallrunAudio;
-
-        [SerializeField] private float _minSpeed = 0.1f;
-
-        private FirstPersonPlayer _player;
-
+        NotPlaying, Running, WallRunning
+    }
+    
+    public class CharacterMovementAudio
+    {
+        private readonly ICharacterMovement _characterMovement = null;
         private MovementSoundState _state;
-        
-        private void Awake()
+        private float _minSpeed = 0;
+
+        public event Action<MovementSoundState> OnSoundStateChange;
+
+        public CharacterMovementAudio(ICharacterMovement characterMovement, float minSpeed)
         {
-            _player = GetComponent<FirstPersonPlayer>();
+            _characterMovement = characterMovement;
+            _minSpeed = minSpeed;
         }
 
-        private void Update()
+        public void OnUpdate()
         {
             var oldState = _state;
             switch (_state)
@@ -39,53 +36,23 @@ namespace Perigon.Character
                     _state = GetNextStateFromWallRunning();
                     break;
             }
-            PlayStateAudio(_state, oldState);
-        }
 
-        private void OnEnable()
-        {
-            if (_player != null)
+            if (oldState != _state)
             {
-                _player.Jumped += PlayJumpSound;
-                _player.Dashed += PlayDashSound;
-                _player.Slid += PlaySlideSound;
+                OnSoundStateChange?.Invoke(_state);
             }
         }
         
-        private void OnDisable()
-        {
-            if (_player != null)
-            {
-                _player.Jumped -= PlayJumpSound;
-                _player.Dashed -= PlayDashSound;
-                _player.Slid -= PlaySlideSound;
-            }
-        }
-
-        private void PlayJumpSound()
-        {
-            RuntimeManager.PlayOneShot(_jumpAudio, transform.position);
-        }
-        
-        private void PlaySlideSound()
-        {
-            RuntimeManager.PlayOneShot(_slideAudio, transform.position);
-        }
-        
-        private void PlayDashSound()
-        {
-            RuntimeManager.PlayOneShot(_dashAudio, transform.position);
-        }
-
         private MovementSoundState GetNextStateFromNotPlaying()
         {
-            if (_player.Speed < _minSpeed) 
+            if (_characterMovement.SpeedMagnitude < _minSpeed) 
                 return MovementSoundState.NotPlaying;
-            if (_player.IsWallRunning())
+            if (_characterMovement.IsWallRunning)
             {
                 return MovementSoundState.WallRunning;
             }
-            else if (_player.IsWalking())
+            
+            if (_characterMovement.IsWalking())
             {
                 return MovementSoundState.Running;
             }
@@ -94,12 +61,12 @@ namespace Perigon.Character
         
         private MovementSoundState GetNextStateFromRunning()
         {
-            bool isWalkingOrWallRunning = _player.IsWallRunning() || _player.IsWalking();
-            if (_player.Speed < _minSpeed || !isWalkingOrWallRunning)
+            bool isWalkingOrWallRunning = _characterMovement.IsWallRunning || _characterMovement.IsWalking();
+            if (_characterMovement.SpeedMagnitude < _minSpeed || !isWalkingOrWallRunning)
             {
                 return MovementSoundState.NotPlaying;
             }
-            if (_player.IsWallRunning())
+            if (_characterMovement.IsWallRunning)
             {
                 return MovementSoundState.WallRunning;
             }
@@ -108,41 +75,16 @@ namespace Perigon.Character
         
         private MovementSoundState GetNextStateFromWallRunning()
         {
-            bool isWalkingOrWallRunning = _player.IsWallRunning() || _player.IsWalking();
-            if (_player.Speed < _minSpeed || !isWalkingOrWallRunning)
+            bool isWalkingOrWallRunning = _characterMovement.IsWallRunning || _characterMovement.IsWalking();
+            if (_characterMovement.SpeedMagnitude < _minSpeed || !isWalkingOrWallRunning)
             {
                 return MovementSoundState.NotPlaying;
             }
-            if (!_player.IsWallRunning())
+            if (!_characterMovement.IsWallRunning)
             {
                 return MovementSoundState.Running;
             }
             return MovementSoundState.WallRunning;
-        }
-
-        private void PlayStateAudio(MovementSoundState state, MovementSoundState oldState)
-        {
-            if (oldState == state) return;
-            switch (state)
-            {
-                case MovementSoundState.NotPlaying:
-                    _wallrunAudio.Stop();
-                    _runningAudio.Stop();
-                    break;
-                case MovementSoundState.Running:
-                    _wallrunAudio.Stop();
-                    _runningAudio.Play();
-                    break;
-                case MovementSoundState.WallRunning:
-                    _runningAudio.Stop();
-                    _wallrunAudio.Play();
-                    break;
-            }
-        }
-
-        private enum MovementSoundState
-        {
-            NotPlaying, Running, WallRunning
         }
     }
 }
