@@ -7,7 +7,7 @@ using UnityEngine.Rendering;
 
 namespace BForBoss
 {
-    public class SandboxWorldManager : BaseWorldManager
+    public class WeaponSandboxWorldManager : BaseWorldManager
     {
         private const float DEATH_POST_PROCESSING_DURATION = 0.1F;
         private const float DEATH_POST_PROCESSING_START = 0F;
