@@ -19,7 +19,7 @@ namespace BForBoss
         private bool _forceRepaint = false;
 
         private Rect _screenShotRect;
-        private Color _brushColor = Color.black;
+        private Color32 _brushColor = Color.black;
         private int _currentBrushIndex = 1;
         private int _brushSize;
         private readonly string[] _brushSelections = new string[3] {"Small", "Medium", "Large"};
@@ -104,7 +104,7 @@ namespace BForBoss
             Undo.RecordObject(_editedScreenShot, "ScreenShot Edit");
             
             _brushSize = _brushSizes[_currentBrushIndex];
-            Color[] pixels = _editedScreenShot.GetPixels();
+            Color32[] pixels = _editedScreenShot.GetPixels32();
             Vector2 mousePosition = evt.mousePosition;
             Vector2Int relativeMousePosition = new Vector2Int((int)mousePosition.x, (int)(_editedScreenShot.height - mousePosition.y));
             
@@ -138,7 +138,7 @@ namespace BForBoss
                 }
             }
             
-            _editedScreenShot.SetPixels(pixels);
+            _editedScreenShot.SetPixels32(pixels);
             _editedScreenShot.Apply();
 
             _forceRepaint = true;
