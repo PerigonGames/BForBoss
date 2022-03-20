@@ -18,6 +18,7 @@ namespace Perigon.Utility
 
         private static Texture2D _originalImage;
         private static Texture2D _image;
+        private ImageEditorWindow _imageEditorWindow = null;
         private string _title;
         private string _feedback;
 
@@ -87,13 +88,16 @@ namespace Perigon.Utility
                         EditorGUI.DrawTextureTransparent(previewImageRect, _image, ScaleMode.ScaleToFit, 0);
                     }
 
+                    //Todo: Use new SceneViewCameraWindow(SceneView.currentDrawingSceneView) for secondary window
                     if (_image != null && WasElementDoubleClicked(previewImageRect))
                     {
-                        // new SceneViewCameraWindow(SceneView.currentDrawingSceneView)
-
-                        ImageEditorWindow imagePopupWindow = GetWindow<ImageEditorWindow>();
-                        imagePopupWindow.OnWindowClosed += OnImageEdited;
-                        imagePopupWindow.OpenWindow(_image);
+                        if (_imageEditorWindow == null)
+                        {
+                            _imageEditorWindow = GetWindow<ImageEditorWindow>();
+                        }
+                        
+                        _imageEditorWindow.OnWindowClosed += OnImageEdited;
+                        _imageEditorWindow.OpenWindow(_image);
                     }
 
                     GUILayout.FlexibleSpace();
@@ -119,6 +123,11 @@ namespace Perigon.Utility
 
         private void OnImageEdited(Texture2D editedScreenShot)
         {
+            if (_imageEditorWindow != null)
+            {
+                _imageEditorWindow.OnWindowClosed -= OnImageEdited;
+            }
+            
             _image = editedScreenShot;
             Repaint();
         }
