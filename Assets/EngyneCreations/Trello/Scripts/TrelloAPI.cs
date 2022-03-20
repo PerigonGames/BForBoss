@@ -42,8 +42,9 @@ namespace Trello
 		/// </summary>
 		public TrelloAPI(Action onFailure)
 		{
-			KEY = TrelloBoardSettings.Instance.APIKey;
-			TOKEN = TrelloBoardSettings.Instance.APIToken;
+			TrelloBoardSettings settings = TrelloBoardSettings.LoadSettings();
+			KEY = settings.APIKey;
+			TOKEN = settings.APIToken;
 			
 			_onFailure = onFailure;
 		}
@@ -112,7 +113,7 @@ namespace Trello
 
 			if (string.IsNullOrEmpty(currentListId))
 			{
-				CatchException($"A list with th name {name} was not found");
+				CatchException($"A list with the name {name} was not found");
 			}
 			
 			_currentListId = currentListId;

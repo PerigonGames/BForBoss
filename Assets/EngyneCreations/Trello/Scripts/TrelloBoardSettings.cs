@@ -14,53 +14,40 @@ namespace Trello
 		[Header("API Key and Token needed for Interacting with Trello")]
 		public string APIKey;
 		public string APIToken;
-
-		private static TrelloBoardSettings _instance;
-
-		public static TrelloBoardSettings Instance
+		
+		public static TrelloBoardSettings LoadSettings()
 		{
-			get
-			{
-				LoadSettings();
-				return _instance;
-			}
-		}
-
-		public static void LoadSettings()
-		{
-			_instance = FindOrCreateInstance();
+			return FindOrCreateInstance();
 		}
 
 		private static TrelloBoardSettings FindOrCreateInstance()
 		{
-			TrelloBoardSettings instance = null;
-			instance = Resources.Load<TrelloBoardSettings>("TrelloBoard");
-			instance = instance ? instance : Resources.LoadAll<TrelloBoardSettings>(string.Empty).FirstOrDefault();
-			instance = instance ? instance : CreateAndSave<TrelloBoardSettings>();
-
-			if (instance == null)
+			TrelloBoardSettings settings = null;
+			settings = Resources.Load<TrelloBoardSettings>("TrelloBoard") ?? CreateAndSave<TrelloBoardSettings>();
+			
+			if (settings == null)
 			{
 				throw new Exception("Could not find or create settings for Trello API");
 			}
-
-			return instance;
+			
+			return settings;
 		}
 		
 		private static T CreateAndSave<T>() where T : ScriptableObject
 		{
-			T instance = CreateInstance<T>();
+			T settings = CreateInstance<T>();
 #if UNITY_EDITOR
 			//Saving during Awake() will crash Unity, delay saving until next editor frame
 			if (EditorApplication.isPlayingOrWillChangePlaymode)
 			{
-				EditorApplication.delayCall += () => SaveAsset(instance);
+				EditorApplication.delayCall += () => SaveAsset(settings);
 			}
 			else
 			{
-				SaveAsset(instance);
+				SaveAsset(settings);
 			}
 #endif
-			return instance;
+			return settings;
 		}
 		
 #if UNITY_EDITOR
