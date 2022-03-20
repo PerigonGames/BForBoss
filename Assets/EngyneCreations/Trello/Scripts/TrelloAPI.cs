@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using MiniJSON;
@@ -22,8 +21,6 @@ namespace Trello
 {
 	public class TrelloAPI
 	{
-		private const string HASHEDKEY = "NmZiZDU4M2VmMzkxZjU1ZjFjZTgyODJlNWRmMDUxYjU=";
-		private const string HASHEDTOKEN = "ZWYxZWJhYTI4YmVkNjc1ZDI1ZjgxMmI1ZjFmYmQ5ODMxMDk5YTlkZGI5ZjA3YWE3N2I1MGZkYjlhZjUyYWM4Zg==";
 		private const string DEFAULT_BOARD = "LevelDesignFeedbackBoard";
 		private const string MEMBER_BASE_URL = "https://api.trello.com/1/members/me";
 		private const string BOARD_BASE_URL = "https://api.trello.com/1/boards/";
@@ -45,8 +42,9 @@ namespace Trello
 		/// </summary>
 		public TrelloAPI(Action onFailure)
 		{
-			KEY = Encoding.UTF8.GetString(Convert.FromBase64String(HASHEDKEY));
-			TOKEN = Encoding.UTF8.GetString(Convert.FromBase64String(HASHEDTOKEN));
+			KEY = TrelloBoardSettings.Instance.APIKey;
+			TOKEN = TrelloBoardSettings.Instance.APIToken;
+			
 			_onFailure = onFailure;
 		}
 		
