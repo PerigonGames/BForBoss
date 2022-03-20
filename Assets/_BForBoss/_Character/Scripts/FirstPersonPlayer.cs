@@ -97,11 +97,11 @@ namespace Perigon.Character
             base.OnStart();
             if (_dashBehaviour != null)
             {
-                _dashBehaviour.Initialize(this, base.GetMovementInput);
+                _dashBehaviour.Initialize(this, base.GetMovementInput, Dashed);
             }
             if (_slideBehaviour != null)
             {
-                _slideBehaviour.Initialize(this);
+                _slideBehaviour.Initialize(this, Slid);
             }
             if (_wallRunBehaviour != null)
             {
@@ -237,15 +237,10 @@ namespace Perigon.Character
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.OnOnDisable();
-                _dashBehaviour.StartDashing -= Dashed;
             }
             if (_slowMotionBehaviour != null)
             {
                 _slowMotionBehaviour.OnOnDisable();
-            }
-            if (_slideBehaviour != null)
-            {
-                _slideBehaviour.StartSliding -= Slid;
             }
         }
         
@@ -255,15 +250,10 @@ namespace Perigon.Character
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.OnOnEnable();
-                _dashBehaviour.StartDashing += Dashed;
             }
             if (_slowMotionBehaviour != null)
             {
                 _slowMotionBehaviour.OnOnEnable();
-            }
-            if (_slideBehaviour != null)
-            {
-                _slideBehaviour.StartSliding += Slid;
             }
         }
 
