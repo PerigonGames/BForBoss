@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using Perigon.Character;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
