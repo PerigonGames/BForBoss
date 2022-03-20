@@ -145,7 +145,7 @@ namespace Trello
 				post.AddBinaryData("fileSource", attachment.FileSource, attachment.FileName);
 			}
 
-			using (UnityWebRequest request = UnityWebRequest.Post(string.Format("{0}?key={1}&token={2}", CARD_BASE_URL, KEY, TOKEN), post))
+			using (UnityWebRequest request = UnityWebRequest.Post($"{CARD_BASE_URL}?key={KEY}&token={TOKEN}", post))
 			{
 				await request.SendWebRequest();
 
@@ -166,7 +166,7 @@ namespace Trello
 		/// <returns>Downloaded boards.</returns>
 		private async Task PopulateBoards()
 		{
-			using (UnityWebRequest request = UnityWebRequest.Get(string.Format("{0}?key={1}&token={2}&boards=all", MEMBER_BASE_URL, KEY, TOKEN)))
+			using (UnityWebRequest request = UnityWebRequest.Get($"{MEMBER_BASE_URL}?key={KEY}&token={TOKEN}&boards=all"))
 			{
 				await request.SendWebRequest();
 
@@ -196,7 +196,7 @@ namespace Trello
 				CatchException("Cannot retrieve the lists, there isn't a selected board yet.");
 			}
 
-			using (UnityWebRequest request = UnityWebRequest.Get(string.Format("{0}{1}?key={2}&token={3}&lists=all", BOARD_BASE_URL, _currentBoardId, KEY, TOKEN)))
+			using (UnityWebRequest request = UnityWebRequest.Get($"{BOARD_BASE_URL}{_currentBoardId}?key={KEY}&token={TOKEN}&lists=all"))
 			{
 				await request.SendWebRequest();
 
@@ -222,7 +222,7 @@ namespace Trello
 			WWWForm post = new WWWForm();
 			post.AddField("name",boardName);
 
-			using (UnityWebRequest request = UnityWebRequest.Post(string.Format(string.Format("{0}?key={1}&token={2}", BOARD_BASE_URL, KEY, TOKEN)), post))
+			using (UnityWebRequest request = UnityWebRequest.Post($"{BOARD_BASE_URL}?key={KEY}&token={TOKEN}", post))
 			{
 				await request.SendWebRequest();
 
@@ -244,7 +244,7 @@ namespace Trello
 			post.AddField("name", listName);
 			post.AddField("idBoard", _currentBoardId);
 
-			using (UnityWebRequest request = UnityWebRequest.Post(string.Format("{0}?key={1}&token={2}", LIST_BASE_URL, KEY, TOKEN), post))
+			using (UnityWebRequest request = UnityWebRequest.Post($"{LIST_BASE_URL}?key={KEY}&token={TOKEN}", post))
 			{
 				await request.SendWebRequest();
 				
@@ -302,6 +302,7 @@ namespace Trello
 		}
 	}
 }
+
 public static class AsyncOperationExtensionMethods
 {
 	public static TaskAwaiter GetAwaiter(this AsyncOperation asyncOp)
