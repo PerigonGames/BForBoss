@@ -1,9 +1,7 @@
 using System;
-using System.Text;
 using BForBoss;
 using UnityEditor;
 using UnityEngine;
-using Trello;
 
 namespace Perigon.Utility
 {
@@ -39,8 +37,7 @@ namespace Perigon.Utility
 
         private static Texture2D CreateTextureCopy(Texture2D sourceTexture)
         {
-            Texture2D textureCopy =
-                new Texture2D(sourceTexture.width, sourceTexture.height, TextureFormat.ARGB32, false);
+            Texture2D textureCopy = new Texture2D(sourceTexture.width, sourceTexture.height, TextureFormat.ARGB32, false);
             textureCopy.SetPixels(sourceTexture.GetPixels());
             textureCopy.Apply();
 
@@ -171,30 +168,13 @@ namespace Perigon.Utility
 
                 if (GUILayout.Button("Create Feedback"))
                 {
-                    SendFeedback();
+                    LevelDesignFeedbackSender.SendFeedback(_title, _feedback, _image);
                 }
 
                 GUI.enabled = true;
 
                 EditorGUILayout.Space(ELEMENT_SPACING);
             }
-        }
-
-        private void SendFeedback()
-        {
-            TrelloCard card = new TrelloCard
-            {
-                name = _title,
-                desc = GenerateDescription(_feedback),
-                attachment = new TrelloCard.Attachment(_image, "Attachment.jpg")
-            };
-            TrelloSend.SendNewCard(card, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, null, OnFeedbackSent);
-        }
-
-        private void OnFeedbackSent(bool success)
-        {
-            string message = $"The Trello Card {_title} was {(success ? "successfully" : "unsuccessfully")} created";
-            EditorUtility.DisplayDialog("Level Design Feedback Window", message, "Sounds good");
         }
 
         private bool WasElementDoubleClicked(Rect elementRect)
@@ -205,27 +185,7 @@ namespace Perigon.Utility
 
             return hasMouseClick && evt.button == 0 && evt.clickCount == 2 && elementRect.Contains(evt.mousePosition);
         }
-
-        private string GenerateDescription(string feedback)
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("#Feedback");
-            stringBuilder.AppendLine("___");
-            stringBuilder.AppendLine("###User Description");
-            stringBuilder.AppendLine("```");
-            stringBuilder.AppendLine(feedback);
-            stringBuilder.AppendLine("```");
-            stringBuilder.AppendLine("___");
-
-            if (Camera.main != null)
-            {
-                stringBuilder.AppendLine("###Additional Details");
-                stringBuilder.AppendLine($"Main Camera Position : {Camera.main.transform.position}");
-            }
-
-            return stringBuilder.ToString();
-        }
-
+        
         private void OnDestroy()
         {
             OnWindowClosed?.Invoke();
