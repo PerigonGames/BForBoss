@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -16,11 +15,6 @@ namespace Trello
 		public string APIToken;
 		
 		public static TrelloBoardSettings LoadSettings()
-		{
-			return FindOrCreateInstance();
-		}
-
-		private static TrelloBoardSettings FindOrCreateInstance()
 		{
 			TrelloBoardSettings settings = null;
 			settings = Resources.Load<TrelloBoardSettings>("TrelloBoard") ?? CreateAndSave<TrelloBoardSettings>();
@@ -53,7 +47,6 @@ namespace Trello
 #if UNITY_EDITOR
 		private static void SaveAsset<T>(T obj) where T : ScriptableObject
 		{
-
 			string dirName = "Assets/Resources";
 			if (!Directory.Exists(dirName))
 			{
