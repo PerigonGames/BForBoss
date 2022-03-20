@@ -15,16 +15,16 @@ namespace Perigon.Character
         private bool _isSliding = false;
 
         private ECM2.Characters.Character _baseCharacter = null;
-
-        public event Action StartSliding;
+        private Action _onSlide = null;
         
         public bool IsSliding => _isSliding;
         public float MaxWalkSpeedSliding => _maxWalkSpeedSliding;
         public float brakingDecelerationSliding => _brakingDecelerationSliding;
 
-        public void Initialize(ECM2.Characters.Character character)
+        public void Initialize(ECM2.Characters.Character character, Action onSlide)
         {
             _baseCharacter = character;
+            _onSlide = onSlide;
         }
         
         public void Slide()
@@ -35,7 +35,7 @@ namespace Perigon.Character
             }
 
             _isSliding = true;
-            StartSliding?.Invoke();
+            _onSlide?.Invoke();
             
             _baseCharacter.brakingFriction = _groundFrictionSliding;
             _baseCharacter.useSeparateBrakingFriction = true;
