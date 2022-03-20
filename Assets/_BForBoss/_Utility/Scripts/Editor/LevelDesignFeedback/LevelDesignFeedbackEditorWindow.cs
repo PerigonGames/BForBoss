@@ -67,11 +67,11 @@ namespace Perigon.Utility
 
         private void DrawPreviewImage()
         {
-            Rect previewImageRect;
             EditorGUILayout.Space(ELEMENT_SPACING);
 
             using (new EditorGUILayout.VerticalScope())
             {
+                Rect previewImageRect;
                 using (new EditorGUILayout.HorizontalScope())
                 {
                     GUILayout.FlexibleSpace();
@@ -79,26 +79,7 @@ namespace Perigon.Utility
                     previewImageRect = new Rect(position.width * 0.05f, position.height * 0.02f, position.width * 0.9f,
                         position.height * 0.4f);
 
-                    if (_image == null)
-                    {
-                        EditorGUI.DrawRect(previewImageRect, Color.gray);
-                    }
-                    else
-                    {
-                        EditorGUI.DrawTextureTransparent(previewImageRect, _image, ScaleMode.ScaleToFit, 0);
-                    }
-
-                    //Todo: Use new SceneViewCameraWindow(SceneView.currentDrawingSceneView) for secondary window
-                    if (_image != null && WasElementDoubleClicked(previewImageRect))
-                    {
-                        if (_imageEditorWindow == null)
-                        {
-                            _imageEditorWindow = GetWindow<ImageEditorWindow>();
-                        }
-                        
-                        _imageEditorWindow.OnWindowClosed += OnImageEdited;
-                        _imageEditorWindow.OpenWindow(_image);
-                    }
+                    PresentPreviewImage(previewImageRect);
 
                     GUILayout.FlexibleSpace();
                 }
@@ -119,6 +100,30 @@ namespace Perigon.Utility
             }
 
             EditorGUILayout.Space(ELEMENT_SPACING);
+        }
+
+        private void PresentPreviewImage(Rect previewImageRect)
+        {
+            if (_image == null)
+            {
+                EditorGUI.DrawRect(previewImageRect, Color.gray);
+            }
+            else
+            {
+                EditorGUI.DrawTextureTransparent(previewImageRect, _image, ScaleMode.ScaleToFit, 0);
+            }
+
+            //Todo: Use new SceneViewCameraWindow(SceneView.currentDrawingSceneView) for secondary window
+            if (_image != null && WasElementDoubleClicked(previewImageRect))
+            {
+                if (_imageEditorWindow == null)
+                {
+                    _imageEditorWindow = GetWindow<ImageEditorWindow>();
+                }
+
+                _imageEditorWindow.OnWindowClosed += OnImageEdited;
+                _imageEditorWindow.OpenWindow(_image);
+            }
         }
 
         private void OnImageEdited(Texture2D editedScreenShot)
