@@ -20,7 +20,13 @@ namespace BForBoss
         protected override void Start()
         {
             base.Start();
-            _weaponsManager.Initialize(new CharacterMovementWrapper(_player));
+            _weaponsManager.Initialize(
+                () => _player.CharacterVelocity,
+                () => _player.CharacterMaxSpeed,
+                () => _player.IsWallRunning,
+                () => _player.IsGrounded,
+                () => _player.IsSliding,
+                () => _player.IsDashing);
             _equipmentBehaviour.Initialize();
             _ammunitionCountView.Initialize(_equipmentBehaviour);
             _reloadView.Initialize(_equipmentBehaviour);
