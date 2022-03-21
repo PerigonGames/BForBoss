@@ -1,3 +1,4 @@
+using System;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -67,17 +68,17 @@ namespace Perigon.Weapons
         {
             if (_defaultCrosshair == null)
             {
-                Debug.LogWarning("Crosshair Behaviour missing sprite");
+                PanicHelper.Panic(new Exception("Crosshair Behaviour missing sprite"));
             }
 
             if (_hitMarker == null)
             {
-                Debug.LogWarning("Crosshair behaviour missing hit marker");
+                PanicHelper.Panic(new Exception("Crosshair behaviour missing hit marker"));
             }
             
             if (_crosshair == null)
             {
-                Debug.LogWarning("Crosshair behaviour missing crosshair");
+                PanicHelper.Panic(new Exception("Crosshair behaviour missing crosshair"));
             }
         }
     }
