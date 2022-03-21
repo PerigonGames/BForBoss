@@ -6,22 +6,20 @@ using UnityEngine;
 
 namespace Perigon.Weapons
 {
-    public interface ICharacterMovement
-    {
-        Vector3 CharacterVelocity { get; }
-        float CharacterMaxSpeed { get; }
-        bool IsGrounded { get; }
-        bool IsDashing { get; }
-        bool IsSliding { get; }
-        bool IsWallRunning { get; }
-    }
+
     
     public class WeaponsManager : MonoBehaviour
     {
         private const float ACCUMULATED_RECOIL_PERCENTAGE = 0.99F;
         [Resolve] [SerializeField] private GameObject _weaponHolder = null;
         [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
-        private ICharacterMovement _characterMovement = null;
+        
+        private Func<Vector3> _characterVelocity = null;
+        private Func<float> _characterMaxSpeed = null;
+        private Func<bool> _isWallRunning = null;
+        private Func<bool> _isSliding = null;
+        private Func<bool> _isDashing = null;
+        private Func<bool> _isGrounded = null;
         
         [Title("Weapon Bob Properties")] 
         [SerializeField]
@@ -50,9 +48,20 @@ namespace Perigon.Weapons
         private Vector3 _accumulatedRecoil;
         private Vector3 _weaponRecoilLocalPosition;
 
-        public void Initialize(ICharacterMovement characterMovement)
+        public void Initialize(
+            Func<Vector3> characterVelocity, 
+            Func<float> characterMaxSpeed, 
+            Func<bool> isWallRunning,
+            Func<bool> isGrounded,
+            Func<bool> isSliding,
+            Func<bool> isDashing)
         {
-            _characterMovement = characterMovement;
+            _characterVelocity = characterVelocity;
+            _characterMaxSpeed = characterMaxSpeed;
+            _isGrounded = isGrounded;
+            _isSliding = isSliding;
+            _isDashing = isDashing;
+            _isWallRunning = isWallRunning;
         }
 
         private void Start()
@@ -90,16 +99,16 @@ namespace Perigon.Weapons
 
         private void UpdateBobbingWeaponOnMovement()
         {
-            var characterVelocity = _characterMovement.CharacterVelocity;
+            var characterVelocity = _characterVelocity();
             var characterMovementFactor = 0f;
             if (CanBobWeapon())
             {
                 characterMovementFactor =
-                    Mathf.Clamp01(characterVelocity.magnitude / _characterMovement.CharacterMaxSpeed);
+                    Mathf.Clamp01(characterVelocity.magnitude / _characterMaxSpeed());
             }
             
             _weaponBobFactor = Mathf.Lerp(_weaponBobFactor, characterMovementFactor, _weaponBobSharpness * Time.deltaTime);
-            var bobAmount = _hipFireBobAmount * (_characterMovement.IsWallRunning ? _wallRunningBobMultiplier : 1);
+            var bobAmount = _hipFireBobAmount * (_isWallRunning() ? _wallRunningBobMultiplier : 1);
             
             var hBobValue = Mathf.Sin(Time.time * _weaponBobFrequency) * bobAmount * _weaponBobFactor;
             /// Trignometric Graph Tranformation: y = A * Sin(b * x - c) + d
@@ -112,9 +121,9 @@ namespace Perigon.Weapons
         
         private bool CanBobWeapon()
         {
-            return (_characterMovement.IsWallRunning || _characterMovement.IsGrounded) 
-                   && !_characterMovement.IsDashing 
-                   && !_characterMovement.IsSliding;
+            return (_isWallRunning() || _isGrounded()) 
+                   && !_isDashing()
+                   && !_isSliding();
         }
 
         private void UpdateWeaponRecoil()

@@ -70,7 +70,13 @@ namespace BForBoss
             _checkpointManager.Initialize(_detectInput, _timeManagerViewModel);
             _timeManager.Initialize(_timeManagerViewModel);
 
-            _weaponsManager.Initialize(new CharacterMovementWrapper(_player));
+            _weaponsManager.Initialize(
+                () => _player.CharacterVelocity,
+                () => _player.CharacterMaxSpeed,
+                () => _player.IsWallRunning,
+                () => _player.IsGrounded,
+                () => _player.IsSliding,
+                () => _player.IsDashing);
             _equipmentBehaviour.Initialize();
             _ammunitionCountView.Initialize(_equipmentBehaviour);
             _reloadView.Initialize(_equipmentBehaviour);
