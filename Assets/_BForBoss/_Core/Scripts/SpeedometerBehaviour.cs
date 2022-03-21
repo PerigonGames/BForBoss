@@ -1,3 +1,4 @@
+using System;
 using Perigon.Character;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -13,10 +14,10 @@ namespace BForBoss
         [Title("Properties")]
         [MinValue(1)]
         [SerializeField] private float _maxSpeed = 50f;
+
+        private Func<float> _characterSpeed = null;
         
-        private ICharacterSpeed _characterSpeed = null;
-        
-        public void Initialize(ICharacterSpeed characterSpeed)
+        public void Initialize(Func<float> characterSpeed)
         {
             _characterSpeed = characterSpeed;
         }
@@ -25,7 +26,7 @@ namespace BForBoss
         private void Awake()
         {
             var character = FindObjectOfType<FirstPersonPlayer>();
-            Initialize(character);
+            Initialize(() => character.SpeedMagnitude);
         }
 
         private void Update()
@@ -41,13 +42,13 @@ namespace BForBoss
 
         private void SetMeter()
         {
-            var percentage = _characterSpeed.Speed / _maxSpeed;
+            var percentage = _characterSpeed() / _maxSpeed;
             _meter.fillAmount = percentage;
         }
 
         private void SetSpeedLabel()
         {
-            _speedLabel.text = _characterSpeed.Speed.ToString("F1");
+            _speedLabel.text = _characterSpeed().ToString("F1");
         }
     }
 }
