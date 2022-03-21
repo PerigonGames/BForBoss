@@ -1,4 +1,6 @@
+using System;
 using Perigon.Entities;
+using Perigon.Utility;
 using Perigon.Weapons;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -43,27 +45,27 @@ namespace BForBoss
             base.OnValidate();
             if (_weaponsManager == null)
             {
-                Debug.LogWarning("Weapons Manager missing from World Manager");
+                PanicHelper.Panic(new Exception("Weapons Manager missing from World Manager"));
             }
             
             if (_equipmentBehaviour == null)
             {
-                Debug.LogWarning("Equipment Behaviour missing from World Manager");
+                PanicHelper.Panic(new Exception("Equipment Behaviour missing from World Manager"));
             }
             
             if (_ammunitionCountView == null)
             {
-                Debug.LogWarning("Ammunition Count View missing from World Manager");
+                PanicHelper.Panic(new Exception("Ammunition Count View missing from World Manager"));
             }
             
             if (_reloadView == null)
             {
-                Debug.LogWarning("Reload View missing from World Manager");
+                PanicHelper.Panic(new Exception("Reload View missing from World Manager"));
             }
             
             if (_lifeCycleManager == null)
             {
-                Debug.LogWarning("Life Cycle Manager missing from World Manager");
+                PanicHelper.Panic(new Exception("Life Cycle Manager missing from World Manager"));
             }
         }
     }

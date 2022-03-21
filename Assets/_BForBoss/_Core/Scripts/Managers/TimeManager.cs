@@ -1,4 +1,5 @@
 using System;
+using Perigon.Utility;
 using UnityEngine;
 
 namespace BForBoss
@@ -51,12 +52,12 @@ namespace BForBoss
         {
             if (_timeStartingCheckpoint == null)
             {
-                Debug.LogWarning("Starting Checkpoint missing from Time Manager");
+                PanicHelper.Panic(new Exception("Starting Checkpoint missing from Time Manager"));
             }
 
             if (_endingCheckpoint == null)
             {
-                Debug.LogWarning("Ending Checkpoint missing from Time Manager");
+                PanicHelper.Panic(new Exception("Ending Checkpoint missing from Time Manager"));
             }
         }
 
