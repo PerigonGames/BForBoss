@@ -9,7 +9,7 @@ namespace Perigon.Utility
         private void OnGUI()
         {
             Event evt = Event.current;
-            if (evt.isKey && evt.keyCode == LevelDesignFeedbackWindowListener.WindowKeyCode)
+            if (evt.isKey && evt.keyCode == LevelDesignFeedbackWindowListener.OpenWindowKeyCode)
             {
                 StartCoroutine(OpenLevelDesignFeedbackWindow());
             }
