@@ -37,21 +37,6 @@ namespace Perigon.Character
             }
         }
         
-        public bool IsSliding()
-        {
-            return _slideBehaviour?.IsSliding ?? false;
-        }
-
-        public bool IsDashing()
-        {
-            return _dashBehaviour?.IsDashing ?? false;
-        }
-        
-        public bool IsWallRunning()
-        {
-            return  _wallRunBehaviour?.IsWallRunning ?? false;
-        }
-        
         public void Initialize()
         {
             SetupInput();
@@ -67,17 +52,17 @@ namespace Perigon.Character
         
         public override float GetBrakingDeceleration()
         {
-            return IsSliding() ? _slideBehaviour.brakingDecelerationSliding : base.GetBrakingDeceleration();
+            return IsSliding ? _slideBehaviour.brakingDecelerationSliding : base.GetBrakingDeceleration();
         }
 
         public override float GetMaxSpeed()
         {
-            return IsSliding() ? _slideBehaviour.MaxWalkSpeedSliding : base.GetMaxSpeed();
+            return IsSliding ? _slideBehaviour.MaxWalkSpeedSliding : base.GetMaxSpeed();
         }
 
         public override float GetMaxAcceleration()
         {
-            return IsWallRunning() ? _wallRunBehaviour.GetMaxAcceleration() : base.GetMaxAcceleration();
+            return IsWallRunning ? _wallRunBehaviour.GetMaxAcceleration() : base.GetMaxAcceleration();
         }
 
         protected override void OnAwake()
@@ -134,7 +119,7 @@ namespace Perigon.Character
 
         protected override Vector3 CalcDesiredVelocity()
         {
-            return IsSliding() ? Vector3.zero : base.CalcDesiredVelocity();
+            return IsSliding ? Vector3.zero : base.CalcDesiredVelocity();
         }
 
         protected override void OnCrouched()
@@ -179,7 +164,7 @@ namespace Perigon.Character
 
         protected override Vector3 CalcJumpVelocity()
         {
-            return IsWallRunning() ? _wallRunBehaviour.CalcJumpVelocity() : base.CalcJumpVelocity();
+            return IsWallRunning ? _wallRunBehaviour.CalcJumpVelocity() : base.CalcJumpVelocity();
         }
 
         protected override void OnMove()

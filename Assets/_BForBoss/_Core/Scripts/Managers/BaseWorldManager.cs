@@ -1,3 +1,4 @@
+using System;
 using Perigon.Character;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
@@ -59,12 +60,12 @@ namespace BForBoss
         {
             if (_player == null)
             {
-                Debug.LogError("FirstPersonPlayer is missing from World Manager");
+                PanicHelper.Panic(new Exception("FirstPersonPlayer is missing from World Manager"));
             }
             
             if (_pauseMenu == null)
             {
-                Debug.LogError("PauseMenu is missing from World Manager");
+                PanicHelper.Panic(new Exception("PauseMenu is missing from World Manager"));
             }
         }
         
