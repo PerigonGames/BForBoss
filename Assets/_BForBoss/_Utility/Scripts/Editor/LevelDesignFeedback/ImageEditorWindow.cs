@@ -1,5 +1,6 @@
 using System;
 using UnityEditor;
+using UnityEditor.Graphs;
 using UnityEngine;
 
 namespace BForBoss
@@ -22,8 +23,8 @@ namespace BForBoss
         private Color32 _brushColor = Color.black;
         private int _currentBrushIndex = 1;
         private int _brushSize;
-        private readonly string[] _brushSelections = new string[3] {"Small", "Medium", "Large"};
-        private readonly int[] _brushSizes = new int[3] {4, 7, 10};
+        private readonly string[] _brushSelections = {"Small", "Medium", "Large"};
+        private readonly int[] _brushSizes = {4, 7, 10};
 
         public void OpenWindow(Texture2D screenShot)
         {
@@ -56,98 +57,81 @@ namespace BForBoss
             {
                 Close();
             }
-            
-            DrawScreenShotToEdit();
+            OnInputUpdate();
+            EditorGUI.DrawPreviewTexture(_screenShotRect, _editedScreenShot);
+            DrawPreviewSquareIfMousePressedDown();
+            DrawSquareOnToScreenshot();
+
             EditorGUILayout.Space(_editedScreenShot.height + 5f);
             DrawToolbar();
         }
 
-        private void DrawScreenShotToEdit()
+        private void DrawPreviewSquareIfMousePressedDown()
         {
-            EditorGUI.DrawPreviewTexture(_screenShotRect, _editedScreenShot);
-
-            if (mouseOverWindow != this)
+            if (mouseDownPosition != Vector3.zero)
             {
-                return;
+                Handles.BeginGUI();
+                Handles.color = Color.red;
+                var currentMousePosition = Event.current.mousePosition;
+                var topRight = new Vector3(mouseDownPosition.x, currentMousePosition.y);
+                var bottomLeft = new Vector3(currentMousePosition.x, mouseDownPosition.y);
+                Handles.DrawLine(mouseDownPosition, topRight);
+                Handles.DrawLine(topRight, currentMousePosition);
+                Handles.DrawLine(currentMousePosition, bottomLeft);
+                Handles.DrawLine(bottomLeft, mouseDownPosition);
+                Repaint();
+                Handles.EndGUI();
             }
             
-            Event evt = Event.current;
-            
-            if (evt.isMouse && evt.button == 0)
-            {
-                if (!_screenShotRect.Contains(evt.mousePosition))
-                {
-                    return;
-                }
-                
-                switch (evt.type)
-                {
-                    case EventType.MouseDown:
-                    case EventType.MouseDrag:
-                    {
-                        _drawThisFrame = true;
-                        break;
-                    }
-                    case EventType.MouseUp:
-                    {
-                        _drawThisFrame = false;
-                        break;
-                    }
-                }
-            }
-            
-            if (!_drawThisFrame)
-            {
-                return;
-            }
-            
-            Undo.RecordObject(_editedScreenShot, "ScreenShot Edit");
-            
-            _brushSize = _brushSizes[_currentBrushIndex];
-            Color32[] pixels = _editedScreenShot.GetPixels32();
-            Vector2 mousePosition = evt.mousePosition;
-            Vector2Int relativeMousePosition = new Vector2Int((int)mousePosition.x, (int)(_editedScreenShot.height - mousePosition.y));
-            
-            for (int i = -_brushSize; i <= _brushSize; i++)
-            {
-                int centreXPoint = relativeMousePosition.x + i;
-                if (centreXPoint < 0)
-                {
-                    continue;
-                }
-            
-                if (centreXPoint >= _editedScreenShot.width)
-                {
-                    break;
-                }
-            
-                for (int j = -_brushSize; j <= _brushSize; j++)
-                {
-                    int centreYPoint = relativeMousePosition.y + j;
-                    if (centreYPoint < 0)
-                    {
-                        continue;
-                    }
-            
-                    if (centreYPoint >= _editedScreenShot.height)
-                    {
-                        break;
-                    }
-
-                    pixels[centreXPoint + (centreYPoint * _editedScreenShot.width)] = _brushColor;
-                }
-            }
-            
-            _editedScreenShot.SetPixels32(pixels);
-            _editedScreenShot.Apply();
-
-            _forceRepaint = true;
         }
 
+        private void DrawSquareOnToScreenshot()
+        {
+            if (mouseDownPosition == Vector3.zero || mouseUpPosition == Vector3.zero)
+            {
+                return;
+            }
+            
+            Vector2Int relativeMouseDownPosition = new Vector2Int((int)mouseDownPosition.x, (int)(_editedScreenShot.height - mouseDownPosition.y));
+            Vector2Int relativeMouseUpPosition = new Vector2Int((int)mouseUpPosition.x, (int)(_editedScreenShot.height - mouseUpPosition.y));
+
+            var topRight = new Vector3(relativeMouseDownPosition.x, relativeMouseUpPosition.y);
+            var bottomLeft = new Vector3(relativeMouseUpPosition.x, relativeMouseDownPosition.y);
+            var thickness = _brushSizes[2];
+            DrawLine(_editedScreenShot, relativeMouseDownPosition, topRight, Color.blue, thickness);
+            DrawLine(_editedScreenShot, topRight, relativeMouseUpPosition, Color.blue, thickness);
+            DrawLine(_editedScreenShot, relativeMouseUpPosition, bottomLeft, Color.blue, thickness);
+            DrawLine(_editedScreenShot, bottomLeft, relativeMouseDownPosition, Color.blue, thickness);
+            
+            _editedScreenShot.Apply();
+            Repaint();
+
+            mouseDownPosition = Vector3.zero;
+            mouseUpPosition = Vector3.zero;
+        }
+
+        //https://answers.unity.com/questions/244417/create-line-on-a-texture.html
+        private void DrawLine(Texture2D tex, Vector2 p1, Vector2 p2, Color col, int thickness)
+        {
+            Vector2 t = p1;
+            float frac = 1/Mathf.Sqrt (Mathf.Pow (p2.x - p1.x, 2) + Mathf.Pow (p2.y - p1.y, 2));
+            float ctr = 0;
+     
+            while ((int)t.x != (int)p2.x || (int)t.y != (int)p2.y) {
+                t = Vector2.Lerp(p1, p2, ctr);
+                ctr += frac;
+                for (int i = 0; i < thickness; i++)
+                {
+                    tex.SetPixel((int)t.x + i, (int)t.y + i, col);
+                }
+            }
+        }
+        
         private void DrawToolbar()
         {
             using (new EditorGUILayout.HorizontalScope())
             {
+                Debug.Log("Draw Toolbar");
                 float originalLabelWidth = EditorGUIUtility.labelWidth;
                 EditorGUIUtility.labelWidth = 70f;
                 _brushColor = EditorGUILayout.ColorField("Brush Color", _brushColor);
@@ -169,13 +153,37 @@ namespace BForBoss
             }
         }
 
-        private void Update()
+        private Vector3 mouseDownPosition = Vector3.zero;
+        private Vector3 mouseUpPosition = Vector3.zero;
+
+        private void OnInputUpdate()
         {
-            if (_forceRepaint)
+            Event inputEvent = Event.current;
+            if (inputEvent == null || mouseOverWindow != this )
             {
-                _forceRepaint = false;
-                Repaint();
+                return;
+            } 
+            
+            if (inputEvent.isMouse && inputEvent.button == 0)
+            {
+                if (!_screenShotRect.Contains(inputEvent.mousePosition))
+                {
+                    return;
+                }
+                
+                switch (inputEvent.type)
+                {
+                    case EventType.MouseDown:
+                        mouseDownPosition = inputEvent.mousePosition;
+                        break;
+                    case EventType.MouseUp:
+                    {
+                        mouseUpPosition = inputEvent.mousePosition;
+                        break;
+                    }
+                }
             }
+
         }
 
         private Texture2D CreateTextureCopy(Texture2D sourceTexture)
