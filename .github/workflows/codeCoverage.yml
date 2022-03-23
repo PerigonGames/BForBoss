@@ -3,6 +3,7 @@ name: Run code coverage
 on: 
   pull_request: 
     types: [opened]
+  workflow_dispatch: {}
 
 jobs:
 
