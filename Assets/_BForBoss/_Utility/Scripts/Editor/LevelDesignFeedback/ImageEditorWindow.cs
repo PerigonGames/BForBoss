@@ -262,7 +262,7 @@ namespace BForBoss
                 EditorGUIUtility.labelWidth = 65f;
                 _currentBrushIndex = EditorGUILayout.Popup("Brush Size", _currentBrushIndex, _brushSelections, GUILayout.ExpandWidth(true));
                 EditorGUIUtility.labelWidth = originalLabelWidth;
-                _shouldDrawPaint = EditorGUILayout.Toggle(_shouldDrawPaint);
+                _shouldDrawPaint = EditorGUILayout.Toggle("Should use Paint", _shouldDrawPaint);
                 
                 EditorGUILayout.Space();
             
