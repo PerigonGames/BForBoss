@@ -71,7 +71,6 @@ namespace BForBoss
             {
                 OnInputUpdate();
                 DrawPreviewSquareIfMousePressedDown();
-                DrawSquareOnToScreenshot();
             }
 
 
@@ -159,7 +158,6 @@ namespace BForBoss
         
         
         private Vector3 mouseDownPosition = Vector3.zero;
-        private Vector3 mouseUpPosition = Vector3.zero;
 
         private void OnInputUpdate()
         {
@@ -183,7 +181,7 @@ namespace BForBoss
                         break;
                     case EventType.MouseUp:
                     {
-                        mouseUpPosition = inputEvent.mousePosition;
+                        DrawSquareOnToScreenshot();
                         break;
                     }
                 }
@@ -211,11 +209,12 @@ namespace BForBoss
 
         private void DrawSquareOnToScreenshot()
         {
-            if (mouseDownPosition == Vector3.zero || mouseUpPosition == Vector3.zero)
+            if (mouseDownPosition == Vector3.zero)
             {
                 return;
             }
-            
+
+            Vector2 mouseUpPosition = Event.current.mousePosition;
             Vector2Int relativeMouseDownPosition = new Vector2Int((int)mouseDownPosition.x, (int)(_editedScreenShot.height - mouseDownPosition.y));
             Vector2Int relativeMouseUpPosition = new Vector2Int((int)mouseUpPosition.x, (int)(_editedScreenShot.height - mouseUpPosition.y));
 
@@ -231,7 +230,6 @@ namespace BForBoss
             Repaint();
 
             mouseDownPosition = Vector3.zero;
-            mouseUpPosition = Vector3.zero;
         }
 
         //https://answers.unity.com/questions/244417/create-line-on-a-texture.html
