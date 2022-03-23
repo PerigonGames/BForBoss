@@ -117,7 +117,7 @@ namespace BForBoss
             if (!_listOfPoints.IsNullOrEmpty())
             {
                 Handles.BeginGUI();
-                Handles.color = Color.red;
+                Handles.color = _brushColor;
                 Vector3 lastPoint = Vector3.zero;
                 foreach (var point in _listOfPoints)
                 {
@@ -145,7 +145,7 @@ namespace BForBoss
                     {
                         Vector2Int relativeLastPoint = new Vector2Int((int)lastPoint.x, (int)(_editedScreenShot.height - lastPoint.y));
                         Vector2Int relativePoint = new Vector2Int((int)point.x, (int)(_editedScreenShot.height - point.y));
-                        DrawLine(_editedScreenShot, relativeLastPoint, relativePoint, Color.red);
+                        DrawLine(_editedScreenShot, relativeLastPoint, relativePoint, _brushColor);
                     }
 
                     lastPoint = point;
@@ -195,7 +195,7 @@ namespace BForBoss
             if (mouseDownPosition != Vector3.zero)
             {
                 Handles.BeginGUI();
-                Handles.color = Color.red;
+                Handles.color = _brushColor;
                 var currentMousePosition = Event.current.mousePosition;
                 var topRight = new Vector3(mouseDownPosition.x, currentMousePosition.y);
                 var bottomLeft = new Vector3(currentMousePosition.x, mouseDownPosition.y);
@@ -222,10 +222,10 @@ namespace BForBoss
             var topRight = new Vector3(relativeMouseDownPosition.x, relativeMouseUpPosition.y);
             var bottomLeft = new Vector3(relativeMouseUpPosition.x, relativeMouseDownPosition.y);
             var thickness = _brushSizes[2];
-            DrawLine(_editedScreenShot, relativeMouseDownPosition, topRight, Color.blue, thickness);
-            DrawLine(_editedScreenShot, topRight, relativeMouseUpPosition, Color.blue, thickness);
-            DrawLine(_editedScreenShot, relativeMouseUpPosition, bottomLeft, Color.blue, thickness);
-            DrawLine(_editedScreenShot, bottomLeft, relativeMouseDownPosition, Color.blue, thickness);
+            DrawLine(_editedScreenShot, relativeMouseDownPosition, topRight, _brushColor, thickness);
+            DrawLine(_editedScreenShot, topRight, relativeMouseUpPosition, _brushColor, thickness);
+            DrawLine(_editedScreenShot, relativeMouseUpPosition, bottomLeft, _brushColor, thickness);
+            DrawLine(_editedScreenShot, bottomLeft, relativeMouseDownPosition, _brushColor, thickness);
             
             _editedScreenShot.Apply();
             Repaint();
@@ -264,7 +264,6 @@ namespace BForBoss
         {
             using (new EditorGUILayout.HorizontalScope())
             {
-                Debug.Log("Draw Toolbar");
                 float originalLabelWidth = EditorGUIUtility.labelWidth;
                 EditorGUIUtility.labelWidth = 70f;
                 _brushColor = EditorGUILayout.ColorField("Brush Color", _brushColor);
