@@ -247,6 +247,15 @@ namespace BForBoss
                 for (int i = 0; i < thickness; i++)
                 {
                     tex.SetPixel((int)t.x + i, (int)t.y + i, col);
+                    tex.SetPixel((int)t.x - i, (int)t.y + i, col);
+                    tex.SetPixel((int)t.x - i, (int)t.y - i, col);
+                    tex.SetPixel((int)t.x - i, (int)t.y - i, col);
+                    
+                    tex.SetPixel((int)t.x, (int)t.y - i, col);
+                    tex.SetPixel((int)t.x, (int)t.y + i, col);
+                    
+                    tex.SetPixel((int)t.x - i, (int)t.y, col);
+                    tex.SetPixel((int)t.x + i, (int)t.y, col);
                 }
             }
         }
