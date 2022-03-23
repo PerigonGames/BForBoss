@@ -5,7 +5,7 @@
 			<value>Weapon_ShotGun</value>
 		</property>
 		<property name="outputFormat">
-			<value>2</value>
+			<value>0</value>
 		</property>
 		<relationship name="folder">
 			<destination>{d2b6c4cb-6156-4afc-ac5c-ec1979b80dc0}</destination>
@@ -56,7 +56,14 @@
 			<destination>{10d8d637-6da4-4516-aed5-1f6a071e8c23}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{cb7078a1-fa68-48bb-bafb-6f503f88d063}" />
+	<object class="EventAutomatableProperties" id="{cb7078a1-fa68-48bb-bafb-6f503f88d063}">
+		<property name="minimumDistance">
+			<value>0</value>
+		</property>
+		<property name="maximumDistance">
+			<value>60</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{c5224dcd-127b-4a69-8c52-824be78f89c6}" />
 	<object class="GroupTrack" id="{714502b9-ff46-463f-bb09-b25e10cd09fb}">
 		<relationship name="modules">
@@ -119,7 +126,11 @@
 			<destination>{0aef5e80-676d-482a-bb41-655117bb183e}</destination>
 		</relationship>
 	</object>
-	<object class="MixerBusPanner" id="{ab52d2a9-f164-4516-8916-29acf171135b}" />
+	<object class="MixerBusPanner" id="{ab52d2a9-f164-4516-8916-29acf171135b}">
+		<property name="overridingOutputFormat">
+			<value>0</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{bf297daa-538a-42bb-833d-606601755045}" />
 	<object class="MixerBusEffectChain" id="{24e667f7-ece7-4169-b6c2-d85da776258f}">
 		<relationship name="effects">
@@ -132,7 +143,14 @@
 	</object>
 	<object class="MixerBusPanner" id="{9b92003d-dbbd-4cdf-b69c-3d8faa553dd8}" />
 	<object class="MixerBusFader" id="{0c6f345f-bf72-4196-9c72-f07c5e56b7dc}" />
-	<object class="SpatialiserEffect" id="{0aef5e80-676d-482a-bb41-655117bb183e}" />
+	<object class="SpatialiserEffect" id="{0aef5e80-676d-482a-bb41-655117bb183e}">
+		<property name="minimumDistance">
+			<value>0</value>
+		</property>
+		<property name="maximumDistance">
+			<value>60</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{3743eea3-2bad-42b1-a59b-08fd35e62b4b}" />
 	<object class="GainEffect" id="{aec759ba-237f-4905-bada-e6969d444b71}">
 		<property name="gain">
