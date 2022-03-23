@@ -1,6 +1,7 @@
 using System;
+using System.Collections.Generic;
+using Sirenix.Utilities;
 using UnityEditor;
-using UnityEditor.Graphs;
 using UnityEngine;
 
 namespace BForBoss
@@ -25,6 +26,8 @@ namespace BForBoss
         private int _brushSize;
         private readonly string[] _brushSelections = {"Small", "Medium", "Large"};
         private readonly int[] _brushSizes = {4, 7, 10};
+
+        private bool _shouldDrawPaint = true;
 
         public void OpenWindow(Texture2D screenShot)
         {
@@ -57,13 +60,134 @@ namespace BForBoss
             {
                 Close();
             }
-            OnInputUpdate();
             EditorGUI.DrawPreviewTexture(_screenShotRect, _editedScreenShot);
-            DrawPreviewSquareIfMousePressedDown();
-            DrawSquareOnToScreenshot();
+
+            if (_shouldDrawPaint)
+            {
+                OnPaintInputUpdate();
+                DrawPreviewPaint();
+            }
+            else
+            {
+                OnInputUpdate();
+                DrawPreviewSquareIfMousePressedDown();
+                DrawSquareOnToScreenshot();
+            }
+
 
             EditorGUILayout.Space(_editedScreenShot.height + 5f);
             DrawToolbar();
+        }
+
+        private List<Vector3> _listOfPoints = new List<Vector3>();
+        private void OnPaintInputUpdate()
+        {
+            Event inputEvent = Event.current;
+            if (inputEvent == null || mouseOverWindow != this )
+            {
+                return;
+            } 
+            
+            if (inputEvent.isMouse && inputEvent.button == 0)
+            {
+                if (!_screenShotRect.Contains(inputEvent.mousePosition))
+                {
+                    return;
+                }
+                
+                switch (inputEvent.type)
+                {
+                    case EventType.MouseDown:
+                        _listOfPoints.Add(inputEvent.mousePosition);
+                        break;
+                    case EventType.MouseDrag:
+                        _listOfPoints.Add(inputEvent.mousePosition);
+                        break;
+                    case EventType.MouseUp:
+                    {
+                        DrawPaintIfNeeded();
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void DrawPreviewPaint()
+        {
+            if (!_listOfPoints.IsNullOrEmpty())
+            {
+                Handles.BeginGUI();
+                Handles.color = Color.red;
+                Vector3 lastPoint = Vector3.zero;
+                foreach (var point in _listOfPoints)
+                {
+                    if (lastPoint != Vector3.zero)
+                    {
+                        Handles.DrawLine(lastPoint, point);
+                    }
+
+                    lastPoint = point;
+                }
+
+                Repaint();
+                Handles.EndGUI();
+            }
+        }
+
+        private void DrawPaintIfNeeded()
+        {
+            if (!_listOfPoints.IsNullOrEmpty())
+            {
+                Vector3 lastPoint = Vector3.zero;
+                foreach (var point in _listOfPoints)
+                {
+                    if (lastPoint != Vector3.zero)
+                    {
+                        Vector2Int relativeLastPoint = new Vector2Int((int)lastPoint.x, (int)(_editedScreenShot.height - lastPoint.y));
+                        Vector2Int relativePoint = new Vector2Int((int)point.x, (int)(_editedScreenShot.height - point.y));
+                        DrawLine(_editedScreenShot, relativeLastPoint, relativePoint, Color.red);
+                    }
+
+                    lastPoint = point;
+                }
+                _editedScreenShot.Apply();
+                Repaint();
+            }
+            
+            _listOfPoints.Clear();
+        }
+        
+        
+        private Vector3 mouseDownPosition = Vector3.zero;
+        private Vector3 mouseUpPosition = Vector3.zero;
+
+        private void OnInputUpdate()
+        {
+            Event inputEvent = Event.current;
+            if (inputEvent == null || mouseOverWindow != this )
+            {
+                return;
+            } 
+            
+            if (inputEvent.isMouse && inputEvent.button == 0)
+            {
+                if (!_screenShotRect.Contains(inputEvent.mousePosition))
+                {
+                    return;
+                }
+                
+                switch (inputEvent.type)
+                {
+                    case EventType.MouseDown:
+                        mouseDownPosition = inputEvent.mousePosition;
+                        break;
+                    case EventType.MouseUp:
+                    {
+                        mouseUpPosition = inputEvent.mousePosition;
+                        break;
+                    }
+                }
+            }
         }
 
         private void DrawPreviewSquareIfMousePressedDown()
@@ -111,7 +235,7 @@ namespace BForBoss
         }
 
         //https://answers.unity.com/questions/244417/create-line-on-a-texture.html
-        private void DrawLine(Texture2D tex, Vector2 p1, Vector2 p2, Color col, int thickness)
+        private void DrawLine(Texture2D tex, Vector2 p1, Vector2 p2, Color col, int thickness = 1)
         {
             Vector2 t = p1;
             float frac = 1/Mathf.Sqrt (Mathf.Pow (p2.x - p1.x, 2) + Mathf.Pow (p2.y - p1.y, 2));
@@ -138,6 +262,7 @@ namespace BForBoss
                 EditorGUIUtility.labelWidth = 65f;
                 _currentBrushIndex = EditorGUILayout.Popup("Brush Size", _currentBrushIndex, _brushSelections, GUILayout.ExpandWidth(true));
                 EditorGUIUtility.labelWidth = originalLabelWidth;
+                _shouldDrawPaint = EditorGUILayout.Toggle(_shouldDrawPaint);
                 
                 EditorGUILayout.Space();
             
@@ -153,38 +278,6 @@ namespace BForBoss
             }
         }
 
-        private Vector3 mouseDownPosition = Vector3.zero;
-        private Vector3 mouseUpPosition = Vector3.zero;
-
-        private void OnInputUpdate()
-        {
-            Event inputEvent = Event.current;
-            if (inputEvent == null || mouseOverWindow != this )
-            {
-                return;
-            } 
-            
-            if (inputEvent.isMouse && inputEvent.button == 0)
-            {
-                if (!_screenShotRect.Contains(inputEvent.mousePosition))
-                {
-                    return;
-                }
-                
-                switch (inputEvent.type)
-                {
-                    case EventType.MouseDown:
-                        mouseDownPosition = inputEvent.mousePosition;
-                        break;
-                    case EventType.MouseUp:
-                    {
-                        mouseUpPosition = inputEvent.mousePosition;
-                        break;
-                    }
-                }
-            }
-
-        }
 
         private Texture2D CreateTextureCopy(Texture2D sourceTexture)
         {
