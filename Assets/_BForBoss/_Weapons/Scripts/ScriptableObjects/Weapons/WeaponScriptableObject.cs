@@ -1,6 +1,7 @@
 using FMODUnity;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.VFX;
 
 namespace Perigon.Weapons
 {
