@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ECM2.Components;
 using Perigon.Utility;
 using PerigonGames;
 using UnityEngine;
 
 namespace BForBoss
 {
-    public class PatrolBehaviour : MonoBehaviour
+    public class PatrolBehaviour : PlatformMovement
     {
         [SerializeField] private List<GameObject> _patrolPosition = new List<GameObject>();
         [SerializeField] private float _speed = 1;
@@ -35,9 +36,9 @@ namespace BForBoss
             transform.position = _patrolPosition[0].transform.position;
         }
 
-        private void FixedUpdate()
+        protected override void OnMove()
         {
-            transform.position = _patrol.MoveTowards(transform.position, Time.deltaTime);
+            position = _patrol.MoveTowards(transform.position, Time.deltaTime);
         }
     }
     
