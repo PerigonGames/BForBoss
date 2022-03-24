@@ -38,8 +38,6 @@ namespace BForBoss
             
             _originalScreenShot = screenShot;
             _editedScreenShot = CreateTextureCopy(_originalScreenShot);
-
-            Undo.undoRedoPerformed += OnUndoBrushStroke;
             
             _window = GetWindow<ImageEditorWindow>();
             _window.minSize = new Vector2(screenShot.width, screenShot.height + TOOLBAR_HEIGHT);
@@ -307,11 +305,6 @@ namespace BForBoss
             _editedScreenShot = CreateTextureCopy(_originalScreenShot);
         }
         
-        private void OnUndoBrushStroke()
-        {
-            _forceRepaint = true;
-        }
-        
         private void OnLostFocus()
         {
             Rect windowRect = new Rect(0,0, position.width, position.height);
@@ -323,7 +316,6 @@ namespace BForBoss
 
         private void OnDestroy()
         {
-            Undo.undoRedoPerformed -= OnUndoBrushStroke;
             OnWindowClosed?.Invoke(_originalScreenShot);
         }
     }
