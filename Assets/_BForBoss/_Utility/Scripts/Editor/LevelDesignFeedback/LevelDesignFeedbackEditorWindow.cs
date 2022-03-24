@@ -87,7 +87,7 @@ namespace Perigon.Utility
                 {
                     GUILayout.FlexibleSpace();
 
-                    if (GUILayout.Button("Reset"))
+                    if (GUILayout.Button("Reset to original Screen Shot"))
                     {
                         _image = CreateTextureCopy(_originalImage);
                     }

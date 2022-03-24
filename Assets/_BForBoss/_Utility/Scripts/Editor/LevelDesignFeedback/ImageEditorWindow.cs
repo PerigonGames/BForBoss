@@ -113,24 +113,26 @@ namespace BForBoss
 
         private void DrawPreviewPaint()
         {
-            if (!_listOfPoints.IsNullOrEmpty())
+            if (_listOfPoints.IsNullOrEmpty())
             {
-                Handles.BeginGUI();
-                Handles.color = _brushColor;
-                Vector3 lastPoint = Vector3.zero;
-                foreach (var point in _listOfPoints)
+                return;
+            }
+            
+            Handles.BeginGUI();
+            Handles.color = _brushColor;
+            Vector3 lastPoint = Vector3.zero;
+            foreach (var point in _listOfPoints)
+            {
+                if (lastPoint != Vector3.zero)
                 {
-                    if (lastPoint != Vector3.zero)
-                    {
-                        Handles.DrawLine(lastPoint, point);
-                    }
-
-                    lastPoint = point;
+                    Handles.DrawLine(lastPoint, point);
                 }
 
-                Repaint();
-                Handles.EndGUI();
+                lastPoint = point;
             }
+
+            Repaint();
+            Handles.EndGUI();
         }
 
         private void DrawPaintIfNeeded()
@@ -277,7 +279,7 @@ namespace BForBoss
                     SaveEditedChanges();
                 }
             
-                if (GUILayout.Button("Reset"))
+                if (GUILayout.Button("Reset to last iteration"))
                 {
                     Reset();
                 }
