@@ -31,54 +31,78 @@ namespace BForBoss
             {
                 PanicHelper.Panic(new Exception("List of patrol position is empty or null for Patrol Behaviour"));
             }
-            _patrol = new Patrol(transform.position, _patrolPosition.Select(x => transform.position).ToArray(), _speed);    
+            _patrol = new Patrol(_patrolPosition.Select(x => x.transform.position).ToArray(), _speed, _waitTimeOnArrival);    
             transform.position = _patrolPosition[0].transform.position;
         }
 
         private void FixedUpdate()
         {
-            if (_patrol.CurrentDestination == null)
-            {
-                return;
-            }
-
             transform.position = _patrol.MoveTowards(transform.position, Time.deltaTime);
         }
     }
     
     public class Patrol
     {
+        private enum PatrolState
+        {
+            Moving,
+            Waiting
+        }
         private readonly Queue<Vector3> _queueOfLocations = new Queue<Vector3>();
         private readonly float _speed = 0;
+        private readonly float _waitTimeOnArrival = 0;
         private readonly Vector3[] _arrayOfLocations;
 
-        private Vector3? _currentDestination = null;
+        private float _elapsedWaitTime = 0;
+        private PatrolState _state = PatrolState.Moving;
+        private Vector3 _currentDestination = Vector3.zero;
 
-        public Vector3? CurrentDestination => _currentDestination;
-        public Vector3 StartingLocation { get; } = Vector3.zero;
+        private bool NeedToWait => _elapsedWaitTime < _waitTimeOnArrival; 
 
-        public Patrol(Vector3 startingPosition, Vector3[] patrolLocations, float speed = 0f)
+        public Patrol(Vector3[] patrolLocations, 
+            float speed = 0f,
+            float waitTimeOnArrival = 0f)
         {
             _speed = speed;
+            _waitTimeOnArrival = waitTimeOnArrival;
             _arrayOfLocations = patrolLocations;
-            StartingLocation = startingPosition;
             SetupLocations();
         }
 
         public Vector3 MoveTowards(Vector3 position, float time)
         {
-            var nextPosition = Vector3.MoveTowards(position, (Vector3) _currentDestination, _speed * time);
+            if (_state == PatrolState.Waiting && NeedToWait)
+            {
+                Debug.Log("waiting");
+                UpdateWaitTime(time);
+                return position;
+            }
+            
+            var nextPosition = Vector3.MoveTowards(position, _currentDestination, _speed * time);
             if (nextPosition == _currentDestination)
             {
+                Debug.Log("Got next destination: " + _currentDestination);
+                _state = PatrolState.Waiting;
                 GetNextDestination();
             }
 
             return nextPosition;
         }
 
+        private void UpdateWaitTime(float time)
+        {
+            _elapsedWaitTime += time;
+            if (_elapsedWaitTime > _waitTimeOnArrival)
+            {
+                Debug.Log("Finished Waiting");
+                _elapsedWaitTime = 0;
+                _state = PatrolState.Moving;
+            }
+        }
+
         public void CleanUp()
         {
-            _currentDestination = null;
+            _currentDestination = Vector3.zero;
             _queueOfLocations.Clear();
         }
 
@@ -92,8 +116,7 @@ namespace BForBoss
             _queueOfLocations.Clear();
             foreach (var location in _arrayOfLocations)
             {
-                var position = new Vector3(location.x, 0, location.z);
-                _queueOfLocations.Enqueue(position);
+                _queueOfLocations.Enqueue(location);
             }
 
             GetNextDestination();
@@ -104,7 +127,7 @@ namespace BForBoss
             if (_queueOfLocations.Count > 0)
             {
                 _currentDestination = _queueOfLocations.Dequeue();
-                _queueOfLocations.Enqueue((Vector3) _currentDestination);
+                _queueOfLocations.Enqueue(_currentDestination);
             }
         }
     }
