@@ -15,10 +15,10 @@ namespace BForBoss
     {
 
         [SerializeField] private float _waitTime = 1.0f;    
-        [SerializeField] private float _currTime = 0f;      
+        private float _currTime = 0f;      
         [SerializeField] private VisualEffect _muzzleFlash = null;      
         
-        void Update()
+        private void Update()
         {
             _currTime += Time.deltaTime;  
             if (_currTime >= _waitTime)
