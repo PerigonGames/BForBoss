@@ -8,8 +8,7 @@ namespace Perigon.Utility
     public static class LevelDesignFeedbackSender
     {
         private static string _cardName;
-        
-        
+
         public static void SendFeedback(string name, string feedback, Texture2D image)
         {
             _cardName = name;
