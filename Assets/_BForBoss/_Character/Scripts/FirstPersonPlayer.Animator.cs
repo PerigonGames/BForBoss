@@ -25,14 +25,14 @@ namespace Perigon.Character
                 return;
             }
 
-            if (IsWallRunning())
+            if (IsWallRunning)
                 SetWallRunSpeed();
             else
                 SetRunSpeed();
 
 
-            animator.SetBool(GroundParamId, IsOnGround() || IsWallRunning());
-            animator.SetBool(SlideParamId, IsSliding());
+            animator.SetBool(GroundParamId, IsOnGround() || IsWallRunning);
+            animator.SetBool(SlideParamId, IsSliding);
             animator.SetBool(CrouchParamId, IsCrouching());
 
             SetAnimatorJump();
@@ -48,7 +48,7 @@ namespace Perigon.Character
 
         private void SetAnimatorJump()
         {
-            if (IsFalling() && !IsWallRunning())
+            if (IsFalling() && !IsWallRunning)
             {
                 float verticalSpeed = Vector3.Dot(GetVelocity(), GetUpVector());
                 animator.SetFloat(JumpParamId, verticalSpeed, 0.1f, Time.deltaTime);

@@ -1,3 +1,4 @@
+using System;
 using Perigon.Analytics;
 using Perigon.Entities;
 using Perigon.Leaderboard;
@@ -69,7 +70,13 @@ namespace BForBoss
             _checkpointManager.Initialize(_detectInput, _timeManagerViewModel);
             _timeManager.Initialize(_timeManagerViewModel);
 
-            _weaponsManager.Initialize(new CharacterMovementWrapper(_player));
+            _weaponsManager.Initialize(
+                () => _player.CharacterVelocity,
+                () => _player.CharacterMaxSpeed,
+                () => _player.IsWallRunning,
+                () => _player.IsGrounded,
+                () => _player.IsSliding,
+                () => _player.IsDashing);
             _equipmentBehaviour.Initialize();
             _ammunitionCountView.Initialize(_equipmentBehaviour);
             _reloadView.Initialize(_equipmentBehaviour);
@@ -105,27 +112,27 @@ namespace BForBoss
             base.OnValidate();
             if (_weaponsManager == null)
             {
-                Debug.LogWarning("Weapons Manager missing from World Manager");
+                PanicHelper.Panic(new Exception("Weapons Manager missing from World Manager"));
             }
             
             if (_equipmentBehaviour == null)
             {
-                Debug.LogWarning("Equipment Behaviour missing from World Manager");
+                PanicHelper.Panic(new Exception("Equipment Behaviour missing from World Manager"));
             }
             
             if (_ammunitionCountView == null)
             {
-                Debug.LogWarning("Ammunition Count View missing from World Manager");
+                PanicHelper.Panic(new Exception("Ammunition Count View missing from World Manager"));
             }
             
             if (_reloadView == null)
             {
-                Debug.LogWarning("Reload View missing from World Manager");
+                PanicHelper.Panic(new Exception("Reload View missing from World Manager"));
             }
 
             if (_lifeCycleManager == null)
             {
-                Debug.LogWarning("Life Cycle Manager missing from World Manager");
+                PanicHelper.Panic(new Exception("Life Cycle Manager missing from World Manager"));
             }
         }
     }

@@ -29,16 +29,18 @@ namespace Perigon.Character
 
         private ECM2.Characters.Character _baseCharacter = null;
         private InputAction _dashInputAction = null;
+        private Action _onDashing = null;
 
         public bool IsDashing => _isDashing;
         private bool IsCoolDownOver => _dashCoolDownElapsedTime <= 0;
 
-        public event Action StartDashing;
         
-        public void Initialize(ECM2.Characters.Character baseCharacter, Func<Vector2> characterMovement)
+        
+        public void Initialize(ECM2.Characters.Character baseCharacter, Func<Vector2> characterMovement, Action onDash)
         {
             _baseCharacter = baseCharacter;
             _characterInputMovement = characterMovement;
+            _onDashing = onDash;
         }
         
         public void SetupPlayerInput(InputAction dashAction)
@@ -124,7 +126,7 @@ namespace Perigon.Character
             }
 
             PlayerDashVisuals();
-            StartDashing?.Invoke();
+            _onDashing?.Invoke();
             _isDashing = true;
             
             _baseCharacter.brakingFriction = 0.0f;

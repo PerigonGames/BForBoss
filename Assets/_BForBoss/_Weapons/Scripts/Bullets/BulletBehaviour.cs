@@ -73,12 +73,6 @@ namespace Perigon.Weapons
 
         protected void SpawnWallHitPrefab(Vector3 position, Vector3 wallNormal)
         {
-            if (_wallHitVFXPrefab == null)
-            {
-                Debug.LogWarning("No wall hit prefab set!");
-                return;
-            }
-            
             _wallHitVFXObjectPool ??= new ObjectPooler<WallHitVFX>("WallHitVFX", 
                 () =>
                 {
@@ -97,6 +91,14 @@ namespace Perigon.Weapons
             vfx.transform.SetPositionAndRotation(position, Quaternion.LookRotation(wallNormal));
             vfx.transform.Translate(0f, 0f, WALL_HIT_ZFIGHT_BUFFER, Space.Self);
             vfx.Spawn(_properties.BulletHoleTimeToLive);
+        }
+
+        private void OnValidate()
+        {
+            if (_wallHitVFXPrefab == null)
+            {
+                PanicHelper.Panic(new Exception("No wall hit prefab set!"));
+            }
         }
     }
 }

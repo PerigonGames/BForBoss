@@ -1,3 +1,4 @@
+using System;
 using Perigon.Character;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
@@ -7,6 +8,8 @@ namespace BForBoss
 {
     public abstract class BaseWorldManager : MonoBehaviour
     {
+        protected readonly StateManager _stateManager = StateManager.Instance;
+
         [Title("Base Component")] 
         [SerializeField] protected FirstPersonPlayer _player = null;
 
@@ -14,7 +17,6 @@ namespace BForBoss
         [SerializeField] protected PauseMenu _pauseMenu;
 
         private ICharacterSpawn _character = null;
-        protected readonly StateManager _stateManager = StateManager.Instance;
         protected FreezeActionsUtility _freezeActionsUtility = null;
 
         protected abstract Vector3 SpawnLocation { get; }
@@ -59,12 +61,12 @@ namespace BForBoss
         {
             if (_player == null)
             {
-                Debug.LogError("FirstPersonPlayer is missing from World Manager");
+                PanicHelper.Panic(new Exception("FirstPersonPlayer is missing from World Manager"));
             }
             
             if (_pauseMenu == null)
             {
-                Debug.LogError("PauseMenu is missing from World Manager");
+                PanicHelper.Panic(new Exception("PauseMenu is missing from World Manager"));
             }
         }
 
