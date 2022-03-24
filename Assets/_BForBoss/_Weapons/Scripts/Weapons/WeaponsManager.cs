@@ -81,7 +81,7 @@ namespace Perigon.Weapons
             FMODUnity.RuntimeManager.PlayOneShot(_equipmentBehaviour.WeaponShotAudio, transform.position);
         }
 
-        private void OnValidate()
+        private void Awake()
         {
             if (_equipmentBehaviour == null)
             {

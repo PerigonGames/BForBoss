@@ -8,6 +8,8 @@ namespace BForBoss
 {
     public abstract class BaseWorldManager : MonoBehaviour
     {
+        protected readonly StateManager _stateManager = StateManager.Instance;
+
         [Title("Base Component")] 
         [SerializeField] protected FirstPersonPlayer _player = null;
 
@@ -15,7 +17,6 @@ namespace BForBoss
         [SerializeField] protected PauseMenu _pauseMenu;
 
         private ICharacterSpawn _character = null;
-        protected readonly StateManager _stateManager = StateManager.Instance;
         protected FreezeActionsUtility _freezeActionsUtility = null;
 
         protected abstract Vector3 SpawnLocation { get; }
