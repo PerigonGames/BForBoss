@@ -1501,7 +1501,7 @@ GameObject:
   - component: {fileID: 176671537}
   - component: {fileID: 176671539}
   m_Layer: 0
-  m_Name: P_MuzzleFlash
+  m_Name: ShotgunTestFlash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1613,8 +1613,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cbb3bb94ca447a4e8c44f192b64df9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wait_time: 1
-  _curr_time: 0.38946897
+  _waitTime: 1
+  _currTime: 0.79211736
+  _muzzleFlash: {fileID: 176671538}
 --- !u!43 &185261185
 Mesh:
   m_ObjectHideFlags: 0
@@ -2986,7 +2987,7 @@ GameObject:
   - component: {fileID: 342729944}
   - component: {fileID: 342729943}
   m_Layer: 0
-  m_Name: 4PointedMuzzle
+  m_Name: AssaultTestFlash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3018,8 +3019,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cbb3bb94ca447a4e8c44f192b64df9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wait_time: 1
-  _curr_time: 0.38946897
+  _waitTime: 1
+  _currTime: 0.79211736
+  _muzzleFlash: {fileID: 342729945}
 --- !u!73398921 &342729944
 VFXRenderer:
   m_ObjectHideFlags: 2
@@ -14412,9 +14414,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e4e4289d88e9b84db7fc737719d7c2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _point1: {x: -7, y: 1, z: 8}
-  _point2: {x: -8, y: 5, z: 7}
-  _speed: 0.4
+  _firstPointToVisit: {x: 0, y: 0, z: 0}
+  _secondPointToVisit: {x: 0, y: 0, z: 0}
+  _moveSpeedBetweenPoints: 0.4
 --- !u!108 &1526917818
 Light:
   m_ObjectHideFlags: 0
@@ -15225,7 +15227,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3093835205963856409, guid: 1263fd774c91c9644930c6ddafd69c09, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0010198076
+      value: 0.0007534966
       objectReference: {fileID: 0}
     - target: {fileID: 4516330132463527741, guid: 1263fd774c91c9644930c6ddafd69c09, type: 3}
       propertyPath: m_AnchorMax.x
@@ -16868,17 +16870,9 @@ MonoBehaviour:
   assetGuid: 
   m_Mesh: {fileID: 95619440}
   m_IsSelectable: 1
-  m_SelectedFaces: 02000000
-  m_SelectedEdges:
-  - a: 8
-    b: 9
-  - a: 10
-    b: 8
-  - a: 9
-    b: 11
-  - a: 11
-    b: 10
-  m_SelectedVertices: 08000000090000000a0000000b000000
+  m_SelectedFaces: 
+  m_SelectedEdges: []
+  m_SelectedVertices: 
 --- !u!4 &1836177900
 Transform:
   m_ObjectHideFlags: 0
@@ -17999,7 +17993,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21.2
+  m_fontSize: 24.15
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -18157,7 +18151,7 @@ GameObject:
   - component: {fileID: 1965698340}
   - component: {fileID: 1965698342}
   m_Layer: 0
-  m_Name: P_MuzzleFlash2_1
+  m_Name: ScoutTestFlash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18270,8 +18264,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cbb3bb94ca447a4e8c44f192b64df9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wait_time: 1
-  _curr_time: 0.38946897
+  _waitTime: 1
+  _currTime: 0.79211736
+  _muzzleFlash: {fileID: 1965698341}
 --- !u!1001 &1974139892
 PrefabInstance:
   m_ObjectHideFlags: 0

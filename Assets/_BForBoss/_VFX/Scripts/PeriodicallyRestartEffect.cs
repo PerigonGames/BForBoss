@@ -10,20 +10,21 @@ using UnityEngine.VFX;
 
 namespace BForBoss
 {
-    [ExecuteInEditMode]     // Remove this if you don't want the script to update in editor.
+    [ExecuteInEditMode]
     public class PeriodicallyRestartEffect : MonoBehaviour
     {
 
-        [SerializeField] private float _wait_time = 1.0f;     // Time between shots.
-        [SerializeField] private float _curr_time = 0f;       // Current time in the timer.
+        [SerializeField] private float _waitTime = 1.0f;    
+        [SerializeField] private float _currTime = 0f;      
+        [SerializeField] private VisualEffect _muzzleFlash = null;      
         
         void Update()
         {
-            _curr_time += Time.deltaTime;    // Increment timer.
-            if (_curr_time >= _wait_time)     // If wait_time is reached:
+            _currTime += Time.deltaTime;  
+            if (_currTime >= _waitTime)
             {
-                _curr_time = 0;                          // Reset timer.
-                GetComponent<VisualEffect>().Reinit();  // Reinitialize the VFX (do the effect).
+                _currTime = 0;                 
+                _muzzleFlash.Reinit();  
             }
         }
     }

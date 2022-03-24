@@ -2,7 +2,6 @@ using System;
 using FMODUnity;
 using PerigonGames;
 using UnityEngine;
-using UnityEngine.VFX;
 
 namespace Perigon.Weapons
 {
