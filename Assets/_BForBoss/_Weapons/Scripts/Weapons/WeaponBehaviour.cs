@@ -85,7 +85,7 @@ namespace Perigon.Weapons
                 bullet.OnBulletDeactivate += HandleOnBulletDeactivate;
             }
             
-            _muzzleFlash.Reinit();
+            _muzzleFlash.Play();
             
         }
 
