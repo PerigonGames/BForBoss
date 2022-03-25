@@ -84,8 +84,12 @@ namespace Perigon.Weapons
                 bullet.OnBulletHitEntity += HandleOnBulletHitEntity;
                 bullet.OnBulletDeactivate += HandleOnBulletDeactivate;
             }
+
+            if (_muzzleFlash != null)
+            {
+                _muzzleFlash.Play();    
+            }
             
-            _muzzleFlash.Play();
             
         }
 

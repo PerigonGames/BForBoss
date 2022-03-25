@@ -23,8 +23,11 @@ namespace Perigon.VFX
             _currTime += Time.deltaTime;  
             if (_currTime >= _waitTime)
             {
-                _currTime = 0;                 
-                _muzzleFlash.Play();  
+                _currTime = 0;            
+                if (_muzzleFlash != null)
+                {
+                    _muzzleFlash.Play();    
+                }
             }
         }
     }
