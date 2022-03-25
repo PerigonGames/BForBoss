@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
-namespace BForBoss
+namespace Perigon.VFX
 {
     [ExecuteInEditMode]
     public class PeriodicallyRestartEffect : MonoBehaviour
@@ -24,7 +24,7 @@ namespace BForBoss
             if (_currTime >= _waitTime)
             {
                 _currTime = 0;                 
-                _muzzleFlash.Reinit();  
+                _muzzleFlash.Play();  
             }
         }
     }

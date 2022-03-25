@@ -10,7 +10,7 @@ using PerigonGames;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace BForBoss
+namespace Perigon.VFX
 {
     public class DemoPatrolBehaviour : MonoBehaviour
     {
