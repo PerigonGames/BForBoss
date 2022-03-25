@@ -12,7 +12,7 @@ using UnityEngine.Serialization;
 
 namespace BForBoss
 {
-    public class TransformMover : MonoBehaviour
+    public class DemoPatrolBehaviour : MonoBehaviour
     {
 
         [SerializeField] private Vector3 _firstPointToVisit;      
@@ -21,7 +21,7 @@ namespace BForBoss
 
         private bool _isGoingToFirstPoint = true;          
                                                       
-        void Update()
+        private void Update()
         {
             var objectPosition = gameObject.transform.position;  
             
