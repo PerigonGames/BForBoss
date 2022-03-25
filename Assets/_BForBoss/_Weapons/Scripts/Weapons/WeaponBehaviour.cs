@@ -143,6 +143,10 @@ namespace Perigon.Weapons
         private void Awake()
         {
             _bulletSpawner = GetComponent<BulletSpawner>();
+            if (_muzzleFlash == null)
+            {
+                Debug.LogWarning("Missing VFX Visual Effect from this weapon");
+            } 
         }
 
         private void OnEnable()
