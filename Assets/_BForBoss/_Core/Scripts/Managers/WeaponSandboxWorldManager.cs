@@ -2,6 +2,7 @@ using Perigon.Entities;
 using Perigon.Utility;
 using Perigon.Weapons;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -32,11 +33,18 @@ namespace BForBoss
 
         protected override Vector3 SpawnLocation => _spawnLocation.position;
         protected override Quaternion SpawnLookDirection => _spawnLocation.rotation;
-        
+
+        protected override void CleanUp()
+        {
+            base.CleanUp();
+            FindObjectsOfType<PatrolBehaviour>().ForEach(pb => pb.CleanUp());
+        }
+
         protected override void Reset()
         {
             base.Reset();
             _lifeCycleManager.Reset();
+            FindObjectsOfType<PatrolBehaviour>().ForEach(pb => pb.Reset());
         }
 
         protected override void Awake()
