@@ -2,6 +2,7 @@ using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.VFX;
 
 namespace Perigon.Weapons
 {
@@ -12,6 +13,7 @@ namespace Perigon.Weapons
         private readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
         [SerializeField] protected Transform _firePoint = null;
         [SerializeField] private CrosshairBehaviour _crosshair = null;
+        [SerializeField] private VisualEffect _muzzleFlash = null;
         [InlineEditor]
         [SerializeField] private WeaponScriptableObject _weaponScriptableObject;
 
@@ -82,6 +84,13 @@ namespace Perigon.Weapons
                 bullet.OnBulletHitEntity += HandleOnBulletHitEntity;
                 bullet.OnBulletDeactivate += HandleOnBulletDeactivate;
             }
+
+            if (_muzzleFlash != null)
+            {
+                _muzzleFlash.Play();    
+            }
+            
+            
         }
 
         private void HandleOnBulletHitEntity(IBullet bullet, bool isDead)
@@ -138,6 +147,10 @@ namespace Perigon.Weapons
         private void Awake()
         {
             _bulletSpawner = GetComponent<BulletSpawner>();
+            if (_muzzleFlash == null)
+            {
+                Debug.LogWarning("Missing VFX Visual Effect from this weapon");
+            } 
         }
 
         private void OnEnable()
