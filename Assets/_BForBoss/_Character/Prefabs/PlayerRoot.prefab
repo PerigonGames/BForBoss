@@ -226,9 +226,9 @@ MonoBehaviour:
   _flyingFriction: 0
   _mass: 1
   _impartExternalVelocity: 0
-  _impartPlatformVelocity: 0
-  _impartPlatformMovement: 0
-  _impartPlatformRotation: 0
+  _impartPlatformVelocity: 1
+  _impartPlatformMovement: 1
+  _impartPlatformRotation: 1
   _applyPushForce: 0
   _pushForceAffectCharacters: 0
   _applyStandingDownwardForce: 0
@@ -1206,14 +1206,14 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: -5716681864270162303, guid: 320b1c2af77554f99a1658df4a6d3d5c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 320b1c2af77554f99a1658df4a6d3d5c, type: 3}
---- !u!1 &7919250276514491954 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 320b1c2af77554f99a1658df4a6d3d5c, type: 3}
-  m_PrefabInstance: {fileID: 2217804276950906683}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6610595906298944545 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 320b1c2af77554f99a1658df4a6d3d5c, type: 3}
+  m_PrefabInstance: {fileID: 2217804276950906683}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7919250276514491954 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 320b1c2af77554f99a1658df4a6d3d5c, type: 3}
   m_PrefabInstance: {fileID: 2217804276950906683}
   m_PrefabAsset: {fileID: 0}
 --- !u!95 &834154866
