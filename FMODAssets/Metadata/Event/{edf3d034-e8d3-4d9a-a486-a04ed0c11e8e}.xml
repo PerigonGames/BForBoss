@@ -5,7 +5,7 @@
 			<value>Enemy_Hit</value>
 		</property>
 		<property name="outputFormat">
-			<value>2</value>
+			<value>0</value>
 		</property>
 		<relationship name="folder">
 			<destination>{052158c9-87e1-4689-b8a3-cfbebed900ba}</destination>
@@ -116,10 +116,13 @@
 	<object class="MixerBusEffectChain" id="{01b2b64a-a55f-4bce-b12a-86bf3ac40d2f}">
 		<relationship name="effects">
 			<destination>{ee07e5c2-b266-4782-806b-aff61b1ded41}</destination>
-			<destination>{20ea88ab-93bf-4c23-970f-206b57def085}</destination>
 		</relationship>
 	</object>
-	<object class="MixerBusPanner" id="{ceb86b03-358e-437e-9ebc-7c1584ad986d}" />
+	<object class="MixerBusPanner" id="{ceb86b03-358e-437e-9ebc-7c1584ad986d}">
+		<property name="overridingOutputFormat">
+			<value>0</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{d2f8a171-ba01-4ed8-a568-f58d152d284a}" />
 	<object class="MixerBusEffectChain" id="{1f7c0023-b807-4c7e-af86-fd39acbcc6a3}">
 		<relationship name="effects">
@@ -132,7 +135,6 @@
 	</object>
 	<object class="MixerBusPanner" id="{5906b962-a470-48cd-ba76-e9db180f6ae5}" />
 	<object class="MixerBusFader" id="{ee07e5c2-b266-4782-806b-aff61b1ded41}" />
-	<object class="SpatialiserEffect" id="{20ea88ab-93bf-4c23-970f-206b57def085}" />
 	<object class="MixerBusFader" id="{9288012a-4446-4d31-83e6-aab2c416f479}" />
 	<object class="SFXReverbEffect" id="{4b67db7e-e2d0-4241-9cc9-08a9147f28a1}">
 		<property name="decayTime">
