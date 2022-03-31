@@ -14,6 +14,8 @@ namespace Perigon.Character
         private float _maxWallRunAcceleration = 20f;
         [SerializeField]
         private float _wallGravityDownForce = 0f;
+        [SerializeField] 
+        private bool _constantSpeed = false;
 
         [Header("Wall Run Conditions")]
         [SerializeField, Tooltip("Stop a wall run if speed dips below this")]
@@ -46,8 +48,8 @@ namespace Perigon.Character
         private float _cameraRotateDuration = 1f;
         [SerializeField] 
         private float _lookAlongWallRotationSpeed = 3f;
-
-        [SerializeField] private float _minLookAlongWallStabilizationAngle = 5f;
+        [SerializeField] 
+        private float _minLookAlongWallStabilizationAngle = 5f;
         #endregion
 
         #region PRIVATE_FIELDS
@@ -60,18 +62,19 @@ namespace Perigon.Character
             Vector3.left
         };
 
-        private bool _isWallRunning = false;
         private ECM2.Characters.Character _baseCharacter = null;
         private FirstPersonPlayer _fpsCharacter = null;
         private LayerMask _mask;
         private Vector3 _lastWallRunPosition;
         private Vector3 _lastWallRunNormal;
+        private Vector3 _constantVelocity;
         private Collider _lastWall;
         private float _baseMaxSpeed;
         private Func<Vector2> _movementInput;
         private Action<int> _OnWallRunFinished;
 
         private bool _hasCameraStabilized = false;
+        private bool _isInitialHeadingSet = false;
 
         private float _currentJumpDuration = 0f;
         private float _timeSinceWallAttach = 0f;
@@ -81,7 +84,8 @@ namespace Perigon.Character
         #region PROPERTIES
         private Transform ChildTransform => _fpsCharacter != null ? _fpsCharacter.rootPivot : transform;
 
-        public bool IsWallRunning => _isWallRunning;
+        public bool IsWallRunning { get; private set; } = false;
+
         #endregion
 
         #region PUBLIC_METHODS
@@ -115,7 +119,7 @@ namespace Perigon.Character
 
             if (GetSmallestRaycastHitIfValid(hits, out RaycastHit hit) && IsClearOfGround())
             {
-                if(_isWallRunning || hit.collider != _lastWall) 
+                if(IsWallRunning || hit.collider != _lastWall) 
                     WallRun(hit);
             }
         }
@@ -123,7 +127,7 @@ namespace Perigon.Character
         public void OnJumped()
         {
             _currentJumpDuration = 0f;
-            if (_isWallRunning)
+            if (IsWallRunning)
             {
                 StopWallRunning(true);
             }
@@ -133,7 +137,7 @@ namespace Perigon.Character
         {
             _currentJumpDuration = 0f;
             _lastWall = null;
-            if (_isWallRunning)
+            if (IsWallRunning)
             {
                 StopWallRunning(false);
             }
@@ -141,13 +145,13 @@ namespace Perigon.Character
 
         public bool CanJump()
         {
-            return _isWallRunning; // can always jump out of a wall run
+            return IsWallRunning; // can always jump out of a wall run
         }
 
         public void OnWallRunning()
         {
             var deltaTime = Time.fixedDeltaTime;
-            if (!_isWallRunning)
+            if (!IsWallRunning)
             {
                 _timeSinceWallDetach += deltaTime;
                 if(_timeSinceWallDetach > _wallResetTimer)
@@ -162,15 +166,26 @@ namespace Perigon.Character
                 StopWallRunning(false);
                 return;
             }
-            
+
+            var velocity = _baseCharacter.GetVelocity();
             var heading = CalculateWallHeadingDirection();
             
-            var velocity = _baseCharacter.GetVelocity();
-            velocity = velocity.dot(heading) * heading;
-            
-            Debug.DrawRay(transform.position, velocity);
-            
-            if (velocity.sqrMagnitude < _minSpeed * _minSpeed)
+            if (!_isInitialHeadingSet && _constantSpeed)
+            {
+                _constantVelocity = heading.normalized * _baseCharacter.maxWalkSpeed;
+                _isInitialHeadingSet = true;
+            }
+
+            if (_constantSpeed)
+            {
+                velocity = _constantVelocity;
+            }
+            else
+            {
+                velocity = velocity.dot(heading) * heading;
+            }
+
+            if (!_constantSpeed && velocity.sqrMagnitude < _minSpeed * _minSpeed)
             {
                 StopWallRunning(false);
                 return;
@@ -188,7 +203,7 @@ namespace Perigon.Character
         public Vector3 CalcJumpVelocity()
         {
             var velocity = _baseCharacter.GetVelocity() * _jumpForwardVelocityMultiplier;
-            if (_isWallRunning)
+            if (IsWallRunning)
             {
                 velocity += _lastWallRunNormal * _wallBounciness +
                             Vector3.up * (_baseCharacter.jumpImpulse * _jumpHeightMultiplier);
@@ -209,7 +224,7 @@ namespace Perigon.Character
 
         public float CalculateWallSideRelativeToPlayer()
         {
-            if (_isWallRunning)
+            if (IsWallRunning)
             {
                 Vector3 heading = _lastWallRunPosition - transform.position;
                 Vector3 perpendicular = Vector3.Cross(ChildTransform.forward, heading);
@@ -226,10 +241,11 @@ namespace Perigon.Character
             _lastWall = wall.collider;
             _lastWallRunNormal = wall.normal;
             _lastWallRunPosition = wall.point;
-            if (!_isWallRunning)
+            if (!IsWallRunning)
             {
-                _isWallRunning = true;
+                IsWallRunning = true;
                 _hasCameraStabilized = false;
+                _isInitialHeadingSet = false;
                 _baseMaxSpeed = _baseCharacter.maxWalkSpeed;
                 _baseCharacter.maxWalkSpeed *= _speedMultiplier;
                 _timeSinceWallAttach = 0f;
@@ -252,9 +268,9 @@ namespace Perigon.Character
 
         private void StopWallRunning(bool jumpedOutOfWallRun)
         {
-            if (!_isWallRunning) 
+            if (!IsWallRunning) 
                 return;
-            _isWallRunning = false;
+            IsWallRunning = false;
             _baseCharacter.maxWalkSpeed = _baseMaxSpeed;
             _timeSinceWallAttach = 0f;
             _timeSinceWallDetach = 0f;
