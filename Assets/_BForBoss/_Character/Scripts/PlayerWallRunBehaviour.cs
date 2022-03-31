@@ -295,7 +295,8 @@ namespace Perigon.Character
         
         private void LookAlongWall(Vector3 characterForward, Vector3 heading)
         {
-            if (_hasCameraStabilized) return;
+            if (_hasCameraStabilized) 
+                return;
             
             var angleDifference = Vector3.SignedAngle(characterForward, heading, Vector3.up);
             if (Mathf.Abs(angleDifference) < _minLookAlongWallStabilizationAngle)
