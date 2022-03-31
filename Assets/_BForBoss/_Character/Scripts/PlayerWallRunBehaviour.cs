@@ -46,6 +46,8 @@ namespace Perigon.Character
         private float _cameraRotateDuration = 1f;
         [SerializeField] 
         private float _lookAlongWallRotationSpeed = 3f;
+
+        [SerializeField] private float _minLookAlongWallStabilizationAngle = 5f;
         #endregion
 
         #region PRIVATE_FIELDS
@@ -69,16 +71,15 @@ namespace Perigon.Character
         private Func<Vector2> _movementInput;
         private Action<int> _OnWallRunFinished;
 
+        private bool _hasCameraStabilized = false;
+
         private float _currentJumpDuration = 0f;
         private float _timeSinceWallAttach = 0f;
         private float _timeSinceWallDetach = 0f;
 #endregion
 
         #region PROPERTIES
-        private Transform ChildTransform
-        {
-            get => _fpsCharacter != null ? _fpsCharacter.rootPivot : transform;
-        }
+        private Transform ChildTransform => _fpsCharacter != null ? _fpsCharacter.rootPivot : transform;
 
         public bool IsWallRunning => _isWallRunning;
         #endregion
@@ -97,14 +98,14 @@ namespace Perigon.Character
         {
             if (!CanWallRun()) 
                 return;
-            RaycastHit[] _hits = new RaycastHit[_directions.Length];
+            RaycastHit[] hits = new RaycastHit[_directions.Length];
             for (int i = 0; i < _directions.Length; i++)
             {
                 Vector3 playerFacingDirection = ChildTransform.TransformDirection(_directions[i]);
-                Physics.Raycast(ChildTransform.position, playerFacingDirection, out _hits[i], _wallMaxDistance, _mask);
-                if (_hits[i].collider != null)
+                Physics.Raycast(ChildTransform.position, playerFacingDirection, out hits[i], _wallMaxDistance, _mask);
+                if (hits[i].collider != null)
                 {
-                    Debug.DrawRay(ChildTransform.position, playerFacingDirection * _hits[i].distance, Color.green);
+                    Debug.DrawRay(ChildTransform.position, playerFacingDirection * hits[i].distance, Color.green);
                 }
                 else
                 {
@@ -112,12 +113,11 @@ namespace Perigon.Character
                 }
             }
 
-            if (GetSmallestRaycastHitIfValid(_hits, out RaycastHit hit) && IsClearOfGround())
+            if (GetSmallestRaycastHitIfValid(hits, out RaycastHit hit) && IsClearOfGround())
             {
                 if(_isWallRunning || hit.collider != _lastWall) 
                     WallRun(hit);
             }
-            else if (_isWallRunning) StopWallRunning(false);
         }
 
         public void OnJumped()
@@ -163,18 +163,20 @@ namespace Perigon.Character
                 return;
             }
             
+            var heading = CalculateWallHeadingDirection();
+            
             var velocity = _baseCharacter.GetVelocity();
-            var characterForward = ChildTransform.forward;
-            velocity = velocity.dot(characterForward) * characterForward;
+            velocity = velocity.dot(heading) * heading;
+            
+            Debug.DrawRay(transform.position, velocity);
+            
             if (velocity.sqrMagnitude < _minSpeed * _minSpeed)
             {
                 StopWallRunning(false);
                 return;
             }
             
-            var heading = CalculateWallHeadingDirection();
-            var angleDifference = Vector3.SignedAngle(ChildTransform.forward, heading, Vector3.up);
-            _baseCharacter.AddYawInput(angleDifference * deltaTime * _lookAlongWallRotationSpeed);
+            LookAlongWall(ChildTransform.forward, heading);
 
             var downwardForce = _timeSinceWallAttach >= _gravityTimerDuration ? 
                 Vector3.down * (_wallGravityDownForce * deltaTime)
@@ -227,6 +229,7 @@ namespace Perigon.Character
             if (!_isWallRunning)
             {
                 _isWallRunning = true;
+                _hasCameraStabilized = false;
                 _baseMaxSpeed = _baseCharacter.maxWalkSpeed;
                 _baseCharacter.maxWalkSpeed *= _speedMultiplier;
                 _timeSinceWallAttach = 0f;
@@ -244,9 +247,7 @@ namespace Perigon.Character
                 if (_currentJumpDuration < _minJumpDuration) 
                     return false;
             }
-            if (_movementInput().y <= 0) 
-                return false;
-            return IsClearOfGround();
+            return _movementInput().y > 0 && IsClearOfGround();
         }
 
         private void StopWallRunning(bool jumpedOutOfWallRun)
@@ -277,11 +278,12 @@ namespace Perigon.Character
         private float GetCameraRoll()
         {
             float wallDirection = CalculateWallSideRelativeToPlayer();
+            var heading = CalculateWallHeadingDirection().dot(ChildTransform.forward);
             float cameraAngle = _fpsCharacter.cmWalkingCamera.m_Lens.Dutch;
             float targetAngle = 0;
             if (wallDirection != 0)
             {
-                targetAngle = Mathf.Sign(wallDirection) * _maxCameraAngleRoll;
+                targetAngle = Mathf.Sign(wallDirection) * heading * _maxCameraAngleRoll;
             }
             return Mathf.LerpAngle(cameraAngle, targetAngle, Mathf.Max(_timeSinceWallAttach, _timeSinceWallDetach) / _cameraRotateDuration);
         }
@@ -289,6 +291,19 @@ namespace Perigon.Character
         private Vector3 CalculateWallHeadingDirection()
         {
             return (Vector3.Cross(ChildTransform.up, _lastWallRunNormal) * CalculateWallSideRelativeToPlayer()).normalized;
+        }
+        
+        private void LookAlongWall(Vector3 characterForward, Vector3 heading)
+        {
+            if (_hasCameraStabilized) 
+                return;
+            
+            var angleDifference = Vector3.SignedAngle(characterForward, heading, Vector3.up);
+            if (Mathf.Abs(angleDifference) < _minLookAlongWallStabilizationAngle)
+            {
+                _hasCameraStabilized = true;
+            }
+            _baseCharacter.AddYawInput(angleDifference * Time.deltaTime * _lookAlongWallRotationSpeed);
         }
 
         private static bool GetSmallestRaycastHitIfValid(RaycastHit[] array, out RaycastHit smallest)
