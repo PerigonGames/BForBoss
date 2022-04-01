@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="DashEffectBehaviour.cs" company="PERIGON GAMES">
+// <copyright file="DashLinesEffectBehaviour.cs" company="PERIGON GAMES">
 //     Copyright (c) PERIGON GAMES. 2020 All Rights Reserved
 // </copyright>
 //-----------------------------------------------------------------------using System;
@@ -33,6 +33,7 @@ namespace Perigon.Character
         private void Update()
         {
             var currentAlpha = _speedLineMaterial.GetFloat("_alpha");
+            
             if (_currentTime > _duration)
             {
                 _speedLineMaterial.SetFloat("_alpha",  Mathf.Lerp(currentAlpha, 0, _lerpOutStrength));
