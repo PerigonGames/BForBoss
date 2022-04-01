@@ -2,7 +2,8 @@
 // <copyright file="DashLinesEffectBehaviour.cs" company="PERIGON GAMES">
 //     Copyright (c) PERIGON GAMES. 2020 All Rights Reserved
 // </copyright>
-//-----------------------------------------------------------------------using System;
+//-----------------------------------------------------------------------
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
