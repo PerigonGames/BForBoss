@@ -12,7 +12,8 @@ namespace Perigon.Character
     public class PlayerDashBehaviour : MonoBehaviour
     {
         [Title("Visual Effects")]
-        [SerializeField] private ParticleSystem _dashVisualEffects = null;
+        [SerializeField] private GameObject _dashEffect = null;
+        private DashLinesEffectBehaviour _dashEffectBehaviour;
         [SerializeField] private Volume _dashPostProcessingEffects = null;        
         
         [Title("Properties")]
@@ -41,6 +42,16 @@ namespace Perigon.Character
             _baseCharacter = baseCharacter;
             _characterInputMovement = characterMovement;
             _onDashing = onDash;
+
+            if (_dashEffect != null)
+            {
+                _dashEffectBehaviour = _dashEffect.GetComponent<DashLinesEffectBehaviour>();
+            }
+            else
+            {
+                Debug.LogWarning("Dash Effect Missing from PlayerDashBehaviour.cs");
+            }
+            
         }
         
         public void SetupPlayerInput(InputAction dashAction)
@@ -164,9 +175,9 @@ namespace Perigon.Character
 
         private void PlayerDashVisuals()
         {
-            if (_dashVisualEffects != null)
+            if (_dashEffectBehaviour != null)
             {
-                _dashVisualEffects.Play();
+                _dashEffectBehaviour.Play();
             }
 
             _postProcessingVolumeWeightTool?.Distort();
