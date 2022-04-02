@@ -14,7 +14,7 @@ namespace Perigon.Character
     [RequireComponent(typeof(RawImage))]
     public class DashLinesEffectBehaviour : MonoBehaviour
     {
-        private const float START_TIME_OFFSET = 0f;
+        private const float START_TIME_OFFSET = 10f;
         private const string MATERIAL_ALPHA = "_alpha";
         
         [SerializeField] [Range(0,1)] float _lerpInStrength = 0.1f;
