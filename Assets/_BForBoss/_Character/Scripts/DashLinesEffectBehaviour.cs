@@ -13,6 +13,8 @@ namespace Perigon.Character
 {
     public class DashLinesEffectBehaviour : MonoBehaviour
     {
+        private const string MATERIAL_ALPHA = "_alpha";
+        
         [SerializeField] [Range(0,1)] float _lerpInStrength = 0.1f;
         [SerializeField] [Range(0,1)] float _lerpOutStrength = 0.1f;
         [SerializeField] float _duration = 0.1f;
@@ -24,21 +26,21 @@ namespace Perigon.Character
         private void Start()
         {
             _speedLineMaterial = GetComponent<RawImage>().material;
-            _speedLineMaterial.SetFloat("_alpha",  0);
+            _speedLineMaterial.SetFloat(MATERIAL_ALPHA,  0);
             _currentTime = _duration + 10f;
         }
 
         private void Update()
         {
-            var currentAlpha = _speedLineMaterial.GetFloat("_alpha");
+            var currentAlpha = _speedLineMaterial.GetFloat(MATERIAL_ALPHA);
             
             if (_currentTime > _duration)
             {
-                _speedLineMaterial.SetFloat("_alpha",  Mathf.Lerp(currentAlpha, 0, _lerpOutStrength));
+                _speedLineMaterial.SetFloat(MATERIAL_ALPHA,  Mathf.Lerp(currentAlpha, 0, _lerpOutStrength));
             }
             else
             {
-                _speedLineMaterial.SetFloat("_alpha",  Mathf.Lerp(currentAlpha, _maxAlpha, _lerpInStrength));
+                _speedLineMaterial.SetFloat(MATERIAL_ALPHA,  Mathf.Lerp(currentAlpha, _maxAlpha, _lerpInStrength));
             }
 
             _currentTime += Time.deltaTime;
