@@ -13,9 +13,6 @@ namespace Perigon.Character
 {
     public class DashLinesEffectBehaviour : MonoBehaviour
     {
-
-        [SerializeField] GameObject _dashEffect;
-        
         [SerializeField] [Range(0,1)] float _lerpInStrength = 0.1f;
         [SerializeField] [Range(0,1)] float _lerpOutStrength = 0.1f;
         [SerializeField] float _duration = 0.1f;
@@ -26,7 +23,7 @@ namespace Perigon.Character
         
         private void Start()
         {
-            _speedLineMaterial = _dashEffect.GetComponent<RawImage>().material;
+            _speedLineMaterial = GetComponent<RawImage>().material;
             _speedLineMaterial.SetFloat("_alpha",  0);
             _currentTime = _duration + 10f;
         }
