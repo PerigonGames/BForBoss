@@ -11,8 +11,10 @@ using UnityEngine.UI;
 
 namespace Perigon.Character
 {
+    [RequireComponent(typeof(RawImage))]
     public class DashLinesEffectBehaviour : MonoBehaviour
     {
+        private const float START_TIME_OFFSET = 0f;
         private const string MATERIAL_ALPHA = "_alpha";
         
         [SerializeField] [Range(0,1)] float _lerpInStrength = 0.1f;
@@ -27,22 +29,18 @@ namespace Perigon.Character
         {
             _speedLineMaterial = GetComponent<RawImage>().material;
             _speedLineMaterial.SetFloat(MATERIAL_ALPHA,  0);
-            _currentTime = _duration + 10f;
+            _currentTime = _duration + START_TIME_OFFSET;
         }
 
         private void Update()
         {
             var currentAlpha = _speedLineMaterial.GetFloat(MATERIAL_ALPHA);
             
-            if (_currentTime > _duration)
-            {
-                _speedLineMaterial.SetFloat(MATERIAL_ALPHA,  Mathf.Lerp(currentAlpha, 0, _lerpOutStrength));
-            }
-            else
-            {
-                _speedLineMaterial.SetFloat(MATERIAL_ALPHA,  Mathf.Lerp(currentAlpha, _maxAlpha, _lerpInStrength));
-            }
+            var isLerpingToZero = _currentTime > _duration;
+            var resultingAlpha = isLerpingToZero ? 0 : _maxAlpha;
 
+            _speedLineMaterial.SetFloat(MATERIAL_ALPHA, Mathf.Lerp(currentAlpha, resultingAlpha, _lerpInStrength));
+            
             _currentTime += Time.deltaTime;
         }
 

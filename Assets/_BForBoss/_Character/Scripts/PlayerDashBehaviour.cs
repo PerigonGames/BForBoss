@@ -12,8 +12,7 @@ namespace Perigon.Character
     public class PlayerDashBehaviour : MonoBehaviour
     {
         [Title("Visual Effects")]
-        [SerializeField] private GameObject _dashEffect = null;
-        private DashLinesEffectBehaviour _dashEffectBehaviour;
+        [SerializeField] private DashLinesEffectBehaviour _dashEffectBehaviour = null;
         [SerializeField] private Volume _dashPostProcessingEffects = null;        
         
         [Title("Properties")]
@@ -42,16 +41,6 @@ namespace Perigon.Character
             _baseCharacter = baseCharacter;
             _characterInputMovement = characterMovement;
             _onDashing = onDash;
-
-            if (_dashEffect != null)
-            {
-                _dashEffectBehaviour = _dashEffect.GetComponent<DashLinesEffectBehaviour>();
-            }
-            else
-            {
-                Debug.LogWarning("Dash Effect Missing from PlayerDashBehaviour.cs");
-            }
-            
         }
         
         public void SetupPlayerInput(InputAction dashAction)
@@ -200,6 +189,12 @@ namespace Perigon.Character
             {
                 Debug.LogWarning("There was an issue finding PostProcessing LensDistortion");
             }
+            
+            if (_dashEffectBehaviour == null)
+            {
+                Debug.LogWarning("Dash Effect Missing from PlayerDashBehaviour.cs");
+            }
+            
         }
 
         private void Update()
