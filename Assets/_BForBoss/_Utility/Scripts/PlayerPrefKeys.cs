@@ -20,7 +20,6 @@ namespace Perigon.Utility
         {
             public const string USERNAME = "user_name";
             public const string TIMER = "timer";
-            public const string INPUT = "input";
             public const string SHOULD_UPLOAD = "should_upload";
         }
 
