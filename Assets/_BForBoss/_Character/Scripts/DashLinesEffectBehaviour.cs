@@ -46,7 +46,6 @@ namespace Perigon.Character
         public void Play()
         {
             _currentTime = _duration;
-            Debug.Log(_currentTime);
         }
 
     }
