@@ -4340,6 +4340,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &298351446 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 248508516748547344, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
+  m_PrefabInstance: {fileID: 1144084895}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 146b20d07e2ef204a808235339f552d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &313127992 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5405225907177277454, guid: f1d69b30a41d14e169372bc26aeed53b, type: 3}
@@ -12595,7 +12606,7 @@ PrefabInstance:
     - target: {fileID: 910638780, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
       propertyPath: _dashEffectBehaviour
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 298351446}
     - target: {fileID: 910638780, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
       propertyPath: _dashPostProcessingEffects
       value: 
@@ -17386,7 +17397,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3093835205963856409, guid: 1263fd774c91c9644930c6ddafd69c09, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.002787114
+      value: 0.000040387917
       objectReference: {fileID: 0}
     - target: {fileID: 4516330132463527741, guid: 1263fd774c91c9644930c6ddafd69c09, type: 3}
       propertyPath: m_AnchorMax.x
