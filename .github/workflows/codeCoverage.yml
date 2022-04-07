@@ -32,7 +32,7 @@ jobs:
         with:
           unityVersion: 2020.3.23f1
           testMode: playmode
-          customParameters: -debugCodeOptimization -enableCodeCoverage -coverageResultsPath ./coverage-results -coverageOptions "generateAdditionalMetrics;pathFilters:+**/Assets/_BForBoss"
+          customParameters: -debugCodeOptimization -enableCodeCoverage -coverageResultsPath ./coverage-results -coverageOptions "generateAdditionalMetrics"
       - name: Upload XML report to Codecov
         uses: codecov/codecov-action@v2
         with:

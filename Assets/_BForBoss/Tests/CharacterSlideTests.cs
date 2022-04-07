@@ -224,7 +224,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_SlideBackward_BeyondBackwardBlockade()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }

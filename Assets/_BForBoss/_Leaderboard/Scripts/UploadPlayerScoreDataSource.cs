@@ -12,7 +12,6 @@ namespace Perigon.Leaderboard
         private int _numberOfRetries = 0;
 
         private int _time = int.MaxValue;
-        private string _input = "";
 
         public event Action StartUploading;
         public event Action StopLoading;
@@ -28,16 +27,7 @@ namespace Perigon.Leaderboard
                 _time = value;
             }
         }
-
-        private string Input
-        {
-            get => _input;
-            set
-            {
-                PlayerPrefs.SetString(PlayerPrefKeys.LeaderboardSettings.INPUT, value);
-                _input = value;
-            }
-        }
+        
         private bool ShouldUploadScores => PlayerPrefs.GetInt(PlayerPrefKeys.LeaderboardSettings.SHOULD_UPLOAD, 0) == 1;
 
         public UploadPlayerScoreDataSource(ILeaderboardPostEndPoint endpoint = null)
@@ -50,10 +40,9 @@ namespace Perigon.Leaderboard
             UploadIfPossible();
         }
 
-        public void UploadScoreIfPossible(int time, string input)
+        public void UploadScoreIfPossible(int time)
         {
             Time = Mathf.Min(time, Time);
-            Input = input;
             UploadIfPossible();
         }
         
@@ -72,29 +61,26 @@ namespace Perigon.Leaderboard
             if (ShouldUploadScores)
             {
                 _time = PlayerPrefs.GetInt(PlayerPrefKeys.LeaderboardSettings.TIMER, int.MaxValue);
-                _input = PlayerPrefs.GetString(PlayerPrefKeys.LeaderboardSettings.INPUT, "");
             }
         }
 
         private void Upload()
         {
             PlayerPrefs.SetInt(PlayerPrefKeys.LeaderboardSettings.SHOULD_UPLOAD, 1);
-            _endpoint.SendScore(Username, _time, _input);
+            _endpoint.SendScore(Username, _time);
         }
 
         private bool CanUpload()
         {
             var isUserNameFilled = !Username.IsNullOrWhitespace();
             var isTimeHigher = _time < int.MaxValue;
-            var isInputFilled = !_input.IsNullOrWhitespace();
-            return isUserNameFilled && isTimeHigher && isInputFilled;
+            return isUserNameFilled && isTimeHigher;
         }
 
         private void HandleEndPointOnSuccess()
         {
             _numberOfRetries = 0;
             PlayerPrefs.DeleteKey(PlayerPrefKeys.LeaderboardSettings.TIMER);
-            PlayerPrefs.DeleteKey(PlayerPrefKeys.LeaderboardSettings.INPUT);
             PlayerPrefs.DeleteKey(PlayerPrefKeys.LeaderboardSettings.SHOULD_UPLOAD);
             StopLoading?.Invoke();
         }

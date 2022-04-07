@@ -12,7 +12,7 @@ namespace Perigon.Character
     public class PlayerDashBehaviour : MonoBehaviour
     {
         [Title("Visual Effects")]
-        [SerializeField] private ParticleSystem _dashVisualEffects = null;
+        [SerializeField] private DashLinesEffectBehaviour _dashEffectBehaviour = null;
         [SerializeField] private Volume _dashPostProcessingEffects = null;        
         
         [Title("Properties")]
@@ -164,9 +164,9 @@ namespace Perigon.Character
 
         private void PlayerDashVisuals()
         {
-            if (_dashVisualEffects != null)
+            if (_dashEffectBehaviour != null)
             {
-                _dashVisualEffects.Play();
+                _dashEffectBehaviour.Play();
             }
 
             _postProcessingVolumeWeightTool?.Distort();
@@ -189,6 +189,12 @@ namespace Perigon.Character
             {
                 Debug.LogWarning("There was an issue finding PostProcessing LensDistortion");
             }
+            
+            if (_dashEffectBehaviour == null)
+            {
+                Debug.LogWarning("Dash Effect Missing from PlayerDashBehaviour.cs");
+            }
+            
         }
 
         private void Update()
