@@ -8,21 +8,19 @@ namespace Perigon.Leaderboard
         private string _username;
         private int _score;
         private int _milliseconds;
-        private string _input;
 
         public event Action OnSuccess;
         public event Action OnFail;
 
-        public void SendScore(string username, int milliseconds, string input)
+        public void SendScore(string username, int milliseconds)
         {
             _username = username;
             _score = -milliseconds;
             _milliseconds = milliseconds;
-            _input = input;
             Post();
         }
 
-        private string Path => $"{DreamloData.Host}{DreamloData.Secret}/add/{_username}/{_score}/{_milliseconds}/{_input}";
+        private string Path => $"{DreamloData.Host}{DreamloData.Secret}/add/{_username}/{_score}/{_milliseconds}";
 
         private async void Post()
         {

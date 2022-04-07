@@ -35,10 +35,10 @@ namespace BForBoss
             ClosePanel();
         }
 
-        public void ForceOpenLeaderboardWithScore(int time, string input)
+        public void ForceOpenLeaderboardWithScore(int time)
         {
             _lockInput.LockInput();
-            _settingsView.OpenLeaderboard(time, input);
+            _settingsView.OpenLeaderboard(time);
         }
 
         private void OpenPanel()
