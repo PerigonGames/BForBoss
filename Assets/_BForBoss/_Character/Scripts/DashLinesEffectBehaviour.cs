@@ -16,8 +16,7 @@ namespace Perigon.Character
     {
         private const string MATERIAL_ALPHA = "_alpha";
         
-        [SerializeField] [Range(0,1)] float _lerpInStrength = 0.1f;
-        [SerializeField] [Range(0,1)] float _lerpOutStrength = 0.1f;
+        [SerializeField] [Range(0,1)] float _lerpStrength = 0.1f;
         [SerializeField] float _duration = 0.1f;
         private float _currentTime;
         
@@ -38,11 +37,10 @@ namespace Perigon.Character
             var isLerpingToZero = _currentTime <= 0;
             var resultingAlpha = isLerpingToZero ? 0 : _maxAlpha;
 
-            _speedLineMaterial.SetFloat(MATERIAL_ALPHA, Mathf.Lerp(currentAlpha, resultingAlpha, _lerpInStrength));
-            
+            _speedLineMaterial.SetFloat(MATERIAL_ALPHA, Mathf.Lerp(currentAlpha, resultingAlpha, _lerpStrength));
+
             _currentTime -= Time.deltaTime;
-            
-            
+
         }
 
         public void Play()
