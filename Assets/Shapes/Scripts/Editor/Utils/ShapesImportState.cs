@@ -125,11 +125,11 @@ namespace Shapes {
 			if( UrpRndFuncs.successfullyLoaded ) { // if our reflected members failed to load, we're kinda screwed :c
 				if( GraphicsSettings.renderPipelineAsset is UniversalRenderPipelineAsset urpa ) { // find the URP asset
 					ScriptableRendererData[] srd = (ScriptableRendererData[])UrpRndFuncs.fRndDataList.GetValue( urpa );
-					foreach( var rndd in srd.Where( x => x is ForwardRendererData ) ) { // only add to forward renderer
+					foreach( var rndd in srd.Where( x => x is UniversalRendererData ) ) { // only add to forward renderer
 						if( rndd.rendererFeatures.Any( x => x is ShapesRenderFeature ) == false ) { // does it have Shapes?
 							// does not contain the Shapes render feature, so, oh boy, here we go~
 							if( ShapesIO.TryMakeAssetsEditable( urpa ) ) {
-								ForwardRendererDataEditor fwEditor = (ForwardRendererDataEditor)Editor.CreateEditor( rndd );
+								UniversalRendererDataEditor fwEditor = (UniversalRendererDataEditor)Editor.CreateEditor( rndd );
 								UrpRndFuncs.fOnEnable.Invoke( fwEditor, null ); // you ever just call OnEnable manually
 								UrpRndFuncs.fAddComponent.Invoke( fwEditor, new[] { (object)nameof(ShapesRenderFeature) } );
 								DestroyImmediate( fwEditor ); // luv 2 create temporary editors
