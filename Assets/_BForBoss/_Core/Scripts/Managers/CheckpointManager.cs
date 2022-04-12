@@ -14,14 +14,11 @@ namespace BForBoss
         private TimeManagerViewModel _timeManagerViewModel = null;
         private Checkpoint _activeCheckpoint = null;
         
-        private DetectInput _detectInput = null;
-
         public Vector3 CheckpointPosition => _activeCheckpoint == null ? _spawnPoint.transform.position : _activeCheckpoint.transform.position;
         public Quaternion CheckpointRotation => _activeCheckpoint == null ? _spawnPoint.transform.rotation : _activeCheckpoint.transform.rotation;
 
-        public void Initialize(DetectInput detectInput, TimeManagerViewModel timeManagerViewModel)
+        public void Initialize(TimeManagerViewModel timeManagerViewModel)
         {
-            _detectInput = detectInput;
             if (_checkpoints.IsNullOrEmpty())
             {
                 Debug.LogError("No Checkpoints found in the CheckPointManager!");
@@ -55,7 +52,6 @@ namespace BForBoss
 
         private void SetNewCheckpoint(Checkpoint checkpoint)
         {
-            _detectInput.Detect();
             _activeCheckpoint = checkpoint;
             _activeCheckpoint.SetCheckpoint();
             
@@ -67,7 +63,6 @@ namespace BForBoss
             var stateManager = StateManager.Instance;
             if (stateManager.GetState() == State.Play)
             {
-                _detectInput.Detect();
                 stateManager.SetState(State.EndRace);
             }
         }

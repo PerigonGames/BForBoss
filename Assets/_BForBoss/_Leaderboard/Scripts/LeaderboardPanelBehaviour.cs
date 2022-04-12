@@ -30,11 +30,10 @@ namespace Perigon.Leaderboard
             _reloadButton.onClick.RemoveListener(Reload);        
         }
 
-        public void SetUserScore(float time, string input)
+        public void SetUserScore(float time)
         {
             var score = new LeaderboardScore
             {
-                Input = input,
                 Time = time / 1000,
                 Username = PlayerPrefs.GetString(PlayerPrefKeys.LeaderboardSettings.USERNAME)
             };

@@ -49,12 +49,12 @@ namespace BForBoss
             UnlockInputIfEndRaceState();
         }
         
-        public void OpenLeaderboard(int time, string input)
+        public void OpenLeaderboard(int time)
         {
             OpenPanel();
             _tabbedPanelViews.TurnOffAllContent();
             _leaderboardView.gameObject.SetActive(true);
-            _leaderboardView.SetUserScore(time, input);
+            _leaderboardView.SetUserScore(time);
         }
 
         private void Awake()

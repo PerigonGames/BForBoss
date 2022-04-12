@@ -11,7 +11,7 @@ namespace Perigon.Leaderboard
 
     public interface ILeaderboardPostEndPoint
     {
-        public void SendScore(string username, int milliseconds, string input);
+        public void SendScore(string username, int milliseconds);
         public event Action OnSuccess;
         public event Action OnFail;
     }
