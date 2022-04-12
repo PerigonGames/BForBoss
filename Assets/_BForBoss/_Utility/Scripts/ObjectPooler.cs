@@ -48,7 +48,7 @@ namespace Perigon.Utility
 		~ObjectPooler()
         {
 #if UNITY_2021_1_OR_NEWER
-			objectPool.Dispose();
+			objectPool.Clear();
 #else
 			SceneManager.UnloadSceneAsync(poolScene); //destroys all objects in the pool
 			pool = null;
@@ -123,11 +123,13 @@ namespace Perigon.Utility
 		}
 #endif
 
+#if !UNITY_2021_1_OR_NEWER
 	    private void OnActiveSceneChanged(Scene oldScene, Scene newScene)
 	    {
-#if !UNITY_2021_1_OR_NEWER
+
 		    pool = null;
-#endif
+
 	    }
+#endif
 	}
 }
