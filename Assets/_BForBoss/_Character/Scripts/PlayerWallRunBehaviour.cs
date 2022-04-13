@@ -1,11 +1,15 @@
 using UnityEngine;
 using System;
+using System.Runtime.CompilerServices;
 using ECM2.Common;
+using ECM2.Components;
 
 namespace Perigon.Character
 {
     public class PlayerWallRunBehaviour : MonoBehaviour
     {
+        private const string PARKOUR_WALL_LAYER = "ParkourWall";
+
         #region SERIALIZED_FIELDS
         [Header("Wall Run Movement properties")]
         [SerializeField] 
@@ -65,6 +69,7 @@ namespace Perigon.Character
         private ECM2.Characters.Character _baseCharacter = null;
         private FirstPersonPlayer _fpsCharacter = null;
         private LayerMask _mask;
+        private int _layerIndex;
         private Vector3 _lastWallRunPosition;
         private Vector3 _lastWallRunNormal;
         private Vector3 _constantVelocity;
@@ -95,7 +100,8 @@ namespace Perigon.Character
             _fpsCharacter = baseCharacter as FirstPersonPlayer;
             _movementInput = getMovementInput;
             _OnWallRunFinished = OnWallRunFinished;
-            _mask = LayerMask.GetMask("ParkourWall");
+            _mask = LayerMask.GetMask(PARKOUR_WALL_LAYER);
+            _layerIndex = LayerMask.NameToLayer(PARKOUR_WALL_LAYER);
         }
 
         public void Falling(Vector3 _)
@@ -121,6 +127,10 @@ namespace Perigon.Character
             {
                 if(IsWallRunning || hit.collider != _lastWall) 
                     WallRun(hit);
+            }
+            else
+            {
+                //StopWallRunning(false);
             }
         }
 
@@ -168,7 +178,7 @@ namespace Perigon.Character
             }
 
             var velocity = _baseCharacter.GetVelocity();
-            var heading = CalculateWallHeadingDirection();
+            var heading = ProjectOntoWallNormalized(ChildTransform.forward);
             
             if (!_isInitialHeadingSet && _constantSpeed)
             {
@@ -226,8 +236,9 @@ namespace Perigon.Character
         {
             if (IsWallRunning)
             {
-                Vector3 heading = _lastWallRunPosition - transform.position;
-                Vector3 perpendicular = Vector3.Cross(ChildTransform.forward, heading);
+                var dir = ChildTransform.forward;
+                Vector3 heading = ProjectOntoWallNormalized(dir);
+                Vector3 perpendicular = Vector3.Cross(_lastWallRunNormal, heading);
                 float wallDirection = Vector3.Dot(perpendicular, ChildTransform.up);
                 return wallDirection;
             }
@@ -241,6 +252,7 @@ namespace Perigon.Character
             _lastWall = wall.collider;
             _lastWallRunNormal = wall.normal;
             _lastWallRunPosition = wall.point;
+            
             if (!IsWallRunning)
             {
                 IsWallRunning = true;
@@ -294,7 +306,8 @@ namespace Perigon.Character
         private float GetCameraRoll()
         {
             float wallDirection = CalculateWallSideRelativeToPlayer();
-            var heading = CalculateWallHeadingDirection().dot(ChildTransform.forward);
+            var forwardDir = ChildTransform.forward;
+            var heading = ProjectOntoWallNormalized(forwardDir).dot(forwardDir);
             float cameraAngle = _fpsCharacter.cmWalkingCamera.m_Lens.Dutch;
             float targetAngle = 0;
             if (wallDirection != 0)
@@ -303,10 +316,18 @@ namespace Perigon.Character
             }
             return Mathf.LerpAngle(cameraAngle, targetAngle, Mathf.Max(_timeSinceWallAttach, _timeSinceWallDetach) / _cameraRotateDuration);
         }
-        
-        private Vector3 CalculateWallHeadingDirection()
+
+        private Vector3 ProjectOntoWallPreservingMagnitude(Vector3 vec)
         {
-            return (Vector3.Cross(ChildTransform.up, _lastWallRunNormal) * CalculateWallSideRelativeToPlayer()).normalized;
+            var mag = vec.magnitude;
+            vec.y = 0f;
+            return Vector3.ProjectOnPlane(vec, _lastWallRunNormal).normalized * mag;
+        }
+        
+        private Vector3 ProjectOntoWallNormalized(Vector3 direction)
+        {
+            direction.y = 0;
+            return Vector3.ProjectOnPlane(direction, _lastWallRunNormal).normalized;
         }
         
         private void LookAlongWall(Vector3 characterForward, Vector3 heading)
@@ -339,5 +360,14 @@ namespace Perigon.Character
             return validRaycast;
         }
         #endregion
+
+        public void OnMovementHit(ref MovementHit movementHit)
+        {
+            if (movementHit.hitLocation != CapsuleHitLocation.Sides)
+                return;
+            if (movementHit.collider.gameObject.layer != _layerIndex)
+                return;
+            //Debug.Log("Hit wall at " + movementHit.point);
+        }
     }
 }
