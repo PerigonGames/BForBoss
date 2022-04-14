@@ -20,6 +20,8 @@ namespace Perigon.Character
         private float _wallGravityDownForce = 0f;
         [SerializeField] 
         private bool _constantSpeed = false;
+        [SerializeField, Tooltip("If true, uses Unity collision detection instead of manual detection. Better quality but only works on convex walls")] 
+        private bool _useCollisionPhysics = true;
 
         [Header("Wall Run Conditions")]
         [SerializeField, Tooltip("Stop a wall run if speed dips below this")]
@@ -70,7 +72,6 @@ namespace Perigon.Character
         private FirstPersonPlayer _fpsCharacter = null;
         private LayerMask _mask;
         private int _layerIndex;
-        private Vector3 _lastWallRunPosition;
         private Vector3 _lastWallRunNormal;
         private Vector3 _constantVelocity;
         private Collider _lastWall;
@@ -94,19 +95,19 @@ namespace Perigon.Character
         #endregion
 
         #region PUBLIC_METHODS
-        public void Initialize(ECM2.Characters.Character baseCharacter, Func<Vector2> getMovementInput, Action<int> OnWallRunFinished)
+        public void Initialize(ECM2.Characters.Character baseCharacter, Func<Vector2> getMovementInput, Action<int> onWallRunFinished)
         {
             _baseCharacter = baseCharacter;
             _fpsCharacter = baseCharacter as FirstPersonPlayer;
             _movementInput = getMovementInput;
-            _OnWallRunFinished = OnWallRunFinished;
+            _OnWallRunFinished = onWallRunFinished;
             _mask = LayerMask.GetMask(PARKOUR_WALL_LAYER);
             _layerIndex = LayerMask.NameToLayer(PARKOUR_WALL_LAYER);
         }
 
         public void Falling(Vector3 _)
         {
-            if (!CanWallRun()) 
+            if (_useCollisionPhysics || !CanWallRun()) 
                 return;
             RaycastHit[] hits = new RaycastHit[_directions.Length];
             for (int i = 0; i < _directions.Length; i++)
@@ -130,7 +131,7 @@ namespace Perigon.Character
             }
             else
             {
-                //StopWallRunning(false);
+                StopWallRunning(false);
             }
         }
 
@@ -193,14 +194,13 @@ namespace Perigon.Character
             else
             {
                 velocity = velocity.dot(heading) * heading;
+                if (velocity.sqrMagnitude < _minSpeed * _minSpeed)
+                {
+                    StopWallRunning(false);
+                    return;
+                }
             }
 
-            if (!_constantSpeed && velocity.sqrMagnitude < _minSpeed * _minSpeed)
-            {
-                StopWallRunning(false);
-                return;
-            }
-            
             LookAlongWall(ChildTransform.forward, heading);
 
             var downwardForce = _timeSinceWallAttach >= _gravityTimerDuration ? 
@@ -234,15 +234,26 @@ namespace Perigon.Character
 
         public float CalculateWallSideRelativeToPlayer()
         {
-            if (IsWallRunning)
-            {
-                var dir = ChildTransform.forward;
-                Vector3 heading = ProjectOntoWallNormalized(dir);
-                Vector3 perpendicular = Vector3.Cross(_lastWallRunNormal, heading);
-                float wallDirection = Vector3.Dot(perpendicular, ChildTransform.up);
-                return wallDirection;
-            }
-            return 0;
+            if (!IsWallRunning) 
+                return 0;
+            var dir = ChildTransform.forward;
+            Vector3 heading = ProjectOntoWallNormalized(dir);
+            Vector3 perpendicular = Vector3.Cross(_lastWallRunNormal, heading);
+            float wallDirection = Vector3.Dot(perpendicular, ChildTransform.up);
+            return wallDirection;
+        }
+        
+        public void OnMovementHit(ref MovementHit movementHit)
+        {
+            if (!_useCollisionPhysics)
+                return;
+            if (movementHit.hitLocation != CapsuleHitLocation.Sides)
+                return;
+            if (movementHit.collider.gameObject.layer != _layerIndex)
+                return;
+            if (!IsWallRunning && !CanWallRun())
+                return;
+            WallRun(ref movementHit);
         }
         #endregion
 
@@ -250,8 +261,36 @@ namespace Perigon.Character
         private void WallRun(RaycastHit wall)
         {
             _lastWall = wall.collider;
+            var oldNormal = _lastWallRunNormal;
             _lastWallRunNormal = wall.normal;
-            _lastWallRunPosition = wall.point;
+
+            if (ShouldUpdateConstantVelocity(wall.normal, oldNormal))
+            {
+                GetConstantVelocity(IsWallRunning ? _constantVelocity : ChildTransform.forward);
+            }
+            
+            if (!IsWallRunning)
+            {
+                IsWallRunning = true;
+                _hasCameraStabilized = false;
+                _isInitialHeadingSet = false;
+                _baseMaxSpeed = _baseCharacter.maxWalkSpeed;
+                _baseCharacter.maxWalkSpeed *= _speedMultiplier;
+                _timeSinceWallAttach = 0f;
+                _timeSinceWallDetach = 0f;
+            }
+        }
+        
+        private void WallRun(ref MovementHit wall)
+        {
+            _lastWall = wall.collider;
+            var oldNormal = _lastWallRunNormal;
+            _lastWallRunNormal = wall.normal;
+
+            if (ShouldUpdateConstantVelocity(wall.normal, oldNormal))
+            {
+                GetConstantVelocity(IsWallRunning ? _constantVelocity : ChildTransform.forward);
+            }
             
             if (!IsWallRunning)
             {
@@ -269,12 +308,12 @@ namespace Perigon.Character
         {
             if (_baseCharacter.IsOnGround()) return false;
 
-            if (_baseCharacter.IsJumping())
-            {
-                _currentJumpDuration += Time.fixedDeltaTime;
-                if (_currentJumpDuration < _minJumpDuration) 
-                    return false;
-            }
+            if (!_baseCharacter.IsJumping()) 
+                return _movementInput().y > 0 && IsClearOfGround();
+            
+            _currentJumpDuration += Time.fixedDeltaTime;
+            if (_currentJumpDuration < _minJumpDuration) 
+                return false;
             return _movementInput().y > 0 && IsClearOfGround();
         }
 
@@ -317,13 +356,6 @@ namespace Perigon.Character
             return Mathf.LerpAngle(cameraAngle, targetAngle, Mathf.Max(_timeSinceWallAttach, _timeSinceWallDetach) / _cameraRotateDuration);
         }
 
-        private Vector3 ProjectOntoWallPreservingMagnitude(Vector3 vec)
-        {
-            var mag = vec.magnitude;
-            vec.y = 0f;
-            return Vector3.ProjectOnPlane(vec, _lastWallRunNormal).normalized * mag;
-        }
-        
         private Vector3 ProjectOntoWallNormalized(Vector3 direction)
         {
             direction.y = 0;
@@ -341,6 +373,28 @@ namespace Perigon.Character
                 _hasCameraStabilized = true;
             }
             _baseCharacter.AddYawInput(angleDifference * Time.deltaTime * _lookAlongWallRotationSpeed);
+        }
+        
+        private bool ShouldUpdateConstantVelocity(Vector3 newNormal, Vector3 oldNormal)
+        {
+            if (!_constantSpeed)
+                return false;
+            if (!IsWallRunning)
+                return true;
+            return Vector3.Distance(oldNormal, newNormal) > Vector3.kEpsilon;
+        }
+
+        private void GetConstantVelocity(Vector3 initialDirection)
+        {
+            var heading = ProjectOntoWallNormalized(initialDirection);
+            _constantVelocity = heading * _baseCharacter.maxWalkSpeed;
+        }
+
+        private void OnCollisionExit(Collision other)
+        {
+            if (!_useCollisionPhysics || other.collider != _lastWall)
+                return;
+            StopWallRunning(false);
         }
 
         private static bool GetSmallestRaycastHitIfValid(RaycastHit[] array, out RaycastHit smallest)
@@ -360,14 +414,5 @@ namespace Perigon.Character
             return validRaycast;
         }
         #endregion
-
-        public void OnMovementHit(ref MovementHit movementHit)
-        {
-            if (movementHit.hitLocation != CapsuleHitLocation.Sides)
-                return;
-            if (movementHit.collider.gameObject.layer != _layerIndex)
-                return;
-            //Debug.Log("Hit wall at " + movementHit.point);
-        }
     }
 }
