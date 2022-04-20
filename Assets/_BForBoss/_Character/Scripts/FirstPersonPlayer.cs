@@ -26,6 +26,7 @@ namespace Perigon.Character
         public void Initialize()
         {
             SetupInput();
+            SetCameraCullingMask();
         }
 
         public override bool CanJump()
