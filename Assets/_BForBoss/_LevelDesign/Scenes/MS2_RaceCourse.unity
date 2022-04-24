@@ -14733,6 +14733,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f4c714e075a694942b5c6d0c13c235d6, type: 3}
+--- !u!114 &1319911517 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5644926148023334689, guid: d1b6eae1f0bf4054badf84daebd18c5e, type: 3}
+  m_PrefabInstance: {fileID: 1356696690}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08042372ff802804b81d28fd6cf0fa0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1324289822
 GameObject:
   m_ObjectHideFlags: 0
@@ -17378,7 +17389,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3093835205963856409, guid: 1263fd774c91c9644930c6ddafd69c09, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0010209936
+      value: 0.00096046156
       objectReference: {fileID: 0}
     - target: {fileID: 4516330132463527741, guid: 1263fd774c91c9644930c6ddafd69c09, type: 3}
       propertyPath: m_AnchorMax.x
@@ -17708,7 +17719,7 @@ MonoBehaviour:
   _checkpointManager: {fileID: 1415184885}
   _lifeCycleManager: {fileID: 1754828379}
   _weaponsManager: {fileID: 932950510}
-  _equipmentBehaviour: {fileID: 0}
+  _equipmentBehaviour: {fileID: 1319911517}
   _ammunitionCountView: {fileID: 1516991103}
   _reloadView: {fileID: 2133816042}
   _timerView: {fileID: 1423669322}
