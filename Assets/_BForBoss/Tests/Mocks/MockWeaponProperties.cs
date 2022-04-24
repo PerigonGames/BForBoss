@@ -27,6 +27,7 @@ namespace Tests
         public int BulletsPerShot => _bulletsPerShot;
         public int AmmunitionAmount => _ammoAmount;
         public bool IsRayCastingWeapon => true;
+        public float DamagePerRayCast => 1;
         public float VisualRecoilForce => 0;
         public EventReference WeaponShotAudio => new EventReference();
         public BulletTypes TypeOfBullet => BulletTypes.NoPhysics;

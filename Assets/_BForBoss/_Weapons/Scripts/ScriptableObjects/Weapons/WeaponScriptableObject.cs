@@ -14,6 +14,7 @@ namespace Perigon.Weapons
         int BulletsPerShot { get; }
         int AmmunitionAmount { get; }
         bool IsRayCastingWeapon { get; }
+        float DamagePerRayCast { get; }
         BulletTypes TypeOfBullet { get; }
         float VisualRecoilForce { get; }
         EventReference WeaponShotAudio { get; } 
@@ -32,7 +33,11 @@ namespace Perigon.Weapons
         [SerializeField] private int _bulletsPerShot = 1;
         [SerializeField] 
         [Range(1, 1000)] private int _ammunitionAmount = 20;
+        [Title("Weapon Shoot Style")]
         [SerializeField] private bool _isRaycastWeapon = true;
+
+        [ShowIf("_isRaycastWeapon")] 
+        [SerializeField] private float _damagePerRayCast = 1;
         [HideIf("_isRaycastWeapon")]
         [SerializeField] private BulletTypes _typeOfBullet = BulletTypes.NoPhysics;
         [Title("Effects")] 
@@ -48,6 +53,7 @@ namespace Perigon.Weapons
         public int BulletsPerShot => _bulletsPerShot;
         public int AmmunitionAmount => _ammunitionAmount;
         public bool IsRayCastingWeapon => _isRaycastWeapon;
+        public float DamagePerRayCast => _damagePerRayCast;
         public BulletTypes TypeOfBullet => _typeOfBullet;
         public float VisualRecoilForce => _visualRecoil;
         public EventReference WeaponShotAudio => _weaponShotAudio;
