@@ -9,26 +9,27 @@ namespace BForBoss
     public class ImageEditorWindow : EditorWindow
     {
         private const float TOOLBAR_HEIGHT = 30f;
-        private readonly string[] _brushSelections = {"Small", "Medium", "Large"};
-        private readonly int[] _brushSizes = {4, 7, 10};
-    
+
         public Action<Texture2D> OnWindowClosed;
+        
+        private readonly string[] _brushSelections = {"Small", "Medium", "Large"};
+        private readonly int[] _brushSizes = {1, 3, 5};
+        private readonly List<Vector3> _listOfPoints = new List<Vector3>();
         
         private Texture2D _originalScreenShot = null;
         private Texture2D _editedScreenShot = null;
         private ImageEditorWindow _window;
         
         private bool _shouldCloseWindow = false;
-        private bool _drawThisFrame = false;
 
         private Rect _screenShotRect;
         private Color32 _brushColor = Color.black;
         private int _currentBrushIndex = 1;
         private int _brushSize;
         private Vector3 _mouseDownPosition = Vector3.zero;
-        private List<Vector3> _listOfPoints = new List<Vector3>();
+        
 
-        private bool _shouldDrawPaint = true;
+        private bool _useBoxTool = false;
 
         public void OpenWindow(Texture2D screenShot)
         {
@@ -62,7 +63,7 @@ namespace BForBoss
             
             EditorGUI.DrawPreviewTexture(_screenShotRect, _editedScreenShot);
 
-            if (_shouldDrawPaint)
+            if (!_useBoxTool)
             {
                 HandleFreeHandInput();
                 PreviewFreeHandInput();
@@ -268,14 +269,17 @@ namespace BForBoss
             using (new EditorGUILayout.HorizontalScope())
             {
                 float originalLabelWidth = EditorGUIUtility.labelWidth;
+                
                 EditorGUIUtility.labelWidth = 70f;
                 _brushColor = EditorGUILayout.ColorField("Brush Color", _brushColor);
+                
                 EditorGUIUtility.labelWidth = 65f;
                 _currentBrushIndex = EditorGUILayout.Popup("Brush Size", _currentBrushIndex, _brushSelections, GUILayout.ExpandWidth(true));
                 _brushSize = _brushSizes[_currentBrushIndex];
                 EditorGUIUtility.labelWidth = originalLabelWidth;
-                _shouldDrawPaint = EditorGUILayout.Toggle("Should use Paint", _shouldDrawPaint);
-                
+
+                _useBoxTool = EditorGUILayout.ToggleLeft("Use Box Tool", _useBoxTool);
+
                 EditorGUILayout.Space();
             
                 if (GUILayout.Button("Save Changes"))
