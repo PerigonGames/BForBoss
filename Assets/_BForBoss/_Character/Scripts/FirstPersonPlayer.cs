@@ -13,34 +13,20 @@ namespace Perigon.Character
         [Header("Cinemachine")]
         public CinemachineVirtualCamera cmWalkingCamera;
         public CinemachineVirtualCamera cmCrouchedCamera;
-        public CinemachineVirtualCamera cmThirdPersonCamera;
 
         [Title("Optional Behaviour")]
         private PlayerDashBehaviour _dashBehaviour = null;
         private PlayerWallRunBehaviour _wallRunBehaviour = null;
         private PlayerSlideBehaviour _slideBehaviour = null;
         private PlayerSlowMotionBehaviour _slowMotionBehaviour = null;
-
-        [SerializeField] private bool _isThirdPerson = false;
-        
         public event Action Dashed;
         public event Action Slid;
-
-        public bool IsThirdPerson
-        {
-            get => _isThirdPerson;
-            private set
-            {
-                if (value == _isThirdPerson) return;
-                _isThirdPerson = value;
-                ToggleThirdPerson();
-            }
-        }
+        
         
         public void Initialize()
         {
             SetupInput();
-            SetupThirdPerson();
+            SetCameraCullingMask();
         }
 
         public override bool CanJump()
@@ -71,9 +57,6 @@ namespace Perigon.Character
             _wallRunBehaviour = GetComponent<PlayerWallRunBehaviour>();
             _slideBehaviour = GetComponent<PlayerSlideBehaviour>();
             _slowMotionBehaviour = GetComponent<PlayerSlowMotionBehaviour>();
-
-            _thirdPersonMask = camera.cullingMask;
-
             base.OnAwake();
         }
 
@@ -92,8 +75,6 @@ namespace Perigon.Character
             {
                 _wallRunBehaviour.Initialize(this, base.GetMovementInput, SetJumpCount);
             }
-
-            TogglePlayerModel();
         }
         
         protected override void SetupPlayerInput()
@@ -129,11 +110,9 @@ namespace Perigon.Character
             {
                 _slideBehaviour.Slide();
             }
-            if (!_isThirdPerson)
-            {
-                cmWalkingCamera.gameObject.SetActive(false);
-                cmCrouchedCamera.gameObject.SetActive(true);
-            }
+            
+            cmWalkingCamera.gameObject.SetActive(false);
+            cmCrouchedCamera.gameObject.SetActive(true);
         }
 
         protected override void OnUncrouched()
@@ -143,11 +122,9 @@ namespace Perigon.Character
             {
                 _slideBehaviour.StopSliding();
             }
-            if (!_isThirdPerson)
-            {
-                cmCrouchedCamera.gameObject.SetActive(false);
-                cmWalkingCamera.gameObject.SetActive(true);
-            }
+            
+            cmCrouchedCamera.gameObject.SetActive(false);
+            cmWalkingCamera.gameObject.SetActive(true);
         }
 
         protected override void Falling(Vector3 desiredVelocity)
@@ -255,22 +232,5 @@ namespace Perigon.Character
         {
             _jumpCount = count;
         }
-        
-        protected override void OnOnValidate()
-        {
-            base.OnOnValidate();
-            if(IsThirdPerson != IsThirdPersonCamActive())
-            {
-                ToggleThirdPerson();
-            }
-        }
-
-        #region Helper
-
-        private bool IsThirdPersonCamActive()
-        {
-            return cmThirdPersonCamera != null && cmThirdPersonCamera.gameObject.activeSelf;
-        }
-        #endregion
     }
 }

@@ -6,7 +6,6 @@ namespace Perigon.Leaderboard
     {
         public string Username;
         public float MilliSeconds;
-        public string Input;
         public DateTime CreationDate;
     }
 }

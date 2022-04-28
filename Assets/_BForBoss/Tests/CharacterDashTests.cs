@@ -26,7 +26,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_Dash_StayingStill()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -47,7 +47,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_Dash_PressingForward()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -70,7 +70,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_Dash_PressingBack()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -93,7 +93,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_Dash_PressingLeft()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -116,7 +116,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_Dash_PressingRight()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -139,7 +139,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_Dash_WhileOneJump()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -161,7 +161,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_Dash_WhileDoubleJump()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }

@@ -5,7 +5,7 @@
 			<value>Enemy_KillConfirm</value>
 		</property>
 		<property name="outputFormat">
-			<value>2</value>
+			<value>0</value>
 		</property>
 		<relationship name="folder">
 			<destination>{052158c9-87e1-4689-b8a3-cfbebed900ba}</destination>
@@ -167,7 +167,6 @@
 	<object class="MixerBusEffectChain" id="{3b98be53-e0b2-43e6-b7ef-53be68f3b6a1}">
 		<relationship name="effects">
 			<destination>{7315bd5b-faec-4552-a3a2-9b449125b00e}</destination>
-			<destination>{80a173a2-704b-49cb-bf0c-1d2e3031e4ee}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{8a15a153-a4e7-4ac6-a00f-996823ebcd1b}">
@@ -179,6 +178,9 @@
 		</property>
 		<property name="surroundLFELevel">
 			<value>-35</value>
+		</property>
+		<property name="overridingOutputFormat">
+			<value>0</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{2abf3ce9-c062-4339-8820-a241e45712c8}" />
@@ -208,17 +210,6 @@
 	</object>
 	<object class="MixerBusPanner" id="{5121f9fb-249a-4b37-99da-3826d306b48f}" />
 	<object class="MixerBusFader" id="{7315bd5b-faec-4552-a3a2-9b449125b00e}" />
-	<object class="SpatialiserEffect" id="{80a173a2-704b-49cb-bf0c-1d2e3031e4ee}">
-		<property name="distanceRolloffType">
-			<value>2</value>
-		</property>
-		<property name="minimumDistance">
-			<value>0</value>
-		</property>
-		<property name="maximumDistance">
-			<value>1.80000007</value>
-		</property>
-	</object>
 	<object class="MixerBusFader" id="{da710a63-0145-4ffd-9153-b098b173aa59}" />
 	<object class="SFXReverbEffect" id="{5d28cf71-c642-4f01-b773-cfc011866d9a}">
 		<property name="decayTime">

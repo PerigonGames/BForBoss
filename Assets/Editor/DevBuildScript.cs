@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEditor.Build.Reporting;
 
@@ -34,7 +35,7 @@ public class DevBuildScript : MonoBehaviour
 
         if (summary.result == BuildResult.Failed)
         {
-            Debug.Log("Build failed");
+            throw new BuildFailedException("Build failed");
         }
     }
 }

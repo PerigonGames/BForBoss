@@ -22,7 +22,6 @@ namespace BForBoss
 
         private readonly BForBossAnalytics _analytics = BForBossAnalytics.Instance;
         private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
-        private DetectInput _detectInput = new DetectInput(); //Placeholder, remove this after finishing the timed leader board stuff
         private readonly TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
         private UploadPlayerScoreDataSource _uploadPlayerScoreDataSource = null;
 
@@ -33,7 +32,6 @@ namespace BForBoss
         {
             _checkpointManager.Reset();
             base.Reset();
-            _detectInput.Reset();
             _timeManager.Reset();
             _timerView.Reset();
         }
@@ -49,7 +47,7 @@ namespace BForBoss
         {
             base.Start();
             _analytics.StartSession(SystemInfo.deviceUniqueIdentifier);
-            _checkpointManager.Initialize(_detectInput, _timeManagerViewModel);
+            _checkpointManager.Initialize(_timeManagerViewModel);
             _timeManager.Initialize(_timeManagerViewModel);
             
             _timerView.Initialize(_timeManagerViewModel);
@@ -65,9 +63,8 @@ namespace BForBoss
         {
             _timeManagerViewModel.StopTimer();
             var gameTime = _timeManagerViewModel.CurrentGameTimeMilliSeconds;
-            var input = _detectInput.GetInput(); //Placeholder, remove this after finishing the timed leader board stuff
-            _uploadPlayerScoreDataSource.UploadScoreIfPossible(gameTime, input);
-            _pauseMenu.ForceOpenLeaderboardWithScore(gameTime, input);
+            _uploadPlayerScoreDataSource.UploadScoreIfPossible(gameTime);
+            _pauseMenu.ForceOpenLeaderboardWithScore(gameTime);
         }
 
         protected override void HandleOnDeath()

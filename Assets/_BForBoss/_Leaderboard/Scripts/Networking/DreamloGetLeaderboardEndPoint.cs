@@ -52,7 +52,6 @@ namespace Perigon.Leaderboard
                 LeaderboardScore score = new LeaderboardScore();
                 score.Username = scoreDTO.Username;
                 score.Time = scoreDTO.MilliSeconds / 1000;
-                score.Input = scoreDTO.Input;
                 score.Date = scoreDTO.CreationDate;
                 listOfScore.Add(score);
             }
@@ -97,7 +96,6 @@ namespace Perigon.Leaderboard
                 var entryDTO = new EntryDTO();
                 entryDTO.Username = components[0];
                 entryDTO.MilliSeconds = int.Parse(components[2]);
-                entryDTO.Input = components[3];
                 entryDTO.CreationDate = Convert.ToDateTime(components[4]);
                 return entryDTO;
             }

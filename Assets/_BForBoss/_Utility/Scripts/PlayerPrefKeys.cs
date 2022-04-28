@@ -16,16 +16,10 @@ namespace Perigon.Utility
             public const string CONTROLLER_VERTICAL_SENSITIVITY = "controller_vertical_sensitivity";
         }
 
-        public struct ThirdPerson
-        {
-            public const string IS_THIRD_PERSON = "is_third_person";
-        }
-        
         public struct LeaderboardSettings
         {
             public const string USERNAME = "user_name";
             public const string TIMER = "timer";
-            public const string INPUT = "input";
             public const string SHOULD_UPLOAD = "should_upload";
         }
 
@@ -39,7 +33,6 @@ namespace Perigon.Utility
         public static IList<string> GetAllKeys()
         {
             var keys = GetConstStringValuesFromStruct<InputSettings>().ToList();
-            keys.AddRange(GetConstStringValuesFromStruct<ThirdPerson>());
             keys.AddRange(GetConstStringValuesFromStruct<LeaderboardSettings>());
             keys.AddRange(GetConstStringValuesFromStruct<AudioSettings>());
             return keys;
