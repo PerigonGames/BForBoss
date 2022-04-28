@@ -9,6 +9,8 @@ namespace BForBoss
     public class ImageEditorWindow : EditorWindow
     {
         private const float TOOLBAR_HEIGHT = 30f;
+        private readonly string[] _brushSelections = {"Small", "Medium", "Large"};
+        private readonly int[] _brushSizes = {4, 7, 10};
     
         public Action<Texture2D> OnWindowClosed;
         
@@ -18,14 +20,13 @@ namespace BForBoss
         
         private bool _shouldCloseWindow = false;
         private bool _drawThisFrame = false;
-        private bool _forceRepaint = false;
 
         private Rect _screenShotRect;
         private Color32 _brushColor = Color.black;
         private int _currentBrushIndex = 1;
         private int _brushSize;
-        private readonly string[] _brushSelections = {"Small", "Medium", "Large"};
-        private readonly int[] _brushSizes = {4, 7, 10};
+        private Vector3 _mouseDownPosition = Vector3.zero;
+        private List<Vector3> _listOfPoints = new List<Vector3>();
 
         private bool _shouldDrawPaint = true;
 
@@ -58,26 +59,26 @@ namespace BForBoss
             {
                 Close();
             }
+            
             EditorGUI.DrawPreviewTexture(_screenShotRect, _editedScreenShot);
 
             if (_shouldDrawPaint)
             {
-                OnPaintInputUpdate();
-                DrawPreviewPaint();
+                HandleFreeHandInput();
+                PreviewFreeHandInput();
             }
             else
             {
-                OnInputUpdate();
-                DrawPreviewSquareIfMousePressedDown();
+                HandleBoxHandInput();
+                PreviewBoxHandInput();
             }
 
 
             EditorGUILayout.Space(_editedScreenShot.height + 5f);
             DrawToolbar();
         }
-
-        private List<Vector3> _listOfPoints = new List<Vector3>();
-        private void OnPaintInputUpdate()
+        
+        private void HandleFreeHandInput()
         {
             Event inputEvent = Event.current;
             if (inputEvent == null || mouseOverWindow != this )
@@ -102,14 +103,14 @@ namespace BForBoss
                         break;
                     case EventType.MouseUp:
                     {
-                        DrawPaintIfNeeded();
+                        DrawFreeHand();
                         break;
                     }
                 }
             }
         }
 
-        private void DrawPreviewPaint()
+        private void PreviewFreeHandInput()
         {
             if (_listOfPoints.IsNullOrEmpty())
             {
@@ -133,33 +134,33 @@ namespace BForBoss
             Handles.EndGUI();
         }
 
-        private void DrawPaintIfNeeded()
+        private void DrawFreeHand()
         {
-            if (!_listOfPoints.IsNullOrEmpty())
+            if (_listOfPoints.IsNullOrEmpty())
             {
-                Vector3 lastPoint = Vector3.zero;
-                foreach (var point in _listOfPoints)
-                {
-                    if (lastPoint != Vector3.zero)
-                    {
-                        Vector2Int relativeLastPoint = new Vector2Int((int)lastPoint.x, (int)(_editedScreenShot.height - lastPoint.y));
-                        Vector2Int relativePoint = new Vector2Int((int)point.x, (int)(_editedScreenShot.height - point.y));
-                        DrawLine(_editedScreenShot, relativeLastPoint, relativePoint, _brushColor);
-                    }
-
-                    lastPoint = point;
-                }
-                _editedScreenShot.Apply();
-                Repaint();
+                return;
             }
             
+            Vector3 lastPoint = Vector3.zero;
+            foreach (var point in _listOfPoints)
+            {
+                if (lastPoint != Vector3.zero)
+                {
+                    Vector2Int relativeLastPoint = new Vector2Int((int)lastPoint.x, (int)(_editedScreenShot.height - lastPoint.y));
+                    Vector2Int relativePoint = new Vector2Int((int)point.x, (int)(_editedScreenShot.height - point.y));
+                    DrawLine(_editedScreenShot, relativeLastPoint, relativePoint, _brushColor, _brushSize);
+                }
+
+                lastPoint = point;
+            }
+            
+            _editedScreenShot.Apply();
+            Repaint();
+
             _listOfPoints.Clear();
         }
-        
-        
-        private Vector3 mouseDownPosition = Vector3.zero;
 
-        private void OnInputUpdate()
+        private void HandleBoxHandInput()
         {
             Event inputEvent = Event.current;
             if (inputEvent == null || mouseOverWindow != this )
@@ -177,59 +178,63 @@ namespace BForBoss
                 switch (inputEvent.type)
                 {
                     case EventType.MouseDown:
-                        mouseDownPosition = inputEvent.mousePosition;
+                        _mouseDownPosition = inputEvent.mousePosition;
                         break;
                     case EventType.MouseUp:
                     {
-                        DrawSquareOnToScreenshot();
+                        DrawBox();
                         break;
                     }
                 }
             }
         }
 
-        private void DrawPreviewSquareIfMousePressedDown()
+        private void PreviewBoxHandInput()
         {
-            if (mouseDownPosition != Vector3.zero)
+            if (_mouseDownPosition == Vector3.zero)
             {
-                Handles.BeginGUI();
-                Handles.color = _brushColor;
-                var currentMousePosition = Event.current.mousePosition;
-                var topRight = new Vector3(mouseDownPosition.x, currentMousePosition.y);
-                var bottomLeft = new Vector3(currentMousePosition.x, mouseDownPosition.y);
-                Handles.DrawLine(mouseDownPosition, topRight);
-                Handles.DrawLine(topRight, currentMousePosition);
-                Handles.DrawLine(currentMousePosition, bottomLeft);
-                Handles.DrawLine(bottomLeft, mouseDownPosition);
-                Repaint();
-                Handles.EndGUI();
+                return;
             }
             
+            Handles.BeginGUI();
+            Handles.color = _brushColor;
+                
+            Vector2 currentMousePosition = Event.current.mousePosition;
+            Vector3 topRight = new Vector3(_mouseDownPosition.x, currentMousePosition.y);
+            Vector3 bottomLeft = new Vector3(currentMousePosition.x, _mouseDownPosition.y);
+                
+            Handles.DrawLine(_mouseDownPosition, topRight);
+            Handles.DrawLine(topRight, currentMousePosition);
+            Handles.DrawLine(currentMousePosition, bottomLeft);
+            Handles.DrawLine(bottomLeft, _mouseDownPosition);
+                
+            Repaint();
+            Handles.EndGUI();
         }
 
-        private void DrawSquareOnToScreenshot()
+        private void DrawBox()
         {
-            if (mouseDownPosition == Vector3.zero)
+            if (_mouseDownPosition == Vector3.zero)
             {
                 return;
             }
 
             Vector2 mouseUpPosition = Event.current.mousePosition;
-            Vector2Int relativeMouseDownPosition = new Vector2Int((int)mouseDownPosition.x, (int)(_editedScreenShot.height - mouseDownPosition.y));
+            Vector2Int relativeMouseDownPosition = new Vector2Int((int)_mouseDownPosition.x, (int)(_editedScreenShot.height - _mouseDownPosition.y));
             Vector2Int relativeMouseUpPosition = new Vector2Int((int)mouseUpPosition.x, (int)(_editedScreenShot.height - mouseUpPosition.y));
 
-            var topRight = new Vector3(relativeMouseDownPosition.x, relativeMouseUpPosition.y);
-            var bottomLeft = new Vector3(relativeMouseUpPosition.x, relativeMouseDownPosition.y);
-            var thickness = _brushSizes[2];
-            DrawLine(_editedScreenShot, relativeMouseDownPosition, topRight, _brushColor, thickness);
-            DrawLine(_editedScreenShot, topRight, relativeMouseUpPosition, _brushColor, thickness);
-            DrawLine(_editedScreenShot, relativeMouseUpPosition, bottomLeft, _brushColor, thickness);
-            DrawLine(_editedScreenShot, bottomLeft, relativeMouseDownPosition, _brushColor, thickness);
+            Vector3 topRight = new Vector3(relativeMouseDownPosition.x, relativeMouseUpPosition.y);
+            Vector3 bottomLeft = new Vector3(relativeMouseUpPosition.x, relativeMouseDownPosition.y);
+            
+            DrawLine(_editedScreenShot, relativeMouseDownPosition, topRight, _brushColor, _brushSize);
+            DrawLine(_editedScreenShot, topRight, relativeMouseUpPosition, _brushColor, _brushSize);
+            DrawLine(_editedScreenShot, relativeMouseUpPosition, bottomLeft, _brushColor, _brushSize);
+            DrawLine(_editedScreenShot, bottomLeft, relativeMouseDownPosition, _brushColor, _brushSize);
             
             _editedScreenShot.Apply();
             Repaint();
 
-            mouseDownPosition = Vector3.zero;
+            _mouseDownPosition = Vector3.zero;
         }
 
         //https://answers.unity.com/questions/244417/create-line-on-a-texture.html
@@ -267,6 +272,7 @@ namespace BForBoss
                 _brushColor = EditorGUILayout.ColorField("Brush Color", _brushColor);
                 EditorGUIUtility.labelWidth = 65f;
                 _currentBrushIndex = EditorGUILayout.Popup("Brush Size", _currentBrushIndex, _brushSelections, GUILayout.ExpandWidth(true));
+                _brushSize = _brushSizes[_currentBrushIndex];
                 EditorGUIUtility.labelWidth = originalLabelWidth;
                 _shouldDrawPaint = EditorGUILayout.Toggle("Should use Paint", _shouldDrawPaint);
                 

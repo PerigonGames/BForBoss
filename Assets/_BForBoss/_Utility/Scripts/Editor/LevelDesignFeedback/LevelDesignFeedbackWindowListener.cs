@@ -5,7 +5,7 @@ namespace Perigon.Utility
 {
     public static class LevelDesignFeedbackWindowListener
     {
-        public static KeyCode OpenWindowKeyCode = KeyCode.F10;
+        public static KeyCode OpenEditorKeyCode = KeyCode.F10;
         private static LevelDesignFeedbackEditorWindow _window = null;
 
         private static bool _isApplicationPaused = false;
