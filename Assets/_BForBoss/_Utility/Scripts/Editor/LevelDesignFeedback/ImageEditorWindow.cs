@@ -70,8 +70,8 @@ namespace BForBoss
             }
             else
             {
-                HandleBoxHandInput();
-                PreviewBoxHandInput();
+                HandleBoxToolInput();
+                PreviewBoxToolInput();
             }
 
 
@@ -161,7 +161,7 @@ namespace BForBoss
             _listOfPoints.Clear();
         }
 
-        private void HandleBoxHandInput()
+        private void HandleBoxToolInput()
         {
             Event inputEvent = Event.current;
             if (inputEvent == null || mouseOverWindow != this )
@@ -190,7 +190,7 @@ namespace BForBoss
             }
         }
 
-        private void PreviewBoxHandInput()
+        private void PreviewBoxToolInput()
         {
             if (_mouseDownPosition == Vector3.zero)
             {
