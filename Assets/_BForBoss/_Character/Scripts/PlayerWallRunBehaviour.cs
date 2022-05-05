@@ -109,7 +109,7 @@ namespace Perigon.Character
         {
             if (_useCollisionPhysics || !CanWallRun()) 
                 return;
-            if (ProcessRaycasts(_directions, out RaycastHit hit) && IsClearOfGround())
+            if (ProcessRaycasts(_directions, out var hit, ChildTransform, _mask, _wallMaxDistance) && IsClearOfGround())
             {
                 if(IsWallRunning || hit.collider != _lastWall) 
                     WallRun(hit);
@@ -326,26 +326,6 @@ namespace Perigon.Character
             return !downwardHit;
         }
 
-        private bool ProcessRaycasts(Vector3[] directions, out RaycastHit smallestRaycastResult)
-        {
-            RaycastHit[] hits = new RaycastHit[directions.Length];
-            for (int i = 0; i < directions.Length; i++)
-            {
-                Vector3 playerFacingDirection = ChildTransform.TransformDirection(directions[i]);
-                Physics.Raycast(ChildTransform.position, playerFacingDirection, out hits[i], _wallMaxDistance, _mask);
-                if (hits[i].collider != null)
-                {
-                    Debug.DrawRay(ChildTransform.position, playerFacingDirection * hits[i].distance, Color.green);
-                }
-                else
-                {
-                    Debug.DrawRay(ChildTransform.position, playerFacingDirection * _wallMaxDistance, Color.red);
-                }
-            }
-            return GetSmallestRaycastHitIfValid(hits, out smallestRaycastResult);
-
-        }
-
         private float GetCameraRoll()
         {
             float wallDirection = CalculateWallSideRelativeToPlayer();
@@ -396,7 +376,7 @@ namespace Perigon.Character
 
         private void OnCollisionExit(Collision other)
         {
-            if (!_useCollisionPhysics || other.collider != _lastWall)
+            if (!_useCollisionPhysics || other.collider != _lastWall || !IsWallRunning)
                 return;
             StopWallRunning(false);
         }
@@ -416,6 +396,26 @@ namespace Perigon.Character
                 }
             }
             return validRaycast;
+        }
+        
+        private static bool ProcessRaycasts(Vector3[] directions, out RaycastHit smallestRaycastResult, Transform origin, int layerMask, float maxDistance)
+        {
+            RaycastHit[] hits = new RaycastHit[directions.Length];
+            for (int i = 0; i < directions.Length; i++)
+            {
+                Vector3 playerFacingDirection = origin.TransformDirection(directions[i]);
+                Physics.Raycast(origin.position, playerFacingDirection, out hits[i], maxDistance, layerMask);
+                if (hits[i].collider != null)
+                {
+                    Debug.DrawRay(origin.position, playerFacingDirection * hits[i].distance, Color.green);
+                }
+                else
+                {
+                    Debug.DrawRay(origin.position, playerFacingDirection * maxDistance, Color.red);
+                }
+            }
+            return GetSmallestRaycastHitIfValid(hits, out smallestRaycastResult);
+
         }
         #endregion
     }
