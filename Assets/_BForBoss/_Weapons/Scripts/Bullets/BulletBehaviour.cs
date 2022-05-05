@@ -73,7 +73,7 @@ namespace Perigon.Weapons
 
         protected void SpawnWallHitPrefab(Vector3 position, Vector3 wallNormal)
         {
-            _wallHitVFXObjectPool ??= new ObjectPooler<WallHitVFX>("WallHitVFX", 
+            _wallHitVFXObjectPool ??= new ObjectPooler<WallHitVFX>(
                 () =>
                 {
                     var vfx = Instantiate(_wallHitVFXPrefab);

@@ -22,7 +22,7 @@ namespace Perigon.Weapons
             {
                 var prefab = _bulletPrefabs[i];
                 var index = i;
-                _pools[i] = new ObjectPooler<BulletBehaviour>($"{prefab.name}Pool", () => GenerateBullet(prefab,index),
+                _pools[i] = new ObjectPooler<BulletBehaviour>(() => GenerateBullet(prefab,index),
                     (bullet) => bullet.gameObject.SetActive(true),
                     (bullet) => bullet.gameObject.SetActive(false));
             }
