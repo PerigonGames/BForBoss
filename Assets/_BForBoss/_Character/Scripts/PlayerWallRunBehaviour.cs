@@ -20,8 +20,6 @@ namespace Perigon.Character
         private float _wallGravityDownForce = 0f;
         [SerializeField] 
         private bool _constantSpeed = false;
-        [SerializeField, Tooltip("If true, uses Unity collision detection instead of manual detection. Better quality but only works on convex walls")] 
-        private bool _useCollisionPhysics = true;
 
         [Header("Wall Run Conditions")]
         [SerializeField, Tooltip("Stop a wall run if speed dips below this")]
@@ -125,7 +123,7 @@ namespace Perigon.Character
 
         public void Falling(Vector3 _)
         {
-            if (_useCollisionPhysics || !CanWallRun()) 
+            if (!CanWallRun()) 
                 return;
             if (IsWallRunning)
             {
@@ -267,15 +265,7 @@ namespace Perigon.Character
         
         public void OnMovementHit(ref MovementHit movementHit)
         {
-            if (!_useCollisionPhysics)
-                return;
-            if (movementHit.hitLocation != CapsuleHitLocation.Sides)
-                return;
-            if (movementHit.collider.gameObject.layer != _layerIndex)
-                return;
-            if (!IsWallRunning && !CanWallRun())
-                return;
-            WallRun(ref movementHit);
+            
         }
         #endregion
 
@@ -403,14 +393,6 @@ namespace Perigon.Character
         {
             var heading = ProjectOntoWallNormalized(initialDirection);
             _constantVelocity = heading * _baseCharacter.maxWalkSpeed;
-        }
-
-        private void OnCollisionExit(Collision other)
-        {
-            if (!_useCollisionPhysics || other.collider != _lastWall || !IsWallRunning)
-                return;
-            Debug.Log("Stopped wall run due to collision exit");
-            StopWallRunning(false);
         }
 
         private static bool GetSmallestRaycastHitIfValid(RaycastHit[] array, out RaycastHit smallest)
