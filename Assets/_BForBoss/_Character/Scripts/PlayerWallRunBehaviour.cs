@@ -109,22 +109,7 @@ namespace Perigon.Character
         {
             if (_useCollisionPhysics || !CanWallRun()) 
                 return;
-            RaycastHit[] hits = new RaycastHit[_directions.Length];
-            for (int i = 0; i < _directions.Length; i++)
-            {
-                Vector3 playerFacingDirection = ChildTransform.TransformDirection(_directions[i]);
-                Physics.Raycast(ChildTransform.position, playerFacingDirection, out hits[i], _wallMaxDistance, _mask);
-                if (hits[i].collider != null)
-                {
-                    Debug.DrawRay(ChildTransform.position, playerFacingDirection * hits[i].distance, Color.green);
-                }
-                else
-                {
-                    Debug.DrawRay(ChildTransform.position, playerFacingDirection * _wallMaxDistance, Color.red);
-                }
-            }
-
-            if (GetSmallestRaycastHitIfValid(hits, out RaycastHit hit) && IsClearOfGround())
+            if (ProcessRaycasts(_directions, out RaycastHit hit) && IsClearOfGround())
             {
                 if(IsWallRunning || hit.collider != _lastWall) 
                     WallRun(hit);
@@ -271,13 +256,7 @@ namespace Perigon.Character
             
             if (!IsWallRunning)
             {
-                IsWallRunning = true;
-                _hasCameraStabilized = false;
-                _isInitialHeadingSet = false;
-                _baseMaxSpeed = _baseCharacter.maxWalkSpeed;
-                _baseCharacter.maxWalkSpeed *= _speedMultiplier;
-                _timeSinceWallAttach = 0f;
-                _timeSinceWallDetach = 0f;
+                StartWallRun();
             }
         }
         
@@ -294,14 +273,19 @@ namespace Perigon.Character
             
             if (!IsWallRunning)
             {
-                IsWallRunning = true;
-                _hasCameraStabilized = false;
-                _isInitialHeadingSet = false;
-                _baseMaxSpeed = _baseCharacter.maxWalkSpeed;
-                _baseCharacter.maxWalkSpeed *= _speedMultiplier;
-                _timeSinceWallAttach = 0f;
-                _timeSinceWallDetach = 0f;
+                StartWallRun();
             }
+        }
+
+        private void StartWallRun()
+        {
+            IsWallRunning = true;
+            _hasCameraStabilized = false;
+            _isInitialHeadingSet = false;
+            _baseMaxSpeed = _baseCharacter.maxWalkSpeed;
+            _baseCharacter.maxWalkSpeed *= _speedMultiplier;
+            _timeSinceWallAttach = 0f;
+            _timeSinceWallDetach = 0f;
         }
 
         private bool CanWallRun()
@@ -340,6 +324,26 @@ namespace Perigon.Character
                 Debug.DrawRay(ChildTransform.position, Vector3.down * _minHeight, Color.green);
             }
             return !downwardHit;
+        }
+
+        private bool ProcessRaycasts(Vector3[] directions, out RaycastHit smallestRaycastResult)
+        {
+            RaycastHit[] hits = new RaycastHit[directions.Length];
+            for (int i = 0; i < directions.Length; i++)
+            {
+                Vector3 playerFacingDirection = ChildTransform.TransformDirection(directions[i]);
+                Physics.Raycast(ChildTransform.position, playerFacingDirection, out hits[i], _wallMaxDistance, _mask);
+                if (hits[i].collider != null)
+                {
+                    Debug.DrawRay(ChildTransform.position, playerFacingDirection * hits[i].distance, Color.green);
+                }
+                else
+                {
+                    Debug.DrawRay(ChildTransform.position, playerFacingDirection * _wallMaxDistance, Color.red);
+                }
+            }
+            return GetSmallestRaycastHitIfValid(hits, out smallestRaycastResult);
+
         }
 
         private float GetCameraRoll()
