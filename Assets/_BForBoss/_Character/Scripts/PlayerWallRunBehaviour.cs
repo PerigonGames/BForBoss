@@ -59,6 +59,9 @@ namespace Perigon.Character
         #endregion
 
         #region PRIVATE_FIELDS
+        /// <summary>
+        /// If not in a wall run, only check for walls ahead of the player
+        /// </summary>
         private readonly Vector3[] _directions = new Vector3[]
         {
             Vector3.right, 
@@ -66,6 +69,21 @@ namespace Perigon.Character
             Vector3.forward,
             Vector3.left + Vector3.forward,
             Vector3.left
+        };
+        
+        /// <summary>
+        /// If we are in a wall run, check for walls all around the player
+        /// </summary>
+        private readonly Vector3[] _directionsCurrentlyWallRunning = new Vector3[]
+        {
+            Vector3.right, 
+            Vector3.right + Vector3.forward,
+            Vector3.forward,
+            Vector3.left + Vector3.forward,
+            Vector3.left,
+            Vector3.left + Vector3.back,
+            Vector3.back, 
+            Vector3.back + Vector3.right
         };
 
         private ECM2.Characters.Character _baseCharacter = null;
@@ -109,14 +127,27 @@ namespace Perigon.Character
         {
             if (_useCollisionPhysics || !CanWallRun()) 
                 return;
-            if (ProcessRaycasts(_directions, out var hit, ChildTransform, _mask, _wallMaxDistance) && IsClearOfGround())
+            if (IsWallRunning)
             {
-                if(IsWallRunning || hit.collider != _lastWall) 
+                if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, _mask, _wallMaxDistance) 
+                    && IsClearOfGround())
+                {
                     WallRun(hit);
+                }
+                else
+                {
+                    Debug.Log("Stopped wall run due to no nearby wall, or player was too close to ground");
+                    StopWallRunning(false);
+                }
             }
             else
             {
-                StopWallRunning(false);
+                if (ProcessRaycasts(_directions, out var hit, ChildTransform, _mask, _wallMaxDistance) 
+                    && IsClearOfGround())
+                {
+                    if(hit.collider != _lastWall) 
+                        WallRun(hit);
+                }
             }
         }
 
@@ -125,6 +156,7 @@ namespace Perigon.Character
             _currentJumpDuration = 0f;
             if (IsWallRunning)
             {
+                Debug.Log("Stopped wall run due to jump");
                 StopWallRunning(true);
             }
         }
@@ -135,6 +167,7 @@ namespace Perigon.Character
             _lastWall = null;
             if (IsWallRunning)
             {
+                Debug.Log("Stopped wall run due to landed on ground");
                 StopWallRunning(false);
             }
         }
@@ -159,6 +192,7 @@ namespace Perigon.Character
             var movement = _movementInput();
             if (movement.sqrMagnitude <= 0 || movement.y < 0)
             {
+                Debug.Log("Stopped wall run due to no forward input");
                 StopWallRunning(false);
                 return;
             }
@@ -181,12 +215,15 @@ namespace Perigon.Character
                 velocity = velocity.dot(heading) * heading;
                 if (velocity.sqrMagnitude < _minSpeed * _minSpeed)
                 {
+                    Debug.Log("Stopped wall run as player moved too slow");
                     StopWallRunning(false);
                     return;
                 }
             }
 
             LookAlongWall(ChildTransform.forward, heading);
+
+            _baseCharacter.AddForce(-_lastWallRunNormal * 100f);
 
             var downwardForce = _timeSinceWallAttach >= _gravityTimerDuration ? 
                 Vector3.down * (_wallGravityDownForce * deltaTime)
@@ -245,28 +282,22 @@ namespace Perigon.Character
         #region PRIVATE_METHODS
         private void WallRun(RaycastHit wall)
         {
-            _lastWall = wall.collider;
-            var oldNormal = _lastWallRunNormal;
-            _lastWallRunNormal = wall.normal;
-
-            if (ShouldUpdateConstantVelocity(wall.normal, oldNormal))
-            {
-                GetConstantVelocity(IsWallRunning ? _constantVelocity : ChildTransform.forward);
-            }
-            
-            if (!IsWallRunning)
-            {
-                StartWallRun();
-            }
+            WallRun(wall.collider, wall.normal);
         }
         
         private void WallRun(ref MovementHit wall)
         {
-            _lastWall = wall.collider;
-            var oldNormal = _lastWallRunNormal;
-            _lastWallRunNormal = wall.normal;
+            WallRun(wall.collider, wall.normal);
+            
+        }
 
-            if (ShouldUpdateConstantVelocity(wall.normal, oldNormal))
+        private void WallRun(Collider wallCollider, Vector3 normal)
+        {
+            _lastWall = wallCollider;
+            var oldNormal = _lastWallRunNormal;
+            _lastWallRunNormal = normal;
+
+            if (ShouldUpdateConstantVelocity(normal, oldNormal))
             {
                 GetConstantVelocity(IsWallRunning ? _constantVelocity : ChildTransform.forward);
             }
@@ -378,6 +409,7 @@ namespace Perigon.Character
         {
             if (!_useCollisionPhysics || other.collider != _lastWall || !IsWallRunning)
                 return;
+            Debug.Log("Stopped wall run due to collision exit");
             StopWallRunning(false);
         }
 
@@ -403,15 +435,15 @@ namespace Perigon.Character
             RaycastHit[] hits = new RaycastHit[directions.Length];
             for (int i = 0; i < directions.Length; i++)
             {
-                Vector3 playerFacingDirection = origin.TransformDirection(directions[i]);
-                Physics.Raycast(origin.position, playerFacingDirection, out hits[i], maxDistance, layerMask);
+                Vector3 localDirection = origin.TransformDirection(directions[i]);
+                Physics.Raycast(origin.position, localDirection, out hits[i], maxDistance, layerMask);
                 if (hits[i].collider != null)
                 {
-                    Debug.DrawRay(origin.position, playerFacingDirection * hits[i].distance, Color.green);
+                    Debug.DrawRay(origin.position, localDirection * hits[i].distance, Color.green);
                 }
                 else
                 {
-                    Debug.DrawRay(origin.position, playerFacingDirection * maxDistance, Color.red);
+                    Debug.DrawRay(origin.position, localDirection * maxDistance, Color.red);
                 }
             }
             return GetSmallestRaycastHitIfValid(hits, out smallestRaycastResult);
