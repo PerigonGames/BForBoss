@@ -20,16 +20,12 @@ namespace Perigon.Character
         private float _wallGravityDownForce = 0f;
         [SerializeField] 
         private bool _constantSpeed = false;
-        [SerializeField, Tooltip("If true, uses Unity collision detection instead of manual detection. Better quality but only works on convex walls")] 
-        private bool _useCollisionPhysics = true;
 
         [Header("Wall Run Conditions")]
         [SerializeField, Tooltip("Stop a wall run if speed dips below this")]
         private float _minSpeed = 0.9f;
         [SerializeField, Tooltip("Don't allow a wall run if the player is too close to the ground")] 
         private float _minHeight = 1f;
-        [SerializeField]
-        private float _wallMaxDistance = 1f;
         [SerializeField, Range(0f, 3f), Tooltip("Only allow for a wall run if jump is longer than this")]
         private float _minJumpDuration = 0.3f;
 
@@ -59,36 +55,8 @@ namespace Perigon.Character
         #endregion
 
         #region PRIVATE_FIELDS
-        /// <summary>
-        /// If not in a wall run, only check for walls ahead of the player
-        /// </summary>
-        private readonly Vector3[] _directions = new Vector3[]
-        {
-            Vector3.right, 
-            Vector3.right + Vector3.forward,
-            Vector3.forward,
-            Vector3.left + Vector3.forward,
-            Vector3.left
-        };
-        
-        /// <summary>
-        /// If we are in a wall run, check for walls all around the player
-        /// </summary>
-        private readonly Vector3[] _directionsCurrentlyWallRunning = new Vector3[]
-        {
-            Vector3.right, 
-            Vector3.right + Vector3.forward,
-            Vector3.forward,
-            Vector3.left + Vector3.forward,
-            Vector3.left,
-            Vector3.left + Vector3.back,
-            Vector3.back, 
-            Vector3.back + Vector3.right
-        };
-
         private ECM2.Characters.Character _baseCharacter = null;
         private FirstPersonPlayer _fpsCharacter = null;
-        private LayerMask _mask;
         private int _layerIndex;
         private Vector3 _lastWallRunNormal;
         private Vector3 _constantVelocity;
@@ -119,36 +87,12 @@ namespace Perigon.Character
             _fpsCharacter = baseCharacter as FirstPersonPlayer;
             _movementInput = getMovementInput;
             _OnWallRunFinished = onWallRunFinished;
-            _mask = LayerMask.GetMask(PARKOUR_WALL_LAYER);
             _layerIndex = LayerMask.NameToLayer(PARKOUR_WALL_LAYER);
         }
 
         public void Falling(Vector3 _)
         {
-            if (_useCollisionPhysics || !CanWallRun()) 
-                return;
-            if (IsWallRunning)
-            {
-                if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, _mask, _wallMaxDistance) 
-                    && IsClearOfGround())
-                {
-                    WallRun(hit);
-                }
-                else
-                {
-                    Debug.Log("Stopped wall run due to no nearby wall, or player was too close to ground");
-                    StopWallRunning(false);
-                }
-            }
-            else
-            {
-                if (ProcessRaycasts(_directions, out var hit, ChildTransform, _mask, _wallMaxDistance) 
-                    && IsClearOfGround())
-                {
-                    if(hit.collider != _lastWall) 
-                        WallRun(hit);
-                }
-            }
+            
         }
 
         public void OnJumped()
@@ -267,8 +211,6 @@ namespace Perigon.Character
         
         public void OnMovementHit(ref MovementHit movementHit)
         {
-            if (!_useCollisionPhysics)
-                return;
             if (movementHit.hitLocation != CapsuleHitLocation.Sides)
                 return;
             if (movementHit.collider.gameObject.layer != _layerIndex)
@@ -407,47 +349,10 @@ namespace Perigon.Character
 
         private void OnCollisionExit(Collision other)
         {
-            if (!_useCollisionPhysics || other.collider != _lastWall || !IsWallRunning)
+            if (other.collider != _lastWall || !IsWallRunning)
                 return;
             Debug.Log("Stopped wall run due to collision exit");
             StopWallRunning(false);
-        }
-
-        private static bool GetSmallestRaycastHitIfValid(RaycastHit[] array, out RaycastHit smallest)
-        {
-            bool validRaycast = false;
-            float minimumDistance = float.MaxValue;
-            smallest = new RaycastHit();
-            foreach (var hit in array)
-            {
-                if (hit.collider != null && hit.distance < minimumDistance)
-                {
-                    validRaycast = true;
-                    minimumDistance = hit.distance;
-                    smallest = hit;
-                }
-            }
-            return validRaycast;
-        }
-        
-        private static bool ProcessRaycasts(Vector3[] directions, out RaycastHit smallestRaycastResult, Transform origin, int layerMask, float maxDistance)
-        {
-            RaycastHit[] hits = new RaycastHit[directions.Length];
-            for (int i = 0; i < directions.Length; i++)
-            {
-                Vector3 localDirection = origin.TransformDirection(directions[i]);
-                Physics.Raycast(origin.position, localDirection, out hits[i], maxDistance, layerMask);
-                if (hits[i].collider != null)
-                {
-                    Debug.DrawRay(origin.position, localDirection * hits[i].distance, Color.green);
-                }
-                else
-                {
-                    Debug.DrawRay(origin.position, localDirection * maxDistance, Color.red);
-                }
-            }
-            return GetSmallestRaycastHitIfValid(hits, out smallestRaycastResult);
-
         }
         #endregion
     }
