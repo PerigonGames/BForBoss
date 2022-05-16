@@ -1,5 +1,5 @@
 {
-    "m_SGVersion": 2,
+    "m_SGVersion": 3,
     "m_Type": "UnityEditor.ShaderGraph.GraphData",
     "m_ObjectId": "a926ad04e2b84ae291a0086003fc779a",
     "m_Properties": [
@@ -32,6 +32,12 @@
         }
     ],
     "m_Keywords": [],
+    "m_Dropdowns": [],
+    "m_CategoryData": [
+        {
+            "m_Id": "f0d7d9f09d024b0cbf66ddc71e7bd17a"
+        }
+    ],
     "m_Nodes": [
         {
             "m_Id": "bd6ac1c0ddee462abcc4d89beddc79b1"
@@ -535,10 +541,11 @@
         "serializedMesh": {
             "m_SerializedMesh": "{\"mesh\":{\"fileID\":10210,\"guid\":\"0000000000000000e000000000000000\",\"type\":0}}",
             "m_Guid": ""
-        }
+        },
+        "preventRotation": false
     },
     "m_Path": "Shader Graphs",
-    "m_ConcretePrecision": 0,
+    "m_GraphPrecision": 0,
     "m_PreviewMode": 2,
     "m_OutputNode": {
         "m_Id": ""
@@ -606,9 +613,13 @@
         "m_GuidSerialized": "e86caed6-8ab9-4176-94cb-84d7711878f1"
     },
     "m_Name": "Speed Lines Radial Scale",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_09090fd7a5414ad7a6dcd07262bcb8e4",
     "m_OverrideReferenceName": "_radialScale",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -1091,9 +1102,13 @@
         "m_GuidSerialized": "c642cb5d-ac79-461b-9e7a-6de16e8861e3"
     },
     "m_Name": "Alpha",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_21732530f123455689f2105d2e087d50",
     "m_OverrideReferenceName": "_alpha",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -1502,9 +1517,13 @@
         "m_GuidSerialized": "1f217409-41dc-46ea-ba8f-b22a9c2273ea"
     },
     "m_Name": "Mask Power",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_41fe04364a73411fa5a705364c02615e",
     "m_OverrideReferenceName": "_maskPower",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -1775,9 +1794,13 @@
         "m_GuidSerialized": "b396b5e1-5056-48ab-a07f-0310004da4c8"
     },
     "m_Name": "Speed Lines Power",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_57214c58807d4e5193a18b1dc9efd34f",
     "m_OverrideReferenceName": "_power",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -2043,9 +2066,13 @@
         "m_GuidSerialized": "7a8424b4-04c1-42db-be97-f593cb364535"
     },
     "m_Name": "Animation Speed",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_68982306447d488ebf5c0583c2db8c03",
     "m_OverrideReferenceName": "_speed",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -2914,17 +2941,23 @@
 }
 
 {
-    "m_SGVersion": 0,
+    "m_SGVersion": 1,
     "m_Type": "UnityEditor.Rendering.Universal.ShaderGraph.UniversalTarget",
     "m_ObjectId": "b40817dc91ea461bb63fe0f81b3d1de3",
     "m_ActiveSubTarget": {
         "m_Id": "c2202804d63c4b998f91c20f2095e56c"
     },
+    "m_AllowMaterialOverride": false,
     "m_SurfaceType": 0,
+    "m_ZTestMode": 4,
+    "m_ZWriteControl": 0,
     "m_AlphaMode": 2,
-    "m_TwoSided": false,
+    "m_RenderFace": 2,
     "m_AlphaClip": false,
-    "m_CustomEditorGUI": ""
+    "m_CastShadows": true,
+    "m_ReceiveShadows": true,
+    "m_CustomEditorGUI": "",
+    "m_SupportVFX": false
 }
 
 {
@@ -3227,9 +3260,13 @@
         "m_GuidSerialized": "e3766803-041d-4fd5-9414-4df7505b70b8"
     },
     "m_Name": "Speed Lines Tiling",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_d58629ff0d0849dbb30353f443036425",
     "m_OverrideReferenceName": "_tiling",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -3280,9 +3317,13 @@
         "m_GuidSerialized": "c62e4184-a2df-4b35-a1de-cdb9c16fffd8"
     },
     "m_Name": "Speed Lines Remap",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_d7950a847b854fc6823f6b0445a8a6b6",
     "m_OverrideReferenceName": "_remap",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -3303,9 +3344,13 @@
         "m_GuidSerialized": "2667b856-d498-4d03-8570-537b6cf8ead1"
     },
     "m_Name": "_MainTex",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Texture2D_d833019a21e94a64b9d0b9ce5e9d8dac",
     "m_OverrideReferenceName": "_MainTex",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -3314,6 +3359,8 @@
         "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
         "m_Guid": ""
     },
+    "isMainTexture": false,
+    "useTilingAndOffset": false,
     "m_Modifiable": true,
     "m_DefaultType": 0
 }
@@ -3513,9 +3560,13 @@
         "m_GuidSerialized": "d2ed7419-b8b1-4c95-8ca1-4ffb4160e11b"
     },
     "m_Name": "Color",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Color_ec53302a66cb40ee9bb9199ea5873ddc",
     "m_OverrideReferenceName": "_color",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -3526,6 +3577,7 @@
         "b": 1.0,
         "a": 0.0
     },
+    "isMainColor": false,
     "m_ColorMode": 0
 }
 
@@ -3542,6 +3594,42 @@
     "m_Value": 0.0,
     "m_DefaultValue": 0.0,
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "f0d7d9f09d024b0cbf66ddc71e7bd17a",
+    "m_Name": "",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "09090fd7a5414ad7a6dcd07262bcb8e4"
+        },
+        {
+            "m_Id": "d58629ff0d0849dbb30353f443036425"
+        },
+        {
+            "m_Id": "68982306447d488ebf5c0583c2db8c03"
+        },
+        {
+            "m_Id": "57214c58807d4e5193a18b1dc9efd34f"
+        },
+        {
+            "m_Id": "d7950a847b854fc6823f6b0445a8a6b6"
+        },
+        {
+            "m_Id": "41fe04364a73411fa5a705364c02615e"
+        },
+        {
+            "m_Id": "ec53302a66cb40ee9bb9199ea5873ddc"
+        },
+        {
+            "m_Id": "21732530f123455689f2105d2e087d50"
+        },
+        {
+            "m_Id": "d833019a21e94a64b9d0b9ce5e9d8dac"
+        }
+    ]
 }
 
 {

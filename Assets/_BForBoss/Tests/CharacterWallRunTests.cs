@@ -17,7 +17,6 @@ namespace Tests.Character
         private Vector3 _narrowCorridor = new Vector3(0, 0.5f, -10);
         private Vector3 _wideCorridor = new Vector3(5, 0.5f, -10);
         
-        [SetUp]
         public override void Setup()
         {
             base.Setup();
@@ -95,7 +94,7 @@ namespace Tests.Character
             //First Wall Run
             Press(_keyboard.wKey);
             Press(_keyboard.aKey);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.1f);
             Press(_keyboard.spaceKey);
             yield return new WaitForFixedUpdate();
             Release(_keyboard.aKey);
@@ -104,10 +103,10 @@ namespace Tests.Character
             
             //First Jump
             Press(_keyboard.spaceKey);
-            Press(_keyboard.dKey);
             yield return new WaitForFixedUpdate();
             Release(_keyboard.spaceKey);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForFixedUpdate();
+            yield return new WaitForSeconds(0.2f);
             
             //Second mid air jump
             Press(_keyboard.spaceKey);
