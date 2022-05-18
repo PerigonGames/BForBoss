@@ -11,15 +11,15 @@ Shader "Shapes/Disc Lighten" {
 	}
 	SubShader {
 		Tags {
-			"RenderPipeline" = "UniversalPipeline"
+			"RenderPipeline" = "HDRenderPipeline"
 			"IgnoreProjector" = "True"
 			"Queue" = "Transparent"
 			"RenderType" = "Transparent"
 			"DisableBatching" = "True"
 		}
 		Pass {
-			Name "Pass"
-			Tags { "LightMode" = "UniversalForward" }
+			Name "ForwardOnly"
+			Tags { "LightMode" = "ForwardOnly" }
 			Stencil {
 				Comp [_StencilComp]
 				Pass [_StencilOpPass]
@@ -47,8 +47,8 @@ Shader "Shapes/Disc Lighten" {
 			ENDHLSL
 		}
 		Pass {
-			Name "DepthOnly"
-			Tags { "LightMode" = "DepthOnly" }
+			Name "DepthForwardOnly"
+			Tags { "LightMode" = "DepthForwardOnly" }
 			Stencil {
 				Comp [_StencilComp]
 				Pass [_StencilOpPass]
