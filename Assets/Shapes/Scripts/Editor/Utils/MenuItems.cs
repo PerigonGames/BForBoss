@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEditor;
-using UnityEditor.Experimental.SceneManagement;
+
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -133,7 +133,7 @@ namespace Shapes {
 			if( context != null && context is GameObject goCtx )
 				parentTransform = goCtx.transform;
 			else
-				parentTransform = PrefabStageUtility.GetCurrentPrefabStage()?.prefabContentsRoot.transform;
+				parentTransform = UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage()?.prefabContentsRoot.transform;
 			Transform transform = go.transform;
 			Undo.SetTransformParent( transform, parentTransform, "Reparenting" );
 			transform.localPosition = Vector3.zero;
