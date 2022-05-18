@@ -10,12 +10,14 @@ namespace Perigon.Weapons
     {
         [SerializeField] private InputActionAsset _inputActions;
         private WeaponBehaviour[] _weaponBehaviours = null;
+        private MeleeWeaponBehaviour _meleeBehaviour = null;
         private Weapon[] _weapons = null;
         private int _currentWeaponIndex = 0;
 
         private InputAction _reloadInputAction = null;
         private InputAction _fireInputAction = null;
         private InputAction _swapWeaponInputAction = null;
+        private InputAction _meleeWeaponInputAction = null;
         private bool _isMouseScrollEnabled = true;
         
         public void Initialize()
@@ -28,6 +30,7 @@ namespace Perigon.Weapons
             _reloadInputAction?.Enable();
             _fireInputAction?.Enable();
             _swapWeaponInputAction?.Enable();
+            _meleeWeaponInputAction?.Enable();
             _isMouseScrollEnabled = true;
         }
         
@@ -36,6 +39,7 @@ namespace Perigon.Weapons
             _reloadInputAction?.Disable();
             _fireInputAction?.Disable();
             _swapWeaponInputAction?.Disable();
+            _meleeWeaponInputAction?.Disable();
             _isMouseScrollEnabled = false;
         }
 
@@ -50,6 +54,7 @@ namespace Perigon.Weapons
             }
 
             _weapons[_currentWeaponIndex].ActivateWeapon = true;
+            _meleeBehaviour.Initialize(_meleeWeaponInputAction);
         }
         
         private void SetupPlayerEquipmentInput()
@@ -57,6 +62,7 @@ namespace Perigon.Weapons
             _reloadInputAction = _inputActions.FindAction("Reload");
             _fireInputAction = _inputActions.FindAction("Fire");
             _swapWeaponInputAction = _inputActions.FindAction("WeaponSwap");
+            _meleeWeaponInputAction = _inputActions.FindAction("Melee");
         }
 
         private void ScrollSwapWeapons(bool isUpwards)
@@ -91,6 +97,7 @@ namespace Perigon.Weapons
             SetupPlayerEquipmentInput();
             _swapWeaponInputAction.started += OnControllerSwapWeaponAction;
             _weaponBehaviours = GetComponentsInChildren<WeaponBehaviour>();
+            _meleeBehaviour = GetComponentInChildren<MeleeWeaponBehaviour>();
             if (_weaponBehaviours.IsNullOrEmpty())
             {
                 PanicHelper.Panic(new Exception("There are currently no WeaponBehaviour within the child of EquipmentBehaviour"));
