@@ -11,15 +11,15 @@ Shader "Shapes/Line 2D Opaque" {
 	}
 	SubShader {
 		Tags {
-			"RenderPipeline" = "UniversalPipeline"
+			"RenderPipeline" = "HDRenderPipeline"
 			"IgnoreProjector" = "True"
 			"Queue" = "AlphaTest"
 			"RenderType" = "TransparentCutout"
 			"DisableBatching" = "True"
 		}
 		Pass {
-			Name "Pass"
-			Tags { "LightMode" = "UniversalForward" }
+			Name "ForwardOnly"
+			Tags { "LightMode" = "ForwardOnly" }
 			Stencil {
 				Comp [_StencilComp]
 				Pass [_StencilOpPass]
@@ -44,8 +44,8 @@ Shader "Shapes/Line 2D Opaque" {
 			ENDHLSL
 		}
 		Pass {
-			Name "DepthOnly"
-			Tags { "LightMode" = "DepthOnly" }
+			Name "DepthForwardOnly"
+			Tags { "LightMode" = "DepthForwardOnly" }
 			Stencil {
 				Comp [_StencilComp]
 				Pass [_StencilOpPass]

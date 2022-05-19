@@ -1,7 +1,7 @@
 name: Run code coverage
 
-on: 
-  pull_request: 
+on:
+  pull_request:
     types: [opened]
   workflow_dispatch: {}
 
@@ -26,11 +26,11 @@ jobs:
           key: Library
 
       - name: Run tests and generate Coverage XML report
-        uses: game-ci/unity-test-runner@v2
+        uses: game-ci/unity-test-runner@v2 
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
-          unityVersion: 2020.3.23f1
+          unityVersion: 2021.3.0f1
           testMode: playmode
           customParameters: -debugCodeOptimization -enableCodeCoverage -coverageResultsPath ./coverage-results -coverageOptions "generateAdditionalMetrics;pathFilters:+**/Assets/_BForBoss/**"
       - name: Upload XML report to Codecov
