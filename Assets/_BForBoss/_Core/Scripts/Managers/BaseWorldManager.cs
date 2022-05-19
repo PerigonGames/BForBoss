@@ -69,7 +69,7 @@ namespace BForBoss
                 PanicHelper.Panic(new Exception("PauseMenu is missing from World Manager"));
             }
         }
-
+        
         private void HandleStateChange(State newState)
         {
             switch (newState)
