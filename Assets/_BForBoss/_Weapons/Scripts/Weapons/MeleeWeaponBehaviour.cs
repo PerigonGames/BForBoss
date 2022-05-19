@@ -71,7 +71,7 @@ namespace Perigon.Weapons
             }
         }
 
-        private void OnDrawGizmos()
+        private void OnDrawGizmosSelected()
         {
             if (_meleeScriptable != null)
             {
