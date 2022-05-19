@@ -30,23 +30,41 @@ namespace Perigon.Weapons
                 _currentCooldown = 0;
         }
 
-        public void AttackIfPossible(Vector3 playerPosition, Vector3 playerForwardDirection)
+        public void AttackManyIfPossible(Vector3 playerPosition, Vector3 playerForwardDirection)
         {
             if (!CanMelee)
                 return;
-            var hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, ref _enemyBuffer);
-
             _currentCooldown += _meleeProperties.AttackCoolDown;
+            
+            var hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, ref _enemyBuffer);
             if (hits <= 0) 
                 return;
             
             for(int i = 0; i < hits; i++)
             {
-                if(_enemyBuffer[i].TryGetComponent(out LifeCycleBehaviour lifeCycle))
-                {
-                    lifeCycle.Damage(_meleeProperties.Damage);
-                    _onHitEntity?.Invoke(!lifeCycle.IsAlive);
-                }
+                DamageEnemy(_enemyBuffer[i]);
+            }
+        }
+        
+        public void AttackOneIfPossible(Vector3 playerPosition, Vector3 playerForwardDirection)
+        {
+            if (!CanMelee)
+                return;
+            _currentCooldown += _meleeProperties.AttackCoolDown;
+            
+            var hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, ref _enemyBuffer);
+            if (hits <= 0) 
+                return;
+            
+            DamageEnemy(_enemyBuffer[0]);
+        }
+
+        private void DamageEnemy(Collider enemyCollider)
+        {
+            if(enemyCollider.TryGetComponent(out LifeCycleBehaviour lifeCycle))
+            {
+                lifeCycle.Damage(_meleeProperties.Damage);
+                _onHitEntity?.Invoke(!lifeCycle.IsAlive);
             }
         }
     }

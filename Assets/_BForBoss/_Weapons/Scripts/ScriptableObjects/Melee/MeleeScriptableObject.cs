@@ -30,15 +30,7 @@ namespace Perigon.Weapons
             point1 += forwardDirection * 0.5f * Range;
             var point2 = point1;
             point1.y += Height;
-            return Physics.OverlapCapsuleNonAlloc(point1, point2, Range, buffer);
-        }
-
-        public Vector3 GetColliderCenter(Vector3 position, Vector3 forwardDirection)
-        {
-            var center = position;
-            center += forwardDirection * Range * 0.5f;
-            center.y += Height * 0.5f;
-            return center;
+            return Physics.OverlapCapsuleNonAlloc(point1, point2, Range * 0.5f, buffer);
         }
     }
 }

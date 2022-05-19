@@ -11,6 +11,8 @@ namespace Perigon.Weapons
         [SerializeField] private MeleeScriptableObject _meleeScriptable;
         [SerializeField] private Transform _playerTransform;
 
+        [SerializeField] private bool _attackMany = true;
+
         private MeleeWeapon _weapon;
         private InputAction _meleeActionInputAction;
 
@@ -26,7 +28,10 @@ namespace Perigon.Weapons
             if (context.performed)
             {
                 var t = _playerTransform ? _playerTransform : transform;
-                _weapon.AttackIfPossible(t.position, t.forward);
+                if(_attackMany)
+                    _weapon.AttackManyIfPossible(t.position, t.forward);
+                else
+                    _weapon.AttackOneIfPossible(t.position, t.forward);
             }
         }
 
@@ -63,6 +68,24 @@ namespace Perigon.Weapons
             {
                 _meleeActionInputAction.performed -= OnMeleeInputAction;
                 _meleeActionInputAction.canceled -= OnMeleeInputAction;
+            }
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (_meleeScriptable != null)
+            {
+                var t = _playerTransform ? _playerTransform : transform;
+                Gizmos.color = Color.blue;
+                Gizmos.matrix = t.localToWorldMatrix;
+                var center = Vector3.zero;
+                var radius = _meleeScriptable.Range * 0.5f;
+                center.y += radius;
+                center.z += radius;
+                Gizmos.DrawWireSphere(center, radius);
+                center.y -= 2 * radius;
+                center.y += _meleeScriptable.Height;
+                Gizmos.DrawWireSphere(center, radius);
             }
         }
     }
