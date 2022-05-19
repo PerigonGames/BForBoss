@@ -26,7 +26,7 @@ namespace Perigon.Weapons
             if (context.performed)
             {
                 var t = _playerTransform ? _playerTransform : transform;
-                _weapon.AttackIfPossible(t.position, t.rotation);
+                _weapon.AttackIfPossible(t.position, t.forward);
             }
         }
 
@@ -35,7 +35,15 @@ namespace Perigon.Weapons
             _meleeActionInputAction.performed += OnMeleeInputAction;
             _meleeActionInputAction.canceled += OnMeleeInputAction;
         }
-        
+
+        private void Awake()
+        {
+            if (_playerTransform == null)
+            {
+                Debug.LogWarning("Player transform is not set on melee weapon, melee attacks may not work as expected");
+            }
+        }
+
         private void Update()
         {
             _weapon.DecrementCooldown(Time.deltaTime);
@@ -55,19 +63,6 @@ namespace Perigon.Weapons
             {
                 _meleeActionInputAction.performed -= OnMeleeInputAction;
                 _meleeActionInputAction.canceled -= OnMeleeInputAction;
-            }
-        }
-
-        private void OnDrawGizmos()
-        {
-            if (_meleeScriptable != null)
-            {
-                var t = _playerTransform ? _playerTransform : transform;
-                Gizmos.color = Color.blue;
-                var center = _meleeScriptable.GetColliderCenter(t.localPosition);
-                var size = _meleeScriptable.HalfExtents * 2;
-                Gizmos.matrix = t.localToWorldMatrix;
-                Gizmos.DrawWireCube(center, size);
             }
         }
     }

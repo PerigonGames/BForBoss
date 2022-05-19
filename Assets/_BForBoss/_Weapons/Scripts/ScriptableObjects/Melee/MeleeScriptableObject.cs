@@ -9,7 +9,7 @@ namespace Perigon.Weapons
         float Damage { get; }
         float AttackCoolDown { get; }
 
-        int OverlapCube(Vector3 position, Quaternion rotation, Collider[] buffer);
+        int OverlapCapsule(Vector3 position, Vector3 forwardDirection, ref Collider[] buffer);
     }
     
     [CreateAssetMenu(fileName = "MeleeProperties", menuName = "PerigonGames/Melee", order = 1)]
@@ -19,24 +19,25 @@ namespace Perigon.Weapons
         [SerializeField] private float _coolDown = 0.5f;
         
         [field: SerializeField] public float Range { get; set; } = 1f;
-        [field: SerializeField] public float Height { get; set; } = 1f;
-        [field: SerializeField] public float Width { get; set; } = 1f;
-        
+        [field: SerializeField] public float Height { get; set; } = 2f;
+
         public float Damage => _damage;
         public float AttackCoolDown => _coolDown;
 
-        public Vector3 HalfExtents => new Vector3(Width, Height, Range) * 0.5f;
-
-        public int OverlapCube(Vector3 position, Quaternion rotation, Collider[] buffer)
+        public int OverlapCapsule(Vector3 position, Vector3 forwardDirection, ref Collider[] buffer)
         {
-            return Physics.OverlapBoxNonAlloc(GetColliderCenter(position), HalfExtents, buffer, rotation);
+            var point1 = position;
+            point1 += forwardDirection * 0.5f * Range;
+            var point2 = point1;
+            point1.y += Height;
+            return Physics.OverlapCapsuleNonAlloc(point1, point2, Range, buffer);
         }
 
-        public Vector3 GetColliderCenter(Vector3 position)
+        public Vector3 GetColliderCenter(Vector3 position, Vector3 forwardDirection)
         {
             var center = position;
+            center += forwardDirection * Range * 0.5f;
             center.y += Height * 0.5f;
-            center.z += Range * 0.5f;
             return center;
         }
     }

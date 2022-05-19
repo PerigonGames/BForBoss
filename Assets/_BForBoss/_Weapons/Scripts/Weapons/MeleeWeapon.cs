@@ -15,7 +15,7 @@ namespace Perigon.Weapons
         private Collider[] _enemyBuffer = new Collider[BUFFER_SIZE];
         private float _currentCooldown = 0f;
         private Action<bool> _onHitEntity;
-        public bool CanMelee => _currentCooldown == 0f;
+        public bool CanMelee => _currentCooldown <= 0f;
         
         public MeleeWeapon(IMeleeProperties meleeProperties, Action<bool> onHitEntity = null)
         {
@@ -30,15 +30,15 @@ namespace Perigon.Weapons
                 _currentCooldown = 0;
         }
 
-        public bool AttackIfPossible(Vector3 playerPosition, Quaternion playerRotation)
+        public void AttackIfPossible(Vector3 playerPosition, Vector3 playerForwardDirection)
         {
             if (!CanMelee)
-                return false;
-            var hits = _meleeProperties.OverlapCube(playerPosition, playerRotation, _enemyBuffer);
+                return;
+            var hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, ref _enemyBuffer);
 
             _currentCooldown += _meleeProperties.AttackCoolDown;
             if (hits <= 0) 
-                return true;
+                return;
             
             for(int i = 0; i < hits; i++)
             {
@@ -48,8 +48,6 @@ namespace Perigon.Weapons
                     _onHitEntity?.Invoke(!lifeCycle.IsAlive);
                 }
             }
-
-            return true;
         }
     }
 }
