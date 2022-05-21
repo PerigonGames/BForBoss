@@ -28,6 +28,7 @@ namespace Perigon.Weapons
 
         private Camera _mainCamera = null;
         protected BulletSpawner _bulletSpawner;
+        protected WallHitVFXSpawner _wallHitVFXSpawner;
 
         public Weapon WeaponViewModel => _weapon;
 
@@ -104,8 +105,6 @@ namespace Perigon.Weapons
         {
             _weapon.ReloadWeaponIfPossible();
         }
-
-
         
         protected Vector3 GetDirectionOfShot()
         {
@@ -140,6 +139,7 @@ namespace Perigon.Weapons
         private void Awake()
         {
             _bulletSpawner = GetComponent<BulletSpawner>();
+            _wallHitVFXSpawner = GetComponent<WallHitVFXSpawner>();
             if (_muzzleFlash == null)
             {
                 Debug.LogWarning("Missing VFX Visual Effect from this weapon");

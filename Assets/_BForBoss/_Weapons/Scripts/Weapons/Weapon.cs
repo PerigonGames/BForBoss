@@ -35,6 +35,7 @@ namespace Perigon.Weapons
          public float ElapsedReloadDuration => _elapsedReloadDuration;
          public string NameOfWeapon => _weaponProperties.NameOfWeapon;
          public bool IsRayCastingWeapon => _weaponProperties.IsRayCastingWeapon;
+         public float DamagePerRayCast => IsRayCastingWeapon ? _weaponProperties.DamagePerRayCast : 0;
          public BulletTypes TypeOfBullet => _weaponProperties.TypeOfBullet;
          public Sprite Crosshair => _weaponProperties.Crosshair;
          public float VisualRecoilForce => _weaponProperties.VisualRecoilForce;
@@ -143,6 +144,11 @@ namespace Perigon.Weapons
          private void ResetRateOfFire()
          {
              _elapsedRateOfFire = _weaponProperties.RateOfFire;
+         }
+
+         public float GenerateRayCastAngle()
+         {
+             return RandomDoubleIncludingNegative();
          }
     }
 }

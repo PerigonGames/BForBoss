@@ -17,7 +17,7 @@ namespace Perigon.Weapons
         private InputAction _fireInputAction = null;
         private InputAction _swapWeaponInputAction = null;
         private bool _isMouseScrollEnabled = true;
-        
+
         public void Initialize()
         {
             EnableEquipmentPlayerInput();

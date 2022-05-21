@@ -77,7 +77,10 @@ namespace Perigon.Weapons
                 () =>
                 {
                     var vfx = Instantiate(_wallHitVFXPrefab);
-                    vfx.Initialize(_wallHitVFXObjectPool);
+                    vfx.Initialize(() =>
+                    { 
+                        _wallHitVFXObjectPool.Reclaim(vfx);
+                    });
                     return vfx;
                 },
                 (vfx) => vfx.gameObject.SetActive(true),
