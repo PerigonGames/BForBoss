@@ -14,7 +14,9 @@ namespace Perigon.Weapons
         private float _currentCooldown = 0f;
         private Action<bool> _onHitEntity;
         public bool CanMelee => _currentCooldown <= 0f;
-        
+
+        public float CurrentCooldown => _currentCooldown;
+
         public MeleeWeapon(IMeleeProperties meleeProperties, Action<bool> onHitEntity = null)
         {
             _meleeProperties = meleeProperties;

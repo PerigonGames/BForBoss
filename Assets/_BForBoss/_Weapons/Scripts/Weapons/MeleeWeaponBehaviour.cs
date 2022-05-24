@@ -3,7 +3,15 @@ using UnityEngine.InputSystem;
 
 namespace Perigon.Weapons
 {
-    public class MeleeWeaponBehaviour : MonoBehaviour
+    
+    public interface IMeleeWeapon
+    {
+        float CurrentCooldown { get; }
+        float MaxCooldown { get; }
+        bool CanMelee { get; }
+    }
+    
+    public class MeleeWeaponBehaviour : MonoBehaviour, IMeleeWeapon
     {
         [SerializeField] private MeleeScriptableObject _meleeScriptable;
         [SerializeField] private Transform _playerTransform;
@@ -12,6 +20,10 @@ namespace Perigon.Weapons
 
         private MeleeWeapon _weapon;
         private InputAction _meleeActionInputAction;
+
+        public float CurrentCooldown => _weapon?.CurrentCooldown ?? 0f;
+        public float MaxCooldown => _meleeScriptable != null ? _meleeScriptable.AttackCoolDown : 1f;
+        public bool CanMelee => _weapon?.CanMelee ?? false;
 
         public void Initialize(InputAction meleeAttackAction, IMeleeProperties properties = null)
         {
