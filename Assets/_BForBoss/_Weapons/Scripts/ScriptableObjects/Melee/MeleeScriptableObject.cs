@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Perigon.Weapons
@@ -24,13 +22,15 @@ namespace Perigon.Weapons
         public float Damage => _damage;
         public float AttackCoolDown => _coolDown;
 
+        public float HalfRange => Range * 0.5f;
+
         public int OverlapCapsule(Vector3 position, Vector3 forwardDirection, ref Collider[] buffer)
         {
             var point1 = position;
-            point1 += forwardDirection * 0.5f * Range;
+            point1 += forwardDirection * HalfRange;
             var point2 = point1;
             point1.y += Height;
-            return Physics.OverlapCapsuleNonAlloc(point1, point2, Range * 0.5f, buffer);
+            return Physics.OverlapCapsuleNonAlloc(point1, point2, HalfRange, buffer);
         }
     }
 }

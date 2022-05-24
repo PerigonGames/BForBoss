@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,7 +8,7 @@ namespace Perigon.Weapons
         [SerializeField] private MeleeScriptableObject _meleeScriptable;
         [SerializeField] private Transform _playerTransform;
 
-        [SerializeField] private bool _attackMany = true;
+        [SerializeField] private bool _canAttackMany = true;
 
         private MeleeWeapon _weapon;
         private InputAction _meleeActionInputAction;
@@ -28,7 +25,7 @@ namespace Perigon.Weapons
             if (context.performed)
             {
                 var t = _playerTransform ? _playerTransform : transform;
-                if(_attackMany)
+                if(_canAttackMany)
                     _weapon.AttackManyIfPossible(t.position, t.forward);
                 else
                     _weapon.AttackOneIfPossible(t.position, t.forward);
@@ -79,7 +76,7 @@ namespace Perigon.Weapons
                 Gizmos.color = Color.blue;
                 Gizmos.matrix = t.localToWorldMatrix;
                 var center = Vector3.zero;
-                var radius = _meleeScriptable.Range * 0.5f;
+                var radius = _meleeScriptable.HalfRange;
                 center.y += radius;
                 center.z += radius;
                 Gizmos.DrawWireSphere(center, radius);

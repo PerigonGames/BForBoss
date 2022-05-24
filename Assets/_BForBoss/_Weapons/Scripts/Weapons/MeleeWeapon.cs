@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Perigon.Entities;
 using UnityEngine;
 
@@ -24,10 +22,7 @@ namespace Perigon.Weapons
 
         public void DecrementCooldown(float deltaTime)
         {
-            if (_currentCooldown > 0)
-                _currentCooldown -= deltaTime;
-            else if (_currentCooldown < 0)
-                _currentCooldown = 0;
+            _currentCooldown -= _currentCooldown > 0 ? deltaTime : _currentCooldown;
         }
 
         public void AttackManyIfPossible(Vector3 playerPosition, Vector3 playerForwardDirection)
