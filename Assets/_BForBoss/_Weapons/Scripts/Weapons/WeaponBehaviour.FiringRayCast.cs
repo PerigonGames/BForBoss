@@ -14,7 +14,7 @@ namespace Perigon.Weapons
             //TODO - origin -> direction -> random direction
             for (int i = 0; i < numberOfBullets; i++)
             {
-                
+
                 var forward = new Vector3(_weapon.GenerateRayCastAngle()/10, _weapon.GenerateRayCastAngle()/10, 1);
                 if (Physics.Raycast(camOrigin, MainCamera.transform.TransformDirection(forward), out var hit, Mathf.Infinity, ~TagsAndLayers.Layers.TriggerArea))
                 {

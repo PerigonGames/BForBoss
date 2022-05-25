@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Perigon.Weapons
 {
     public class Weapon
-    { 
+    {
         private const float MIN_TO_MAX_RANGE_OF_SPREAD = 2;
          private readonly IRandomUtility _randomUtility;
          private readonly IWeaponProperties _weaponProperties;
@@ -14,7 +14,7 @@ namespace Perigon.Weapons
          private float _elapsedRateOfFire;
          private float _elapsedReloadDuration;
          private int _ammunitionAmount;
-         
+
          public bool IsReloading { get; set; }
 
          public bool ActivateWeapon
@@ -25,10 +25,10 @@ namespace Perigon.Weapons
                  OnSetWeaponActivate?.Invoke(value);
              }
          }
-         
+
          public event Action<int> OnFireWeapon;
          public event Action<bool> OnSetWeaponActivate;
-         
+
          public int AmmunitionAmount => _ammunitionAmount;
          public int MaxAmmunitionAmount => _weaponProperties.AmmunitionAmount;
          public float MaxReloadDuration => _weaponProperties.ReloadDuration;
@@ -41,7 +41,7 @@ namespace Perigon.Weapons
          public float VisualRecoilForce => _weaponProperties.VisualRecoilForce;
          public EventReference ShotAudio => _weaponProperties.WeaponShotAudio;
          private bool CanShoot => _elapsedRateOfFire <= 0 && _ammunitionAmount > 0;
-         
+
          public Weapon(IWeaponProperties weaponProperties, IRandomUtility randomUtility = null)
          {
              _weaponProperties = weaponProperties;
@@ -61,12 +61,12 @@ namespace Perigon.Weapons
              {
                  IsReloading = true;
              }
-             
+
              if (IsReloading)
              {
                  _elapsedReloadDuration -= deltaTime;
              }
-             
+
              if (_elapsedReloadDuration <= 0)
              {
                  ResetWeaponState();
@@ -80,7 +80,7 @@ namespace Perigon.Weapons
                  IsReloading = true;
              }
          }
-         
+
          public Vector3 GetShootDirection(Vector3 from, Vector3 to, float timeSinceFiring)
          {
              var directionWithoutSpread = to - from;
@@ -88,14 +88,14 @@ namespace Perigon.Weapons
              var directionWithSpread = GenerateSpreadAngle(spread) * directionWithoutSpread;
              return directionWithSpread.normalized;
          }
-         
+
          public void FireIfPossible()
          {
              if (!CanShoot)
              {
                  return;
              }
-             
+
              StopReloading();
              _ammunitionAmount--;
              ResetRateOfFire();
@@ -115,32 +115,32 @@ namespace Perigon.Weapons
          }
 
          private void Fire()
-         { 
+         {
              OnFireWeapon?.Invoke(_weaponProperties.BulletsPerShot);
          }
-         
+
          private Quaternion GenerateSpreadAngle(float spread)
          {
              var spreadRange = spread * MIN_TO_MAX_RANGE_OF_SPREAD;
              var randomizedSpread = -spread + (float)_randomUtility.NextDouble() * spreadRange;
              var randomizedDirection = new Vector3(
-                 RandomDoubleIncludingNegative(), 
-                 RandomDoubleIncludingNegative(), 
+                 RandomDoubleIncludingNegative(),
+                 RandomDoubleIncludingNegative(),
                  RandomDoubleIncludingNegative());
              return Quaternion.AngleAxis(randomizedSpread, randomizedDirection);
          }
-         
+
          private float GenerateSpread(float timeSinceFiring)
          {
              float spreadRate = _weaponProperties.GetBulletSpreadRate(timeSinceFiring);
              return _weaponProperties.BulletSpread * spreadRate;
          }
-         
+
          private float RandomDoubleIncludingNegative()
          {
              return (float) _randomUtility.NextDouble() * (_randomUtility.CoinFlip() ? 1 : -1);
          }
-         
+
          private void ResetRateOfFire()
          {
              _elapsedRateOfFire = _weaponProperties.RateOfFire;

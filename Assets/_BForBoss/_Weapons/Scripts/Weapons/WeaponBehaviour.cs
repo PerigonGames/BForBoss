@@ -11,18 +11,18 @@ namespace Perigon.Weapons
     {
         private const float RAYCAST_DISTANCE_LIMIT = 50f;
         protected readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
-        
+
         [SerializeField] protected Transform _firePoint = null;
         [SerializeField] protected CrosshairBehaviour _crosshair = null;
         [SerializeField] private VisualEffect _muzzleFlash = null;
-        [InlineEditor] 
+        [InlineEditor]
         [SerializeField]
         private WeaponScriptableObject _weaponScriptableObject = null;
-        
+
         protected Weapon _weapon = null;
         protected bool _isFiring = false;
         protected float _timeSinceFire = 0f;
-        
+
         private InputAction _fireInputAction = null;
         private InputAction _reloadInputAction = null;
 
@@ -75,20 +75,20 @@ namespace Perigon.Weapons
                 _crosshair.SetCrosshairImage(_weapon.Crosshair);
             }
         }
-        
+
         protected abstract void OnFireInputAction(InputAction.CallbackContext context);
         protected abstract void Update();
 
         private void HandleOnFire(int numberOfBullets)
         {
             FireBullets(numberOfBullets);
-            
+
             if (_muzzleFlash != null)
             {
                 _muzzleFlash.Play();
             }
         }
-        
+
         private void FireBullets(int numberOfBullets)
         {
             if (_weapon.IsRayCastingWeapon)
@@ -105,7 +105,7 @@ namespace Perigon.Weapons
         {
             _weapon.ReloadWeaponIfPossible();
         }
-        
+
         protected Vector3 GetDirectionOfShot()
         {
             var camRay = MainCamera.ViewportPointToRay(CenterOfCameraPosition);
@@ -121,7 +121,7 @@ namespace Perigon.Weapons
 
             return _weapon.GetShootDirection(_firePoint.position, targetPoint, _timeSinceFire);
         }
-        
+
         private void SetupPlayerInput()
         {
             if (_fireInputAction != null)
@@ -135,7 +135,7 @@ namespace Perigon.Weapons
                 _reloadInputAction.started += OnReloadInputAction;
             }
         }
-        
+
         private void Awake()
         {
             _bulletSpawner = GetComponent<BulletSpawner>();
@@ -143,7 +143,7 @@ namespace Perigon.Weapons
             if (_muzzleFlash == null)
             {
                 Debug.LogWarning("Missing VFX Visual Effect from this weapon");
-            } 
+            }
         }
 
         private void OnEnable()
