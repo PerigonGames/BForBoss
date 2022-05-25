@@ -7,16 +7,18 @@ using UnityEngine.VFX;
 namespace Perigon.Weapons
 {
     [RequireComponent(typeof(BulletSpawner))]
-    public abstract class WeaponBehaviour : MonoBehaviour
+    public abstract partial class WeaponBehaviour : MonoBehaviour
     {
         private const float RAYCAST_DISTANCE_LIMIT = 50f;
-        private readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
+        protected readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
+        
         [SerializeField] protected Transform _firePoint = null;
-        [SerializeField] private CrosshairBehaviour _crosshair = null;
+        [SerializeField] protected CrosshairBehaviour _crosshair = null;
         [SerializeField] private VisualEffect _muzzleFlash = null;
-        [InlineEditor]
-        [SerializeField] private WeaponScriptableObject _weaponScriptableObject;
-
+        [InlineEditor] 
+        [SerializeField]
+        private WeaponScriptableObject _weaponScriptableObject = null;
+        
         protected Weapon _weapon = null;
         protected bool _isFiring = false;
         protected float _timeSinceFire = 0f;
@@ -25,11 +27,11 @@ namespace Perigon.Weapons
         private InputAction _reloadInputAction = null;
 
         private Camera _mainCamera = null;
-        private BulletSpawner _bulletSpawner;
+        protected BulletSpawner _bulletSpawner;
 
         public Weapon WeaponViewModel => _weapon;
 
-        private Camera MainCamera
+        protected Camera MainCamera
         {
             get
             {
@@ -65,48 +67,47 @@ namespace Perigon.Weapons
             _weapon.OnSetWeaponActivate += HandleOnWeaponActivate;
         }
 
+        private void SetCrosshairImage()
+        {
+            if (_weapon != null)
+            {
+                _crosshair.SetCrosshairImage(_weapon.Crosshair);
+            }
+        }
+        
         protected abstract void OnFireInputAction(InputAction.CallbackContext context);
-
         protected abstract void Update();
+
+        private void HandleOnFire(int numberOfBullets)
+        {
+            FireBullets(numberOfBullets);
+            
+            if (_muzzleFlash != null)
+            {
+                _muzzleFlash.Play();
+            }
+        }
+        
+        private void FireBullets(int numberOfBullets)
+        {
+            if (_weapon.IsRayCastingWeapon)
+            {
+                FireRayCastBullets(numberOfBullets);
+            }
+            else
+            {
+                FireProjectiles(numberOfBullets);
+            }
+        }
 
         private void OnReloadInputAction(InputAction.CallbackContext context)
         {
             _weapon.ReloadWeaponIfPossible();
         }
 
-        private void HandleOnFire(int numberOfBullets)
-        {
-            for (int i = 0; i < numberOfBullets; i++)
-            {
-                var bullet = _bulletSpawner
-                    .SpawnBullet(_weaponScriptableObject.TypeOfBullet);
-                bullet.SetSpawnAndDirection(_firePoint.position, GetDirectionOfShot());
-                bullet.OnBulletHitEntity += HandleOnBulletHitEntity;
-                bullet.OnBulletDeactivate += HandleOnBulletDeactivate;
-            }
 
-            if (_muzzleFlash != null)
-            {
-                _muzzleFlash.Play();    
-            }
-            
-            
-        }
-
-        private void HandleOnBulletHitEntity(IBullet bullet, bool isDead)
-        {
-            _crosshair.ActivateHitMarker(isDead);
-            bullet.OnBulletHitEntity -= HandleOnBulletHitEntity;
-            bullet.OnBulletDeactivate -= HandleOnBulletDeactivate;
-        }
-
-        private void HandleOnBulletDeactivate(IBullet bullet)
-        {
-            bullet.OnBulletHitEntity -= HandleOnBulletHitEntity;
-            bullet.OnBulletDeactivate -= HandleOnBulletDeactivate;
-        }
-
-        private Vector3 GetDirectionOfShot()
+        
+        protected Vector3 GetDirectionOfShot()
         {
             var camRay = MainCamera.ViewportPointToRay(CenterOfCameraPosition);
             Vector3 targetPoint;
@@ -135,15 +136,7 @@ namespace Perigon.Weapons
                 _reloadInputAction.started += OnReloadInputAction;
             }
         }
-
-        private void SetCrosshairImage()
-        {
-            if (_weapon != null)
-            {
-                _crosshair.SetCrosshairImage(_weapon.Crosshair);
-            }
-        }
-
+        
         private void Awake()
         {
             _bulletSpawner = GetComponent<BulletSpawner>();

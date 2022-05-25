@@ -33,8 +33,10 @@ namespace Perigon.Weapons
          public int MaxAmmunitionAmount => _weaponProperties.AmmunitionAmount;
          public float MaxReloadDuration => _weaponProperties.ReloadDuration;
          public float ElapsedReloadDuration => _elapsedReloadDuration;
-         public string NameOfWeapon => _weaponProperties?.NameOfWeapon;
-         public Sprite Crosshair => _weaponProperties?.Crosshair;
+         public string NameOfWeapon => _weaponProperties.NameOfWeapon;
+         public bool IsRayCastingWeapon => _weaponProperties.IsRayCastingWeapon;
+         public BulletTypes TypeOfBullet => _weaponProperties.TypeOfBullet;
+         public Sprite Crosshair => _weaponProperties.Crosshair;
          public float VisualRecoilForce => _weaponProperties.VisualRecoilForce;
          public EventReference ShotAudio => _weaponProperties.WeaponShotAudio;
          private bool CanShoot => _elapsedRateOfFire <= 0 && _ammunitionAmount > 0;
