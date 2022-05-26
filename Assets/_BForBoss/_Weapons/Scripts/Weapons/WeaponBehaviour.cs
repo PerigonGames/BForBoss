@@ -1,3 +1,5 @@
+using System;
+using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -135,6 +137,16 @@ namespace Perigon.Weapons
             if (_muzzleFlash == null)
             {
                 Debug.LogWarning("Missing VFX Visual Effect from this weapon");
+            }
+            
+            if (_bulletSpawner == null)
+            {
+                PanicHelper.Panic(new Exception("Bullet Spawner missing from Equipment > Weapons Object"));
+            }
+
+            if (_wallHitVFXSpawner == null)
+            {
+                Debug.LogWarning("Wall Hit VFX Spawner missing from Equipment > Weapons object");
             }
         }
 
