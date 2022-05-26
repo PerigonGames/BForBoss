@@ -13,13 +13,15 @@ namespace Perigon.Weapons
         float ReloadDuration { get; }
         int BulletsPerShot { get; }
         int AmmunitionAmount { get; }
+        bool IsRayCastingWeapon { get; }
+        float DamagePerRayCast { get; }
+        BulletTypes TypeOfBullet { get; }
         float VisualRecoilForce { get; }
         EventReference WeaponShotAudio { get; } 
-        BulletTypes TypeOfBullet { get; }
         float GetBulletSpreadRate(float timeSinceFiring);
     }
-
-    [CreateAssetMenu(fileName = "WeaponProperties", menuName = "PerigonGames/Weapon", order = 1)]
+    
+    [CreateAssetMenu(fileName = "Weapon", menuName = "PerigonGames/Weapon", order = 2)]
     public class WeaponScriptableObject : ScriptableObject, IWeaponProperties
     {
         [SerializeField] private string _nameOfWeapon = "";
@@ -31,24 +33,32 @@ namespace Perigon.Weapons
         [SerializeField] private int _bulletsPerShot = 1;
         [SerializeField] 
         [Range(1, 1000)] private int _ammunitionAmount = 20;
+        [Title("Weapon Shoot Style")]
+        [SerializeField] private bool _isRaycastWeapon = true;
+
+        [ShowIf("_isRaycastWeapon")] 
+        [SerializeField] private float _damagePerRayCast = 1;
+        [HideIf("_isRaycastWeapon")]
         [SerializeField] private BulletTypes _typeOfBullet = BulletTypes.NoPhysics;
         [Title("Effects")] 
         [SerializeField] private EventReference _weaponShotAudio = new EventReference();
         [PreviewField]
         [SerializeField] private Sprite _crosshair = null;
-
         [SerializeField] private float _visualRecoil = 0.5f;
+        
         public string NameOfWeapon => _nameOfWeapon;
         public float RateOfFire => _rateOfFire;
         public float BulletSpread => _bulletSpread;
         public float ReloadDuration => _reloadDuration;
         public int BulletsPerShot => _bulletsPerShot;
         public int AmmunitionAmount => _ammunitionAmount;
+        public bool IsRayCastingWeapon => _isRaycastWeapon;
+        public float DamagePerRayCast => _damagePerRayCast;
+        public BulletTypes TypeOfBullet => _typeOfBullet;
         public float VisualRecoilForce => _visualRecoil;
         public EventReference WeaponShotAudio => _weaponShotAudio;
         public Sprite Crosshair => _crosshair;
-        public BulletTypes TypeOfBullet => _typeOfBullet;
-
+        
         public float GetBulletSpreadRate(float timeSinceFiring)
         {
             float clampedTimeSinceFiring = Mathf.Clamp(timeSinceFiring, 0, 1);
