@@ -17,6 +17,7 @@ namespace Perigon.Weapons
         private InputAction _fireInputAction = null;
         private InputAction _swapWeaponInputAction = null;
         private bool _isMouseScrollEnabled = true;
+        protected WallHitVFXSpawner _wallHitVFXSpawner;
 
         public void Initialize()
         {

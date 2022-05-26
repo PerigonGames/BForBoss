@@ -8,6 +8,7 @@ namespace Perigon.Weapons
     public class Weapon
     {
         private const float MIN_TO_MAX_RANGE_OF_SPREAD = 2;
+        private const float MAP_TO_RAYCAST_RANGE_SPREAD = 0.1F;
          private readonly IRandomUtility _randomUtility;
          private readonly IWeaponProperties _weaponProperties;
 
@@ -89,6 +90,13 @@ namespace Perigon.Weapons
              return directionWithSpread.normalized;
          }
 
+         public Vector3 GetShootDirection()
+         {
+             var xPosition = RandomDoubleIncludingNegative() * MAP_TO_RAYCAST_RANGE_SPREAD * _weaponProperties.BulletSpread;
+             var yPosition = RandomDoubleIncludingNegative() * MAP_TO_RAYCAST_RANGE_SPREAD * _weaponProperties.BulletSpread;
+             return new Vector3(xPosition, yPosition, 1);
+         }
+
          public void FireIfPossible()
          {
              if (!CanShoot)
@@ -144,11 +152,6 @@ namespace Perigon.Weapons
          private void ResetRateOfFire()
          {
              _elapsedRateOfFire = _weaponProperties.RateOfFire;
-         }
-
-         public float GenerateRayCastAngle()
-         {
-             return RandomDoubleIncludingNegative();
          }
     }
 }
