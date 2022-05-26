@@ -1,3 +1,5 @@
+using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,6 +15,7 @@ namespace Perigon.Weapons
     
     public class MeleeWeaponBehaviour : MonoBehaviour, IMeleeWeapon
     {
+        [InlineEditor]
         [SerializeField] private MeleeScriptableObject _meleeScriptable;
         [SerializeField] private Transform _playerTransform;
 
@@ -20,14 +23,16 @@ namespace Perigon.Weapons
 
         private MeleeWeapon _weapon;
         private InputAction _meleeActionInputAction;
+        private Func<Transform> _getTransform;
 
         public float CurrentCooldown => _weapon?.CurrentCooldown ?? 0f;
         public float MaxCooldown => _meleeScriptable != null ? _meleeScriptable.AttackCoolDown : 1f;
         public bool CanMelee => _weapon?.CanMelee ?? false;
 
-        public void Initialize(InputAction meleeAttackAction, IMeleeProperties properties = null)
+        public void Initialize(InputAction meleeAttackAction, Func<Transform> getTransform, IMeleeProperties properties = null)
         {
             _meleeActionInputAction = meleeAttackAction;
+            _getTransform = getTransform;
             _weapon = new MeleeWeapon(properties ?? _meleeScriptable);
             BindActions();
         }
@@ -36,7 +41,7 @@ namespace Perigon.Weapons
         {
             if (context.performed)
             {
-                var t = _playerTransform ? _playerTransform : transform;
+                var t = _playerTransform ? _playerTransform : _getTransform();
                 if(_canAttackMany)
                     _weapon.AttackManyIfPossible(t.position, t.forward);
                 else
@@ -54,7 +59,7 @@ namespace Perigon.Weapons
         {
             if (_playerTransform == null)
             {
-                Debug.LogWarning("Player transform is not set on melee weapon, melee attacks may not work as expected");
+                Debug.LogWarning("Player transform is not set on melee weapon, gizmos will not be drawn");
             }
         }
 
@@ -82,9 +87,9 @@ namespace Perigon.Weapons
 
         private void OnDrawGizmosSelected()
         {
-            if (_meleeScriptable != null)
+            if (_meleeScriptable != null && _playerTransform != null)
             {
-                var t = _playerTransform ? _playerTransform : transform;
+                var t = _playerTransform;
                 Gizmos.color = Color.blue;
                 Gizmos.matrix = t.localToWorldMatrix;
                 var center = Vector3.zero;

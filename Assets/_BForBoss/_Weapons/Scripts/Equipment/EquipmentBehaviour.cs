@@ -9,6 +9,7 @@ namespace Perigon.Weapons
     public partial class EquipmentBehaviour : MonoBehaviour
     {
         [SerializeField] private InputActionAsset _inputActions;
+        [SerializeField] private Transform _playerPivotTransform;
         private WeaponBehaviour[] _weaponBehaviours = null;
         private MeleeWeaponBehaviour _meleeBehaviour = null;
         private Weapon[] _weapons = null;
@@ -54,7 +55,7 @@ namespace Perigon.Weapons
             }
 
             _weapons[_currentWeaponIndex].ActivateWeapon = true;
-            _meleeBehaviour.Initialize(_meleeWeaponInputAction);
+            _meleeBehaviour.Initialize(_meleeWeaponInputAction, () => _playerPivotTransform);
         }
         
         private void SetupPlayerEquipmentInput()
@@ -101,6 +102,11 @@ namespace Perigon.Weapons
             if (_weaponBehaviours.IsNullOrEmpty())
             {
                 PanicHelper.Panic(new Exception("There are currently no WeaponBehaviour within the child of EquipmentBehaviour"));
+            }
+            if (_playerPivotTransform == null)
+            {
+                Debug.LogWarning(
+                    "Player transform is not set up on EquipmentBehaviour, melee attacks may not function as expected");
             }
             SetupWeapons();
         }
