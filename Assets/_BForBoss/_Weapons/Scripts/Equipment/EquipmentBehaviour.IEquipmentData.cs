@@ -10,6 +10,9 @@ namespace Perigon.Weapons
         float MaxReloadDuration { get; }
         float ElapsedReloadDuration { get; }
         EventReference WeaponShotAudio { get; }
+        float CurrentMeleeCooldown { get; }
+        float MaxMeleeCooldown { get; }
+        bool CanMelee { get; }
     }
 
     public partial class EquipmentBehaviour: IEquipmentData
@@ -24,5 +27,9 @@ namespace Perigon.Weapons
 
         public Weapon[] Weapons => _weapons;
         public Weapon CurrentWeapon => _weapons[_currentWeaponIndex];
+
+        public float CurrentMeleeCooldown => _meleeBehaviour != null ? _meleeBehaviour.CurrentCooldown : 0f;
+        public float MaxMeleeCooldown => _meleeBehaviour != null ? _meleeBehaviour.MaxCooldown : 1f;
+        public bool CanMelee => _meleeBehaviour != null && _meleeBehaviour.CanMelee;
     }
 }

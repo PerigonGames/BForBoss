@@ -14,6 +14,7 @@ namespace BForBoss
         [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
         [SerializeField] private AmmunitionCountViewBehaviour _ammunitionCountView = null;
         [SerializeField] private ReloadViewBehaviour _reloadView = null;
+        [SerializeField] private MeleeViewBehaviour _meleeView = null;
         [SerializeField] private LifeCycleManager _lifeCycleManager = null;
 
         protected override Vector3 SpawnLocation => Vector3.zero;
@@ -32,6 +33,7 @@ namespace BForBoss
             _equipmentBehaviour.Initialize();
             _ammunitionCountView.Initialize(_equipmentBehaviour);
             _reloadView.Initialize(_equipmentBehaviour);
+            _meleeView.Initialize(_equipmentBehaviour);
         }
 
         protected override void Reset()
@@ -61,6 +63,11 @@ namespace BForBoss
             if (_reloadView == null)
             {
                 PanicHelper.Panic(new Exception("Reload View missing from World Manager"));
+            }
+            
+            if (_meleeView == null)
+            {
+                PanicHelper.Panic(new Exception("Melee View missing from World Manager"));
             }
             
             if (_lifeCycleManager == null)
