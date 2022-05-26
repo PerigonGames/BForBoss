@@ -90,10 +90,11 @@ namespace Perigon.Weapons
              return directionWithSpread.normalized;
          }
 
-         public Vector3 GetShootDirection()
+         public Vector3 GetShootDirection(float timeSinceFiring)
          {
-             var xPosition = RandomDoubleIncludingNegative() * MAP_TO_RAYCAST_RANGE_SPREAD * _weaponProperties.BulletSpread;
-             var yPosition = RandomDoubleIncludingNegative() * MAP_TO_RAYCAST_RANGE_SPREAD * _weaponProperties.BulletSpread;
+             var bulletSpread = GenerateSpread(timeSinceFiring);
+             var xPosition = RandomDoubleIncludingNegative() * MAP_TO_RAYCAST_RANGE_SPREAD * bulletSpread;
+             var yPosition = RandomDoubleIncludingNegative() * MAP_TO_RAYCAST_RANGE_SPREAD * bulletSpread;
              return new Vector3(xPosition, yPosition, 1);
          }
 

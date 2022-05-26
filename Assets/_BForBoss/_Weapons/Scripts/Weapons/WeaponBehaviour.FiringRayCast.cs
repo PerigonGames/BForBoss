@@ -11,7 +11,7 @@ namespace Perigon.Weapons
             var camOrigin = MainCamera.transform.position;
             for (int i = 0; i < numberOfBullets; i++)
             {
-                var forwardAngle = _weapon.GetShootDirection();
+                var forwardAngle = _weapon.GetShootDirection(_timeSinceFire);
                 RayCastBullet(camOrigin, forwardAngle);
             }
         }
