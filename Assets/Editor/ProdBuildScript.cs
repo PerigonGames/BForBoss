@@ -15,6 +15,12 @@ public class ProdBuildScript : MonoBehaviour
         
         foreach (EditorBuildSettingsScene e in EditorBuildSettings.scenes)
         {
+            //Do not include AdditiveDebugScene in ProdBuild
+            if (e.path.Contains("AdditiveDebugScene"))
+            {
+                continue;
+            }
+            
             scenePaths.Add(e.path);
             Debug.Log("Scene added to build: " + e.path);
         }
