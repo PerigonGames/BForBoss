@@ -65,7 +65,7 @@ namespace Perigon.Weapons
 
         protected void Update()
         {
-            if(Vector3.Distance(transform.position, _startPosition) > _properties.MaxDistance)
+            if(Vector3.Distance(transform.position, _startPosition) > _properties.MaxTravelDistance)
             {
                 Deactivate();
             }
