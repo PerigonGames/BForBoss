@@ -70,8 +70,6 @@ namespace BForBoss
                 {
                     OpenPanel();
                 }
-
-                _isPanelShowing = !_isPanelShowing;
             }
         }
 
@@ -108,8 +106,10 @@ namespace BForBoss
                         {
                             if (GUILayout.Button(debugType.Name))
                             {
-                                ConstructorInfo constructorInfo = debugType.GetConstructor(new Type[] {typeof(Rect)});
-                                object[] parameters = new object[] {_windowRect};
+                                ConstructorInfo constructorInfo = debugType.GetConstructors()[0];
+                                object[] parameters = debugType == typeof(SceneSwitcher)
+                                    ? new object[] {_windowRect, (Action)ClosePanel}
+                                    : new object[] {_windowRect};
                                 _currentDebugView = constructorInfo.Invoke(parameters) as DebugView;
                             }
                         }
@@ -140,6 +140,7 @@ namespace BForBoss
             GetCanvasRect();
             transform.localScale = Vector3.one;
             LockMouseUtility.Instance.UnlockMouse();
+            _isPanelShowing = !_isPanelShowing;
         }
 
         private void ClosePanel()
@@ -150,6 +151,7 @@ namespace BForBoss
             transform.localScale = Vector3.zero;
             _stateManager.SetState(_currentState);
             LockMouseUtility.Instance.LockMouse();
+            _isPanelShowing = !_isPanelShowing;
         }
         
         private void GetCanvasRect()
