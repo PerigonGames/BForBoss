@@ -20,10 +20,17 @@ namespace Perigon.Weapons
         private InputAction _swapWeaponInputAction = null;
         private InputAction _meleeWeaponInputAction = null;
         private bool _isMouseScrollEnabled = true;
+
+        public Action MeleeAttack;
         
         public void Initialize()
         {
             EnableEquipmentPlayerInput();
+        }
+
+        public void ApplyMeleeDamageDelayed()
+        {
+            _meleeBehaviour.ApplyDamageDelayed();
         }
 
         private void EnableEquipmentPlayerInput()
@@ -55,7 +62,7 @@ namespace Perigon.Weapons
             }
 
             _weapons[_currentWeaponIndex].ActivateWeapon = true;
-            _meleeBehaviour.Initialize(_meleeWeaponInputAction, () => _playerPivotTransform);
+            _meleeBehaviour.Initialize(_meleeWeaponInputAction, () => _playerPivotTransform, true, onSuccessfulAttack: MeleeAttack);
         }
         
         private void SetupPlayerEquipmentInput()

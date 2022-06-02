@@ -24,16 +24,24 @@ namespace Perigon.Weapons
         private MeleeWeapon _weapon;
         private InputAction _meleeActionInputAction;
         private Func<Transform> _getTransform;
+        private Action _onSuccessfulAttack;
+        private bool _applyDamageDelayed = false;
 
         public float CurrentCooldown => _weapon?.CurrentCooldown ?? 0f;
         public float MaxCooldown => _meleeScriptable != null ? _meleeScriptable.AttackCoolDown : 1f;
         public bool CanMelee => _weapon?.CanMelee ?? false;
 
-        public void Initialize(InputAction meleeAttackAction, Func<Transform> getTransform, IMeleeProperties properties = null)
+        public void Initialize(InputAction meleeAttackAction, 
+            Func<Transform> getTransform, 
+            bool applyDamageDelayed,
+            IMeleeProperties properties = null, 
+            Action onSuccessfulAttack = null)
         {
             _meleeActionInputAction = meleeAttackAction;
             _getTransform = getTransform;
-            _weapon = new MeleeWeapon(properties ?? _meleeScriptable);
+            _applyDamageDelayed = applyDamageDelayed;
+            _onSuccessfulAttack = onSuccessfulAttack;
+            _weapon = new MeleeWeapon(properties ?? _meleeScriptable, _applyDamageDelayed);
             BindActions();
         }
 
@@ -42,10 +50,14 @@ namespace Perigon.Weapons
             if (context.performed)
             {
                 var t = _playerTransform ? _playerTransform : _getTransform();
-                if(_canAttackMany)
-                    _weapon.AttackManyIfPossible(t.position, t.forward);
-                else
+                var attack = _canAttackMany ? 
+                    _weapon.AttackManyIfPossible(t.position, t.forward) : 
                     _weapon.AttackOneIfPossible(t.position, t.forward);
+
+                if (attack)
+                {
+                    _onSuccessfulAttack?.Invoke();
+                }
             }
         }
 
@@ -100,6 +112,14 @@ namespace Perigon.Weapons
                 center.y -= 2 * radius;
                 center.y += _meleeScriptable.Height;
                 Gizmos.DrawWireSphere(center, radius);
+            }
+        }
+
+        public void ApplyDamageDelayed()
+        {
+            if (_applyDamageDelayed)
+            {
+                _weapon.ApplyDamageDelayed();
             }
         }
     }

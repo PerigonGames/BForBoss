@@ -11,6 +11,9 @@ namespace Perigon.Weapons
     public class WeaponsManager : MonoBehaviour
     {
         private const float ACCUMULATED_RECOIL_PERCENTAGE = 0.99F;
+        private const string MELEE_ANIMATOR_PARAM = "Melee";
+        private static int MeleeAnimatorID = Animator.StringToHash(MELEE_ANIMATOR_PARAM);
+        
         [Resolve] [SerializeField] private GameObject _weaponHolder = null;
         [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
         
@@ -48,6 +51,8 @@ namespace Perigon.Weapons
         private Vector3 _accumulatedRecoil;
         private Vector3 _weaponRecoilLocalPosition;
 
+        private Animator _weaponAnimator;
+
         public void Initialize(
             Func<Vector3> characterVelocity, 
             Func<float> characterMaxSpeed, 
@@ -63,15 +68,26 @@ namespace Perigon.Weapons
             _isDashing = isDashing;
             _isWallRunning = isWallRunning;
         }
+        
+        public void MeleeHitCallback()
+        {
+            _equipmentBehaviour.ApplyMeleeDamageDelayed();
+        }
 
         private void Start()
         {
+            _weaponAnimator = GetComponentInChildren<Animator>();
             _equipmentBehaviour.Weapons.ForEach(weapon => weapon.OnFireWeapon += OnWeaponFired);
         }
 
         private void OnDestroy()
         {
             _equipmentBehaviour.Weapons.ForEach(weapon => weapon.OnFireWeapon -= OnWeaponFired);
+        }
+
+        private void OnMeleeAttack()
+        {
+            _weaponAnimator.SetTrigger(MeleeAnimatorID);
         }
 
         private void OnWeaponFired(int _)
@@ -139,6 +155,16 @@ namespace Perigon.Weapons
                     _recoilRestitutionSharpness * Time.deltaTime);
                 _accumulatedRecoil = _weaponRecoilLocalPosition;
             }
+        }
+
+        private void OnEnable()
+        {
+            _equipmentBehaviour.MeleeAttack += OnMeleeAttack;
+        }
+        
+        private void OnDisable()
+        {
+            _equipmentBehaviour.MeleeAttack -= OnMeleeAttack;
         }
     }
 }

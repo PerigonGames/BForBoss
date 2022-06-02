@@ -14,11 +14,14 @@ namespace Perigon.Weapons
         private float _currentCooldown = 0f;
         private Action<bool> _onHitEntity;
         public bool CanMelee => _currentCooldown <= 0f;
-
+        private bool _applyDamageDelayed;
+        private int hits;
+        
         public float CurrentCooldown => _currentCooldown;
 
-        public MeleeWeapon(IMeleeProperties meleeProperties, Action<bool> onHitEntity = null)
+        public MeleeWeapon(IMeleeProperties meleeProperties, bool applyDamageDelayed, Action<bool> onHitEntity = null)
         {
+            _applyDamageDelayed = applyDamageDelayed;
             _meleeProperties = meleeProperties;
         }
 
@@ -27,33 +30,47 @@ namespace Perigon.Weapons
             _currentCooldown -= _currentCooldown > 0 ? deltaTime : _currentCooldown;
         }
 
-        public void AttackManyIfPossible(Vector3 playerPosition, Vector3 playerForwardDirection)
+        public bool AttackManyIfPossible(Vector3 playerPosition, Vector3 playerForwardDirection)
         {
             if (!CanMelee)
-                return;
+                return false;
             _currentCooldown += _meleeProperties.AttackCoolDown;
             
-            var hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, ref _enemyBuffer);
+            hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, ref _enemyBuffer);
             if (hits <= 0) 
-                return;
-            
-            for(int i = 0; i < hits; i++)
+                return true;
+
+            if (!_applyDamageDelayed)
             {
-                DamageEnemy(_enemyBuffer[i]);
+                for (int i = 0; i < hits; i++)
+                {
+                    DamageEnemy(_enemyBuffer[i]);
+                }
             }
+
+            return true;
         }
         
-        public void AttackOneIfPossible(Vector3 playerPosition, Vector3 playerForwardDirection)
+        public bool AttackOneIfPossible(Vector3 playerPosition, Vector3 playerForwardDirection)
         {
             if (!CanMelee)
-                return;
+                return false;
             _currentCooldown += _meleeProperties.AttackCoolDown;
             
             var hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, ref _enemyBuffer);
             if (hits <= 0) 
-                return;
-            
-            DamageEnemy(_enemyBuffer[0]);
+                return true;
+
+            if (_applyDamageDelayed)
+            {
+                hits = 1; //ensure we only damage first enemy
+            }
+            else
+            {
+                DamageEnemy(_enemyBuffer[0]);
+            }
+
+            return true;
         }
 
         private void DamageEnemy(Collider enemyCollider)
@@ -62,6 +79,16 @@ namespace Perigon.Weapons
             {
                 lifeCycle.Damage(_meleeProperties.Damage);
                 _onHitEntity?.Invoke(!lifeCycle.IsAlive);
+            }
+        }
+
+        public void ApplyDamageDelayed()
+        {
+            if (!_applyDamageDelayed || _enemyBuffer == null)
+                return;
+            for (int i = 0; i < hits; i++)
+            {
+                DamageEnemy(_enemyBuffer[i]);
             }
         }
     }
