@@ -62,7 +62,7 @@ namespace Perigon.Weapons
             }
 
             _weapons[_currentWeaponIndex].ActivateWeapon = true;
-            _meleeBehaviour.Initialize(_meleeWeaponInputAction, () => _playerPivotTransform, true, onSuccessfulAttack: MeleeAttack);
+            _meleeBehaviour.Initialize(_meleeWeaponInputAction, () => _playerPivotTransform, onSuccessfulAttack: MeleeAttack);
         }
         
         private void SetupPlayerEquipmentInput()
