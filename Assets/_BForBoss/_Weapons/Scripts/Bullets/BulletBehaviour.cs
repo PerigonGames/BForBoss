@@ -7,21 +7,14 @@ namespace Perigon.Weapons
 {
     public abstract partial class BulletBehaviour : MonoBehaviour, IBullet
     {
-        private const float WALL_HIT_ZFIGHT_BUFFER = 0.01f;
-        
         [InlineEditor]
         [SerializeField] protected BulletPropertiesScriptableObject _properties;
-
-        [SerializeField] private WallHitVFX _wallHitVFXPrefab;
         
         private ObjectPooler<BulletBehaviour> _pool = null;
         private Vector3 _startPosition;
-
-        private static ObjectPooler<WallHitVFX> _wallHitVFXObjectPool = null;
-
+        
         public ObjectPooler<BulletBehaviour> Pool
         {
-            get => _pool;
             set
             {
                 if (_pool == null)
@@ -32,6 +25,9 @@ namespace Perigon.Weapons
                 }
             }
         }
+
+        
+        public Action<Vector3, Vector3> OnBulletHitWall { get; set; }
 
         public event Action OnBulletSpawn;
         public event Action<IBullet> OnBulletDeactivate;
@@ -65,39 +61,9 @@ namespace Perigon.Weapons
 
         protected void Update()
         {
-            if(Vector3.Distance(transform.position, _startPosition) > _properties.MaxDistance)
+            if(Vector3.Distance(transform.position, _startPosition) > _properties.MaxTravelDistance)
             {
                 Deactivate();
-            }
-        }
-
-        protected void SpawnWallHitPrefab(Vector3 position, Vector3 wallNormal)
-        {
-            _wallHitVFXObjectPool ??= new ObjectPooler<WallHitVFX>(
-                () =>
-                {
-                    var vfx = Instantiate(_wallHitVFXPrefab);
-                    vfx.Initialize(_wallHitVFXObjectPool);
-                    return vfx;
-                },
-                (vfx) => vfx.gameObject.SetActive(true),
-                (vfx) =>
-                {
-                    vfx.Reset();
-                    vfx.gameObject.SetActive(false);
-                });
-            
-            var vfx = _wallHitVFXObjectPool.Get();
-            vfx.transform.SetPositionAndRotation(position, Quaternion.LookRotation(wallNormal));
-            vfx.transform.Translate(0f, 0f, WALL_HIT_ZFIGHT_BUFFER, Space.Self);
-            vfx.Spawn(_properties.BulletHoleTimeToLive);
-        }
-
-        private void OnValidate()
-        {
-            if (_wallHitVFXPrefab == null)
-            {
-                PanicHelper.Panic(new Exception("No wall hit prefab set!"));
             }
         }
     }

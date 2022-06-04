@@ -1,3 +1,4 @@
+using System;
 using Perigon.Utility;
 using DG.Tweening;
 using PerigonGames;
@@ -13,10 +14,9 @@ namespace Perigon.Weapons
         [SerializeField] private Sprite[] _bulletHoleSprites;
         private SpriteRenderer _spriteRenderer;
         private ParticleSystem _particleSystem;
-
-        private ObjectPooler<WallHitVFX> _pool;
-
+        
         private RandomUtility _rand;
+        private Action _onSpawnComplete;
         
         private void Awake()
         {
@@ -25,9 +25,9 @@ namespace Perigon.Weapons
             _rand = new RandomUtility();
         }
 
-        public void Initialize(ObjectPooler<WallHitVFX> pool)
+        public void Initialize(Action onSpawnComplete)
         {
-            _pool = pool;
+            _onSpawnComplete = onSpawnComplete;
         }
 
         public void Spawn(float fadeDuration)
@@ -39,7 +39,7 @@ namespace Perigon.Weapons
             _particleSystem.Play();
             
             var tween = _spriteRenderer.DOFade(MIN_ALPHA, fadeDuration);
-            tween.OnComplete(() => _pool.Reclaim(this));
+            tween.OnComplete(() => _onSpawnComplete?.Invoke());
             tween.Play();
         }
 

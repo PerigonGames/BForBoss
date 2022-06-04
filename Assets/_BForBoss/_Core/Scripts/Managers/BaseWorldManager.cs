@@ -3,6 +3,9 @@ using Perigon.Character;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+using UnityEngine.SceneManagement;
+#endif
 
 namespace BForBoss
 {
@@ -36,6 +39,9 @@ namespace BForBoss
         protected virtual void Awake()
         {
             _stateManager.OnStateChanged += HandleStateChange;
+#if (UNITY_EDITOR || DEVELOPMENT_BUILD)            
+            SceneManager.LoadScene("AdditiveDebugScene", LoadSceneMode.Additive);
+#endif
             _character = _player;
         }
 
@@ -69,7 +75,7 @@ namespace BForBoss
                 PanicHelper.Panic(new Exception("PauseMenu is missing from World Manager"));
             }
         }
-
+        
         private void HandleStateChange(State newState)
         {
             switch (newState)

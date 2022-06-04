@@ -14,7 +14,7 @@ namespace Perigon.Weapons
             }
             else
             {
-                SpawnWallHitPrefab(hitPosition, hitNormal);
+                OnBulletHitWall?.Invoke(hitPosition, hitNormal);
             }
         }
     }

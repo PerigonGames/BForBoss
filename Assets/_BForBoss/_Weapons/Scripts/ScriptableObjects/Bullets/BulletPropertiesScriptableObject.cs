@@ -6,7 +6,7 @@ namespace Perigon.Weapons
     {
         public float Damage { get; }
         public float Speed { get; }
-        public float MaxDistance { get; }
+        public float MaxTravelDistance { get; }
         public float BulletHoleTimeToLive { get; }
     }
 
@@ -20,7 +20,7 @@ namespace Perigon.Weapons
 
         public float Damage => _damage;
         public float Speed => _speed;
-        public float MaxDistance => _maxDistance;
+        public float MaxTravelDistance => _maxDistance;
         public float BulletHoleTimeToLive => _bulletHoleTimeToLive;
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -7,29 +8,34 @@ using UnityEngine.VFX;
 namespace Perigon.Weapons
 {
     [RequireComponent(typeof(BulletSpawner))]
-    public abstract class WeaponBehaviour : MonoBehaviour
+    public abstract partial class WeaponBehaviour : MonoBehaviour
     {
+        private const float WALL_HIT_ZFIGHT_BUFFER = 0.01f;
+        private const float WALL_HIT_VFX_HIT_FADE_DURATION = 2.0f;
         private const float RAYCAST_DISTANCE_LIMIT = 50f;
-        private readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
+        protected readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
+
         [SerializeField] protected Transform _firePoint = null;
-        [SerializeField] private CrosshairBehaviour _crosshair = null;
+        [SerializeField] protected CrosshairBehaviour _crosshair = null;
         [SerializeField] private VisualEffect _muzzleFlash = null;
         [InlineEditor]
-        [SerializeField] private WeaponScriptableObject _weaponScriptableObject;
+        [SerializeField]
+        private WeaponScriptableObject _weaponScriptableObject = null;
 
         protected Weapon _weapon = null;
         protected bool _isFiring = false;
         protected float _timeSinceFire = 0f;
-        
+
         private InputAction _fireInputAction = null;
         private InputAction _reloadInputAction = null;
 
         private Camera _mainCamera = null;
         private BulletSpawner _bulletSpawner;
+        private WallHitVFXSpawner _wallHitVFXSpawner;
 
         public Weapon WeaponViewModel => _weapon;
 
-        private Camera MainCamera
+        protected Camera MainCamera
         {
             get
             {
@@ -65,61 +71,49 @@ namespace Perigon.Weapons
             _weapon.OnSetWeaponActivate += HandleOnWeaponActivate;
         }
 
-        protected abstract void OnFireInputAction(InputAction.CallbackContext context);
-
-        protected abstract void Update();
-
-        private void OnReloadInputAction(InputAction.CallbackContext context)
+        private void SetCrosshairImage()
         {
-            _weapon.ReloadWeaponIfPossible();
+            if (_weapon != null)
+            {
+                _crosshair.SetCrosshairImage(_weapon.Crosshair);
+            }
+        }
+
+        protected abstract void OnFireInputAction(InputAction.CallbackContext context);
+        protected abstract void Update();
+        private void OnBulletHitWall(Vector3 point, Vector3 pointNormal)
+        {
+            var wallHitVFX = _wallHitVFXSpawner.SpawnWallHitVFX();
+            wallHitVFX.transform.SetPositionAndRotation(point, Quaternion.LookRotation(pointNormal));
+            wallHitVFX.transform.Translate(0f, 0f, WALL_HIT_ZFIGHT_BUFFER, Space.Self);
+            wallHitVFX.Spawn(WALL_HIT_VFX_HIT_FADE_DURATION);
         }
 
         private void HandleOnFire(int numberOfBullets)
         {
-            for (int i = 0; i < numberOfBullets; i++)
-            {
-                var bullet = _bulletSpawner
-                    .SpawnBullet(_weaponScriptableObject.TypeOfBullet);
-                bullet.SetSpawnAndDirection(_firePoint.position, GetDirectionOfShot());
-                bullet.OnBulletHitEntity += HandleOnBulletHitEntity;
-                bullet.OnBulletDeactivate += HandleOnBulletDeactivate;
-            }
+            FireBullets(numberOfBullets);
 
             if (_muzzleFlash != null)
             {
-                _muzzleFlash.Play();    
+                _muzzleFlash.Play();
             }
-            
-            
         }
 
-        private void HandleOnBulletHitEntity(IBullet bullet, bool isDead)
+        private void FireBullets(int numberOfBullets)
         {
-            _crosshair.ActivateHitMarker(isDead);
-            bullet.OnBulletHitEntity -= HandleOnBulletHitEntity;
-            bullet.OnBulletDeactivate -= HandleOnBulletDeactivate;
-        }
-
-        private void HandleOnBulletDeactivate(IBullet bullet)
-        {
-            bullet.OnBulletHitEntity -= HandleOnBulletHitEntity;
-            bullet.OnBulletDeactivate -= HandleOnBulletDeactivate;
-        }
-
-        private Vector3 GetDirectionOfShot()
-        {
-            var camRay = MainCamera.ViewportPointToRay(CenterOfCameraPosition);
-            Vector3 targetPoint;
-            if (Physics.Raycast(camRay, out var hit, Mathf.Infinity, ~TagsAndLayers.Layers.TriggerArea))
+            if (_weapon.IsRayCastingWeapon)
             {
-                targetPoint = hit.point;
+                FireRayCastBullets(numberOfBullets);
             }
             else
             {
-                targetPoint = camRay.GetPoint(RAYCAST_DISTANCE_LIMIT);
+                FireProjectiles(numberOfBullets);
             }
+        }
 
-            return _weapon.GetShootDirection(_firePoint.position, targetPoint, _timeSinceFire);
+        private void OnReloadInputAction(InputAction.CallbackContext context)
+        {
+            _weapon.ReloadWeaponIfPossible();
         }
         
         private void SetupPlayerInput()
@@ -136,21 +130,24 @@ namespace Perigon.Weapons
             }
         }
 
-        private void SetCrosshairImage()
-        {
-            if (_weapon != null)
-            {
-                _crosshair.SetCrosshairImage(_weapon.Crosshair);
-            }
-        }
-
         private void Awake()
         {
             _bulletSpawner = GetComponent<BulletSpawner>();
+            _wallHitVFXSpawner = GetComponent<WallHitVFXSpawner>();
             if (_muzzleFlash == null)
             {
                 Debug.LogWarning("Missing VFX Visual Effect from this weapon");
-            } 
+            }
+            
+            if (_bulletSpawner == null)
+            {
+                PanicHelper.Panic(new Exception("Bullet Spawner missing from Equipment > Weapons Object"));
+            }
+
+            if (_wallHitVFXSpawner == null)
+            {
+                Debug.LogWarning("Wall Hit VFX Spawner missing from Equipment > Weapons object");
+            }
         }
 
         private void OnEnable()
