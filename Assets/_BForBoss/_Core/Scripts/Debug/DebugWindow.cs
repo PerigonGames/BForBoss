@@ -17,6 +17,7 @@ namespace BForBoss
         
         //[SerializeField] private List<DebugOptions> _debugOptions;
         [SerializeField] private RectTransform _rectTransform;
+        [SerializeField] private DebugFreeRoamCamera _freeRoamCamera = null;
 
         //State Handling
         private StateManager _stateManager = StateManager.Instance;
@@ -107,9 +108,21 @@ namespace BForBoss
                             if (GUILayout.Button(debugType.Name))
                             {
                                 ConstructorInfo constructorInfo = debugType.GetConstructors()[0];
-                                object[] parameters = debugType == typeof(SceneSwitcher)
-                                    ? new object[] {_windowRect, (Action)ClosePanel}
-                                    : new object[] {_windowRect};
+                                object[] parameters;
+
+                                if (debugType == typeof(SceneSwitcher))
+                                {
+                                    parameters = new object[] {_windowRect, (Action) ClosePanel};
+                                }
+                                else if (debugType == typeof(FreeCamera))
+                                {
+                                    parameters = new object[] {_windowRect, (Action) OnFreeCameraDebugViewOpened};
+                                }
+                                else
+                                {
+                                    parameters = new object[] {_windowRect};
+                                }
+                                
                                 _currentDebugView = constructorInfo.Invoke(parameters) as DebugView;
                             }
                         }
@@ -136,25 +149,31 @@ namespace BForBoss
             _currentState = _stateManager.GetState();
             _stateManager.SetState(State.Pause);
             IInputSettings input = FindObjectOfType<FirstPersonPlayer>();
-            input.SwapToUIActions();
+            FreezeActionsUtility freezeActionsUtility = new FreezeActionsUtility(input);
+            freezeActionsUtility.LockInput();
             GetCanvasRect();
             transform.localScale = Vector3.one;
-            LockMouseUtility.Instance.UnlockMouse();
             _isPanelShowing = !_isPanelShowing;
         }
 
         private void ClosePanel()
         {
             IInputSettings input = FindObjectOfType<FirstPersonPlayer>();
-            input.SwapToPlayerActions();
+            FreezeActionsUtility freezeActionsUtility = new FreezeActionsUtility(input);
+            freezeActionsUtility.UnlockInput();
             ResetView();
             transform.localScale = Vector3.zero;
             _stateManager.SetState(_currentState);
-            LockMouseUtility.Instance.LockMouse();
             _isPanelShowing = !_isPanelShowing;
         }
-        
-        private void GetCanvasRect()
+
+        private void OnFreeCameraDebugViewOpened()
+        {
+            _freeRoamCamera.gameObject.SetActive(true);
+            _freeRoamCamera.Initialize();
+        }
+
+            private void GetCanvasRect()
         {
             if (_rectTransform != null)
             {
