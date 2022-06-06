@@ -65,9 +65,8 @@ namespace Perigon.Character
             Vector3.forward,
             Vector3.left + Vector3.forward,
             Vector3.left,
-            Vector3.left + Vector3.back,
-            Vector3.back, 
-            Vector3.back + Vector3.right
+            //Vector3.left + Vector3.back,
+            //Vector3.back + Vector3.right
         };
         
         /// <summary>
@@ -86,7 +85,6 @@ namespace Perigon.Character
         private FirstPersonPlayer _fpsCharacter = null;
         private LayerMask _mask;
         private Vector3 _lastWallRunNormal;
-        private Vector3 _constantVelocity;
         private Collider _lastWall;
         private float _baseMaxSpeed;
         private Func<Vector2> _movementInput;
@@ -195,13 +193,13 @@ namespace Perigon.Character
             }
             
             var playerWallRunDirection = ProjectOntoWallNormalized(ChildTransform.forward);
-            _constantVelocity = playerWallRunDirection * _baseCharacter.maxWalkSpeed;
+            var constantVelocity = playerWallRunDirection * _baseCharacter.maxWalkSpeed;
             
             StabilizeCameraIfNeeded(ChildTransform.forward, playerWallRunDirection);
 
             _baseCharacter.AddForce(-_lastWallRunNormal * 100f);
             _timeSinceWallAttach += Time.fixedDeltaTime;
-            _baseCharacter.SetVelocity(_constantVelocity + DownwardForceIfNeeded());
+            _baseCharacter.SetVelocity(constantVelocity + DownwardForceIfNeeded());
         }
 
         private bool DidPlayerStopMoving()
@@ -329,22 +327,11 @@ namespace Perigon.Character
             var oldNormal = _lastWallRunNormal;
             _lastWallRunNormal = normal;
 
-            UpdateConstantVelocityIfNeeded(normal, oldNormal);
+            //UpdateConstantVelocityIfNeeded(normal, oldNormal);
 
             if (!IsWallRunning)
             {
                 StartWallRun();
-            }
-        }
-
-        private void UpdateConstantVelocityIfNeeded(Vector3 newNormal, Vector3 oldNormal)
-        {
-            var isUpdateNeeded = !IsWallRunning || Vector3.Distance(oldNormal, newNormal) > Vector3.kEpsilon;
-            if (isUpdateNeeded)
-            {
-                var initialDirection = IsWallRunning ? _constantVelocity : ChildTransform.forward;
-                var heading = ProjectOntoWallNormalized(initialDirection);
-                _constantVelocity = heading * _baseCharacter.maxWalkSpeed;
             }
         }
 
