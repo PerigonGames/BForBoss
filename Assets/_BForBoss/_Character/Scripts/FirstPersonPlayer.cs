@@ -182,11 +182,6 @@ namespace Perigon.Character
             {
                 _slideBehaviour.StopSliding();
             }
-
-            if (_wallRunBehaviour != null)
-            {
-                _wallRunBehaviour.OnMovementHit(ref movementHit);
-            }
         }
 
         protected override void HandleInput()
