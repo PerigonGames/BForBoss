@@ -21,7 +21,7 @@ namespace Perigon.Character
 
         [Header("Wall Run Conditions")]
         [SerializeField, Tooltip("Stop a wall run if speed dips below this")]
-        private float _minSpeed = 0.9f;
+        private float _minSpeed = 3f;
         [SerializeField, Tooltip("Don't allow a wall run if the player is too close to the ground")] 
         private float _minHeight = 1f;
         [SerializeField]
@@ -91,9 +91,7 @@ namespace Perigon.Character
         private float _baseMaxSpeed;
         private Func<Vector2> _movementInput;
         private Action<int> _OnWallRunFinished;
-
-        private bool _isInitialHeadingSet = false;
-
+        
         private float _currentJumpDuration = 0f;
         private float _timeSinceWallAttach = 0f;
         private float _timeSinceWallDetach = 0f;
@@ -185,7 +183,7 @@ namespace Perigon.Character
             }
             
             //Far from wall - stop running
-            if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, _mask, _wallMaxDistance))
+            if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, _mask, _wallMaxDistance * 1.5f))
             {
                 _lastWallRunNormal = hit.normal;
             }
@@ -208,9 +206,7 @@ namespace Perigon.Character
 
         private bool DidPlayerStopMoving()
         {
-            var speed = _baseCharacter.GetVelocity().magnitude;
-            Debug.Log("Speed: "+speed);
-            return speed < 3f;
+            return _baseCharacter.GetVelocity().magnitude < _minSpeed;
         }
         
         private void ResetLastWallIfNeeded()
@@ -357,7 +353,6 @@ namespace Perigon.Character
             Debug.Log("Start Wall Run @@@@@@@@@@@@@@@@");
             IsWallRunning = true;
             SetWallRunningWallDirection();
-            _isInitialHeadingSet = false;
             _baseMaxSpeed = _baseCharacter.maxWalkSpeed;
             _baseCharacter.maxWalkSpeed *= _speedMultiplier;
             _timeSinceWallAttach = 0f;
@@ -427,14 +422,13 @@ namespace Perigon.Character
         {
             var isLookingAtWall = Physics.Raycast(ChildTransform.position,
                 ChildTransform.TransformDirection(Vector3.forward),
-                _wallMaxDistance, _mask);
+                _wallMaxDistance * 2, _mask);
             if (!isLookingAtWall)
                 return;
             
             var angleDifference = Vector3.SignedAngle(characterForward, heading, Vector3.up);
             if (Mathf.Abs(angleDifference) > _minLookAlongWallStabilizationAngle)
             {
-                Debug.Log("Stablize@@@@@@@@@@@");
                 _baseCharacter.AddYawInput(angleDifference * Time.deltaTime * _lookAlongWallRotationSpeed);
             }
         }
