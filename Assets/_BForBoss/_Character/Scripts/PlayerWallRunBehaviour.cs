@@ -1,8 +1,6 @@
 using UnityEngine;
 using System;
-using System.Runtime.CompilerServices;
 using ECM2.Common;
-using ECM2.Components;
 
 namespace Perigon.Character
 {
@@ -193,12 +191,10 @@ namespace Perigon.Character
             }
             
             var playerWallRunDirection = ProjectOntoWallNormalized(ChildTransform.forward);
-            var constantVelocity = playerWallRunDirection * _baseCharacter.maxWalkSpeed;
-            
             StabilizeCameraIfNeeded(ChildTransform.forward, playerWallRunDirection);
 
-            _baseCharacter.AddForce(-_lastWallRunNormal * 100f);
             _timeSinceWallAttach += Time.fixedDeltaTime;
+            var constantVelocity = playerWallRunDirection * _baseCharacter.maxWalkSpeed;
             _baseCharacter.SetVelocity(constantVelocity + DownwardForceIfNeeded());
         }
 
@@ -233,12 +229,12 @@ namespace Perigon.Character
             get
             {
                 var angle = 0.5f;
-                if (_wallDirection == Vector3.left)
+                if (_wallDirectionRelativeToPlayer == Vector3.left)
                 {
                     return Vector3.back + Vector3.right * angle;
                 } 
                 
-                if (_wallDirection == Vector3.right)
+                if (_wallDirectionRelativeToPlayer == Vector3.right)
                 {
                     return Vector3.back + Vector3.left * angle;
                 }
@@ -261,29 +257,7 @@ namespace Perigon.Character
             return false;
         }
 
-        private Vector3 _wallDirection = Vector3.zero;
-
-        private void SetWallRunningWallDirection()
-        {
-            var wallSide = CalculateWallSideRelativeToPlayer();
-            if (wallSide == 0)
-            {
-                return;
-            }
-            
-            if (wallSide >= 1)
-            {
-                _wallDirection = Vector3.right;
-                return;
-            } 
-            if (wallSide <= -1)
-            {
-                _wallDirection = Vector3.left;
-                return;
-            }
-
-            _wallDirection = Vector3.zero;
-        }
+        private Vector3 _wallDirectionRelativeToPlayer = Vector3.zero;
 
         public Vector3 CalcJumpVelocity()
         {
@@ -324,11 +298,8 @@ namespace Perigon.Character
         private void StartWallRun(Collider wallCollider, Vector3 normal)
         {
             _lastWall = wallCollider;
-            var oldNormal = _lastWallRunNormal;
             _lastWallRunNormal = normal;
-
-            //UpdateConstantVelocityIfNeeded(normal, oldNormal);
-
+            
             if (!IsWallRunning)
             {
                 StartWallRun();
@@ -337,9 +308,8 @@ namespace Perigon.Character
 
         private void StartWallRun()
         {
-            Debug.Log("Start Wall Run @@@@@@@@@@@@@@@@");
             IsWallRunning = true;
-            SetWallRunningWallDirection();
+            _wallDirectionRelativeToPlayer = Vector3.right * CalculateWallSideRelativeToPlayer();
             _baseMaxSpeed = _baseCharacter.maxWalkSpeed;
             _baseCharacter.maxWalkSpeed *= _speedMultiplier;
             _timeSinceWallAttach = 0f;
