@@ -18,8 +18,6 @@ namespace Perigon.Character
         private float _maxWallRunAcceleration = 20f;
         [SerializeField]
         private float _wallGravityDownForce = 0f;
-        [SerializeField] 
-        private bool _constantSpeed = false;
 
         [Header("Wall Run Conditions")]
         [SerializeField, Tooltip("Stop a wall run if speed dips below this")]
@@ -58,21 +56,9 @@ namespace Perigon.Character
 
         #region PRIVATE_FIELDS
         /// <summary>
-        /// If not in a wall run, only check for walls ahead of the player
-        /// </summary>
-        private readonly Vector3[] _directions = new Vector3[]
-        {
-            Vector3.right, 
-            Vector3.right + Vector3.forward,
-            Vector3.forward,
-            Vector3.left + Vector3.forward,
-            Vector3.left
-        };
-        
-        /// <summary>
         /// If we are in a wall run, check for walls all around the player
         /// </summary>
-        private readonly Vector3[] _directionsCurrentlyWallRunning = new Vector3[]
+        private readonly Vector3[] _directionsCurrentlyWallRunning = 
         {
             Vector3.right, 
             Vector3.right + Vector3.forward,
@@ -83,11 +69,22 @@ namespace Perigon.Character
             Vector3.back, 
             Vector3.back + Vector3.right
         };
-
+        
+        /// <summary>
+        /// If not in a wall run, only check for walls ahead of the player
+        /// </summary>
+        private readonly Vector3[] _startWallRunDirections =
+        {
+            Vector3.right, 
+            Vector3.right + Vector3.forward,
+            Vector3.forward,
+            Vector3.left + Vector3.forward,
+            Vector3.left
+        };
+        
         private ECM2.Characters.Character _baseCharacter = null;
         private FirstPersonPlayer _fpsCharacter = null;
         private LayerMask _mask;
-        private int _layerIndex;
         private Vector3 _lastWallRunNormal;
         private Vector3 _constantVelocity;
         private Collider _lastWall;
@@ -106,7 +103,7 @@ namespace Perigon.Character
         #region PROPERTIES
         private Transform ChildTransform => _fpsCharacter != null ? _fpsCharacter.rootPivot : transform;
 
-        public bool IsWallRunning { get; private set; } = false;
+        public bool IsWallRunning { get; private set; }
 
         #endregion
 
@@ -118,34 +115,19 @@ namespace Perigon.Character
             _movementInput = getMovementInput;
             _OnWallRunFinished = onWallRunFinished;
             _mask = LayerMask.GetMask(PARKOUR_WALL_LAYER);
-            _layerIndex = LayerMask.NameToLayer(PARKOUR_WALL_LAYER);
         }
 
         public void Falling(Vector3 _)
         {
             if (!CanWallRun()) 
                 return;
-            if (IsWallRunning)
+
+            var shouldStartWallRun = ProcessRaycasts(_startWallRunDirections, out var hit, ChildTransform, _mask, _wallMaxDistance)
+                                     && IsClearOfGround()
+                                     && hit.collider != _lastWall;
+            if (shouldStartWallRun)
             {
-                if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, _mask, _wallMaxDistance) 
-                    && IsClearOfGround())
-                {
-                    WallRun(hit);
-                }
-                else
-                {
-                    Debug.Log("Stopped wall run due to no nearby wall, or player was too close to ground");
-                    StopWallRunning(false);
-                }
-            }
-            else
-            {
-                if (ProcessRaycasts(_directions, out var hit, ChildTransform, _mask, _wallMaxDistance) 
-                    && IsClearOfGround())
-                {
-                    if(hit.collider != _lastWall) 
-                        WallRun(hit);
-                }
+                StartWallRun(hit.collider, hit.normal);
             }
         }
 
@@ -177,57 +159,118 @@ namespace Perigon.Character
 
         public void OnWallRunning()
         {
-            var deltaTime = Time.fixedDeltaTime;
             if (!IsWallRunning)
             {
-                _timeSinceWallDetach += deltaTime;
-                if(_timeSinceWallDetach > _wallResetTimer)
-                {
-                    _lastWall = null;
-                }
+                ResetLastWallIfNeeded();
                 return;
             }
-            var movement = _movementInput();
-            if (movement.sqrMagnitude <= 0 || movement.y < 0)
+            
+            if (DidForwardInputStop())
             {
                 Debug.Log("Stopped wall run due to no forward input");
                 StopWallRunning(false);
                 return;
             }
-
-            var velocity = _baseCharacter.GetVelocity();
-            var heading = ProjectOntoWallNormalized(ChildTransform.forward);
             
-            if (!_isInitialHeadingSet && _constantSpeed)
+            if (IsLookTooFarAwayFromWall())
             {
-                _constantVelocity = heading.normalized * _baseCharacter.maxWalkSpeed;
-                _isInitialHeadingSet = true;
+                StopWallRunning(false);
+                return;
             }
-
-            if (_constantSpeed)
+            
+            //Far from wall - stop running
+            if (!ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, _mask, _wallMaxDistance))
             {
-                velocity = _constantVelocity;
+                Debug.Log("Stopped since too far away from wall");
+                StopWallRunning(false);
+                return;
             }
-            else
-            {
-                velocity = velocity.dot(heading) * heading;
-                if (velocity.sqrMagnitude < _minSpeed * _minSpeed)
-                {
-                    Debug.Log("Stopped wall run as player moved too slow");
-                    StopWallRunning(false);
-                    return;
-                }
-            }
-
-            LookAlongWall(ChildTransform.forward, heading);
+            
+            var playerWallRunDirection = ProjectOntoWallNormalized(ChildTransform.forward);
+            _constantVelocity = playerWallRunDirection * _baseCharacter.maxWalkSpeed;
+            LookAlongWall(ChildTransform.forward, playerWallRunDirection);
 
             _baseCharacter.AddForce(-_lastWallRunNormal * 100f);
+            _timeSinceWallAttach += Time.fixedDeltaTime;
+            _baseCharacter.SetVelocity(_constantVelocity + DownwardForceIfNeeded());
+        }
 
-            var downwardForce = _timeSinceWallAttach >= _gravityTimerDuration ? 
-                Vector3.down * (_wallGravityDownForce * deltaTime)
+        private void ResetLastWallIfNeeded()
+        {
+            _timeSinceWallDetach += Time.deltaTime;
+            if(_timeSinceWallDetach > _wallResetTimer)
+            {
+                _lastWall = null;
+            }
+        }
+
+        private Vector3 DownwardForceIfNeeded()
+        {
+            return _timeSinceWallAttach >= _gravityTimerDuration ? 
+                Vector3.down * (_wallGravityDownForce * Time.fixedDeltaTime)
                 : Vector3.zero;
-            _timeSinceWallAttach += deltaTime;
-            _baseCharacter.SetVelocity(velocity + downwardForce);
+        }
+
+        private bool DidForwardInputStop()
+        {
+            return _movementInput().sqrMagnitude <= 0 || _movementInput().y < 0;
+        }
+
+        private Vector3 LookAwayFromWallAngle
+        {
+            get
+            {
+                var angle = 0.5f;
+                if (_wallDirection == Vector3.left)
+                {
+                    return Vector3.back + Vector3.right * angle;
+                } 
+                
+                if (_wallDirection == Vector3.right)
+                {
+                    return Vector3.back + Vector3.left * angle;
+                }
+
+                return Vector3.zero;
+            }
+        }
+        
+        private bool IsLookTooFarAwayFromWall()
+        {
+            RaycastHit hit;
+            var backLeftDirection = ChildTransform.TransformDirection(LookAwayFromWallAngle);
+            Debug.DrawRay(ChildTransform.position, backLeftDirection * 1.25f, Color.blue);
+            if (Physics.Raycast(ChildTransform.position, backLeftDirection, out hit, _wallMaxDistance * 1.25f, _mask))
+            {
+                Debug.Log("Looked too far away");
+                return true;
+            }
+            
+            return false;
+        }
+
+        private Vector3 _wallDirection = Vector3.zero;
+
+        private void SetWallRunningWallDirection()
+        {
+            var wallSide = CalculateWallSideRelativeToPlayer();
+            if (wallSide == 0)
+            {
+                return;
+            }
+            
+            if (wallSide >= 1)
+            {
+                _wallDirection = Vector3.right;
+                return;
+            } 
+            if (wallSide <= -1)
+            {
+                _wallDirection = Vector3.left;
+                return;
+            }
+
+            _wallDirection = Vector3.zero;
         }
 
         public Vector3 CalcJumpVelocity()
@@ -270,37 +313,37 @@ namespace Perigon.Character
         #endregion
 
         #region PRIVATE_METHODS
-        private void WallRun(RaycastHit wall)
-        {
-            WallRun(wall.collider, wall.normal);
-        }
-        
-        private void WallRun(ref MovementHit wall)
-        {
-            WallRun(wall.collider, wall.normal);
-            
-        }
 
-        private void WallRun(Collider wallCollider, Vector3 normal)
+        private void StartWallRun(Collider wallCollider, Vector3 normal)
         {
             _lastWall = wallCollider;
             var oldNormal = _lastWallRunNormal;
             _lastWallRunNormal = normal;
 
-            if (ShouldUpdateConstantVelocity(normal, oldNormal))
-            {
-                GetConstantVelocity(IsWallRunning ? _constantVelocity : ChildTransform.forward);
-            }
-            
+            UpdateConstantVelocityIfNeeded(normal, oldNormal);
+
             if (!IsWallRunning)
             {
                 StartWallRun();
             }
         }
 
+        private void UpdateConstantVelocityIfNeeded(Vector3 newNormal, Vector3 oldNormal)
+        {
+            var isUpdateNeeded = !IsWallRunning || Vector3.Distance(oldNormal, newNormal) > Vector3.kEpsilon;
+            if (isUpdateNeeded)
+            {
+                var initialDirection = IsWallRunning ? _constantVelocity : ChildTransform.forward;
+                var heading = ProjectOntoWallNormalized(initialDirection);
+                _constantVelocity = heading * _baseCharacter.maxWalkSpeed;
+            }
+        }
+
         private void StartWallRun()
         {
+            Debug.Log("Start Wall Run @@@@@@@@@@@@@@@@");
             IsWallRunning = true;
+            SetWallRunningWallDirection();
             _hasCameraStabilized = false;
             _isInitialHeadingSet = false;
             _baseMaxSpeed = _baseCharacter.maxWalkSpeed;
@@ -311,7 +354,8 @@ namespace Perigon.Character
 
         private bool CanWallRun()
         {
-            if (_baseCharacter.IsOnGround()) return false;
+            if (_baseCharacter.IsOnGround()) 
+                return false;
 
             if (!_baseCharacter.IsJumping()) 
                 return _movementInput().y > 0 && IsClearOfGround();
@@ -379,23 +423,8 @@ namespace Perigon.Character
             }
             _baseCharacter.AddYawInput(angleDifference * Time.deltaTime * _lookAlongWallRotationSpeed);
         }
-        
-        private bool ShouldUpdateConstantVelocity(Vector3 newNormal, Vector3 oldNormal)
-        {
-            if (!_constantSpeed)
-                return false;
-            if (!IsWallRunning)
-                return true;
-            return Vector3.Distance(oldNormal, newNormal) > Vector3.kEpsilon;
-        }
 
-        private void GetConstantVelocity(Vector3 initialDirection)
-        {
-            var heading = ProjectOntoWallNormalized(initialDirection);
-            _constantVelocity = heading * _baseCharacter.maxWalkSpeed;
-        }
-
-        private static bool GetSmallestRaycastHitIfValid(RaycastHit[] array, out RaycastHit smallest)
+        private bool GetSmallestRaycastHitIfValid(RaycastHit[] array, out RaycastHit smallest)
         {
             bool validRaycast = false;
             float minimumDistance = float.MaxValue;
@@ -412,7 +441,7 @@ namespace Perigon.Character
             return validRaycast;
         }
         
-        private static bool ProcessRaycasts(Vector3[] directions, out RaycastHit smallestRaycastResult, Transform origin, int layerMask, float maxDistance)
+        private bool ProcessRaycasts(Vector3[] directions, out RaycastHit smallestRaycastResult, Transform origin, int layerMask, float maxDistance)
         {
             RaycastHit[] hits = new RaycastHit[directions.Length];
             for (int i = 0; i < directions.Length; i++)
