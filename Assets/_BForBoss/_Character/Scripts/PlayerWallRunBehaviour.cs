@@ -63,8 +63,9 @@ namespace Perigon.Character
             Vector3.forward,
             Vector3.left + Vector3.forward,
             Vector3.left,
-            //Vector3.left + Vector3.back,
-            //Vector3.back + Vector3.right
+            Vector3.left + Vector3.back,
+            Vector3.back + Vector3.right,
+            Vector3.back
         };
         
         /// <summary>
@@ -83,6 +84,7 @@ namespace Perigon.Character
         private FirstPersonPlayer _fpsCharacter = null;
         private LayerMask _mask;
         private Vector3 _lastWallRunNormal;
+        private Vector3 _lastPlayerWallRunDirection;
         private Collider _lastWall;
         private float _baseMaxSpeed;
         private Func<Vector2> _movementInput;
@@ -165,11 +167,13 @@ namespace Perigon.Character
                 return;
             }
             
+            /*
             if (IsLookTooFarAwayFromWall())
             {
                 StopWallRunning(false);
                 return;
             }
+            */
 
             if (DidPlayerStopMoving())
             {
@@ -179,8 +183,9 @@ namespace Perigon.Character
             }
             
             //Far from wall - stop running
-            if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, _mask, _wallMaxDistance * 1.5f))
+            if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, _mask, _wallMaxDistance))
             {
+                Debug.Log("Distance away from Char: " + Vector3.Distance(ChildTransform.position, hit.point));
                 _lastWallRunNormal = hit.normal;
             }
             else
@@ -190,11 +195,12 @@ namespace Perigon.Character
                 return;
             }
             
-            var playerWallRunDirection = ProjectOntoWallNormalized(ChildTransform.forward);
-            StabilizeCameraIfNeeded(ChildTransform.forward, playerWallRunDirection);
+            _lastPlayerWallRunDirection = ProjectOntoWallNormalized(_lastPlayerWallRunDirection);
+            //StabilizeCameraIfNeeded(ChildTransform.forward, _lastPlayerWallRunDirection);
 
             _timeSinceWallAttach += Time.fixedDeltaTime;
-            var constantVelocity = playerWallRunDirection * _baseCharacter.maxWalkSpeed;
+            var lookTowardsWall = (_lastPlayerWallRunDirection - _lastWallRunNormal).normalized;
+            var constantVelocity = (_lastPlayerWallRunDirection + lookTowardsWall).normalized * _baseCharacter.maxWalkSpeed;
             _baseCharacter.SetVelocity(constantVelocity + DownwardForceIfNeeded());
         }
 
@@ -228,7 +234,7 @@ namespace Perigon.Character
         {
             get
             {
-                var angle = 0.5f;
+                var angle = 2f;
                 if (_wallDirectionRelativeToPlayer == Vector3.left)
                 {
                     return Vector3.back + Vector3.right * angle;
@@ -299,6 +305,7 @@ namespace Perigon.Character
         {
             _lastWall = wallCollider;
             _lastWallRunNormal = normal;
+            _lastPlayerWallRunDirection = ProjectOntoWallNormalized(ChildTransform.forward);
             
             if (!IsWallRunning)
             {
