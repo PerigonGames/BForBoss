@@ -89,7 +89,8 @@ namespace Perigon.Character
         private float _baseMaxSpeed;
         private Func<Vector2> _movementInput;
         private Action<int> _OnWallRunFinished;
-        
+
+        private bool isCameraStablizeNeeded = true;
         private float _currentJumpDuration = 0f;
         private float _timeSinceWallAttach = 0f;
         private float _timeSinceWallDetach = 0f;
@@ -132,6 +133,8 @@ namespace Perigon.Character
             if (IsWallRunning)
             {
                 Debug.Log("Stopped wall run due to jump");
+                _lastPlayerWallRunDirection = Vector3.zero;
+                isCameraStablizeNeeded = true;
                 StopWallRunning(true);
             }
         }
@@ -143,6 +146,8 @@ namespace Perigon.Character
             if (IsWallRunning)
             {
                 Debug.Log("Stopped wall run due to landed on ground");
+                _lastPlayerWallRunDirection = Vector3.zero;
+                isCameraStablizeNeeded = true;
                 StopWallRunning(false);
             }
         }
@@ -163,17 +168,11 @@ namespace Perigon.Character
             if (DidForwardInputStop())
             {
                 Debug.Log("Stopped wall run due to no forward input");
+                _lastPlayerWallRunDirection = Vector3.zero;
+                isCameraStablizeNeeded = true;
                 StopWallRunning(false);
                 return;
             }
-            
-            /*
-            if (IsLookTooFarAwayFromWall())
-            {
-                StopWallRunning(false);
-                return;
-            }
-            */
 
             if (DidPlayerStopMoving())
             {
@@ -196,7 +195,7 @@ namespace Perigon.Character
             }
             
             _lastPlayerWallRunDirection = ProjectOntoWallNormalized(_lastPlayerWallRunDirection);
-            //StabilizeCameraIfNeeded(ChildTransform.forward, _lastPlayerWallRunDirection);
+            StabilizeCameraIfNeeded(ChildTransform.forward, _lastPlayerWallRunDirection);
 
             _timeSinceWallAttach += Time.fixedDeltaTime;
             var lookTowardsWall = (_lastPlayerWallRunDirection - _lastWallRunNormal).normalized;
@@ -215,6 +214,7 @@ namespace Perigon.Character
             if(_timeSinceWallDetach > _wallResetTimer)
             {
                 _lastWall = null;
+                Debug.Log("Reset Wall");
             }
         }
 
@@ -248,20 +248,6 @@ namespace Perigon.Character
                 return Vector3.zero;
             }
         }
-        
-        private bool IsLookTooFarAwayFromWall()
-        {
-            RaycastHit hit;
-            var backLeftDirection = ChildTransform.TransformDirection(LookAwayFromWallAngle);
-            Debug.DrawRay(ChildTransform.position, backLeftDirection * 1.25f, Color.blue);
-            if (Physics.Raycast(ChildTransform.position, backLeftDirection, out hit, _wallMaxDistance * 1.25f, _mask))
-            {
-                Debug.Log("Looked too far away");
-                return true;
-            }
-            
-            return false;
-        }
 
         private Vector3 _wallDirectionRelativeToPlayer = Vector3.zero;
 
@@ -274,6 +260,22 @@ namespace Perigon.Character
                             Vector3.up * (_baseCharacter.jumpImpulse * _jumpHeightMultiplier);
             }
             return velocity;
+        }
+        
+        private void StabilizeCameraIfNeeded(Vector3 characterForward, Vector3 heading)
+        {
+            if (!isCameraStablizeNeeded)
+                return;
+            
+            var angleDifference = Vector3.SignedAngle(characterForward, heading, Vector3.up);
+            if (Mathf.Abs(angleDifference) > _minLookAlongWallStabilizationAngle)
+            {
+                _baseCharacter.AddYawInput(angleDifference * Time.deltaTime * _lookAlongWallRotationSpeed);
+            }
+            else
+            {
+                isCameraStablizeNeeded = false;
+            }
         }
 
         public float GetMaxAcceleration()
@@ -305,7 +307,10 @@ namespace Perigon.Character
         {
             _lastWall = wallCollider;
             _lastWallRunNormal = normal;
-            _lastPlayerWallRunDirection = ProjectOntoWallNormalized(ChildTransform.forward);
+            var forwardMovementDirection = _lastPlayerWallRunDirection == Vector3.zero
+                ? ChildTransform.forward
+                : _lastPlayerWallRunDirection;
+            _lastPlayerWallRunDirection = ProjectOntoWallNormalized(forwardMovementDirection);
             
             if (!IsWallRunning)
             {
@@ -380,21 +385,6 @@ namespace Perigon.Character
         {
             direction.y = 0;
             return Vector3.ProjectOnPlane(direction, _lastWallRunNormal).normalized;
-        }
-        
-        private void StabilizeCameraIfNeeded(Vector3 characterForward, Vector3 heading)
-        {
-            var isLookingAtWall = Physics.Raycast(ChildTransform.position,
-                ChildTransform.TransformDirection(Vector3.forward),
-                _wallMaxDistance * 2, _mask);
-            if (!isLookingAtWall)
-                return;
-            
-            var angleDifference = Vector3.SignedAngle(characterForward, heading, Vector3.up);
-            if (Mathf.Abs(angleDifference) > _minLookAlongWallStabilizationAngle)
-            {
-                _baseCharacter.AddYawInput(angleDifference * Time.deltaTime * _lookAlongWallRotationSpeed);
-            }
         }
 
         private bool GetSmallestRaycastHitIfValid(RaycastHit[] array, out RaycastHit smallest)
