@@ -98,7 +98,7 @@ namespace Tests.Character
             PressAndRelease(_keyboard.spaceKey);
             Release(_keyboard.aKey);
             yield return new WaitForFixedUpdate();
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.3f);
             
             //First Jump
             Debug.Log("Press release space");
