@@ -170,24 +170,18 @@ namespace Perigon.Character
 
             if (DidPlayerStopMoving())
             {
-                Debug.Log("Stopped MOVING");
+                Debug.Log("Stopped Wall run due to low velocity");
                 StopWallRunning(false);
                 return;
             }
             
-            //Far from wall - stop running
-            if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, _mask, _wallMaxDistance))
+            if (IsTooFarFromWall())
             {
-                Debug.Log("Distance away from Char: " + Vector3.Distance(ChildTransform.position, hit.point));
-                _lastWallRunNormal = hit.normal;
-            }
-            else
-            {
-                Debug.Log("Stopped since too far away from wall");
+                Debug.Log("Stopped wall run since too far away from wall");
                 StopWallRunning(false);
                 return;
             }
-            
+
             _lastPlayerWallRunDirection = ProjectOntoWallNormalized(_lastPlayerWallRunDirection);
             StabilizeCameraIfNeeded(ChildTransform.forward, _lastPlayerWallRunDirection);
 
@@ -195,6 +189,18 @@ namespace Perigon.Character
             var lookTowardsWall = (_lastPlayerWallRunDirection - _lastWallRunNormal).normalized;
             var constantVelocity = (_lastPlayerWallRunDirection + lookTowardsWall).normalized * _baseCharacter.maxWalkSpeed;
             _baseCharacter.SetVelocity(constantVelocity + DownwardForceIfNeeded());
+        }
+
+        private bool IsTooFarFromWall()
+        {
+            if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, _mask, _wallMaxDistance))
+            {
+                Debug.Log("Distance away from Char: " + Vector3.Distance(ChildTransform.position, hit.point));
+                _lastWallRunNormal = hit.normal;
+                return false;
+            }
+            
+            return true;
         }
         
         public Vector3 CalcJumpVelocity()
