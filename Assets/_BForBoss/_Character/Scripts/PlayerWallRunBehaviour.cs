@@ -62,6 +62,9 @@ namespace Perigon.Character
         [FoldoutGroup("Camera Settings")]
         [SerializeField] 
         private float _minLookAlongWallStabilizationAngle = 5f;
+
+        [SerializeField]
+        private bool _shouldPrintDebugLogs = false;
         #endregion
 
         #region PRIVATE_FIELDS
@@ -144,7 +147,7 @@ namespace Perigon.Character
             _currentJumpDuration = 0f;
             if (IsWallRunning)
             {
-                Debug.Log("Stopped wall run due to jump");
+                PrintWallRunLogs("Stopped wall run due to jump");
                 StopWallRunning(true);
             }
         }
@@ -155,7 +158,7 @@ namespace Perigon.Character
             _lastWall = null;
             if (IsWallRunning)
             {
-                Debug.Log("Stopped wall run due to landed on ground");
+                PrintWallRunLogs("Stopped wall run due to landed on ground");
                 StopWallRunning(false);
             }
         }
@@ -175,21 +178,21 @@ namespace Perigon.Character
             
             if (DidForwardInputStop())
             {
-                Debug.Log("Stopped wall run due to no forward input");
+                PrintWallRunLogs("Stopped wall run due to no forward input");
                 StopWallRunning(false);
                 return;
             }
 
             if (DidPlayerStopMoving())
             {
-                Debug.Log("Stopped Wall run due to low velocity");
+                PrintWallRunLogs("Stopped Wall run due to low velocity");
                 StopWallRunning(false);
                 return;
             }
             
             if (IsTooFarFromWall())
             {
-                Debug.Log("Stopped wall run since too far away from wall");
+                PrintWallRunLogs("Stopped wall run since too far away from wall");
                 StopWallRunning(false);
                 return;
             }
@@ -207,7 +210,7 @@ namespace Perigon.Character
         {
             if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, _parkourWallMask, _wallMaxDistance))
             {
-                Debug.Log("Distance away from Char: " + Vector3.Distance(ChildTransform.position, hit.point));
+                PrintWallRunLogs("Distance away from Wall: " + Vector3.Distance(ChildTransform.position, hit.point));
                 _lastWallRunNormal = hit.normal;
                 return false;
             }
@@ -333,7 +336,7 @@ namespace Perigon.Character
             if(_timeSinceWallDetach > _wallResetTimer)
             {
                 _lastWall = null;
-                Debug.Log("Reset Wall");
+                PrintWallRunLogs("Reset Last Wall");
             }
         }
 
@@ -418,6 +421,14 @@ namespace Perigon.Character
             }
             return GetSmallestRaycastHitIfValid(hits, out smallestRaycastResult);
 
+        }
+
+        private void PrintWallRunLogs(string log)
+        {
+            if (_shouldPrintDebugLogs)
+            {
+                Debug.Log(log);
+            }
         }
         #endregion
     }
