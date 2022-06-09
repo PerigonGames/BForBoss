@@ -133,8 +133,6 @@ namespace Perigon.Character
             if (IsWallRunning)
             {
                 Debug.Log("Stopped wall run due to jump");
-                _lastPlayerWallRunDirection = Vector3.zero;
-                isCameraStablizeNeeded = true;
                 StopWallRunning(true);
             }
         }
@@ -146,8 +144,6 @@ namespace Perigon.Character
             if (IsWallRunning)
             {
                 Debug.Log("Stopped wall run due to landed on ground");
-                _lastPlayerWallRunDirection = Vector3.zero;
-                isCameraStablizeNeeded = true;
                 StopWallRunning(false);
             }
         }
@@ -168,8 +164,6 @@ namespace Perigon.Character
             if (DidForwardInputStop())
             {
                 Debug.Log("Stopped wall run due to no forward input");
-                _lastPlayerWallRunDirection = Vector3.zero;
-                isCameraStablizeNeeded = true;
                 StopWallRunning(false);
                 return;
             }
@@ -202,55 +196,7 @@ namespace Perigon.Character
             var constantVelocity = (_lastPlayerWallRunDirection + lookTowardsWall).normalized * _baseCharacter.maxWalkSpeed;
             _baseCharacter.SetVelocity(constantVelocity + DownwardForceIfNeeded());
         }
-
-        private bool DidPlayerStopMoving()
-        {
-            return _baseCharacter.GetVelocity().magnitude < _minSpeed;
-        }
         
-        private void ResetLastWallIfNeeded()
-        {
-            _timeSinceWallDetach += Time.deltaTime;
-            if(_timeSinceWallDetach > _wallResetTimer)
-            {
-                _lastWall = null;
-                Debug.Log("Reset Wall");
-            }
-        }
-
-        private Vector3 DownwardForceIfNeeded()
-        {
-            return _timeSinceWallAttach >= _gravityTimerDuration ? 
-                Vector3.down * (_wallGravityDownForce * Time.fixedDeltaTime)
-                : Vector3.zero;
-        }
-
-        private bool DidForwardInputStop()
-        {
-            return _movementInput().sqrMagnitude <= 0 || _movementInput().y < 0;
-        }
-
-        private Vector3 LookAwayFromWallAngle
-        {
-            get
-            {
-                var angle = 2f;
-                if (_wallDirectionRelativeToPlayer == Vector3.left)
-                {
-                    return Vector3.back + Vector3.right * angle;
-                } 
-                
-                if (_wallDirectionRelativeToPlayer == Vector3.right)
-                {
-                    return Vector3.back + Vector3.left * angle;
-                }
-
-                return Vector3.zero;
-            }
-        }
-
-        private Vector3 _wallDirectionRelativeToPlayer = Vector3.zero;
-
         public Vector3 CalcJumpVelocity()
         {
             var velocity = _baseCharacter.GetVelocity() * _jumpForwardVelocityMultiplier;
@@ -261,22 +207,7 @@ namespace Perigon.Character
             }
             return velocity;
         }
-        
-        private void StabilizeCameraIfNeeded(Vector3 characterForward, Vector3 heading)
-        {
-            if (!isCameraStablizeNeeded)
-                return;
-            
-            var angleDifference = Vector3.SignedAngle(characterForward, heading, Vector3.up);
-            if (Mathf.Abs(angleDifference) > _minLookAlongWallStabilizationAngle)
-            {
-                _baseCharacter.AddYawInput(angleDifference * Time.deltaTime * _lookAlongWallRotationSpeed);
-            }
-            else
-            {
-                isCameraStablizeNeeded = false;
-            }
-        }
+
 
         public float GetMaxAcceleration()
         {
@@ -321,7 +252,6 @@ namespace Perigon.Character
         private void StartWallRun()
         {
             IsWallRunning = true;
-            _wallDirectionRelativeToPlayer = Vector3.right * CalculateWallSideRelativeToPlayer();
             _baseMaxSpeed = _baseCharacter.maxWalkSpeed;
             _baseCharacter.maxWalkSpeed *= _speedMultiplier;
             _timeSinceWallAttach = 0f;
@@ -341,6 +271,23 @@ namespace Perigon.Character
                 return false;
             return _movementInput().y > 0 && IsClearOfGround();
         }
+        
+                
+        private void StabilizeCameraIfNeeded(Vector3 characterForward, Vector3 heading)
+        {
+            if (!isCameraStablizeNeeded)
+                return;
+            
+            var angleDifference = Vector3.SignedAngle(characterForward, heading, Vector3.up);
+            if (Mathf.Abs(angleDifference) > _minLookAlongWallStabilizationAngle)
+            {
+                _baseCharacter.AddYawInput(angleDifference * Time.deltaTime * _lookAlongWallRotationSpeed);
+            }
+            else
+            {
+                isCameraStablizeNeeded = false;
+            }
+        }
 
         private void StopWallRunning(bool jumpedOutOfWallRun)
         {
@@ -350,7 +297,36 @@ namespace Perigon.Character
             _baseCharacter.maxWalkSpeed = _baseMaxSpeed;
             _timeSinceWallAttach = 0f;
             _timeSinceWallDetach = 0f;
+            _lastPlayerWallRunDirection = Vector3.zero;
+            isCameraStablizeNeeded = true;
             _OnWallRunFinished?.Invoke(jumpedOutOfWallRun ? 1 : 0);
+        }
+        
+        private bool DidPlayerStopMoving()
+        {
+            return _baseCharacter.GetVelocity().magnitude < _minSpeed;
+        }
+        
+        private void ResetLastWallIfNeeded()
+        {
+            _timeSinceWallDetach += Time.deltaTime;
+            if(_timeSinceWallDetach > _wallResetTimer)
+            {
+                _lastWall = null;
+                Debug.Log("Reset Wall");
+            }
+        }
+
+        private Vector3 DownwardForceIfNeeded()
+        {
+            return _timeSinceWallAttach >= _gravityTimerDuration ? 
+                Vector3.down * (_wallGravityDownForce * Time.fixedDeltaTime)
+                : Vector3.zero;
+        }
+
+        private bool DidForwardInputStop()
+        {
+            return _movementInput().sqrMagnitude <= 0 || _movementInput().y < 0;
         }
 
         private bool IsClearOfGround()
