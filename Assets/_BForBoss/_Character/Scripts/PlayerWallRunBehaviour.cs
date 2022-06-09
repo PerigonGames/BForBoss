@@ -94,7 +94,7 @@ namespace Perigon.Character
         
         private ECM2.Characters.Character _baseCharacter = null;
         private FirstPersonPlayer _fpsCharacter = null;
-        private LayerMask _mask;
+        private LayerMask _parkourWallMask;
         private Vector3 _lastWallRunNormal;
         private Vector3 _lastPlayerWallRunDirection;
         private Collider _lastWall;
@@ -102,7 +102,7 @@ namespace Perigon.Character
         private Func<Vector2> _movementInput;
         private Action<int> _OnWallRunFinished;
 
-        private bool isCameraStablizeNeeded = true;
+        private bool _isCameraStabilizeNeeded = true;
         private float _currentJumpDuration = 0f;
         private float _timeSinceWallAttach = 0f;
         private float _timeSinceWallDetach = 0f;
@@ -122,7 +122,7 @@ namespace Perigon.Character
             _fpsCharacter = baseCharacter as FirstPersonPlayer;
             _movementInput = getMovementInput;
             _OnWallRunFinished = onWallRunFinished;
-            _mask = LayerMask.GetMask(PARKOUR_WALL_LAYER);
+            _parkourWallMask = LayerMask.GetMask(PARKOUR_WALL_LAYER);
         }
 
         public void Falling(Vector3 _)
@@ -130,7 +130,7 @@ namespace Perigon.Character
             if (!CanWallRun()) 
                 return;
 
-            var shouldStartWallRun = ProcessRaycasts(_startWallRunDirections, out var hit, ChildTransform, _mask, _wallMaxDistance)
+            var shouldStartWallRun = ProcessRaycasts(_startWallRunDirections, out var hit, ChildTransform, _parkourWallMask, _wallMaxDistance)
                                      && IsClearOfGround()
                                      && hit.collider != _lastWall;
             if (shouldStartWallRun)
@@ -205,7 +205,7 @@ namespace Perigon.Character
 
         private bool IsTooFarFromWall()
         {
-            if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, _mask, _wallMaxDistance))
+            if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, _parkourWallMask, _wallMaxDistance))
             {
                 Debug.Log("Distance away from Char: " + Vector3.Distance(ChildTransform.position, hit.point));
                 _lastWallRunNormal = hit.normal;
@@ -240,13 +240,15 @@ namespace Perigon.Character
 
         public float CalculateWallSideRelativeToPlayer()
         {
-            if (!IsWallRunning) 
-                return 0;
-            var dir = ChildTransform.forward;
-            Vector3 heading = ProjectOntoWallNormalized(dir);
-            Vector3 perpendicular = Vector3.Cross(_lastWallRunNormal, heading);
-            float wallDirection = Vector3.Dot(perpendicular, ChildTransform.up);
-            return wallDirection;
+            if (IsWallRunning)
+            {
+                Vector3 heading = ProjectOntoWallNormalized(ChildTransform.forward);
+                Vector3 perpendicular = Vector3.Cross(_lastWallRunNormal, heading);
+                float wallDirection = Vector3.Dot(perpendicular, ChildTransform.up);
+                return wallDirection;
+            }
+
+            return 0;
         }
         #endregion
 
@@ -293,7 +295,7 @@ namespace Perigon.Character
                 
         private void StabilizeCameraIfNeeded(Vector3 characterForward, Vector3 heading)
         {
-            if (!isCameraStablizeNeeded)
+            if (!_isCameraStabilizeNeeded)
                 return;
             
             var angleDifference = Vector3.SignedAngle(characterForward, heading, Vector3.up);
@@ -303,7 +305,7 @@ namespace Perigon.Character
             }
             else
             {
-                isCameraStablizeNeeded = false;
+                _isCameraStabilizeNeeded = false;
             }
         }
 
@@ -316,7 +318,7 @@ namespace Perigon.Character
             _timeSinceWallAttach = 0f;
             _timeSinceWallDetach = 0f;
             _lastPlayerWallRunDirection = Vector3.zero;
-            isCameraStablizeNeeded = true;
+            _isCameraStabilizeNeeded = true;
             _OnWallRunFinished?.Invoke(jumpedOutOfWallRun ? 1 : 0);
         }
         
