@@ -107,6 +107,14 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ParallaxMapping_3dd10ce844664cefa50ee4739bbf3bb4_Heightmap_1:
+        m_Texture: {fileID: 2800000, guid: 13287fc5f236ad24085192b985404c27, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_4e6c2578df2e44ef94aaaf7f1672d0bf_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 257d632ff328ded4b8888992de4139e4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_f912831e4a5d46a388c8b77063d516d7_Texture_1:
         m_Texture: {fileID: 2800000, guid: 0bf2d2a9e579df440bdc5720a0dbc9c0, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -169,6 +177,11 @@ Material:
     - _AlphaToMaskInspectorValue: 0
     - _Anisotropy: 0
     - _BlendMode: 0
+    - _Caustic_Depth: -300
+    - _Caustic_Distortion_Speed: 0.1
+    - _Caustic_Distortion_Strength: 0.05
+    - _Caustic_Speed: 0.065
+    - _Caustic_Strength: 0.2
     - _CoatMask: 0
     - _ConservativeDepthOffsetEnable: 0
     - _CullMode: 2
@@ -256,6 +269,9 @@ Material:
     - _SubsurfaceMask: 1
     - _SupportDecals: 1
     - _SurfaceType: 1
+    - _TEMP: 0.15
+    - _TEMP2: -300
+    - _TEMP3: 0.05
     - _TexWorldScale: 1
     - _TexWorldScaleEmissive: 1
     - _Thickness: 1
@@ -290,8 +306,8 @@ Material:
     - _EmissiveColorLDR: {r: 0, g: 0, b: 0, a: 1}
     - _InvPrimScale: {r: 1, g: 1, b: 0, a: 0}
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
-    - _Main_Normal_Speed: {r: 0.1, g: 0.05, b: 0, a: 0}
-    - _Secondary_Normal_Speed: {r: 0, g: 0.04, b: 0, a: 0}
+    - _Main_Normal_Speed: {r: 0.05, g: 0.2, b: 0, a: 0}
+    - _Secondary_Normal_Speed: {r: 0, g: 0.1, b: 0, a: 0}
     - _ShallowWaterColor: {r: 0.51054645, g: 0.58764243, b: 0.7264151, a: 0.7294118}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
