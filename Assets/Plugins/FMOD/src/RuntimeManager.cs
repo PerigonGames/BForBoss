@@ -22,45 +22,40 @@ namespace FMODUnity
     {
         public const string BankStubPrefix = "bank stub:";
 
-        static SystemNotInitializedException initException = null;
-        static RuntimeManager instance;
+        private static SystemNotInitializedException initException = null;
+        private static RuntimeManager instance;
 
-        Platform currentPlatform;
-        FMOD.DEBUG_CALLBACK debugCallback;
-        FMOD.SYSTEM_CALLBACK errorCallback;
+        private Platform currentPlatform;
+        private FMOD.DEBUG_CALLBACK debugCallback;
+        private FMOD.SYSTEM_CALLBACK errorCallback;
 
-        FMOD.Studio.System studioSystem;
-        FMOD.System coreSystem;
-        FMOD.DSP mixerHead;
+        private FMOD.Studio.System studioSystem;
+        private FMOD.System coreSystem;
+        private FMOD.DSP mixerHead;
 
         private bool isMuted = false;
 
-        Dictionary<FMOD.GUID, FMOD.Studio.EventDescription> cachedDescriptions = new Dictionary<FMOD.GUID, FMOD.Studio.EventDescription>(new GuidComparer());
+        private Dictionary<FMOD.GUID, FMOD.Studio.EventDescription> cachedDescriptions = new Dictionary<FMOD.GUID, FMOD.Studio.EventDescription>(new GuidComparer());
 
-        Dictionary<string, LoadedBank> loadedBanks = new Dictionary<string, LoadedBank>();
-        List<string> sampleLoadRequests = new List<string>();
+        private Dictionary<string, LoadedBank> loadedBanks = new Dictionary<string, LoadedBank>();
+        private List<string> sampleLoadRequests = new List<string>();
 
-        List<StudioEventEmitter> activeEmitters = new List<StudioEventEmitter>();
-
-        List<AttachedInstance> attachedInstances = new List<AttachedInstance>(128);
+        private List<AttachedInstance> attachedInstances = new List<AttachedInstance>(128);
 
 #if UNITY_EDITOR
-        List<FMOD.Studio.EventInstance> eventPositionWarnings = new List<FMOD.Studio.EventInstance>();
+        private List<FMOD.Studio.EventInstance> eventPositionWarnings = new List<FMOD.Studio.EventInstance>();
 #endif
 
-        bool listenerWarningIssued = false;
+        private bool listenerWarningIssued = false;
 
         protected bool isOverlayEnabled = false;
-        FMODRuntimeManagerOnGUIHelper overlayDrawer = null;
-        Rect windowRect = new Rect(10, 10, 300, 100);
+        private FMODRuntimeManagerOnGUIHelper overlayDrawer = null;
+        private Rect windowRect = new Rect(10, 10, 300, 100);
 
-        string lastDebugText;
-        float lastDebugUpdate = 0;
+        private string lastDebugText;
+        private float lastDebugUpdate = 0;
 
         private int LoadingBanksRef = 0;
-
-        public static List<StudioListener> Listeners = new List<StudioListener>();
-        private static int numListeners = 0;
 
         public static bool IsMuted
         {
@@ -71,7 +66,7 @@ namespace FMODUnity
         }
 
         [AOT.MonoPInvokeCallback(typeof(FMOD.DEBUG_CALLBACK))]
-        static FMOD.RESULT DEBUG_CALLBACK(FMOD.DEBUG_FLAGS flags, IntPtr filePtr, int line, IntPtr funcPtr, IntPtr messagePtr)
+        private static FMOD.RESULT DEBUG_CALLBACK(FMOD.DEBUG_FLAGS flags, IntPtr filePtr, int line, IntPtr funcPtr, IntPtr messagePtr)
         {
             FMOD.StringWrapper file = new FMOD.StringWrapper(filePtr);
             FMOD.StringWrapper func = new FMOD.StringWrapper(funcPtr);
@@ -93,7 +88,7 @@ namespace FMODUnity
         }
 
         [AOT.MonoPInvokeCallback(typeof(FMOD.SYSTEM_CALLBACK))]
-        static FMOD.RESULT ERROR_CALLBACK(IntPtr system, FMOD.SYSTEM_CALLBACK_TYPE type, IntPtr commanddata1, IntPtr commanddata2, IntPtr userdata)
+        private static FMOD.RESULT ERROR_CALLBACK(IntPtr system, FMOD.SYSTEM_CALLBACK_TYPE type, IntPtr commanddata1, IntPtr commanddata2, IntPtr userdata)
         {
             FMOD.ERRORCALLBACK_INFO callbackInfo = (FMOD.ERRORCALLBACK_INFO)FMOD.MarshalHelper.PtrToStructure(commanddata1, typeof(FMOD.ERRORCALLBACK_INFO));
 
@@ -108,7 +103,7 @@ namespace FMODUnity
             return FMOD.RESULT.OK;
         }
 
-        static RuntimeManager Instance
+        private static RuntimeManager Instance
         {
             get
             {
@@ -191,14 +186,14 @@ namespace FMODUnity
             get { return Instance.coreSystem; }
         }
 
-        struct LoadedBank
+        private struct LoadedBank
         {
             public FMOD.Studio.Bank Bank;
             public int RefCount;
         }
 
         // Explicit comparer to avoid issues on platforms that don't support JIT compilation
-        class GuidComparer : IEqualityComparer<FMOD.GUID>
+        private class GuidComparer : IEqualityComparer<FMOD.GUID>
         {
             bool IEqualityComparer<FMOD.GUID>.Equals(FMOD.GUID x, FMOD.GUID y)
             {
@@ -211,7 +206,7 @@ namespace FMODUnity
             }
         }
 
-        void CheckInitResult(FMOD.RESULT result, string cause)
+        private void CheckInitResult(FMOD.RESULT result, string cause)
         {
             if (result != FMOD.RESULT.OK)
             {
@@ -220,7 +215,7 @@ namespace FMODUnity
             }
         }
 
-        void ReleaseStudioSystem()
+        private void ReleaseStudioSystem()
         {
             if (studioSystem.isValid())
             {
@@ -229,7 +224,7 @@ namespace FMODUnity
             }
         }
 
-        FMOD.RESULT Initialize()
+        private FMOD.RESULT Initialize()
         {
             #if UNITY_EDITOR
             EditorApplication.playModeStateChanged += HandlePlayModeStateChange;
@@ -251,15 +246,11 @@ namespace FMODUnity
 
             FMOD.ADVANCEDSETTINGS advancedSettings = new FMOD.ADVANCEDSETTINGS();
             advancedSettings.randomSeed = (uint)DateTime.UtcNow.Ticks;
-            #if UNITY_EDITOR || UNITY_STANDALONE
-            advancedSettings.maxVorbisCodecs = realChannels;
-            #elif UNITY_XBOXONE
-            advancedSettings.maxXMACodecs = realChannels;
-            #elif UNITY_PS4
-            advancedSettings.maxAT9Codecs = realChannels;
-            #else
-            advancedSettings.maxFADPCMCodecs = realChannels;
-            #endif
+            advancedSettings.maxAT9Codecs = GetChannelCountForFormat(CodecType.AT9);
+            advancedSettings.maxFADPCMCodecs = GetChannelCountForFormat(CodecType.FADPCM);
+            advancedSettings.maxOpusCodecs = GetChannelCountForFormat(CodecType.Opus);
+            advancedSettings.maxVorbisCodecs = GetChannelCountForFormat(CodecType.Vorbis);
+            advancedSettings.maxXMACodecs = GetChannelCountForFormat(CodecType.XMA);
 
             SetThreadAffinities(currentPlatform);
 
@@ -377,6 +368,13 @@ retry:
             return initResult;
         }
 
+        private int GetChannelCountForFormat(CodecType format)
+        {
+            CodecChannelCount channelCount = currentPlatform.CodecChannels.Find(x => x.format == format);
+
+            return channelCount == null ? 0 : Math.Min(channelCount.channels, 256);
+        }
+
         private static void SetThreadAffinities(Platform platform)
         {
             foreach (ThreadAffinityGroup group in platform.ThreadAffinities)
@@ -391,7 +389,7 @@ retry:
             }
         }
 
-        class AttachedInstance
+        private class AttachedInstance
         {
             public FMOD.Studio.EventInstance instance;
             public Transform transform;
@@ -403,98 +401,17 @@ retry:
             #endif
         }
 
-        public static int AddListener(StudioListener listener)
-        {
-            // Is the listener already in the list?
-            for (int i = 0; i < Listeners.Count; i++)
-            {
-                if (Listeners[i] != null && listener.gameObject == Listeners[i].gameObject)
-                {
-                    RuntimeUtils.DebugLogWarning(string.Format(("[FMOD] Listener has already been added at index {0}."), i));
-                    return i;
-                }
-            }
-            // If already at the max numListeners
-            if (numListeners >= FMOD.CONSTANTS.MAX_LISTENERS)
-            {
-                RuntimeUtils.DebugLogWarning(string.Format(("[FMOD] Max number of listeners reached : {0}."), FMOD.CONSTANTS.MAX_LISTENERS));
-                //return -1;
-            }
-
-            // If not already in the list
-            // The next available spot in the list should be at `numListeners`
-            if (Listeners.Count <= numListeners)
-            {
-                Listeners.Add(listener);
-            }
-            else
-            {
-                Listeners[numListeners] = listener;
-            }
-            // Increment `numListeners`
-            numListeners++;
-            // setNumListeners (8 is the most that FMOD supports)
-            int numListenersClamped = Mathf.Min(numListeners, FMOD.CONSTANTS.MAX_LISTENERS);
-            StudioSystem.setNumListeners(numListenersClamped);
-            return numListeners - 1;
-        }
-
-        public static bool RemoveListener(StudioListener listener)
-        {
-            int index = listener.ListenerNumber;
-            // Remove listener
-            if (index != -1)
-            {
-                Listeners[index] = null;
-
-                // Are there more listeners above the index of the one we are removing?
-                if (numListeners - 1 > index)
-                {
-                    // Move any higher index listeners down
-                    for (int i = index; i < Listeners.Count; i++)
-                    {
-                        if (i == Listeners.Count - 1)
-                        {
-                            Listeners[i] = null;
-                        }
-                        else
-                        {
-                            Listeners[i] = Listeners[i + 1];
-                            if (Listeners[i])
-                            {
-                                Listeners[i].ListenerNumber = i;
-                            }
-                        }
-                    }
-                }
-                // Decriment numListeners
-                numListeners--;
-                // Always need at least 1 listener, otherwise "[FMOD] assert : assertion: 'numListeners >= 1 && numListeners <= 8' failed"
-                int numListenersClamped = Mathf.Min(Mathf.Max(numListeners, 1), FMOD.CONSTANTS.MAX_LISTENERS);
-                StudioSystem.setNumListeners(numListenersClamped);
-                // Listener attributes will be updated before the next update, due to the Script Execution Order.
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        void Update()
+        private void Update()
         {
             if (studioSystem.isValid())
             {
-                if (numListeners <= 0 && !listenerWarningIssued)
+                if (StudioListener.ListenerCount <= 0 && !listenerWarningIssued)
                 {
                     listenerWarningIssued = true;
                     RuntimeUtils.DebugLogWarning("[FMOD] Please add an 'FMOD Studio Listener' component to your a camera in the scene for correct 3D positioning of sounds.");
                 }
 
-                for (int i = 0; i < activeEmitters.Count; i++)
-                {
-                    UpdateActiveEmitter(activeEmitters[i]);
-                }
+                StudioEventEmitter.UpdateActiveEmitters();
 
                 for (int i = 0; i < attachedInstances.Count; i++)
                 {
@@ -582,46 +499,6 @@ retry:
                 studioSystem.update();
             }
         }
-
-        public static void RegisterActiveEmitter(StudioEventEmitter emitter)
-        {
-            if (!Instance.activeEmitters.Contains(emitter))
-            {
-                Instance.activeEmitters.Add(emitter);
-            }
-        }
-
-        public static void DeregisterActiveEmitter(StudioEventEmitter emitter)
-        {
-            Instance.activeEmitters.Remove(emitter);
-        }
-
-        public static void UpdateActiveEmitter(StudioEventEmitter emitter, bool force = false)
-        {
-            // If at least once listener is within the max distance, ensure an event instance is playing
-            bool playInstance = false;
-            for (int i = 0; i < Listeners.Count; i++)
-            {
-                if (Vector3.Distance(emitter.transform.position, Listeners[i].transform.position) <= emitter.MaxDistance)
-                {
-                    playInstance = true;
-                    break;
-                }
-            }
-            
-            if (force || playInstance != emitter.IsPlaying())
-            {
-                if (playInstance)
-                {
-                    emitter.PlayInstance();
-                }
-                else
-                {
-                    emitter.StopInstance();
-                }
-            }
-        }
-
         public static void AttachInstanceToGameObject(FMOD.Studio.EventInstance instance, Transform transform)
         {
             AttachedInstance attachedInstance = Instance.attachedInstances.Find(x => x.instance.handle == instance.handle);
@@ -699,7 +576,7 @@ retry:
         }
         #endif
 
-        void DrawDebugOverlay(int windowID)
+        private void DrawDebugOverlay(int windowID)
         {
             if (lastDebugUpdate + 0.25f < Time.unscaledTime)
             {
@@ -754,7 +631,7 @@ retry:
             GUI.DragWindow();
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
             coreSystem.setCallback(null, 0);
             ReleaseStudioSystem();
@@ -777,12 +654,12 @@ retry:
             }
         }
 
-        void HandleDomainUnload(object sender, EventArgs args)
+        private void HandleDomainUnload(object sender, EventArgs args)
         {
             ReleaseStudioSystem();
         }
 
-        void HandlePlayModeStateChange(PlayModeStateChange state)
+        private void HandlePlayModeStateChange(PlayModeStateChange state)
         {
             if (state == PlayModeStateChange.ExitingEditMode || state == PlayModeStateChange.EnteredEditMode)
             {
@@ -798,7 +675,7 @@ retry:
 
         #if (UNITY_IOS || UNITY_TVOS) && !UNITY_EDITOR
         [AOT.MonoPInvokeCallback(typeof(Action<bool>))]
-        static void HandleInterrupt(bool began)
+        private static void HandleInterrupt(bool began)
         {
             if (Instance.studioSystem.isValid())
             {
@@ -817,7 +694,7 @@ retry:
             }
         }
         #else
-        void OnApplicationPause(bool pauseStatus)
+        private void OnApplicationPause(bool pauseStatus)
         {
             if (studioSystem.isValid())
             {
@@ -861,7 +738,7 @@ retry:
             ExecuteSampleLoadRequestsIfReady();
         }
 
-        void ExecuteSampleLoadRequestsIfReady()
+        private void ExecuteSampleLoadRequestsIfReady()
         {
             if (sampleLoadRequests.Count > 0)
             {
@@ -887,7 +764,7 @@ retry:
         }
 
 #if UNITY_ANDROID || UNITY_WEBGL
-        IEnumerator loadFromWeb(string bankPath, string bankName, bool loadSamples)
+        private IEnumerator loadFromWeb(string bankPath, string bankName, bool loadSamples)
         {
             byte[] loadWebResult;
             FMOD.RESULT loadResult;
@@ -978,6 +855,7 @@ retry:
                 {
                     loadedBank.Bank.loadSampleData();
                 }
+                Instance.loadedBanks[bankName] = loadedBank;
             }
             else
             {
@@ -1269,6 +1147,18 @@ retry:
             instance.set3DAttributes(RuntimeUtils.To3DAttributes(position));
             instance.start();
             instance.release();
+        }
+
+        public static void PlayOneShotAttached(EventReference eventReference, GameObject gameObject)
+        {
+            try
+            {
+                PlayOneShotAttached(eventReference.Guid, gameObject);
+            }
+            catch (EventNotFoundException)
+            {
+                RuntimeUtils.DebugLogWarning("[FMOD] Event not found: " + eventReference);
+            }
         }
 
         public static void PlayOneShotAttached(string path, GameObject gameObject)
