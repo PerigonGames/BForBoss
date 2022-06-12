@@ -1,7 +1,5 @@
-#if ENABLE_INPUT_SYSTEM
 using System;
 using UnityEngine.InputSystem;
-#endif
 using UnityEngine;
 
 namespace BForBoss
@@ -76,8 +74,6 @@ namespace BForBoss
         private CameraState _targetCameraState = new CameraState();
         private CameraState _interpolatingCameraState = new CameraState();
         private Action _onExitCamera = null;
-        
-#if ENABLE_INPUT_SYSTEM
         private InputAction _movementAction;
         private InputAction _verticalMovementAction;
         private InputAction _lookAction;
@@ -135,48 +131,14 @@ namespace BForBoss
             _verticalMovementAction.Enable();
             _boostFactorAction.Enable();
         }
-#endif
-
-        // private void OnEnable()
-        // {
-        //     _targetCameraState.SetFromTransform(transform);
-        //     _interpolatingCameraState.SetFromTransform(transform);
-        // }
-
+        
         private Vector3 GetInputTranslationDirection()
         {
             Vector3 direction = Vector3.zero;
-#if ENABLE_INPUT_SYSTEM
             var moveDelta = _movementAction.ReadValue<Vector2>();
             direction.x = moveDelta.x;
             direction.z = moveDelta.y;
             direction.y = _verticalMovementAction.ReadValue<Vector2>().y;
-#else
-            if (Input.GetKey(KeyCode.W))
-            {
-                direction += Vector3.forward;
-            }
-            if (Input.GetKey(KeyCode.S))
-            {
-                direction += Vector3.back;
-            }
-            if (Input.GetKey(KeyCode.A))
-            {
-                direction += Vector3.left;
-            }
-            if (Input.GetKey(KeyCode.D))
-            {
-                direction += Vector3.right;
-            }
-            if (Input.GetKey(KeyCode.Q))
-            {
-                direction += Vector3.down;
-            }
-            if (Input.GetKey(KeyCode.E))
-            {
-                direction += Vector3.up;
-            }
-#endif
             return direction;
         }
         
@@ -204,7 +166,7 @@ namespace BForBoss
             // Rotation
             if (IsCameraRotationAllowed())
             {
-                var mouseMovement = GetInputLookRotation() * MOUSE_SENSITIVITY_MULTIPLIER * _mouseSensitivity;
+                var mouseMovement = GetInputLookRotation() * (MOUSE_SENSITIVITY_MULTIPLIER * _mouseSensitivity);
                 var mouseSensitivityFactor = _mouseSensitivityCurve.Evaluate(mouseMovement.magnitude);
 
                 _targetCameraState.yaw += mouseMovement.x * mouseSensitivityFactor;
@@ -237,73 +199,45 @@ namespace BForBoss
 
         private float GetBoostFactor()
         {
-#if ENABLE_INPUT_SYSTEM
             return _boostFactorAction.ReadValue<Vector2>().y * 0.01f;
-#else
-            return Input.mouseScrollDelta.y * 0.01f;
-#endif
         }
 
         private Vector2 GetInputLookRotation()
         {
             // try to compensate the diff between the two input systems by multiplying with empirical values
-#if ENABLE_INPUT_SYSTEM
             var delta = _lookAction.ReadValue<Vector2>();
             delta *= 0.5f; // Account for scaling applied directly in Windows code by old input system.
             delta *= 0.1f; // Account for sensitivity setting on old Mouse X and Y axes.
             return delta;
-#else
-            return new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-#endif
         }
 
         private bool IsBoostPressed()
         {
-#if ENABLE_INPUT_SYSTEM
             bool boost = Keyboard.current != null && Keyboard.current.leftShiftKey.isPressed; 
             boost |= Gamepad.current != null && Gamepad.current.xButton.isPressed;
             return boost;
-#else
-            return Input.GetKey(KeyCode.LeftShift);
-#endif
         }
 
         private bool IsBackQuotePressed()
         {
-#if ENABLE_INPUT_SYSTEM
             return Keyboard.current != null && Keyboard.current[Key.Backquote].isPressed;
-#else
-            return Input.GetKey(KeyCode.BackQuote);
-#endif
         }
 
         private bool IsCameraRotationAllowed()
         {
-#if ENABLE_INPUT_SYSTEM
             bool canRotate = Mouse.current != null && Mouse.current.rightButton.isPressed;
             canRotate |= Gamepad.current != null && Gamepad.current.rightStick.ReadValue().magnitude > 0;
             return canRotate;
-#else
-            return Input.GetMouseButton(1);
-#endif
         }
 
         private bool IsRightMouseButtonDown()
         {
-#if ENABLE_INPUT_SYSTEM
             return Mouse.current != null && Mouse.current.rightButton.isPressed;
-#else
-            return Input.GetMouseButtonDown(1);
-#endif
         }
 
         private bool IsRightMouseButtonUp()
         {
-#if ENABLE_INPUT_SYSTEM
             return Mouse.current != null && !Mouse.current.rightButton.isPressed;
-#else
-            return Input.GetMouseButtonUp(1);
-#endif
         }
     }
 }
