@@ -108,22 +108,7 @@ namespace BForBoss
                             if (GUILayout.Button(debugType.Name))
                             {
                                 ConstructorInfo constructorInfo = debugType.GetConstructors()[0];
-                                object[] parameters;
-
-                                if (debugType == typeof(SceneSwitcher))
-                                {
-                                    parameters = new object[] {_windowRect, (Action) ClosePanel};
-                                }
-                                else if (debugType == typeof(FreeCamera))
-                                {
-                                    parameters = new object[] {_windowRect, (Action) OnFreeCameraDebugViewOpened};
-                                }
-                                else
-                                {
-                                    parameters = new object[] {_windowRect};
-                                }
-                                
-                                _currentDebugView = constructorInfo.Invoke(parameters) as DebugView;
+                                _currentDebugView = constructorInfo.Invoke(GetDebugViewConstructorParameters(debugType)) as DebugView;
                             }
                         }
                     }
@@ -167,13 +152,33 @@ namespace BForBoss
             _isPanelShowing = !_isPanelShowing;
         }
 
+        
         private void OnFreeCameraDebugViewOpened()
         {
             _freeRoamCamera.gameObject.SetActive(true);
-            _freeRoamCamera.Initialize();
+            _freeRoamCamera.Initialize(Camera.main.transform, () =>
+            {
+                _freeRoamCamera.gameObject.SetActive(false);
+            });
         }
 
-            private void GetCanvasRect()
+        private object[] GetDebugViewConstructorParameters(Type debugType)
+        {
+            List<object> parameters = new List<object> {_windowRect};
+
+            if (debugType == typeof(SceneSwitcher))
+            {
+                parameters.Add((Action) ClosePanel);
+            }
+            else if (debugType == typeof(FreeCamera))
+            {
+                parameters.Add((Action) OnFreeCameraDebugViewOpened);
+            }
+
+            return parameters.ToArray();
+        }
+
+        private void GetCanvasRect()
         {
             if (_rectTransform != null)
             {

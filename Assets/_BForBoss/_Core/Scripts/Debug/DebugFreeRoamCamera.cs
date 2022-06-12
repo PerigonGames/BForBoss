@@ -1,117 +1,309 @@
-using Perigon.Utility;
-using Sirenix.OdinInspector;
-using UnityEngine;
+#if ENABLE_INPUT_SYSTEM
+using System;
 using UnityEngine.InputSystem;
+#endif
+using UnityEngine;
 
 namespace BForBoss
 {
     public class DebugFreeRoamCamera : MonoBehaviour
     {
-        [SerializeField, Resolve] private Camera _freeRoamCamera;
-
-        [Title("Modifiers")] 
-        [SerializeField] private float _movementSpeed = 10.0f;
-        [SerializeField, Range(0, 20)] private float _speedBoostModifier = 5.0f;
-        [SerializeField, Range(0, 10)] private float _freeLookSensitivity = 3.0f;
-        [SerializeField, Range(5, 20)] private float _zoomSensitivity = 10.0f;
-        [SerializeField, Range(0,10f)] private float _zoomBoostModifier = 5.0f;
-
-        private bool _isFreeLooking = false;
-        
-        private bool _canRoam = false;
-        
-        public void Initialize()
+        internal class CameraState
         {
-            _canRoam = true;
+            public float yaw;
+            public float pitch;
+            public float roll;
+            public float x;
+            public float y;
+            public float z;
+
+            public void SetFromTransform(Transform t)
+            {
+                pitch = t.eulerAngles.x;
+                yaw = t.eulerAngles.y;
+                roll = t.eulerAngles.z;
+                x = t.position.x;
+                y = t.position.y;
+                z = t.position.z;
+            }
+
+            public void Translate(Vector3 translation)
+            {
+                Vector3 rotatedTranslation = Quaternion.Euler(pitch, yaw, roll) * translation;
+
+                x += rotatedTranslation.x;
+                y += rotatedTranslation.y;
+                z += rotatedTranslation.z;
+            }
+
+            public void LerpTowards(CameraState target, float positionLerpPct, float rotationLerpPct)
+            {
+                yaw = Mathf.Lerp(yaw, target.yaw, rotationLerpPct);
+                pitch = Mathf.Lerp(pitch, target.pitch, rotationLerpPct);
+                roll = Mathf.Lerp(roll, target.roll, rotationLerpPct);
+
+                x = Mathf.Lerp(x, target.x, positionLerpPct);
+                y = Mathf.Lerp(y, target.y, positionLerpPct);
+                z = Mathf.Lerp(z, target.z, positionLerpPct);
+            }
+
+            public void UpdateTransform(Transform t)
+            {
+                t.eulerAngles = new Vector3(pitch, yaw, roll);
+                t.position = new Vector3(x, y, z);
+            }
         }
 
+        private const float MOUSE_SENSITIVITY_MULTIPLIER = 0.01f;
+
+        [Header("Movement Settings")]
+        [Tooltip("Exponential boost factor on translation, controllable by mouse wheel.")]
+        [SerializeField] private float _boost = 3.5f;
+
+        [Tooltip("Time it takes to interpolate camera position 99% of the way to the target."), Range(0.001f, 1f)]
+        [SerializeField] private float _positionLerpTime = 0.2f;
+
+        [Header("Rotation Settings")]
+        [Tooltip("Multiplier for the sensitivity of the rotation.")] 
+        [SerializeField] private float _mouseSensitivity = 60.0f;
+
+        [Tooltip("X = Change in mouse position.\nY = Multiplicative factor for camera rotation.")]
+        [SerializeField]private AnimationCurve _mouseSensitivityCurve = new AnimationCurve(new Keyframe(0f, 0.5f, 0f, 5f), new Keyframe(1f, 2.5f, 0f, 0f));
+
+        [Tooltip("Time it takes to interpolate camera rotation 99% of the way to the target."), Range(0.001f, 1f)]
+        [SerializeField] private float _rotationLerpTime = 0.01f;
+
+        private CameraState _targetCameraState = new CameraState();
+        private CameraState _interpolatingCameraState = new CameraState();
+        private Action _onExitCamera = null;
+        
+#if ENABLE_INPUT_SYSTEM
+        private InputAction _movementAction;
+        private InputAction _verticalMovementAction;
+        private InputAction _lookAction;
+        private InputAction _boostFactorAction;
+        private InputActionMap _actionMap;
+        private bool _mouseRightButtonPressed;
+        
+        public void Initialize(Transform playerTransform, Action onExit)
+        {
+            if (_actionMap == null)
+            {
+                InitializeActionMap();
+            }
+            else
+            {
+                _actionMap.Enable();
+            }
+            
+            transform.SetPositionAndRotation(playerTransform.position, playerTransform.rotation);
+            _onExitCamera = onExit;
+            _targetCameraState.SetFromTransform(transform);
+            _interpolatingCameraState.SetFromTransform(transform);
+        }
+
+        private void InitializeActionMap()
+        {
+            _actionMap = new InputActionMap("Debug Free Roam Camera Controller");
+
+            _lookAction = _actionMap.AddAction("look", binding: "<Mouse>/delta");
+            _movementAction = _actionMap.AddAction("move", binding: "<Gamepad>/leftStick");
+            _verticalMovementAction = _actionMap.AddAction("Vertical Movement");
+            _boostFactorAction = _actionMap.AddAction("Boost Factor", binding: "<Mouse>/scroll");
+
+            _lookAction.AddBinding("<Gamepad>/rightStick").WithProcessor("scaleVector2(x=15, y=15)");
+            _movementAction.AddCompositeBinding("Dpad")
+                .With("Up", "<Keyboard>/w")
+                .With("Up", "<Keyboard>/upArrow")
+                .With("Down", "<Keyboard>/s")
+                .With("Down", "<Keyboard>/downArrow")
+                .With("Left", "<Keyboard>/a")
+                .With("Left", "<Keyboard>/leftArrow")
+                .With("Right", "<Keyboard>/d")
+                .With("Right", "<Keyboard>/rightArrow");
+            _verticalMovementAction.AddCompositeBinding("Dpad")
+                .With("Up", "<Keyboard>/pageUp")
+                .With("Down", "<Keyboard>/pageDown")
+                .With("Up", "<Keyboard>/e")
+                .With("Down", "<Keyboard>/q")
+                .With("Up", "<Gamepad>/rightshoulder")
+                .With("Down", "<Gamepad>/leftshoulder");
+            _boostFactorAction.AddBinding("<Gamepad>/Dpad").WithProcessor("scaleVector2(x=1, y=4)");
+
+            _movementAction.Enable();
+            _lookAction.Enable();
+            _verticalMovementAction.Enable();
+            _boostFactorAction.Enable();
+        }
+#endif
+
+        // private void OnEnable()
+        // {
+        //     _targetCameraState.SetFromTransform(transform);
+        //     _interpolatingCameraState.SetFromTransform(transform);
+        // }
+
+        private Vector3 GetInputTranslationDirection()
+        {
+            Vector3 direction = Vector3.zero;
+#if ENABLE_INPUT_SYSTEM
+            var moveDelta = _movementAction.ReadValue<Vector2>();
+            direction.x = moveDelta.x;
+            direction.z = moveDelta.y;
+            direction.y = _verticalMovementAction.ReadValue<Vector2>().y;
+#else
+            if (Input.GetKey(KeyCode.W))
+            {
+                direction += Vector3.forward;
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                direction += Vector3.back;
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                direction += Vector3.left;
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                direction += Vector3.right;
+            }
+            if (Input.GetKey(KeyCode.Q))
+            {
+                direction += Vector3.down;
+            }
+            if (Input.GetKey(KeyCode.E))
+            {
+                direction += Vector3.up;
+            }
+#endif
+            return direction;
+        }
+        
         private void Update()
         {
-            if (!_canRoam)
+            if (IsBackQuotePressed())
             {
-                return;
+                _actionMap.Disable();
+                _onExitCamera?.Invoke();
             }
 
-            bool isSpeedBoosted = Keyboard.current[Key.LeftShift].wasPressedThisFrame ||
-                                  Keyboard.current[Key.RightShift].wasPressedThisFrame;
-            float movementSpeed = _movementSpeed * (isSpeedBoosted ? _speedBoostModifier : 1);
-
-            if (Keyboard.current[Key.A].wasPressedThisFrame || Keyboard.current[Key.LeftArrow].wasPressedThisFrame)
+            // Hide and lock cursor when right mouse button pressed
+            if (IsRightMouseButtonDown())
             {
-                Debug.Log("A was pressed");
-                transform.position = transform.position + (-transform.right * (movementSpeed * Time.deltaTime));
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+
+            // Unlock and show cursor when right mouse button released
+            if (IsRightMouseButtonUp())
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+
+            // Rotation
+            if (IsCameraRotationAllowed())
+            {
+                var mouseMovement = GetInputLookRotation() * MOUSE_SENSITIVITY_MULTIPLIER * _mouseSensitivity;
+                var mouseSensitivityFactor = _mouseSensitivityCurve.Evaluate(mouseMovement.magnitude);
+
+                _targetCameraState.yaw += mouseMovement.x * mouseSensitivityFactor;
+                _targetCameraState.pitch += mouseMovement.y * mouseSensitivityFactor;
             }
             
-            if (Keyboard.current[Key.D].wasPressedThisFrame || Keyboard.current[Key.RightArrow].wasPressedThisFrame)
+            // Translation
+            var translation = GetInputTranslationDirection() * Time.unscaledDeltaTime;
+
+            // Speed up movement when shift key held
+            if (IsBoostPressed())
             {
-                Debug.Log("D was pressed");
-                transform.position = transform.position + (transform.right * (movementSpeed * Time.deltaTime));
+                translation *= 10.0f;
             }
             
-            if (Keyboard.current[Key.W].wasPressedThisFrame || Keyboard.current[Key.UpArrow].wasPressedThisFrame)
-            {
-                Debug.Log("W was pressed");
-                transform.position = transform.position + (transform.forward * (movementSpeed * Time.deltaTime));
-            }
-            
-            if (Keyboard.current[Key.S].wasPressedThisFrame || Keyboard.current[Key.DownArrow].wasPressedThisFrame)
-            {
-                Debug.Log("S was pressed");
-                transform.position = transform.position + (-transform.forward * (movementSpeed * Time.deltaTime));
-            }
+            // Modify movement by a boost factor (defined in Inspector and modified in play mode through the mouse scroll wheel)
+            _boost += GetBoostFactor();
+            translation *= Mathf.Pow(2.0f, _boost);
 
-            if (Keyboard.current[Key.Q].wasPressedThisFrame)
-            {
-                transform.position = transform.position + (transform.up * (movementSpeed * Time.deltaTime));
-            }
+            _targetCameraState.Translate(translation);
 
-            if (Keyboard.current[Key.E].wasPressedThisFrame)
-            {
-                transform.position = transform.position + (-transform.up * (movementSpeed * Time.deltaTime));
-            }
-            
-            if (Keyboard.current[Key.R].wasPressedThisFrame || Keyboard.current[Key.PageUp].wasPressedThisFrame)
-            {
-                transform.position = transform.position + (Vector3.up * (movementSpeed * Time.deltaTime));
-            }
+            // Framerate-independent interpolation
+            // Calculate the lerp amount, such that we get 99% of the way to our target in the specified time
+            var positionLerpPct = 1f - Mathf.Exp((Mathf.Log(1f - 0.99f) / _positionLerpTime) * Time.unscaledDeltaTime);
+            var rotationLerpPct = 1f - Mathf.Exp((Mathf.Log(1f - 0.99f) / _rotationLerpTime) * Time.unscaledDeltaTime);
+            _interpolatingCameraState.LerpTowards(_targetCameraState, positionLerpPct, rotationLerpPct);
 
-            if (Keyboard.current[Key.F].wasPressedThisFrame || Keyboard.current[Key.PageDown].wasPressedThisFrame)
-            {
-                transform.position = transform.position + (-Vector3.up * (movementSpeed * Time.deltaTime));
-            }
-
-            if (_isFreeLooking)
-            {
-                float newRotationX = transform.localEulerAngles.y + Mouse.current.position.x.ReadValue() * _freeLookSensitivity; 
-                float newRotationY = transform.localEulerAngles.x + Mouse.current.position.y.ReadValue() * _freeLookSensitivity;
-                transform.localEulerAngles = new Vector3(newRotationY, newRotationX, 0f);
-            }
-
-            float scrollWheelAxis = Mouse.current.scroll.EvaluateMagnitude();
-            if (scrollWheelAxis != 0.0f)
-            {
-                float zoomSensitivity = _zoomSensitivity * (isSpeedBoosted ? _zoomBoostModifier : 1);
-                transform.position = transform.position * (scrollWheelAxis * zoomSensitivity);
-            }
-
-            if (Mouse.current.rightButton.wasPressedThisFrame)
-            {
-                StartLooking();
-            }
-            else if (Mouse.current.rightButton.wasReleasedThisFrame)
-            {
-                StopLooking();
-            }
+            _interpolatingCameraState.UpdateTransform(transform);
         }
 
-        private void StartLooking()
+        private float GetBoostFactor()
         {
-            _isFreeLooking = true;
+#if ENABLE_INPUT_SYSTEM
+            return _boostFactorAction.ReadValue<Vector2>().y * 0.01f;
+#else
+            return Input.mouseScrollDelta.y * 0.01f;
+#endif
         }
 
-        private void StopLooking()
+        private Vector2 GetInputLookRotation()
         {
-            _isFreeLooking = false;
+            // try to compensate the diff between the two input systems by multiplying with empirical values
+#if ENABLE_INPUT_SYSTEM
+            var delta = _lookAction.ReadValue<Vector2>();
+            delta *= 0.5f; // Account for scaling applied directly in Windows code by old input system.
+            delta *= 0.1f; // Account for sensitivity setting on old Mouse X and Y axes.
+            return delta;
+#else
+            return new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+#endif
+        }
+
+        private bool IsBoostPressed()
+        {
+#if ENABLE_INPUT_SYSTEM
+            bool boost = Keyboard.current != null && Keyboard.current.leftShiftKey.isPressed; 
+            boost |= Gamepad.current != null && Gamepad.current.xButton.isPressed;
+            return boost;
+#else
+            return Input.GetKey(KeyCode.LeftShift);
+#endif
+        }
+
+        private bool IsBackQuotePressed()
+        {
+#if ENABLE_INPUT_SYSTEM
+            return Keyboard.current != null && Keyboard.current[Key.Backquote].isPressed;
+#else
+            return Input.GetKey(KeyCode.BackQuote);
+#endif
+        }
+
+        private bool IsCameraRotationAllowed()
+        {
+#if ENABLE_INPUT_SYSTEM
+            bool canRotate = Mouse.current != null && Mouse.current.rightButton.isPressed;
+            canRotate |= Gamepad.current != null && Gamepad.current.rightStick.ReadValue().magnitude > 0;
+            return canRotate;
+#else
+            return Input.GetMouseButton(1);
+#endif
+        }
+
+        private bool IsRightMouseButtonDown()
+        {
+#if ENABLE_INPUT_SYSTEM
+            return Mouse.current != null && Mouse.current.rightButton.isPressed;
+#else
+            return Input.GetMouseButtonDown(1);
+#endif
+        }
+
+        private bool IsRightMouseButtonUp()
+        {
+#if ENABLE_INPUT_SYSTEM
+            return Mouse.current != null && !Mouse.current.rightButton.isPressed;
+#else
+            return Input.GetMouseButtonUp(1);
+#endif
         }
     }
 }
