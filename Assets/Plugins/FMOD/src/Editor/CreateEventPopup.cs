@@ -6,9 +6,9 @@ using UnityEditor;
 
 namespace FMODUnity
 {
-    public class CreateEventPopup : EditorWindow
+    class CreateEventPopup : EditorWindow
     {        
-        private class FolderEntry
+        class FolderEntry
         {
             public FolderEntry parent;
             public string name;
@@ -17,28 +17,28 @@ namespace FMODUnity
             public Rect rect;
         }
 
-        private SerializedProperty outputProperty;
+        SerializedProperty outputProperty;
 
-        private FolderEntry rootFolder;
-        private FolderEntry currentFolder;
-        private List<BankEntry> banks;
+        FolderEntry rootFolder;
+        FolderEntry currentFolder;
+        List<BankEntry> banks;
 
-        private int lastHover = 0;
-        private string eventFolder = "/";
-        private string eventName = "";
-        private string currentFilter = "";
-        private int selectedBank = 0;
-        private bool resetCursor = true;
-        private Vector2 scrollPos = new Vector2();
-        private Rect scrollRect = new Rect();
-        private bool isConnected = false;
+        int lastHover = 0;
+        string eventFolder = "/";
+        string eventName = "";
+        string currentFilter = "";
+        int selectedBank = 0;
+        bool resetCursor = true;
+        Vector2 scrollPos = new Vector2();
+        Rect scrollRect = new Rect();
+        bool isConnected = false;
 
         internal void SelectEvent(SerializedProperty property)
         {
             outputProperty = property;
         }
 
-        private class BankEntry
+        class BankEntry
         {
             public string name;
             public string guid;
@@ -57,32 +57,20 @@ namespace FMODUnity
             wantsMouseMove = true;
             banks = new List<BankEntry>();
 
-            const string buildBankTreeFunc =
-                @"function() {
-                    var output = """";
-                    const items = [ studio.project.workspace.masterBankFolder ];
-                    while (items.length > 0) {
-                        var currentItem = items.shift();
-                        if (currentItem.isOfType(""BankFolder"")) {
-                            currentItem.items.reverse().forEach(function(val) {
-                                items.unshift(val);
-                            });
-                        } else {
-                            output += "","" + currentItem.id + currentItem.getPath().replace(""bank:/"", """");
-                        }
-                    }
-                    return output;
-                }";
-
-            string bankList = EditorUtils.GetScriptOutput(string.Format("({0})()", buildBankTreeFunc));
+            EditorUtils.GetScriptOutput("children = \"\";");
+            EditorUtils.GetScriptOutput("func = function(val) {{ children += \",\" + val.id + val.name; }};");
+            EditorUtils.GetScriptOutput("studio.project.workspace.masterBankFolder.items.forEach(func, this); ");
+            string bankList = EditorUtils.GetScriptOutput("children;");
             string[] bankListSplit = bankList.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var bank in bankListSplit)
+            foreach(var bank in bankListSplit)
             {
                 var entry = new BankEntry();
                 entry.guid = bank.Substring(0, 38);
                 entry.name = bank.Substring(38);
                 banks.Add(entry);
             }
+
+            banks.Sort((a, b) => a.name.CompareTo(b.name));
         }
 
         private void BuildTreeItem(FolderEntry entry)
