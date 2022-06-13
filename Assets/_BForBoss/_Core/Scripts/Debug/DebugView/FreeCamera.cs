@@ -40,7 +40,7 @@ namespace BForBoss
                 GUILayout.Label("");
                 DrawInstruction("Use", "WASD", "to move");
                 DrawInstruction("Use", "Q", "to pan down");
-                DrawInstruction("Use", "E", "to pan down");
+                DrawInstruction("Use", "E", "to pan up");
                 DrawInstruction("Hold", "Left Shift", "to boost");
                 DrawInstruction("Use", "Scroll Wheel", "to modify boost multiplier");
                 DrawInstruction("Hold", "Right mouse", "to rotate");
