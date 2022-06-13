@@ -22,6 +22,7 @@ namespace BForBoss
         //State Handling
         private StateManager _stateManager = StateManager.Instance;
         private State _currentState;
+        private FreezeActionsUtility _freezeActionsUtility;
         
         private bool _isPanelShowing = false;
         
@@ -57,6 +58,9 @@ namespace BForBoss
                     _debugOptions.Add(viewType);
                 }
             }
+            
+            IInputSettings input = FindObjectOfType<FirstPersonPlayer>();
+            _freezeActionsUtility = new FreezeActionsUtility(input);
         }
 
         private void Update()
@@ -133,9 +137,7 @@ namespace BForBoss
         {
             _currentState = _stateManager.GetState();
             _stateManager.SetState(State.Pause);
-            IInputSettings input = FindObjectOfType<FirstPersonPlayer>();
-            FreezeActionsUtility freezeActionsUtility = new FreezeActionsUtility(input);
-            freezeActionsUtility.LockInput();
+            _freezeActionsUtility.LockInput();
             GetCanvasRect();
             transform.localScale = Vector3.one;
             _isPanelShowing = !_isPanelShowing;
@@ -143,9 +145,7 @@ namespace BForBoss
 
         private void ClosePanel()
         {
-            IInputSettings input = FindObjectOfType<FirstPersonPlayer>();
-            FreezeActionsUtility freezeActionsUtility = new FreezeActionsUtility(input);
-            freezeActionsUtility.UnlockInput();
+            _freezeActionsUtility.UnlockInput();
             ResetView();
             transform.localScale = Vector3.zero;
             _stateManager.SetState(_currentState);
@@ -156,10 +156,12 @@ namespace BForBoss
         private void OnFreeCameraDebugViewOpened()
         {
             _freeRoamCamera.gameObject.SetActive(true);
-            _freeRoamCamera.Initialize(Camera.main.transform, () =>
-            {
-                _freeRoamCamera.gameObject.SetActive(false);
-            });
+            _freeRoamCamera.Initialize(Camera.main.transform, OnFreeCameraDebugViewExited);
+        }
+
+        private void OnFreeCameraDebugViewExited()
+        {
+            _freeRoamCamera.gameObject.SetActive(false);
         }
 
         private object[] GetDebugViewConstructorParameters(Type debugType)
@@ -172,7 +174,11 @@ namespace BForBoss
             }
             else if (debugType == typeof(FreeCamera))
             {
-                parameters.Add((Action) OnFreeCameraDebugViewOpened);
+                Rect freeCameraRect = new Rect(_windowRect)
+                {
+                    width = _windowRect.width + 20f
+                };
+                parameters = new List<object>{freeCameraRect, (Action) OnFreeCameraDebugViewOpened, (Action) OnFreeCameraDebugViewExited};
             }
 
             return parameters.ToArray();

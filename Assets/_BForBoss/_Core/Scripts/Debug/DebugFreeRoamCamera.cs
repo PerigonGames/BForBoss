@@ -1,6 +1,7 @@
 using System;
 using UnityEngine.InputSystem;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 
 namespace BForBoss
 {
@@ -55,7 +56,7 @@ namespace BForBoss
         private const float MOUSE_SENSITIVITY_MULTIPLIER = 0.01f;
 
         [Header("Movement Settings")]
-        [Tooltip("Exponential boost factor on translation, controllable by mouse wheel.")]
+        [Tooltip("Exponential boost factor on translation, controllable by mouse wheel."), Range(2.0f, 6.0f)]
         [SerializeField] private float _boost = 3.5f;
 
         [Tooltip("Time it takes to interpolate camera position 99% of the way to the target."), Range(0.001f, 1f)]
@@ -79,6 +80,7 @@ namespace BForBoss
         private InputAction _lookAction;
         private InputAction _boostFactorAction;
         private InputActionMap _actionMap;
+        private Transform _startingTransform;
         private bool _mouseRightButtonPressed;
         
         public void Initialize(Transform playerTransform, Action onExit)
@@ -91,7 +93,8 @@ namespace BForBoss
             {
                 _actionMap.Enable();
             }
-            
+
+            _startingTransform = playerTransform;
             transform.SetPositionAndRotation(playerTransform.position, playerTransform.rotation);
             _onExitCamera = onExit;
             _targetCameraState.SetFromTransform(transform);
@@ -141,7 +144,7 @@ namespace BForBoss
             direction.y = _verticalMovementAction.ReadValue<Vector2>().y;
             return direction;
         }
-        
+
         private void Update()
         {
             if (IsBackQuotePressed())
@@ -161,6 +164,13 @@ namespace BForBoss
             {
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
+            }
+            
+            // Return to starting position when Reset button is Pressed
+            if (IsResetButtonPressed())
+            {
+                _targetCameraState.SetFromTransform(_startingTransform);
+                _interpolatingCameraState.SetFromTransform(_startingTransform);
             }
 
             // Rotation
@@ -184,6 +194,7 @@ namespace BForBoss
             
             // Modify movement by a boost factor (defined in Inspector and modified in play mode through the mouse scroll wheel)
             _boost += GetBoostFactor();
+            _boost = Mathf.Clamp(_boost, 2.0f, 6.0f);
             translation *= Mathf.Pow(2.0f, _boost);
 
             _targetCameraState.Translate(translation);
@@ -238,6 +249,13 @@ namespace BForBoss
         private bool IsRightMouseButtonUp()
         {
             return Mouse.current != null && !Mouse.current.rightButton.isPressed;
+        }
+
+        private bool IsResetButtonPressed()
+        {
+            bool isResetButtonPressed = Keyboard.current != null && Keyboard.current[Key.Space].isPressed;
+            isResetButtonPressed |= Gamepad.current != null && Gamepad.current[GamepadButton.South].isPressed;
+            return isResetButtonPressed;
         }
     }
 }

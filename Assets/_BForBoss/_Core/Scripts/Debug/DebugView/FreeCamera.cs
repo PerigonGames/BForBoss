@@ -6,10 +6,18 @@ namespace BForBoss
     public class FreeCamera : DebugView
     {
         private GUIStyle _boldInstructionStyle = null;
+        private Action _onBackButtonPressed = null;
         
-        public FreeCamera(Rect masterRect, Action onWindowOpened) : base(masterRect)
+        public FreeCamera(Rect masterRect, Action onWindowOpened, Action onBackButtonPressed) : base(masterRect)
         {
+            _onBackButtonPressed = onBackButtonPressed;
             onWindowOpened?.Invoke();
+        }
+
+        public override void ResetData()
+        {
+            base.ResetData();
+            _onBackButtonPressed?.Invoke();
         }
 
         protected override void DrawWindow()
@@ -22,7 +30,7 @@ namespace BForBoss
                     {
                         textColor = Color.white
                     },
-                    fontStyle = FontStyle.Bold,
+                    fontStyle = FontStyle.BoldAndItalic,
                     alignment = TextAnchor.MiddleCenter
                 };
             }
@@ -34,8 +42,10 @@ namespace BForBoss
                 DrawInstruction("Use", "Q", "to pan down");
                 DrawInstruction("Use", "E", "to pan down");
                 DrawInstruction("Hold", "Left Shift", "to boost");
+                DrawInstruction("Use", "Scroll Wheel", "to modify boost multiplier");
                 DrawInstruction("Hold", "Right mouse", "to rotate");
-                DrawInstruction("Press", "`", "to escape");
+                DrawInstruction("Press", "SpaceBar", "to reset");
+                DrawInstruction("Press", "Backquote", "to escape");
             }
             
             GUI.UnfocusWindow();
