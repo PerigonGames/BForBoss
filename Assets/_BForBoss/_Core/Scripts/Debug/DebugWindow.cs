@@ -15,7 +15,6 @@ namespace BForBoss
         private const float CANVAS_WIDTH_MULTIPLIER = 0.15f;
         private const float CANVAS_HEIGHT_MULTIPLIER = 0.5f;
         
-        //[SerializeField] private List<DebugOptions> _debugOptions;
         [SerializeField] private RectTransform _rectTransform;
         [SerializeField] private FreeRoamCamera _freeRoamCamera = null;
 
@@ -136,7 +135,7 @@ namespace BForBoss
         private void OpenPanel()
         {
             _currentState = _stateManager.GetState();
-            _stateManager.SetState(State.Pause);
+            _stateManager.SetState(State.Debug);
             _freezeActionsUtility.LockInput();
             GetCanvasRect();
             transform.localScale = Vector3.one;

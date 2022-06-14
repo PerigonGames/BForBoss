@@ -9,6 +9,7 @@ namespace BForBoss
         Pause,
         EndRace,
         Death,
+        Debug
     }
 
     public interface IStateManager
