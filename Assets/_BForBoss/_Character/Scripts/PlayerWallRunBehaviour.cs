@@ -414,11 +414,11 @@ namespace Perigon.Character
         private bool ProcessRaycasts(Vector3[] directions, out RaycastHit smallestRaycastResult, Transform origin, int layerMask, float maxDistance)
         {
             RaycastHit[] hits = new RaycastHit[directions.Length];
-#if Unity_Editor || Development_Build
             for (int i = 0; i < directions.Length; i++)
             {
                 Vector3 localDirection = origin.TransformDirection(directions[i]);
                 Physics.Raycast(origin.position, localDirection, out hits[i], maxDistance, layerMask);
+#if Unity_Editor || Development_Build
                 if (hits[i].collider != null)
                 {
                     Debug.DrawRay(origin.position, localDirection * hits[i].distance, Color.green);
@@ -427,8 +427,8 @@ namespace Perigon.Character
                 {
                     Debug.DrawRay(origin.position, localDirection * maxDistance, Color.red);
                 }
-            }
 #endif
+            }
             return GetSmallestRaycastHitIfValid(hits, out smallestRaycastResult);
 
         }
