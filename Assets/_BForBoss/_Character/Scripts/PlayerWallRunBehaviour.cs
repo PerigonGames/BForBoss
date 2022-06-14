@@ -62,7 +62,6 @@ namespace Perigon.Character
         [FoldoutGroup("Camera Settings")]
         [SerializeField] 
         private float _minLookAlongWallStabilizationAngle = 5f;
-
         [SerializeField]
         private bool _shouldPrintDebugLogs = false;
         #endregion
@@ -133,9 +132,7 @@ namespace Perigon.Character
             if (!CanWallRun()) 
                 return;
 
-            var shouldStartWallRun = ProcessRaycasts(_startWallRunDirections, out var hit, ChildTransform, _parkourWallMask, _wallMaxDistance)
-                                     && IsClearOfGround()
-                                     && hit.collider != _lastWall;
+            var shouldStartWallRun = ShouldStartWallRun(out var hit);
             if (shouldStartWallRun)
             {
                 StartWallRun(hit.collider, hit.normal);
@@ -206,18 +203,6 @@ namespace Perigon.Character
             _baseCharacter.SetVelocity(constantVelocity + DownwardForceIfNeeded());
         }
 
-        private bool IsTooFarFromWall()
-        {
-            if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, _parkourWallMask, _wallMaxDistance))
-            {
-                PrintWallRunLogs("Distance away from Wall: " + Vector3.Distance(ChildTransform.position, hit.point));
-                _lastWallRunNormal = hit.normal;
-                return false;
-            }
-            
-            return true;
-        }
-        
         public Vector3 CalcJumpVelocity()
         {
             var velocity = _baseCharacter.GetVelocity() * _jumpForwardVelocityMultiplier;
@@ -256,6 +241,16 @@ namespace Perigon.Character
         #endregion
 
         #region PRIVATE_METHODS
+        
+        
+        private bool ShouldStartWallRun(out RaycastHit hit)
+        {
+            var shouldStartWallRun =
+                ProcessRaycasts(_startWallRunDirections, out hit, ChildTransform, _parkourWallMask, _wallMaxDistance)
+                && IsClearOfGround()
+                && hit.collider != _lastWall;
+            return shouldStartWallRun;
+        }
 
         private void StartWallRun(Collider wallCollider, Vector3 normal)
         {
@@ -295,6 +290,17 @@ namespace Perigon.Character
             return _movementInput().y > 0 && IsClearOfGround();
         }
         
+        private bool IsTooFarFromWall()
+        {
+            if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, _parkourWallMask, _wallMaxDistance))
+            {
+                PrintWallRunLogs("Distance away from Wall: " + Vector3.Distance(ChildTransform.position, hit.point));
+                _lastWallRunNormal = hit.normal;
+                return false;
+            }
+            
+            return true;
+        }
                 
         private void StabilizeCameraIfNeeded(Vector3 characterForward, Vector3 heading)
         {
@@ -355,6 +361,7 @@ namespace Perigon.Character
         private bool IsClearOfGround()
         {
             var downwardHit = Physics.Raycast(ChildTransform.position, Vector3.down, out RaycastHit hit, _minHeight);
+#if Unity_Editor || Development_Build
             if (downwardHit)
             {
                 Debug.DrawRay(ChildTransform.position, Vector3.down * hit.distance, Color.red);
@@ -363,6 +370,7 @@ namespace Perigon.Character
             {
                 Debug.DrawRay(ChildTransform.position, Vector3.down * _minHeight, Color.green);
             }
+#endif
             return !downwardHit;
         }
 
@@ -406,6 +414,7 @@ namespace Perigon.Character
         private bool ProcessRaycasts(Vector3[] directions, out RaycastHit smallestRaycastResult, Transform origin, int layerMask, float maxDistance)
         {
             RaycastHit[] hits = new RaycastHit[directions.Length];
+#if Unity_Editor || Development_Build
             for (int i = 0; i < directions.Length; i++)
             {
                 Vector3 localDirection = origin.TransformDirection(directions[i]);
@@ -419,6 +428,7 @@ namespace Perigon.Character
                     Debug.DrawRay(origin.position, localDirection * maxDistance, Color.red);
                 }
             }
+#endif
             return GetSmallestRaycastHitIfValid(hits, out smallestRaycastResult);
 
         }
