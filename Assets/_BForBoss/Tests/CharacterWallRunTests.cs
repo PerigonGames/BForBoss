@@ -89,24 +89,25 @@ namespace Tests.Character
             }
             
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
-            character.transform.position = _wideCorridor;
+            character.transform.position = _narrowCorridor;
             
             //First Wall Run
             Press(_keyboard.wKey);
             Press(_keyboard.aKey);
             yield return new WaitForSeconds(0.1f);
-            Press(_keyboard.spaceKey);
-            yield return new WaitForFixedUpdate();
+            PressAndRelease(_keyboard.spaceKey);
             Release(_keyboard.aKey);
-            Release(_keyboard.spaceKey);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForFixedUpdate();
+            yield return new WaitForSeconds(0.3f);
             
             //First Jump
+            Debug.Log("Press release space");
             Press(_keyboard.spaceKey);
             yield return new WaitForFixedUpdate();
+            yield return new WaitForSeconds(0.3f);
             Release(_keyboard.spaceKey);
             yield return new WaitForFixedUpdate();
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.3f);
             
             //Second mid air jump
             Press(_keyboard.spaceKey);
