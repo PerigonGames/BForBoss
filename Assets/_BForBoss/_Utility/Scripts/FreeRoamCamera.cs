@@ -5,7 +5,7 @@ using UnityEngine.InputSystem.LowLevel;
 
 namespace BForBoss
 {
-    public class DebugFreeRoamCamera : MonoBehaviour
+    public class FreeRoamCamera : MonoBehaviour
     {
         internal class CameraState
         {
@@ -103,7 +103,7 @@ namespace BForBoss
 
         private void InitializeActionMap()
         {
-            _actionMap = new InputActionMap("Debug Free Roam Camera Controller");
+            _actionMap = new InputActionMap("Free Roam Camera Controller");
 
             _lookAction = _actionMap.AddAction("look", binding: "<Mouse>/delta");
             _movementAction = _actionMap.AddAction("move", binding: "<Gamepad>/leftStick");

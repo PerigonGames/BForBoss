@@ -17,7 +17,7 @@ namespace BForBoss
         
         //[SerializeField] private List<DebugOptions> _debugOptions;
         [SerializeField] private RectTransform _rectTransform;
-        [SerializeField] private DebugFreeRoamCamera _freeRoamCamera = null;
+        [SerializeField] private FreeRoamCamera _freeRoamCamera = null;
 
         //State Handling
         private StateManager _stateManager = StateManager.Instance;
