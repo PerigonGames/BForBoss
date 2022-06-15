@@ -90,6 +90,7 @@ namespace BForBoss
                     HandleStatePlay();
                     break;
                 }
+                case State.Debug:
                 case State.Pause:
                 {
                     HandleStatePause();
