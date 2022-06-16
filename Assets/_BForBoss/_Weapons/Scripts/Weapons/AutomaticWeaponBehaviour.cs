@@ -26,7 +26,7 @@ namespace Perigon.Weapons
                 _timeSinceFire += Time.deltaTime;
                 _weapon.FireIfPossible();
             }
-            _weapon.DecrementElapsedTimeRateOfFire(Time.deltaTime);
+            _weapon.DecrementElapsedTimeRateOfFire(Time.deltaTime, Time.timeScale);
             _weapon.ReloadWeaponCountDownIfNeeded(Time.deltaTime);
         }
     }

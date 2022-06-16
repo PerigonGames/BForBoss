@@ -59,13 +59,55 @@ namespace Tests.Weapons
                 shootTimes++;
             };
             weapon.FireIfPossible();
-            weapon.DecrementElapsedTimeRateOfFire(100);
+            weapon.DecrementElapsedTimeRateOfFire(100, 1);
             
             //When
             weapon.FireIfPossible();
             
             //Then
             Assert.AreEqual(shootTimes, 2);
+        }
+        
+        [Test]
+        public void Test_FireIfPossible_ShootAfterTimeScaledElapsedRateOfTimeHitsZero()
+        {
+            // Given
+            var mockProperties = new MockWeaponProperties(rateOfFire: 10f);
+            var weapon = new Weapon(mockProperties);
+            var shootTimes = 0;
+            weapon.OnFireWeapon += bullets =>
+            {
+                shootTimes++;
+            };
+            weapon.FireIfPossible();
+            weapon.DecrementElapsedTimeRateOfFire(5, 0.5f);
+            
+            //When
+            weapon.FireIfPossible();
+            
+            //Then
+            Assert.AreEqual(shootTimes, 2);
+        }
+        
+        [Test]
+        public void Test_FireIfPossible_CannotShoot_AfterTimeScaledElapsedRateOfTime_DoesNotHitZero()
+        {
+            // Given
+            var mockProperties = new MockWeaponProperties(rateOfFire: 10f);
+            var weapon = new Weapon(mockProperties);
+            var shootTimes = 0;
+            weapon.OnFireWeapon += bullets =>
+            {
+                shootTimes++;
+            };
+            weapon.FireIfPossible();
+            weapon.DecrementElapsedTimeRateOfFire(5, 1f);
+            
+            //When
+            weapon.FireIfPossible();
+            
+            //Then
+            Assert.AreEqual(shootTimes, 1);
         }
         
         [Test]
