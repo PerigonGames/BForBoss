@@ -17,7 +17,7 @@ namespace Tests.Character
         public override void Setup()
         {
             base.Setup();
-            EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/_BForBoss/Tests/Scenes/CharacterMovementTest.unity", new LoadSceneParameters(LoadSceneMode.Single));
+            EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/_BForBoss/Tests/Scenes/GenericCharacterTests.unity", new LoadSceneParameters(LoadSceneMode.Single));
             _keyboard = InputSystem.AddDevice<Keyboard>();
         }
 
@@ -29,14 +29,14 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
 
-            var originalPosition = Vector3.zero;
+            var startingPosition = GameObject.Find("MovementSpawn").transform.position;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
-            character.transform.position = originalPosition;
+            character.transform.position = startingPosition;
             Press(_keyboard.wKey);
             
             yield return new WaitForSeconds(1.5f);
 
-            Assert.Greater(character.transform.position.z, originalPosition.z, "Character walked forward, should be higher z value");
+            Assert.Greater(character.transform.position.z, startingPosition.z, "Character walked forward, should be higher z value");
         }
         
         [UnityTest]
@@ -47,7 +47,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
 
-            var originalPosition = Vector3.zero;
+            var originalPosition = GameObject.Find("MovementSpawn").transform.position;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             character.transform.position = originalPosition;
             Press(_keyboard.sKey);
@@ -65,7 +65,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
 
-            var originalPosition = Vector3.zero;
+            var originalPosition = GameObject.Find("MovementSpawn").transform.position;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             character.transform.position = originalPosition;
             Press(_keyboard.aKey);
@@ -83,7 +83,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
 
-            var originalPosition = Vector3.zero;
+            var originalPosition = GameObject.Find("MovementSpawn").transform.position;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             character.transform.position = originalPosition;
             Press(_keyboard.dKey);
@@ -102,7 +102,7 @@ namespace Tests.Character
             }
 
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
-            character.transform.position = Vector3.zero;
+            character.transform.position = GameObject.Find("MovementSpawn").transform.position;
             
             // Wait for character to settle after repositioning to 0,0,0
             for (int i = 0; i < 5; i++)
