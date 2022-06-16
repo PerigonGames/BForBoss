@@ -178,10 +178,24 @@ namespace Tests.Weapons
             weapon.FireIfPossible();
             
             //When
-            weapon.ReloadWeaponCountDownIfNeeded(0);
+            weapon.ReloadWeaponCountDownIfNeeded(0, 1);
             
             //Then
             Assert.IsTrue(weapon.IsReloading, "Weapon should be reloading when out of ammo");
+        }
+        
+        [Test]
+        public void Test_ScaledDeltaTime_WithHalfTimeScale()
+        {
+            //Given 
+            var mockProperties = new MockWeaponProperties(ammoAmount: 1);
+            var weapon = new Weapon(mockProperties);
+            
+            //When
+            float actualResult = weapon.ScaledDeltaTime(10, 0.5f);
+            
+            //Then
+            Assert.AreEqual(20f, actualResult, "Should be double the delta time");
         }
 
         [Test]
@@ -194,7 +208,7 @@ namespace Tests.Weapons
             weapon.IsReloading = true;
             
             //When
-            weapon.ReloadWeaponCountDownIfNeeded(0.5f);
+            weapon.ReloadWeaponCountDownIfNeeded(0.5f, 1);
             
             //Then
             Assert.IsFalse(weapon.IsReloading, "Weapon should have completed reloading");
