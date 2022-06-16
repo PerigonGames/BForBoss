@@ -8,7 +8,7 @@ namespace Perigon.Weapons
 {
 
     
-    public class WeaponsManager : MonoBehaviour
+    public class WeaponAnimationController : MonoBehaviour
     {
         private const float ACCUMULATED_RECOIL_PERCENTAGE = 0.99F;
         private const string MELEE_ANIMATOR_PARAM = "Melee";

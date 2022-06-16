@@ -4,13 +4,15 @@ using Perigon.Utility;
 using Perigon.Weapons;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BForBoss
 {
     public class GunRangeWorldManager : BaseWorldManager
     {
+        [FormerlySerializedAs("_weaponsManager")]
         [Title("Component")] 
-        [SerializeField] private WeaponsManager _weaponsManager = null;
+        [SerializeField] private WeaponAnimationController weaponAnimationController = null;
         [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
         [SerializeField] private AmmunitionCountViewBehaviour _ammunitionCountView = null;
         [SerializeField] private ReloadViewBehaviour _reloadView = null;
@@ -23,7 +25,7 @@ namespace BForBoss
         protected override void Start()
         {
             base.Start();
-            _weaponsManager.Initialize(
+            weaponAnimationController.Initialize(
                 () => _player.CharacterVelocity,
                 () => _player.CharacterMaxSpeed,
                 () => _player.IsWallRunning,
@@ -45,7 +47,7 @@ namespace BForBoss
         protected override void OnValidate()
         {
             base.OnValidate();
-            if (_weaponsManager == null)
+            if (weaponAnimationController == null)
             {
                 PanicHelper.Panic(new Exception("Weapons Manager missing from World Manager"));
             }
