@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 262.3369, g: 325.0498, b: 430.21924, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -650,7 +650,7 @@ MonoBehaviour:
   _firePoint: {fileID: 1467719136}
   _crosshair: {fileID: 1924278439}
   _muzzleFlash: {fileID: 1467719138}
-  _weaponScriptableObject: {fileID: 11400000, guid: b669f6e948f309b43adf276791a84958, type: 2}
+  _weaponScriptableObject: {fileID: 11400000, guid: 02219ca89e64d9b4e9d475dad85dc0c4, type: 2}
 --- !u!114 &513119966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -666,7 +666,7 @@ MonoBehaviour:
   _firePoint: {fileID: 1467719136}
   _crosshair: {fileID: 1924278439}
   _muzzleFlash: {fileID: 1467719139}
-  _weaponScriptableObject: {fileID: 11400000, guid: ebd17210773efd94da60b70929d3c5ee, type: 2}
+  _weaponScriptableObject: {fileID: 11400000, guid: 48642ad1006cced44a8be5eef771876d, type: 2}
 --- !u!114 &513119967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -682,7 +682,7 @@ MonoBehaviour:
   _firePoint: {fileID: 1467719136}
   _crosshair: {fileID: 1924278439}
   _muzzleFlash: {fileID: 1467719137}
-  _weaponScriptableObject: {fileID: 11400000, guid: 48df86ba764786a488249b8673a3cee8, type: 2}
+  _weaponScriptableObject: {fileID: 11400000, guid: b883d7c670b4f214695eeab3f0e3f74e, type: 2}
 --- !u!114 &513119968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1519,7 +1519,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attenuationObject: {fileID: 0}
-  ListenerNumber: -1
 --- !u!20 &1186343774
 Camera:
   m_ObjectHideFlags: 0
@@ -3112,7 +3111,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2061070007434329460, guid: c7cd698ab65444f38b1e49e2e17d8e9f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 168.962
+      value: 198.96051
       objectReference: {fileID: 0}
     - target: {fileID: 3924296612012996776, guid: c7cd698ab65444f38b1e49e2e17d8e9f, type: 3}
       propertyPath: m_Name
@@ -3296,7 +3295,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6758736603576299658, guid: c7cd698ab65444f38b1e49e2e17d8e9f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 168.962
+      value: 198.96051
       objectReference: {fileID: 0}
     - target: {fileID: 7649166824825422377, guid: c7cd698ab65444f38b1e49e2e17d8e9f, type: 3}
       propertyPath: m_AnchorMax.x
