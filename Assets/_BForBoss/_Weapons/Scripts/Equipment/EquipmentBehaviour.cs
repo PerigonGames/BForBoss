@@ -6,11 +6,15 @@ using UnityEngine.InputSystem;
 
 namespace Perigon.Weapons
 {
+    [RequireComponent(typeof(BulletSpawner))]
+    [RequireComponent(typeof(WallHitVFXSpawner))]
     public partial class EquipmentBehaviour : MonoBehaviour
     {
         [SerializeField] private InputActionAsset _inputActions;
         [SerializeField] private Transform _playerPivotTransform;
-        private WeaponBehaviour[] _weaponBehaviours = null;
+        [SerializeField] private WeaponBehaviour[] _weaponBehaviours = null;
+        private BulletSpawner _bulletSpawner;
+        private WallHitVFXSpawner _wallHitVFXSpawner;
         private MeleeWeaponBehaviour _meleeBehaviour = null;
         private Weapon[] _weapons = null;
         private int _currentWeaponIndex = 0;
@@ -21,16 +25,9 @@ namespace Perigon.Weapons
         private InputAction _meleeWeaponInputAction = null;
         private bool _isMouseScrollEnabled = true;
 
-        public Action MeleeAttack;
-        
         public void Initialize()
         {
             EnableEquipmentPlayerInput();
-        }
-
-        public void ApplyMeleeDamageDelayed()
-        {
-            _meleeBehaviour.ApplyDamageDelayed();
         }
 
         private void EnableEquipmentPlayerInput()
@@ -56,13 +53,13 @@ namespace Perigon.Weapons
             _weapons = new Weapon[_weaponBehaviours.Length];
             for(int i = 0; i < _weaponBehaviours.Length; i++)
             {
-                _weaponBehaviours[i].Initialize(_fireInputAction, _reloadInputAction);
+                _weaponBehaviours[i].Initialize(_fireInputAction, _reloadInputAction, _bulletSpawner, _wallHitVFXSpawner);
                 _weapons[i] = _weaponBehaviours[i].WeaponViewModel;
                 _weapons[i].ActivateWeapon = false;
             }
 
             _weapons[_currentWeaponIndex].ActivateWeapon = true;
-            _meleeBehaviour.Initialize(_meleeWeaponInputAction, () => _playerPivotTransform, onSuccessfulAttack: MeleeAttack);
+            _meleeBehaviour.Initialize(_meleeWeaponInputAction, () => _playerPivotTransform, onSuccessfulAttack: OnMeleeAttack);
         }
         
         private void SetupPlayerEquipmentInput()
@@ -100,12 +97,18 @@ namespace Perigon.Weapons
             OnMouseSwapWeaponAction();
         }
 
+        private void OnMeleeAttack()
+        {
+            _weaponBehaviours[_currentWeaponIndex].OnMeleeAttack();
+        }
+
         private void Awake()
         {
             SetupPlayerEquipmentInput();
             _swapWeaponInputAction.started += OnControllerSwapWeaponAction;
-            _weaponBehaviours = GetComponentsInChildren<WeaponBehaviour>();
-            _meleeBehaviour = GetComponentInChildren<MeleeWeaponBehaviour>();
+            _bulletSpawner = GetComponent<BulletSpawner>();
+            _wallHitVFXSpawner = GetComponent<WallHitVFXSpawner>();
+            _meleeBehaviour = GetComponent<MeleeWeaponBehaviour>();
             if (_weaponBehaviours.IsNullOrEmpty())
             {
                 PanicHelper.Panic(new Exception("There are currently no WeaponBehaviour within the child of EquipmentBehaviour"));
