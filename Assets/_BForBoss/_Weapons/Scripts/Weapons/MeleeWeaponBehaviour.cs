@@ -47,11 +47,11 @@ namespace Perigon.Weapons
             if (context.performed)
             {
                 var t = _playerTransform ? _playerTransform : _getTransform();
-                var attack = _canAttackMany ? 
+                var isAttackSuccessful = _canAttackMany ? 
                     _weapon.TryAttackMany(t.position, t.forward) : 
                     _weapon.TryAttackOne(t.position, t.forward);
 
-                if (attack)
+                if (isAttackSuccessful)
                 {
                     _onSuccessfulAttack?.Invoke();
                 }
@@ -112,9 +112,9 @@ namespace Perigon.Weapons
             }
         }
 
-        public void ApplyDamageDelayed()
+        public void ApplyDamage()
         {
-            _weapon.ApplyDamageDelayed();
+            _weapon.ApplyDamage();
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using Perigon.Entities;
+using PerigonGames;
 using UnityEngine;
 
 namespace Perigon.Weapons
@@ -50,9 +51,9 @@ namespace Perigon.Weapons
             return true;
         }
         
-        public void ApplyDamageDelayed()
+        public void ApplyDamage()
         {
-            if (_enemyBuffer == null)
+            if (_enemyBuffer.IsNullOrEmpty())
                 return;
             for (int i = 0; i < _hits; i++)
             {

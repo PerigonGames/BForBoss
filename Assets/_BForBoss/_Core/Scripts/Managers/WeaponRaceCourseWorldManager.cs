@@ -23,7 +23,6 @@ namespace BForBoss
         [SerializeField] private TimeManager _timeManager = null;
         [SerializeField] private CheckpointManager _checkpointManager = null;
         [SerializeField] private LifeCycleManager _lifeCycleManager = null;
-        [FormerlySerializedAs("_weaponsManager")]
         [Title("Weapon/Equipment Component")] 
         [SerializeField] private WeaponAnimationController weaponAnimationController = null;
         [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
@@ -111,7 +110,7 @@ namespace BForBoss
             base.OnValidate();
             if (weaponAnimationController == null)
             {
-                PanicHelper.Panic(new Exception("Weapons Manager missing from World Manager"));
+                PanicHelper.Panic(new Exception("Weapons animation controller missing from World Manager"));
             }
             
             if (_equipmentBehaviour == null)

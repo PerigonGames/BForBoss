@@ -21,7 +21,6 @@ namespace BForBoss
         [Title("Component")]
         [SerializeField] private LifeCycleManager _lifeCycleManager = null;
         
-        [FormerlySerializedAs("_weaponsManager")]
         [Title("Weapon/Equipment Component")] 
         [SerializeField] private WeaponAnimationController weaponAnimationController = null;
         [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
