@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Serialization;
 
 namespace BForBoss
 {
@@ -21,7 +22,7 @@ namespace BForBoss
         [SerializeField] private LifeCycleManager _lifeCycleManager = null;
         
         [Title("Weapon/Equipment Component")] 
-        [SerializeField] private WeaponsManager _weaponsManager = null;
+        [SerializeField] private WeaponAnimationController weaponAnimationController = null;
         [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
         [SerializeField] private AmmunitionCountViewBehaviour _ammunitionCountView = null;
         [SerializeField] private ReloadViewBehaviour _reloadView = null;
@@ -56,14 +57,14 @@ namespace BForBoss
         protected override void Start()
         {
             base.Start();
-            _weaponsManager.Initialize(
+            weaponAnimationController.Initialize(
                 () => _player.CharacterVelocity,
                 () => _player.CharacterMaxSpeed,
                 () => _player.IsWallRunning,
                 () => _player.IsGrounded,
                 () => _player.IsSliding,
                 () => _player.IsDashing);
-            _equipmentBehaviour.Initialize();
+            _equipmentBehaviour.Initialize(_player.RootPivot);
             _ammunitionCountView.Initialize(_equipmentBehaviour);
             _reloadView.Initialize(_equipmentBehaviour);
         }
@@ -78,7 +79,7 @@ namespace BForBoss
         protected override void OnValidate()
         {
             base.OnValidate();
-            if (_weaponsManager == null)
+            if (weaponAnimationController == null)
             {
                 Debug.LogWarning("Weapons Manager missing from World Manager");
             }

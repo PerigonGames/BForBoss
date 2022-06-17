@@ -312,6 +312,7 @@ MonoBehaviour:
   _cameraRotateDuration: 2
   _lookAlongWallRotationSpeed: 3
   _minLookAlongWallStabilizationAngle: 5
+  _shouldPrintDebugLogs: 0
 --- !u!114 &910638779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -675,7 +676,7 @@ MonoBehaviour:
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 5
-    NearClipPlane: 0.3
+    NearClipPlane: 0.2
     FarClipPlane: 1000
     Dutch: 0
     ModeOverride: 0
@@ -753,7 +754,7 @@ MonoBehaviour:
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 5
-    NearClipPlane: 0.3
+    NearClipPlane: 0.2
     FarClipPlane: 1000
     Dutch: 0
     ModeOverride: 0

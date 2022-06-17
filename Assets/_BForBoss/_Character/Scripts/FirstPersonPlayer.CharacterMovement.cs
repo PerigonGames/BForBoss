@@ -4,6 +4,7 @@ namespace Perigon.Character
 {
     public interface ICharacterMovement
     {
+        Transform RootPivot { get; }
         Vector3 CharacterVelocity { get; }
         float CharacterMaxSpeed { get; }
         bool IsGrounded { get; }
@@ -16,6 +17,7 @@ namespace Perigon.Character
     
     public partial class FirstPersonPlayer : ICharacterMovement
     {
+        public Transform RootPivot => rootPivot;
         public Vector3 CharacterVelocity => GetVelocity();
         public float SpeedMagnitude => GetVelocity().magnitude;
         public float CharacterMaxSpeed => GetMaxSpeed();

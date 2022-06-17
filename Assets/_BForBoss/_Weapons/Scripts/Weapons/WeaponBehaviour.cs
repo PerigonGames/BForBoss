@@ -7,12 +7,13 @@ using UnityEngine.VFX;
 
 namespace Perigon.Weapons
 {
-    [RequireComponent(typeof(BulletSpawner))]
     public abstract partial class WeaponBehaviour : MonoBehaviour
     {
         private const float WALL_HIT_ZFIGHT_BUFFER = 0.01f;
         private const float WALL_HIT_VFX_HIT_FADE_DURATION = 2.0f;
         private const float RAYCAST_DISTANCE_LIMIT = 50f;
+        private const string MELEE_ANIMATOR_PARAM = "Melee";
+        private static readonly int MeleeAnimatorID = Animator.StringToHash(MELEE_ANIMATOR_PARAM);
         protected readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
 
         [SerializeField] protected Transform _firePoint = null;
@@ -33,6 +34,8 @@ namespace Perigon.Weapons
         private BulletSpawner _bulletSpawner;
         private WallHitVFXSpawner _wallHitVFXSpawner;
 
+        private Animator _weaponAnimator = null;
+
         public Weapon WeaponViewModel => _weapon;
 
         protected Camera MainCamera
@@ -51,10 +54,14 @@ namespace Perigon.Weapons
         public void Initialize(
             InputAction fireInputAction,
             InputAction reloadInputAction,
+            BulletSpawner bulletSpawner,
+            WallHitVFXSpawner wallHitVFXSpawner,
             IWeaponProperties properties = null)
         {
             _fireInputAction = fireInputAction;
             _reloadInputAction = reloadInputAction;
+            _bulletSpawner = bulletSpawner;
+            _wallHitVFXSpawner = wallHitVFXSpawner;
             _weapon = new Weapon(properties ?? _weaponScriptableObject);
             BindWeapon();
             SetCrosshairImage();
@@ -63,6 +70,7 @@ namespace Perigon.Weapons
         private void HandleOnWeaponActivate(bool activate)
         {
             enabled = activate;
+            gameObject.SetActive(activate);
         }
 
         private void BindWeapon()
@@ -132,22 +140,16 @@ namespace Perigon.Weapons
 
         private void Awake()
         {
-            _bulletSpawner = GetComponent<BulletSpawner>();
-            _wallHitVFXSpawner = GetComponent<WallHitVFXSpawner>();
             if (_muzzleFlash == null)
             {
                 Debug.LogWarning("Missing VFX Visual Effect from this weapon");
             }
-            
-            if (_bulletSpawner == null)
-            {
-                PanicHelper.Panic(new Exception("Bullet Spawner missing from Equipment > Weapons Object"));
-            }
-
-            if (_wallHitVFXSpawner == null)
-            {
-                Debug.LogWarning("Wall Hit VFX Spawner missing from Equipment > Weapons object");
-            }
+            _weaponAnimator = GetComponent<Animator>();
+        }
+        
+        public void OnMeleeAttack()
+        {
+            _weaponAnimator.SetTrigger(MeleeAnimatorID);
         }
 
         private void OnEnable()
