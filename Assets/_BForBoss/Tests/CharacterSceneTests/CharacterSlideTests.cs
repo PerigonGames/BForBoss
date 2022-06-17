@@ -17,7 +17,7 @@ namespace Tests.Character
         public override void Setup()
         {
             base.Setup();
-            EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/_BForBoss/Tests/Scenes/CharacterSlideTest.unity", new LoadSceneParameters(LoadSceneMode.Single));
+            EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/_BForBoss/Tests/Scenes/GenericCharacterTests.unity", new LoadSceneParameters(LoadSceneMode.Single));
             _keyboard = InputSystem.AddDevice<Keyboard>();
         }
         
@@ -29,18 +29,18 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = GameObject.Find("SlideSpawn").transform.position;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             character.transform.position = originalPosition;
             
             Press(_keyboard.cKey);
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(2.0f);
 
-            var withinBoundsXPosition = TestUtilities.WithinBounds(character.transform.position.x, 0);
-            var withinBoundsYPosition = TestUtilities.WithinBounds(character.transform.position.z, 0);
+            var withinBoundsXPosition = TestUtilities.WithinBounds(character.transform.position.x, originalPosition.x, 1);
+            var withinBoundsYPosition = TestUtilities.WithinBounds(character.transform.position.z, 0, 1);
 
-            Assert.IsTrue(withinBoundsXPosition, "Crouching should not have moved player when standing still");
-            Assert.IsTrue(withinBoundsYPosition, "Crouching should not have moved player when standing still");
+            Assert.IsTrue(withinBoundsXPosition, "Crouching should not have moved player when standing still X Position");
+            Assert.IsTrue(withinBoundsYPosition, "Crouching should not have moved player when standing still Y Position: " + character.transform.position.z);
         }
         
         [UnityTest]
@@ -51,7 +51,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = GameObject.Find("SlideSpawn").transform.position;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             character.transform.position = originalPosition;
             
@@ -60,8 +60,8 @@ namespace Tests.Character
             Press(_keyboard.cKey);
             yield return new WaitForSeconds(1.0f);
 
-            var withinBoundsXPosition = TestUtilities.WithinBounds(character.transform.position.x, 0);
-            var withinBoundsYPosition = TestUtilities.WithinBounds(character.transform.position.z, 0);
+            var withinBoundsXPosition = TestUtilities.WithinBounds(character.transform.position.x, originalPosition.x, 1);
+            var withinBoundsYPosition = TestUtilities.WithinBounds(character.transform.position.z, 0, 1);
 
             Assert.IsTrue(withinBoundsXPosition, "Crouching should not have moved player when standing still");
             Assert.IsTrue(withinBoundsYPosition, "Crouching should not have moved player when standing still");
@@ -75,7 +75,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = GameObject.Find("SlideSpawn").transform.position;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             var blockadeLeft = GameObject.Find("Blockade_Left");
             character.transform.position = originalPosition;
@@ -97,7 +97,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = GameObject.Find("SlideSpawn").transform.position;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             var blockadeLeft = GameObject.Find("Blockade_Right");
             character.transform.position = originalPosition;
@@ -119,7 +119,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = GameObject.Find("SlideSpawn").transform.position;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             var blockadeForward = GameObject.Find("Blockade_Forward");
             character.transform.position = originalPosition;
@@ -141,7 +141,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = GameObject.Find("SlideSpawn").transform.position;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             var blockadeForward = GameObject.Find("Blockade_Backward");
             character.transform.position = originalPosition;
@@ -163,7 +163,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = GameObject.Find("SlideSpawn").transform.position;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             var blockadeLeft = GameObject.Find("Blockade_Left");
             character.transform.position = originalPosition;
@@ -185,7 +185,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = GameObject.Find("SlideSpawn").transform.position;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             var blockadeLeft = GameObject.Find("Blockade_Right");
             character.transform.position = originalPosition;
@@ -207,7 +207,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = GameObject.Find("SlideSpawn").transform.position;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             var blockadeForward = GameObject.Find("Blockade_Forward");
             character.transform.position = originalPosition;
@@ -229,7 +229,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = GameObject.Find("SlideSpawn").transform.position;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             var blockadeForward = GameObject.Find("Blockade_Backward");
             character.transform.position = originalPosition;
@@ -251,7 +251,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = GameObject.Find("SlideSpawn").transform.position;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             var blockadeForward = GameObject.Find("Blockade_Forward");
             var blockadeRight = GameObject.Find("Blockade_Right");
@@ -276,7 +276,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = GameObject.Find("SlideSpawn").transform.position;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             var blockadeForward = GameObject.Find("Blockade_Forward");
             var blockadeLeft = GameObject.Find("Blockade_Left");
@@ -301,7 +301,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = GameObject.Find("SlideSpawn").transform.position;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             var blockadeBackward = GameObject.Find("Blockade_Backward");
             var blockadeLeft = GameObject.Find("Blockade_Left");
@@ -326,7 +326,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = GameObject.Find("SlideSpawn").transform.position;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             var blockadeBackward = GameObject.Find("Blockade_Backward");
             var blockadeRight = GameObject.Find("Blockade_Right");
