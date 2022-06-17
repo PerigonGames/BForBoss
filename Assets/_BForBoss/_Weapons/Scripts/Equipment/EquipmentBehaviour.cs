@@ -30,7 +30,7 @@ namespace Perigon.Weapons
         {
             _playerPivotTransform = playerPivotTransform;
             EnableEquipmentPlayerInput();
-            SetupWeapons();
+            _meleeBehaviour.Initialize(_meleeWeaponInputAction, () => _playerPivotTransform, onSuccessfulAttack: OnMeleeAttack);
         }
 
         private void EnableEquipmentPlayerInput()
@@ -62,7 +62,6 @@ namespace Perigon.Weapons
             }
 
             _weapons[_currentWeaponIndex].ActivateWeapon = true;
-            _meleeBehaviour.Initialize(_meleeWeaponInputAction, () => _playerPivotTransform, onSuccessfulAttack: OnMeleeAttack);
         }
         
         private void SetupPlayerEquipmentInput()
@@ -116,6 +115,7 @@ namespace Perigon.Weapons
             {
                 PanicHelper.Panic(new Exception("There are currently no WeaponBehaviour within the child of EquipmentBehaviour"));
             }
+            SetupWeapons();
         }
 
         private void OnValidate()
