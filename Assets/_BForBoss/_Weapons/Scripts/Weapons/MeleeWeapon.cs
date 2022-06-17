@@ -28,7 +28,7 @@ namespace Perigon.Weapons
             _currentCooldown -= _currentCooldown > 0 ? deltaTime : _currentCooldown;
         }
 
-        public bool AttackManyIfPossible(Vector3 playerPosition, Vector3 playerForwardDirection)
+        public bool TryAttackMany(Vector3 playerPosition, Vector3 playerForwardDirection)
         {
             if (!CanMelee)
                 return false;
@@ -38,15 +38,15 @@ namespace Perigon.Weapons
             return true;
         }
         
-        public bool AttackOneIfPossible(Vector3 playerPosition, Vector3 playerForwardDirection)
+        public bool TryAttackOne(Vector3 playerPosition, Vector3 playerForwardDirection)
         {
             if (!CanMelee)
                 return false;
             _currentCooldown += _meleeProperties.AttackCoolDown;
             
-            var hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, ref _enemyBuffer);
-            if (hits > 1)
-                hits = 1; //ensure we only damage first enemy
+            _hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, ref _enemyBuffer);
+            if (_hits > 1)
+                _hits = 1; //ensure we only damage first enemy
             return true;
         }
         

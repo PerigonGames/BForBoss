@@ -48,8 +48,8 @@ namespace Perigon.Weapons
             {
                 var t = _playerTransform ? _playerTransform : _getTransform();
                 var attack = _canAttackMany ? 
-                    _weapon.AttackManyIfPossible(t.position, t.forward) : 
-                    _weapon.AttackOneIfPossible(t.position, t.forward);
+                    _weapon.TryAttackMany(t.position, t.forward) : 
+                    _weapon.TryAttackOne(t.position, t.forward);
 
                 if (attack)
                 {
