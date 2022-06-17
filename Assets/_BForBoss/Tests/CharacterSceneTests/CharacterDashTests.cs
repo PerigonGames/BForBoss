@@ -11,7 +11,8 @@ namespace Tests.Character
 {
     public class CharacterDashTests : InputTestFixture
     {
-        private Vector3 Section_B_Location = new Vector3(0, 0, -40f);
+        private Vector3 Section_B_Location => GameObject.Find("Dash_B_Spawn").transform.position;
+        private Vector3 Section_A_Location => GameObject.Find("Dash_A_Spawn").transform.position;
         private Keyboard _keyboard = null;
         
 
@@ -19,7 +20,7 @@ namespace Tests.Character
         public override void Setup()
         {
             base.Setup();
-            EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/_BForBoss/Tests/Scenes/CharacterDashTest.unity", new LoadSceneParameters(LoadSceneMode.Single));
+            EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/_BForBoss/Tests/Scenes/GenericCharacterTests.unity", new LoadSceneParameters(LoadSceneMode.Single));
             _keyboard = InputSystem.AddDevice<Keyboard>();
         }
         
@@ -31,7 +32,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = Section_A_Location;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             character.transform.position = originalPosition;
             var expectedHeight = character.transform.position.y;
@@ -52,7 +53,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = Section_A_Location;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             character.transform.position = originalPosition;
             var expectedHeight = character.transform.position.y;
@@ -75,7 +76,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = Section_A_Location;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             character.transform.position = originalPosition;
             var expectedHeight = character.transform.position.y;
@@ -98,7 +99,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = Section_A_Location;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             character.transform.position = originalPosition;
             var expectedHeight = character.transform.position.y;
@@ -121,7 +122,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var originalPosition = Vector3.zero;
+            var originalPosition = Section_A_Location;
             var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
             character.transform.position = originalPosition;
             var expectedHeight = character.transform.position.y;
