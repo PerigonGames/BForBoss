@@ -17,6 +17,7 @@ namespace Perigon.Weapons
     {
         [InlineEditor]
         [SerializeField] private MeleeScriptableObject _meleeScriptable;
+        [Tooltip("Used for previewing melee radius in editor")]
         [SerializeField] private Transform _playerTransform;
 
         [SerializeField] private bool _canAttackMany = true;
@@ -46,7 +47,7 @@ namespace Perigon.Weapons
         {
             if (context.performed)
             {
-                var t = _playerTransform ? _playerTransform : _getTransform();
+                var t = _getTransform();
                 var isAttackSuccessful = _canAttackMany ? 
                     _weapon.TryAttackMany(t.position, t.forward) : 
                     _weapon.TryAttackOne(t.position, t.forward);
@@ -62,14 +63,6 @@ namespace Perigon.Weapons
         {
             _meleeActionInputAction.performed += OnMeleeInputAction;
             _meleeActionInputAction.canceled += OnMeleeInputAction;
-        }
-
-        private void Awake()
-        {
-            if (_playerTransform == null)
-            {
-                Debug.LogWarning("Player transform is not set on melee weapon, gizmos will not be drawn");
-            }
         }
 
         private void Update()
@@ -91,6 +84,14 @@ namespace Perigon.Weapons
             {
                 _meleeActionInputAction.performed -= OnMeleeInputAction;
                 _meleeActionInputAction.canceled -= OnMeleeInputAction;
+            }
+        }
+        
+        private void OnValidate()
+        {
+            if (_playerTransform == null)
+            {
+                _playerTransform = GameObject.Find("Root").transform;
             }
         }
 

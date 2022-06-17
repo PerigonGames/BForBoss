@@ -64,7 +64,7 @@ namespace BForBoss
                 () => _player.IsGrounded,
                 () => _player.IsSliding,
                 () => _player.IsDashing);
-            _equipmentBehaviour.Initialize();
+            _equipmentBehaviour.Initialize(_player.RootPivot);
             _ammunitionCountView.Initialize(_equipmentBehaviour);
             _reloadView.Initialize(_equipmentBehaviour);
         }

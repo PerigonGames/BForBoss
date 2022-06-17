@@ -24,7 +24,7 @@ namespace BForBoss
         [SerializeField] private CheckpointManager _checkpointManager = null;
         [SerializeField] private LifeCycleManager _lifeCycleManager = null;
         [Title("Weapon/Equipment Component")] 
-        [SerializeField] private WeaponAnimationController weaponAnimationController = null;
+        [SerializeField] private WeaponAnimationController _weaponAnimationController = null;
         [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
         [SerializeField] private AmmunitionCountViewBehaviour _ammunitionCountView = null;
         [SerializeField] private ReloadViewBehaviour _reloadView = null;
@@ -69,14 +69,14 @@ namespace BForBoss
             _checkpointManager.Initialize(_timeManagerViewModel);
             _timeManager.Initialize(_timeManagerViewModel);
 
-            weaponAnimationController.Initialize(
+            _weaponAnimationController.Initialize(
                 () => _player.CharacterVelocity,
                 () => _player.CharacterMaxSpeed,
                 () => _player.IsWallRunning,
                 () => _player.IsGrounded,
                 () => _player.IsSliding,
                 () => _player.IsDashing);
-            _equipmentBehaviour.Initialize();
+            _equipmentBehaviour.Initialize(_player.RootPivot);
             _ammunitionCountView.Initialize(_equipmentBehaviour);
             _reloadView.Initialize(_equipmentBehaviour);
             
@@ -108,7 +108,7 @@ namespace BForBoss
         protected override void OnValidate()
         {
             base.OnValidate();
-            if (weaponAnimationController == null)
+            if (_weaponAnimationController == null)
             {
                 PanicHelper.Panic(new Exception("Weapons animation controller missing from World Manager"));
             }
