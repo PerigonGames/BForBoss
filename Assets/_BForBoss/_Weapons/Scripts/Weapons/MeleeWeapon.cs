@@ -1,5 +1,6 @@
 using System;
 using Perigon.Entities;
+using PerigonGames;
 using UnityEngine;
 
 namespace Perigon.Weapons
@@ -14,7 +15,8 @@ namespace Perigon.Weapons
         private float _currentCooldown = 0f;
         private Action<bool> _onHitEntity;
         public bool CanMelee => _currentCooldown <= 0f;
-
+        private int _hits;
+        
         public float CurrentCooldown => _currentCooldown;
 
         public MeleeWeapon(IMeleeProperties meleeProperties, Action<bool> onHitEntity = null)
@@ -27,33 +29,36 @@ namespace Perigon.Weapons
             _currentCooldown -= _currentCooldown > 0 ? deltaTime : _currentCooldown;
         }
 
-        public void AttackManyIfPossible(Vector3 playerPosition, Vector3 playerForwardDirection)
+        public bool TryAttackMany(Vector3 playerPosition, Vector3 playerForwardDirection)
         {
             if (!CanMelee)
-                return;
+                return false;
             _currentCooldown += _meleeProperties.AttackCoolDown;
             
-            var hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, ref _enemyBuffer);
-            if (hits <= 0) 
-                return;
+            _hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, ref _enemyBuffer);
+            return true;
+        }
+        
+        public bool TryAttackOne(Vector3 playerPosition, Vector3 playerForwardDirection)
+        {
+            if (!CanMelee)
+                return false;
+            _currentCooldown += _meleeProperties.AttackCoolDown;
             
-            for(int i = 0; i < hits; i++)
+            _hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, ref _enemyBuffer);
+            if (_hits > 1)
+                _hits = 1; //ensure we only damage first enemy
+            return true;
+        }
+        
+        public void ApplyDamage()
+        {
+            if (_enemyBuffer.IsNullOrEmpty())
+                return;
+            for (int i = 0; i < _hits; i++)
             {
                 DamageEnemy(_enemyBuffer[i]);
             }
-        }
-        
-        public void AttackOneIfPossible(Vector3 playerPosition, Vector3 playerForwardDirection)
-        {
-            if (!CanMelee)
-                return;
-            _currentCooldown += _meleeProperties.AttackCoolDown;
-            
-            var hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, ref _enemyBuffer);
-            if (hits <= 0) 
-                return;
-            
-            DamageEnemy(_enemyBuffer[0]);
         }
 
         private void DamageEnemy(Collider enemyCollider)

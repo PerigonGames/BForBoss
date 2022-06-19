@@ -17,6 +17,7 @@ namespace Perigon.Weapons
     {
         [InlineEditor]
         [SerializeField] private MeleeScriptableObject _meleeScriptable;
+        [Tooltip("Used for previewing melee radius in editor")]
         [SerializeField] private Transform _playerTransform;
 
         [SerializeField] private bool _canAttackMany = true;
@@ -24,15 +25,20 @@ namespace Perigon.Weapons
         private MeleeWeapon _weapon;
         private InputAction _meleeActionInputAction;
         private Func<Transform> _getTransform;
+        private Action _onSuccessfulAttack;
 
         public float CurrentCooldown => _weapon?.CurrentCooldown ?? 0f;
         public float MaxCooldown => _meleeScriptable != null ? _meleeScriptable.AttackCoolDown : 1f;
         public bool CanMelee => _weapon?.CanMelee ?? false;
 
-        public void Initialize(InputAction meleeAttackAction, Func<Transform> getTransform, IMeleeProperties properties = null)
+        public void Initialize(InputAction meleeAttackAction, 
+            Func<Transform> getTransform,
+            IMeleeProperties properties = null, 
+            Action onSuccessfulAttack = null)
         {
             _meleeActionInputAction = meleeAttackAction;
             _getTransform = getTransform;
+            _onSuccessfulAttack = onSuccessfulAttack;
             _weapon = new MeleeWeapon(properties ?? _meleeScriptable);
             BindActions();
         }
@@ -41,11 +47,15 @@ namespace Perigon.Weapons
         {
             if (context.performed)
             {
-                var t = _playerTransform ? _playerTransform : _getTransform();
-                if(_canAttackMany)
-                    _weapon.AttackManyIfPossible(t.position, t.forward);
-                else
-                    _weapon.AttackOneIfPossible(t.position, t.forward);
+                var t = _getTransform();
+                var isAttackSuccessful = _canAttackMany ? 
+                    _weapon.TryAttackMany(t.position, t.forward) : 
+                    _weapon.TryAttackOne(t.position, t.forward);
+
+                if (isAttackSuccessful)
+                {
+                    _onSuccessfulAttack?.Invoke();
+                }
             }
         }
 
@@ -53,14 +63,6 @@ namespace Perigon.Weapons
         {
             _meleeActionInputAction.performed += OnMeleeInputAction;
             _meleeActionInputAction.canceled += OnMeleeInputAction;
-        }
-
-        private void Awake()
-        {
-            if (_playerTransform == null)
-            {
-                Debug.LogWarning("Player transform is not set on melee weapon, gizmos will not be drawn");
-            }
         }
 
         private void Update()
@@ -84,6 +86,14 @@ namespace Perigon.Weapons
                 _meleeActionInputAction.canceled -= OnMeleeInputAction;
             }
         }
+        
+        private void OnValidate()
+        {
+            if (_playerTransform == null)
+            {
+                _playerTransform = GameObject.Find("Root").transform;
+            }
+        }
 
         private void OnDrawGizmosSelected()
         {
@@ -101,6 +111,11 @@ namespace Perigon.Weapons
                 center.y += _meleeScriptable.Height;
                 Gizmos.DrawWireSphere(center, radius);
             }
+        }
+
+        public void ApplyDamage()
+        {
+            _weapon.ApplyDamage();
         }
     }
 }
