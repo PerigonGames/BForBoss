@@ -5,6 +5,7 @@ namespace Tests
 {
     public class MockCharacterMovement : ICharacterMovement
     {
+        public Transform RootPivot { get; set; }
         public bool _isWalking = false;
         public Vector3 CharacterVelocity { get; set; }
         public float CharacterMaxSpeed { get; set; }
