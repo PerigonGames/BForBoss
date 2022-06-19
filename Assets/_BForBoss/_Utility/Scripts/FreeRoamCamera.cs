@@ -82,6 +82,12 @@ namespace BForBoss
         private InputActionMap _actionMap;
         private Transform _startingTransform;
         private bool _mouseRightButtonPressed;
+        private bool _isMouseRotationYInverted = true;
+
+        public bool IsMouseRotationYInverted
+        {
+            set => _isMouseRotationYInverted = value;
+        }
         
         public void Initialize(Transform playerTransform, Action onExit)
         {
@@ -100,7 +106,7 @@ namespace BForBoss
             _targetCameraState.SetFromTransform(transform);
             _interpolatingCameraState.SetFromTransform(transform);
         }
-
+        
         private void InitializeActionMap()
         {
             _actionMap = new InputActionMap("Free Roam Camera Controller");
@@ -177,6 +183,7 @@ namespace BForBoss
             if (IsCameraRotationAllowed())
             {
                 var mouseMovement = GetInputLookRotation() * (MOUSE_SENSITIVITY_MULTIPLIER * _mouseSensitivity);
+                mouseMovement.y *= _isMouseRotationYInverted ? -1 : 1;
                 var mouseSensitivityFactor = _mouseSensitivityCurve.Evaluate(mouseMovement.magnitude);
 
                 _targetCameraState.yaw += mouseMovement.x * mouseSensitivityFactor;
