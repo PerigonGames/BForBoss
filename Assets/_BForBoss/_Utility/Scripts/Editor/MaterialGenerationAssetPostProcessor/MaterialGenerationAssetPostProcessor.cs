@@ -22,7 +22,7 @@ public class MaterialGenerationAssetPostProcessor : AssetPostprocessor
     private static readonly int NORMAL_MAP_PROPERTY_ID = Shader.PropertyToID("_NormalMap");
     private static readonly int MASK_MAP_PROPERTY_ID = Shader.PropertyToID("_MaskMap");
     
-    private static Dictionary<string, MaterialGenerationAsset> _materialGenerationStructs = new Dictionary<string, MaterialGenerationAsset>();
+    private static Dictionary<string, MaterialGenerationAsset> _materialGenerationAssets = new Dictionary<string, MaterialGenerationAsset>();
     private static string _directory = string.Empty;
 
     private void OnPreprocessTexture()
@@ -47,24 +47,24 @@ public class MaterialGenerationAssetPostProcessor : AssetPostprocessor
         string materialName = materialNameWithExtension.Remove(materialNameWithExtension.Length - extension.Length);
         _directory = assetPath.Substring(0, startingIndex);
 
-        if (_materialGenerationStructs.ContainsKey(materialName))
+        if (_materialGenerationAssets.ContainsKey(materialName))
         {
-            MaterialGenerationAsset materialGenerationAsset = _materialGenerationStructs[materialName];
+            MaterialGenerationAsset materialGenerationAsset = _materialGenerationAssets[materialName];
             switch (prefix)
             {
                 case BASE_MAP_PREFIX when materialGenerationAsset.BaseMapAssetPath == null:
                 {
-                    _materialGenerationStructs[materialName].BaseMapAssetPath = assetPath;
+                    materialGenerationAsset.BaseMapAssetPath = assetPath;
                     return;
                 }
                 case NORMAL_MAP_PREFIX when materialGenerationAsset.NormalMapAssetPath == null:
                 {
-                    _materialGenerationStructs[materialName].NormalMapAssetPath = assetPath;
+                    materialGenerationAsset.NormalMapAssetPath = assetPath;
                     return;
                 }
                 case MASK_MAP_PREFIX when materialGenerationAsset.MaskMapAssetPath == null:
                 {
-                    _materialGenerationStructs[materialName].MaskMapAssetPath = assetPath;
+                    materialGenerationAsset.MaskMapAssetPath = assetPath;
                     return;
                 }
             }
@@ -89,18 +89,18 @@ public class MaterialGenerationAssetPostProcessor : AssetPostprocessor
                 break;
             }
         }
-        _materialGenerationStructs.Add(materialName, newMaterialGenerationAsset);
+        _materialGenerationAssets.Add(materialName, newMaterialGenerationAsset);
     }
 
     private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets,
         string[] movedFromAssetPaths)
     {
-        if (importedAssets.IsNullOrEmpty() || _materialGenerationStructs.Count == 0)
+        if (importedAssets.IsNullOrEmpty() || _materialGenerationAssets.Count == 0)
         {
             return;
         }
         
-        foreach (var materialGenerationPair in _materialGenerationStructs)
+        foreach (var materialGenerationPair in _materialGenerationAssets)
         {
             Material material = new Material(Shader.Find("HDRP/Lit"));
             string materialName = materialGenerationPair.Key;
@@ -139,7 +139,7 @@ public class MaterialGenerationAssetPostProcessor : AssetPostprocessor
             AssetDatabase.CreateAsset(material, materialPath);
         }
         
-        _materialGenerationStructs = new Dictionary<string, MaterialGenerationAsset>();
+        _materialGenerationAssets = new Dictionary<string, MaterialGenerationAsset>();
         AssetDatabase.Refresh();
     }
 }
