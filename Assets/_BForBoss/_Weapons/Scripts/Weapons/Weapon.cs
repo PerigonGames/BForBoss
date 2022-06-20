@@ -51,12 +51,19 @@ namespace Perigon.Weapons
              _ammunitionAmount = weaponProperties.AmmunitionAmount;
          }
 
-         public void DecrementElapsedTimeRateOfFire(float deltaTime)
+         public void DecrementElapsedTimeRateOfFire(float deltaTime, float timeScale)
          {
-             _elapsedRateOfFire = Mathf.Clamp(_elapsedRateOfFire - deltaTime, 0, float.PositiveInfinity);
+             var scaledDeltaTime = ScaledDeltaTime(deltaTime, timeScale);
+             _elapsedRateOfFire = Mathf.Clamp(_elapsedRateOfFire - scaledDeltaTime, 0, float.PositiveInfinity);
          }
 
-         public void ReloadWeaponCountDownIfNeeded(float deltaTime)
+         public float ScaledDeltaTime(float deltaTime, float timeScale)
+         {
+             var clampedTimeScale = Mathf.Clamp(timeScale, 0.01f, float.MaxValue);
+             return 1 / clampedTimeScale * deltaTime;
+         }
+
+         public void ReloadWeaponCountDownIfNeeded(float deltaTime, float timeScale)
          {
              if (_ammunitionAmount <= 0)
              {
@@ -65,7 +72,7 @@ namespace Perigon.Weapons
 
              if (IsReloading)
              {
-                 _elapsedReloadDuration -= deltaTime;
+                 _elapsedReloadDuration -= ScaledDeltaTime(deltaTime, timeScale);
              }
 
              if (_elapsedReloadDuration <= 0)
