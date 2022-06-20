@@ -3,12 +3,14 @@ using UnityEngine;
 
 namespace BForBoss
 {
-    public class FreeCamera : DebugView
+    public class FreeRoamCameraDebugView : DebugView
     {
         private GUIStyle _boldInstructionStyle = null;
         private Action _onBackButtonPressed = null;
-        
-        public FreeCamera(Rect masterRect, Action onWindowOpened, Action onBackButtonPressed) : base(masterRect)
+
+        public override string PrettyName => "Free Roam Camera";
+
+        public FreeRoamCameraDebugView(Rect masterRect, Action onWindowOpened, Action onBackButtonPressed) : base(masterRect)
         {
             _onBackButtonPressed = onBackButtonPressed;
             onWindowOpened?.Invoke();

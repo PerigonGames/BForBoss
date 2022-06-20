@@ -4,13 +4,15 @@ using UnityEngine;
 
 namespace BForBoss
 {
-    public class PlayerPrefResetter : DebugView
+    public class PlayerPrefResetterDebugView : DebugView
     {
         private Vector2 _scrollPosition = Vector2.zero;
 
         private IList<string> _keys;
 
-        public PlayerPrefResetter(Rect masterRect) : base(masterRect)
+        public override string PrettyName => "Player Pref Resetter";
+
+        public PlayerPrefResetterDebugView(Rect masterRect) : base(masterRect)
         {
             _keys = PlayerPrefKeys.GetAllKeys();
         }
