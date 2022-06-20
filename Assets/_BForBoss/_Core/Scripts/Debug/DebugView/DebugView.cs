@@ -23,6 +23,8 @@ namespace BForBoss
             }
         }
         
+        public abstract string PrettyName { get; }
+        
         public virtual void ResetData()
         {
             IsInitialized = false;

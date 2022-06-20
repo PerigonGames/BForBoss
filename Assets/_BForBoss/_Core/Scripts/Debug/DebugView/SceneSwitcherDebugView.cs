@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace BForBoss
 {
-    public class SceneSwitcher : DebugView
+    public class SceneSwitcherDebugView : DebugView
     {
         private const string SCENE_NAME_DELIMITER = "/";
         private const string SCENE_NAME_EXTENSION = ".unity";
@@ -14,7 +14,9 @@ namespace BForBoss
         private Vector2 _scrollPosition = Vector2.zero;
         private Action _onSceneSwitched;
 
-        public SceneSwitcher(Rect masterRect, Action onSceneSwitched) : base(masterRect)
+        public override string PrettyName => "Scene Switcher";
+
+        public SceneSwitcherDebugView(Rect masterRect, Action onSceneSwitched) : base(masterRect)
         {
             _onSceneSwitched = onSceneSwitched;
             GetBuildSceneNames();
