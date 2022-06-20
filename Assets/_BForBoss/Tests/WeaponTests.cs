@@ -197,6 +197,34 @@ namespace Tests.Weapons
             //Then
             Assert.AreEqual(20f, actualResult, "Should be double the delta time");
         }
+        
+        [Test]
+        public void Test_ScaledDeltaTime_With0TimeScale()
+        {
+            //Given 
+            var mockProperties = new MockWeaponProperties(ammoAmount: 1);
+            var weapon = new Weapon(mockProperties);
+            
+            //When
+            float actualResult = weapon.ScaledDeltaTime(10, 0);
+            
+            //Then
+            Assert.AreEqual(1000f, actualResult, "time scale should be clamped");
+        }
+        
+        [Test]
+        public void Test_ScaledDeltaTime_With0Deltatime()
+        {
+            //Given 
+            var mockProperties = new MockWeaponProperties(ammoAmount: 1);
+            var weapon = new Weapon(mockProperties);
+            
+            //When
+            float actualResult = weapon.ScaledDeltaTime(0, 1);
+            
+            //Then
+            Assert.AreEqual(0, actualResult, "scaled delta time should be 0");
+        }
 
         [Test]
         public void Test_ReloadWeaponCountDownIfNeeded_WithSomeAmmunition_CompletesReload()

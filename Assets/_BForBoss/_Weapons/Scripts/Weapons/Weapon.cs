@@ -59,7 +59,8 @@ namespace Perigon.Weapons
 
          public float ScaledDeltaTime(float deltaTime, float timeScale)
          {
-             return 1 / timeScale * deltaTime;
+             var clampedTimeScale = Mathf.Clamp(timeScale, 0.01f, float.MaxValue);
+             return 1 / clampedTimeScale * deltaTime;
          }
 
          public void ReloadWeaponCountDownIfNeeded(float deltaTime, float timeScale)
