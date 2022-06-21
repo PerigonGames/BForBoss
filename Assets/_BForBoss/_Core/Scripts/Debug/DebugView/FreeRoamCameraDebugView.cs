@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace BForBoss
 {
-    public class FreeCamera : DebugView
+    public class FreeRoamCameraDebugView : DebugView
     {
         private GUIStyle _boldInstructionStyle = null;
         private Action<bool> _onOptionsChanged = null;
         private Action _onBackButtonPressed = null;
 
-        private bool _isMouseRotationYInverted = true;
+        public override string PrettyName => "Free Roam Camera";
 
-        public FreeCamera(Rect masterRect, Action onWindowOpened, Action<bool> onOptionsChanged, Action onBackButtonPressed) : base(masterRect)
+        public FreeRoamCameraDebugView(Rect masterRect, Action onWindowOpened, Action<bool> onOptionsChanged, Action onBackButtonPressed) : base(masterRect)
         {
             _onOptionsChanged = onOptionsChanged;
             _onBackButtonPressed = onBackButtonPressed;
@@ -35,7 +35,7 @@ namespace BForBoss
                 fontStyle = FontStyle.BoldAndItalic,
                 alignment = TextAnchor.MiddleCenter
             };
-            
+
             using (new GUILayout.VerticalScope())
             {
                 GUILayout.Label("");
@@ -55,7 +55,7 @@ namespace BForBoss
                     _onOptionsChanged?.Invoke(_isMouseRotationYInverted);
                 }
             }
-            
+
             GUI.UnfocusWindow();
         }
 

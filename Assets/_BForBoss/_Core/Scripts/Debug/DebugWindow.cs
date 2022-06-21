@@ -108,10 +108,12 @@ namespace BForBoss
 
                         foreach (Type debugType in _debugOptions)
                         {
-                            if (GUILayout.Button(debugType.Name))
+                            ConstructorInfo constructorInfo = debugType.GetConstructors()[0];
+                            DebugView debugView = constructorInfo.Invoke(GetDebugViewConstructorParameters(debugType)) as DebugView;
+                            string debugViewPrettyName = debugType.GetProperty(nameof(DebugView.PrettyName)).GetValue(debugView) as string;
+                            if (GUILayout.Button(debugViewPrettyName))
                             {
-                                ConstructorInfo constructorInfo = debugType.GetConstructors()[0];
-                                _currentDebugView = constructorInfo.Invoke(GetDebugViewConstructorParameters(debugType)) as DebugView;
+                                _currentDebugView = debugView;
                             }
                         }
                     }
@@ -172,11 +174,11 @@ namespace BForBoss
         {
             List<object> parameters = new List<object> {_windowRect};
 
-            if (debugType == typeof(SceneSwitcher))
+            if (debugType == typeof(SceneSwitcherDebugView))
             {
                 parameters.Add((Action) ClosePanel);
             }
-            else if (debugType == typeof(FreeCamera))
+            else if (debugType == typeof(FreeRoamCameraDebugView))
             {
                 Rect freeCameraRect = new Rect(_windowRect)
                 {
