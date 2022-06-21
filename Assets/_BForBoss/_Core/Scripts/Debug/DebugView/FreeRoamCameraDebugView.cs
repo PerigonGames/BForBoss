@@ -9,6 +9,8 @@ namespace BForBoss
         private Action<bool> _onOptionsChanged = null;
         private Action _onBackButtonPressed = null;
 
+        private bool _isMouseRotationYInverted = true;
+
         public override string PrettyName => "Free Roam Camera";
 
         public FreeRoamCameraDebugView(Rect masterRect, Action onWindowOpened, Action<bool> onOptionsChanged, Action onBackButtonPressed) : base(masterRect)
