@@ -91,11 +91,11 @@ namespace Perigon.Weapons
         {
             if (_playerTransform == null)
             {
-                _playerTransform = GameObject.Find("Root").transform;
+                Debug.LogWarning("Melee gizmos will not be drawn correctly, please set the player transform in the MeleeWeaponBehavior!");
             }
         }
 
-        private void OnDrawGizmosSelected()
+        private void OnDrawGizmos()
         {
             if (_meleeScriptable != null && _playerTransform != null)
             {
@@ -106,10 +106,10 @@ namespace Perigon.Weapons
                 var radius = _meleeScriptable.HalfRange;
                 center.y += radius;
                 center.z += radius;
-                Gizmos.DrawWireSphere(center, radius);
+                Gizmos.DrawSphere(center, radius);
                 center.y -= 2 * radius;
                 center.y += _meleeScriptable.Height;
-                Gizmos.DrawWireSphere(center, radius);
+                Gizmos.DrawSphere(center, radius);
             }
         }
 
