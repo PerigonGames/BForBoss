@@ -162,7 +162,7 @@ namespace BForBoss
 
         private void OnFreeCameraOptionsChanged(bool isMouseRotationYInverted)
         {
-            _freeRoamCamera.IsMouseRotationYInverted = isMouseRotationYInverted;
+            _freeRoamCamera.ShouldInvertMouseYAxis = isMouseRotationYInverted;
         }
 
         private void OnFreeCameraDebugViewExited()

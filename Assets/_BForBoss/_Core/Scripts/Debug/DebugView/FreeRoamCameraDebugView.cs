@@ -9,7 +9,7 @@ namespace BForBoss
         private Action<bool> _onOptionsChanged = null;
         private Action _onBackButtonPressed = null;
 
-        private bool _isMouseRotationYInverted = true;
+        private bool _shouldInvertMouseYAxis = false;
 
         public override string PrettyName => "Free Roam Camera";
 
@@ -50,11 +50,11 @@ namespace BForBoss
                 DrawInstruction("Press", "SpaceBar", "to reset");
                 DrawInstruction("Press", "Backquote", "to escape");
 
-                _isMouseRotationYInverted = GUILayout.Toggle(_isMouseRotationYInverted, "Invert Y-Axis");
+                _shouldInvertMouseYAxis = GUILayout.Toggle(_shouldInvertMouseYAxis, "Invert Y-Axis");
 
                 if (GUI.changed)
                 {
-                    _onOptionsChanged?.Invoke(_isMouseRotationYInverted);
+                    _onOptionsChanged?.Invoke(_shouldInvertMouseYAxis);
                 }
             }
 
