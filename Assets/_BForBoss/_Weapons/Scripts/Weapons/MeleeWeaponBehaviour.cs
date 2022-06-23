@@ -106,10 +106,10 @@ namespace Perigon.Weapons
                 var radius = _meleeScriptable.HalfRange;
                 center.y += radius;
                 center.z += radius;
-                Gizmos.DrawWireSphere(center, radius);
+                Gizmos.DrawSphere(center, radius);
                 center.y -= 2 * radius;
                 center.y += _meleeScriptable.Height;
-                Gizmos.DrawWireSphere(center, radius);
+                Gizmos.DrawSphere(center, radius);
             }
         }
 
