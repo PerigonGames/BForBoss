@@ -160,6 +160,11 @@ namespace BForBoss
             _freeRoamCamera.Initialize(Camera.main.transform, OnFreeCameraDebugViewExited);
         }
 
+        private void OnFreeCameraOptionsChanged(bool isMouseRotationYInverted)
+        {
+            _freeRoamCamera.ShouldInvertMouseYAxis = isMouseRotationYInverted;
+        }
+
         private void OnFreeCameraDebugViewExited()
         {
             _freeRoamCamera.gameObject.SetActive(false);
@@ -179,7 +184,10 @@ namespace BForBoss
                 {
                     width = _windowRect.width + 20f
                 };
-                parameters = new List<object>{freeCameraRect, (Action) OnFreeCameraDebugViewOpened, (Action) OnFreeCameraDebugViewExited};
+                parameters = new List<object>{freeCameraRect,
+                    (Action) OnFreeCameraDebugViewOpened,
+                    (Action<bool>) OnFreeCameraOptionsChanged,
+                    (Action) OnFreeCameraDebugViewExited};
             }
 
             return parameters.ToArray();

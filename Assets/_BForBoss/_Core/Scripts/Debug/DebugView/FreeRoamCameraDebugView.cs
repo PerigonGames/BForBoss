@@ -6,12 +6,16 @@ namespace BForBoss
     public class FreeRoamCameraDebugView : DebugView
     {
         private GUIStyle _boldInstructionStyle = null;
+        private Action<bool> _onOptionsChanged = null;
         private Action _onBackButtonPressed = null;
+
+        private bool _shouldInvertMouseYAxis = false;
 
         public override string PrettyName => "Free Roam Camera";
 
-        public FreeRoamCameraDebugView(Rect masterRect, Action onWindowOpened, Action onBackButtonPressed) : base(masterRect)
+        public FreeRoamCameraDebugView(Rect masterRect, Action onWindowOpened, Action<bool> onOptionsChanged, Action onBackButtonPressed) : base(masterRect)
         {
+            _onOptionsChanged = onOptionsChanged;
             _onBackButtonPressed = onBackButtonPressed;
             onWindowOpened?.Invoke();
         }
@@ -24,19 +28,16 @@ namespace BForBoss
 
         protected override void DrawWindow()
         {
-            if (_boldInstructionStyle == null)
+            _boldInstructionStyle ??= new GUIStyle(GUI.skin.label)
             {
-                _boldInstructionStyle = new GUIStyle(GUI.skin.label)
+                normal = new GUIStyleState
                 {
-                    normal = new GUIStyleState
-                    {
-                        textColor = Color.white
-                    },
-                    fontStyle = FontStyle.BoldAndItalic,
-                    alignment = TextAnchor.MiddleCenter
-                };
-            }
-            
+                    textColor = Color.white
+                },
+                fontStyle = FontStyle.BoldAndItalic,
+                alignment = TextAnchor.MiddleCenter
+            };
+
             using (new GUILayout.VerticalScope())
             {
                 GUILayout.Label("");
@@ -48,8 +49,15 @@ namespace BForBoss
                 DrawInstruction("Hold", "Right mouse", "to rotate");
                 DrawInstruction("Press", "SpaceBar", "to reset");
                 DrawInstruction("Press", "Backquote", "to escape");
+
+                _shouldInvertMouseYAxis = GUILayout.Toggle(_shouldInvertMouseYAxis, "Invert Y-Axis");
+
+                if (GUI.changed)
+                {
+                    _onOptionsChanged?.Invoke(_shouldInvertMouseYAxis);
+                }
             }
-            
+
             GUI.UnfocusWindow();
         }
 
