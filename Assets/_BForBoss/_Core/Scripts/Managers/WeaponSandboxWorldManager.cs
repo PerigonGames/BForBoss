@@ -59,18 +59,18 @@ namespace BForBoss
         {
             base.Start();
             weaponAnimationController.Initialize(
-                () => _player.CharacterVelocity,
-                () => _player.CharacterMaxSpeed,
-                () => _player.IsWallRunning,
-                () => _player.IsGrounded,
-                () => _player.IsSliding,
-                () => _player.IsDashing);
-            _equipmentBehaviour.Initialize(_player.RootPivot);
+                () => _playerBehaviour.PlayerMovement.CharacterVelocity,
+                () => _playerBehaviour.PlayerMovement.CharacterMaxSpeed,
+                () => _playerBehaviour.PlayerMovement.IsWallRunning,
+                () => _playerBehaviour.PlayerMovement.IsGrounded,
+                () => _playerBehaviour.PlayerMovement.IsSliding,
+                () => _playerBehaviour.PlayerMovement.IsDashing);
+            _equipmentBehaviour.Initialize(_playerBehaviour.PlayerMovement.RootPivot);
             _ammunitionCountView.Initialize(_equipmentBehaviour);
             _reloadView.Initialize(_equipmentBehaviour);
             if (_enemyNavigationManager != null)
             {
-                _enemyNavigationManager.Initialize(() => _player.RootPivot.position);
+                _enemyNavigationManager.Initialize(() => _playerBehaviour.PlayerMovement.RootPivot.position);
             }
         }
         

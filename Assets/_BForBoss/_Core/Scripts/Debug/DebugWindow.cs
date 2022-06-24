@@ -58,7 +58,7 @@ namespace BForBoss
                 }
             }
             
-            IInputSettings input = FindObjectOfType<FirstPersonPlayer>();
+            IInputSettings input = FindObjectOfType<PlayerMovementBehaviour>();
             _freezeActionsUtility = new FreezeActionsUtility(input);
         }
 
