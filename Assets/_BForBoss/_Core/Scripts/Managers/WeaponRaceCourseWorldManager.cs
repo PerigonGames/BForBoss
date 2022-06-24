@@ -7,7 +7,6 @@ using Perigon.Weapons;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Serialization;
 
 namespace BForBoss
 {
