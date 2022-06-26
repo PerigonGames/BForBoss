@@ -15,13 +15,13 @@ namespace Perigon.Character
 
         [SerializeField] private float _minSpeed = 0.1f;
 
-        private FirstPersonPlayer _player;
+        private PlayerMovementBehaviour _playerMovementBehaviour;
         private CharacterMovementAudio _movementAudio = null;
 
         private void Awake()
         {
-            _player = GetComponent<FirstPersonPlayer>();
-            _movementAudio = new CharacterMovementAudio(_player, _minSpeed);
+            _playerMovementBehaviour = GetComponent<PlayerMovementBehaviour>();
+            _movementAudio = new CharacterMovementAudio(_playerMovementBehaviour, _minSpeed);
             _movementAudio.OnSoundStateChange += MovementAudioOnOnSoundStateChange;
         }
 
@@ -59,21 +59,21 @@ namespace Perigon.Character
 
         private void OnEnable()
         {
-            if (_player != null)
+            if (_playerMovementBehaviour != null)
             {
-                _player.Jumped += PlayJumpSound;
-                _player.Dashed += PlayDashSound;
-                _player.Slid += PlaySlideSound;
+                _playerMovementBehaviour.Jumped += PlayJumpSound;
+                _playerMovementBehaviour.Dashed += PlayDashSound;
+                _playerMovementBehaviour.Slid += PlaySlideSound;
             }
         }
         
         private void OnDisable()
         {
-            if (_player != null)
+            if (_playerMovementBehaviour != null)
             {
-                _player.Jumped -= PlayJumpSound;
-                _player.Dashed -= PlayDashSound;
-                _player.Slid -= PlaySlideSound;
+                _playerMovementBehaviour.Jumped -= PlayJumpSound;
+                _playerMovementBehaviour.Dashed -= PlayDashSound;
+                _playerMovementBehaviour.Slid -= PlaySlideSound;
             }
         }
 

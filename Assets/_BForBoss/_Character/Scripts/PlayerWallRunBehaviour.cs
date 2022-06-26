@@ -95,7 +95,7 @@ namespace Perigon.Character
         };
         
         private ECM2.Characters.Character _baseCharacter = null;
-        private FirstPersonPlayer _fpsCharacter = null;
+        private PlayerMovementBehaviour _fpsCharacter = null;
         private LayerMask _parkourWallMask;
         private Vector3 _lastWallRunNormal;
         private Vector3 _lastPlayerWallRunDirection;
@@ -121,7 +121,7 @@ namespace Perigon.Character
         public void Initialize(ECM2.Characters.Character baseCharacter, Func<Vector2> getMovementInput, Action<int> onWallRunFinished)
         {
             _baseCharacter = baseCharacter;
-            _fpsCharacter = baseCharacter as FirstPersonPlayer;
+            _fpsCharacter = baseCharacter as PlayerMovementBehaviour;
             _movementInput = getMovementInput;
             _OnWallRunFinished = onWallRunFinished;
             _parkourWallMask = LayerMask.GetMask(PARKOUR_WALL_LAYER);

@@ -2495,17 +2495,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 616281458356855404, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
   m_PrefabInstance: {fileID: 1144084895}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &907697725 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7177967516030943659, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
-  m_PrefabInstance: {fileID: 1144084895}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61feaf7a8fc88824d9b2669245e397a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &956328206
 GameObject:
   m_ObjectHideFlags: 0
@@ -3019,6 +3008,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
+--- !u!114 &1144084896 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3783079141729131295, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
+  m_PrefabInstance: {fileID: 1144084895}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32effb133c1fc884a9051e5c12cba2ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!20 &1186343774 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 4468250412726274963, guid: ff5af1825b14cc744a3b0e2f82a6958b, type: 3}
@@ -3943,7 +3943,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee4488d3cc3d6624f9d979c08488ad1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: {fileID: 907697725}
+  _playerBehaviour: {fileID: 1144084896}
   _pauseMenu: {fileID: 165038793}
   _weaponAnimationController: {fileID: 0}
   _equipmentBehaviour: {fileID: 1013383459}
@@ -4643,7 +4643,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2061070007434329460, guid: c7cd698ab65444f38b1e49e2e17d8e9f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 277.00897
+      value: 0.0009958921
       objectReference: {fileID: 0}
     - target: {fileID: 3924296612012996776, guid: c7cd698ab65444f38b1e49e2e17d8e9f, type: 3}
       propertyPath: m_Name
@@ -4827,7 +4827,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6758736603576299658, guid: c7cd698ab65444f38b1e49e2e17d8e9f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 277.00897
+      value: 0.0009958921
       objectReference: {fileID: 0}
     - target: {fileID: 7649166824825422377, guid: c7cd698ab65444f38b1e49e2e17d8e9f, type: 3}
       propertyPath: m_AnchorMax.x
