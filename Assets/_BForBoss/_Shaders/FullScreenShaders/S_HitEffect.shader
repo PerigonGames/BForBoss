@@ -59,16 +59,10 @@ Shader "FullScreen/S_HitEffect"
         // Load the camera color buffer at the mip 0 if we're not at the before rendering injection point
         if (_CustomPassInjectionPoint != CUSTOMPASSINJECTIONPOINT_BEFORE_RENDERING)
             color = float4(CustomPassLoadCameraColor(varyings.positionCS.xy, 0), 1);
-
-        // Add your custom pass code here
-
-        // Fade value allow you to increase the strength of the effect while the camera gets closer to the custom pass volume
-        float f = 1 - abs(_FadeValue * 2 - 1);
-
+        
         _Aspect = float2(1.0,1.0);
         _Falloff = 0.5;
         
-
         float2 coord = (posInput.positionNDC.xy - 0.5) * _Aspect * 2;
         float rf = sqrt(dot(coord, coord)) * _Falloff;
         float rf2_1 = rf * rf + 1.0;
@@ -100,7 +94,6 @@ Shader "FullScreen/S_HitEffect"
             ZWrite Off
             ZTest Always
             Blend SrcAlpha OneMinusSrcAlpha
-//            Blend One One
             Cull Off
 
             HLSLPROGRAM
