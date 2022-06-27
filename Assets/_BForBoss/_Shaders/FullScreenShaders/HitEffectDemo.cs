@@ -12,7 +12,7 @@ namespace BForBoss
         private CustomPassVolume cps;
         private Color mainColor;
 
-        [SerializeField] public Boolean isOn = true;
+        [SerializeField] public Boolean isOn = false;
         [SerializeField] public float speed = 1;
         [SerializeField] public float strength = 1;
         
