@@ -25,7 +25,7 @@ namespace BForBoss
         // Placeholder
         private void Awake()
         {
-            var character = FindObjectOfType<FirstPersonPlayer>();
+            var character = FindObjectOfType<Perigon.Character.PlayerMovementBehaviour>();
             Initialize(() => character.SpeedMagnitude);
         }
 

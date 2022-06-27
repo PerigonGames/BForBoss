@@ -1,5 +1,4 @@
 using System;
-using Perigon.Character;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -14,12 +13,11 @@ namespace BForBoss
         protected readonly StateManager _stateManager = StateManager.Instance;
 
         [Title("Base Component")] 
-        [SerializeField] protected FirstPersonPlayer _player = null;
+        [SerializeField] protected PlayerBehaviour _playerBehaviour = null;
 
         [Title("Base User Interface")] 
         [SerializeField] protected PauseMenu _pauseMenu;
 
-        private ICharacterSpawn _character = null;
         protected FreezeActionsUtility _freezeActionsUtility = null;
 
         protected abstract Vector3 SpawnLocation { get; }
@@ -33,7 +31,7 @@ namespace BForBoss
         protected virtual void Reset()
         {
             _stateManager.SetState(State.Play);
-            _character.SpawnAt(SpawnLocation, SpawnLookDirection);
+            _playerBehaviour.SpawnAt(SpawnLocation, SpawnLookDirection);
         }
 
         protected virtual void Awake()
@@ -42,20 +40,19 @@ namespace BForBoss
 #if (UNITY_EDITOR || DEVELOPMENT_BUILD)            
             SceneManager.LoadScene("AdditiveDebugScene", LoadSceneMode.Additive);
 #endif
-            _character = _player;
         }
 
         protected virtual void Start()
         {
             SetupSubManagers();
-            _pauseMenu.Initialize(_player, _freezeActionsUtility);
+            _pauseMenu.Initialize(_playerBehaviour.PlayerMovement, _freezeActionsUtility);
             _stateManager.SetState(State.PreGame);
         }
         
         private void SetupSubManagers()
         {
-            _player.Initialize();
-            _freezeActionsUtility = new FreezeActionsUtility(_player);
+            _playerBehaviour.Initialize();
+            _freezeActionsUtility = new FreezeActionsUtility(_playerBehaviour.PlayerMovement);
         }
 
         protected virtual void OnDestroy()
@@ -65,9 +62,9 @@ namespace BForBoss
 
         protected virtual void OnValidate()
         {
-            if (_player == null)
+            if (_playerBehaviour == null)
             {
-                PanicHelper.Panic(new Exception("FirstPersonPlayer is missing from World Manager"));
+                PanicHelper.Panic(new Exception("_playerBehaviour is missing from World Manager"));
             }
             
             if (_pauseMenu == null)
@@ -132,7 +129,7 @@ namespace BForBoss
 
         protected virtual void HandleOnDeath()
         {
-            _character.SpawnAt(SpawnLocation, SpawnLookDirection);
+            _playerBehaviour.SpawnAt(SpawnLocation, SpawnLookDirection);
             _stateManager.SetState(State.Play);
         }
     }

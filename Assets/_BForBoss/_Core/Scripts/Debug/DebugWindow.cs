@@ -58,7 +58,7 @@ namespace BForBoss
                 }
             }
             
-            IInputSettings input = FindObjectOfType<FirstPersonPlayer>();
+            IInputSettings input = FindObjectOfType<PlayerMovementBehaviour>();
             _freezeActionsUtility = new FreezeActionsUtility(input);
         }
 
@@ -108,10 +108,12 @@ namespace BForBoss
 
                         foreach (Type debugType in _debugOptions)
                         {
-                            if (GUILayout.Button(debugType.Name))
+                            ConstructorInfo constructorInfo = debugType.GetConstructors()[0];
+                            DebugView debugView = constructorInfo.Invoke(GetDebugViewConstructorParameters(debugType)) as DebugView;
+                            string debugViewPrettyName = debugType.GetProperty(nameof(DebugView.PrettyName)).GetValue(debugView) as string;
+                            if (GUILayout.Button(debugViewPrettyName))
                             {
-                                ConstructorInfo constructorInfo = debugType.GetConstructors()[0];
-                                _currentDebugView = constructorInfo.Invoke(GetDebugViewConstructorParameters(debugType)) as DebugView;
+                                _currentDebugView = debugView;
                             }
                         }
                     }
@@ -158,6 +160,11 @@ namespace BForBoss
             _freeRoamCamera.Initialize(Camera.main.transform, OnFreeCameraDebugViewExited);
         }
 
+        private void OnFreeCameraOptionsChanged(bool isMouseRotationYInverted)
+        {
+            _freeRoamCamera.ShouldInvertMouseYAxis = isMouseRotationYInverted;
+        }
+
         private void OnFreeCameraDebugViewExited()
         {
             _freeRoamCamera.gameObject.SetActive(false);
@@ -167,17 +174,20 @@ namespace BForBoss
         {
             List<object> parameters = new List<object> {_windowRect};
 
-            if (debugType == typeof(SceneSwitcher))
+            if (debugType == typeof(SceneSwitcherDebugView))
             {
                 parameters.Add((Action) ClosePanel);
             }
-            else if (debugType == typeof(FreeCamera))
+            else if (debugType == typeof(FreeRoamCameraDebugView))
             {
                 Rect freeCameraRect = new Rect(_windowRect)
                 {
                     width = _windowRect.width + 20f
                 };
-                parameters = new List<object>{freeCameraRect, (Action) OnFreeCameraDebugViewOpened, (Action) OnFreeCameraDebugViewExited};
+                parameters = new List<object>{freeCameraRect,
+                    (Action) OnFreeCameraDebugViewOpened,
+                    (Action<bool>) OnFreeCameraOptionsChanged,
+                    (Action) OnFreeCameraDebugViewExited};
             }
 
             return parameters.ToArray();

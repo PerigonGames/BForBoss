@@ -23,11 +23,11 @@ namespace Perigon.Weapons
         {
             if (_isFiring)
             {
-                _timeSinceFire += Time.deltaTime;
+                _timeSinceFire += _weapon.ScaledDeltaTime(Time.deltaTime, Time.timeScale);
                 _weapon.FireIfPossible();
             }
-            _weapon.DecrementElapsedTimeRateOfFire(Time.deltaTime);
-            _weapon.ReloadWeaponCountDownIfNeeded(Time.deltaTime);
+            _weapon.DecrementElapsedTimeRateOfFire(Time.deltaTime, Time.timeScale);
+            _weapon.ReloadWeaponCountDownIfNeeded(Time.deltaTime, Time.timeScale);
         }
     }
 }

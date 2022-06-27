@@ -32,7 +32,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             character.transform.position = _narrowCorridor;
             
             //First Wall Run
@@ -67,7 +67,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             character.transform.position = _narrowCorridor;
             //First Wall Run
             Press(_keyboard.wKey);
@@ -104,7 +104,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
             
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             character.transform.position = _wideCorridor;
             
             Press(_keyboard.wKey);
