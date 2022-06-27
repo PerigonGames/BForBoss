@@ -35,6 +35,10 @@ namespace BForBoss
                 float factor = (float)( Math.Abs(Math.Sin(Time.realtimeSinceStartup * (1 / speed))) * strength);
                 mat.SetFloat("_EmissionStrength", factor);
             }
+            else
+            {
+                mat.SetFloat("_EmissionStrength", 0f);
+            }
         }
     }
 }
