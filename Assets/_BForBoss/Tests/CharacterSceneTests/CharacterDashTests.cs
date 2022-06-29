@@ -33,7 +33,7 @@ namespace Tests.Character
             }
             
             var originalPosition = Section_A_Location;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             character.transform.position = originalPosition;
             var expectedHeight = character.transform.position.y;
             
@@ -54,7 +54,7 @@ namespace Tests.Character
             }
             
             var originalPosition = Section_A_Location;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             character.transform.position = originalPosition;
             var expectedHeight = character.transform.position.y;
             
@@ -77,7 +77,7 @@ namespace Tests.Character
             }
             
             var originalPosition = Section_A_Location;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             character.transform.position = originalPosition;
             var expectedHeight = character.transform.position.y;
             
@@ -100,7 +100,7 @@ namespace Tests.Character
             }
             
             var originalPosition = Section_A_Location;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             character.transform.position = originalPosition;
             var expectedHeight = character.transform.position.y;
             
@@ -123,7 +123,7 @@ namespace Tests.Character
             }
             
             var originalPosition = Section_A_Location;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             character.transform.position = originalPosition;
             var expectedHeight = character.transform.position.y;
             
@@ -146,7 +146,7 @@ namespace Tests.Character
             }
 
             var originalPosition = Section_B_Location;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             character.transform.position = originalPosition;
             
             Press(_keyboard.wKey);
@@ -168,7 +168,7 @@ namespace Tests.Character
             }
 
             var originalPosition = Section_B_Location;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             character.transform.position = originalPosition;
             
             Press(_keyboard.spaceKey);

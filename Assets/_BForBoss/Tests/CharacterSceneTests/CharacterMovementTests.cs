@@ -30,7 +30,7 @@ namespace Tests.Character
             }
 
             var startingPosition = GameObject.Find("MovementSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             character.transform.position = startingPosition;
             Press(_keyboard.wKey);
             
@@ -48,7 +48,7 @@ namespace Tests.Character
             }
 
             var originalPosition = GameObject.Find("MovementSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             character.transform.position = originalPosition;
             Press(_keyboard.sKey);
             
@@ -66,7 +66,7 @@ namespace Tests.Character
             }
 
             var originalPosition = GameObject.Find("MovementSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             character.transform.position = originalPosition;
             Press(_keyboard.aKey);
             
@@ -84,7 +84,7 @@ namespace Tests.Character
             }
 
             var originalPosition = GameObject.Find("MovementSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             character.transform.position = originalPosition;
             Press(_keyboard.dKey);
             
@@ -101,7 +101,7 @@ namespace Tests.Character
                 yield return new WaitForFixedUpdate();
             }
 
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             character.transform.position = GameObject.Find("MovementSpawn").transform.position;
             
             // Wait for character to settle after repositioning to 0,0,0

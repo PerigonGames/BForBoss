@@ -15,7 +15,7 @@ namespace Perigon.Character
         bool IsWalking();
     }
     
-    public partial class FirstPersonPlayer : ICharacterMovement
+    public partial class PlayerMovementBehaviour : ICharacterMovement
     {
         public Transform RootPivot => rootPivot;
         public Vector3 CharacterVelocity => GetVelocity();

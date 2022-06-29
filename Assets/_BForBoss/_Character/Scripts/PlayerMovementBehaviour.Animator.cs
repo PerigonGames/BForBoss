@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Perigon.Character
 {
-    public partial class FirstPersonPlayer
+    public partial class PlayerMovementBehaviour
     {
         #region ANIMATOR_FIELDS
         private static readonly int ForwardParamId = Animator.StringToHash("Forward");

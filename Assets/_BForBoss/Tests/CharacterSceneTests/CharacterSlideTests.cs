@@ -30,7 +30,7 @@ namespace Tests.Character
             }
             
             var originalPosition = GameObject.Find("SlideSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             character.transform.position = originalPosition;
             
             Press(_keyboard.cKey);
@@ -52,7 +52,7 @@ namespace Tests.Character
             }
             
             var originalPosition = GameObject.Find("SlideSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             character.transform.position = originalPosition;
             
             Press(_keyboard.spaceKey);
@@ -76,7 +76,7 @@ namespace Tests.Character
             }
             
             var originalPosition = GameObject.Find("SlideSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             var blockadeLeft = GameObject.Find("Blockade_Left");
             character.transform.position = originalPosition;
             
@@ -98,7 +98,7 @@ namespace Tests.Character
             }
             
             var originalPosition = GameObject.Find("SlideSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             var blockadeLeft = GameObject.Find("Blockade_Right");
             character.transform.position = originalPosition;
             
@@ -120,7 +120,7 @@ namespace Tests.Character
             }
             
             var originalPosition = GameObject.Find("SlideSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             var blockadeForward = GameObject.Find("Blockade_Forward");
             character.transform.position = originalPosition;
             
@@ -142,7 +142,7 @@ namespace Tests.Character
             }
             
             var originalPosition = GameObject.Find("SlideSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             var blockadeForward = GameObject.Find("Blockade_Backward");
             character.transform.position = originalPosition;
             
@@ -164,7 +164,7 @@ namespace Tests.Character
             }
             
             var originalPosition = GameObject.Find("SlideSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             var blockadeLeft = GameObject.Find("Blockade_Left");
             character.transform.position = originalPosition;
             
@@ -186,7 +186,7 @@ namespace Tests.Character
             }
             
             var originalPosition = GameObject.Find("SlideSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             var blockadeLeft = GameObject.Find("Blockade_Right");
             character.transform.position = originalPosition;
             
@@ -208,7 +208,7 @@ namespace Tests.Character
             }
             
             var originalPosition = GameObject.Find("SlideSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             var blockadeForward = GameObject.Find("Blockade_Forward");
             character.transform.position = originalPosition;
             
@@ -230,7 +230,7 @@ namespace Tests.Character
             }
             
             var originalPosition = GameObject.Find("SlideSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             var blockadeForward = GameObject.Find("Blockade_Backward");
             character.transform.position = originalPosition;
             
@@ -252,7 +252,7 @@ namespace Tests.Character
             }
             
             var originalPosition = GameObject.Find("SlideSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             var blockadeForward = GameObject.Find("Blockade_Forward");
             var blockadeRight = GameObject.Find("Blockade_Right");
             character.transform.position = originalPosition;
@@ -277,7 +277,7 @@ namespace Tests.Character
             }
             
             var originalPosition = GameObject.Find("SlideSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             var blockadeForward = GameObject.Find("Blockade_Forward");
             var blockadeLeft = GameObject.Find("Blockade_Left");
             character.transform.position = originalPosition;
@@ -302,7 +302,7 @@ namespace Tests.Character
             }
             
             var originalPosition = GameObject.Find("SlideSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             var blockadeBackward = GameObject.Find("Blockade_Backward");
             var blockadeLeft = GameObject.Find("Blockade_Left");
             character.transform.position = originalPosition;
@@ -327,7 +327,7 @@ namespace Tests.Character
             }
             
             var originalPosition = GameObject.Find("SlideSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<FirstPersonPlayer>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             var blockadeBackward = GameObject.Find("Blockade_Backward");
             var blockadeRight = GameObject.Find("Blockade_Right");
             character.transform.position = originalPosition;

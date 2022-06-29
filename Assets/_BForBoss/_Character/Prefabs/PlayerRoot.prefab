@@ -77,9 +77,10 @@ GameObject:
   - component: {fileID: 616281459798487502}
   - component: {fileID: 616281459798487501}
   - component: {fileID: 616281459798487500}
+  - component: {fileID: 3783079141729131295}
+  - component: {fileID: 7177967516030943659}
   - component: {fileID: 616281459798487499}
   - component: {fileID: 616281459798487498}
-  - component: {fileID: 7177967516030943659}
   - component: {fileID: 9197045308489517486}
   - component: {fileID: 910638773}
   - component: {fileID: 910638779}
@@ -138,7 +139,7 @@ CapsuleCollider:
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
---- !u!114 &616281459798487499
+--- !u!114 &3783079141729131295
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -147,43 +148,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 616281459798487496}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ec98a008bee16d4297327d4ce890e4f, type: 3}
+  m_Script: {fileID: 11500000, guid: 32effb133c1fc884a9051e5c12cba2ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _constrainToPlane: 0
-  _capsuleRadius: 0.4
-  _capsuleHeight: 1.8
-  _slopeLimit: 60
-  _stepOffset: 0.45
-  _perchOffset: 0.4
-  _unperchOffset: 0
-  _perchAdditionalHeight: 0.4
-  _collideWithTriggers: 0
-  _groundMask:
-    serializedVersion: 2
-    m_Bits: 65
-  _groundProbingDistance: 0.5
---- !u!114 &616281459798487498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 616281459798487496}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c5d7a2b9e84fb34b95dc5046e3822c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _lockCursor: 1
-  _invertLook: 1
-  _mouseHorizontalSensitivity: 0.1
-  _mouseVerticalSensitivity: 0.1
-  _controllerHorizontalSensitivity: 0.5
-  _controllerVerticalSensitivity: 0.5
-  _clampPitchRotation: 1
-  _minPitchAngle: -80
-  _maxPitchAngle: 80
 --- !u!114 &7177967516030943659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -248,6 +215,52 @@ MonoBehaviour:
   _strafeSpeedMultiplier: 0.75
   cmWalkingCamera: {fileID: 7120097269958552082}
   cmCrouchedCamera: {fileID: 7120097270423081095}
+--- !u!114 &616281459798487499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616281459798487496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ec98a008bee16d4297327d4ce890e4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _constrainToPlane: 0
+  _capsuleRadius: 0.4
+  _capsuleHeight: 1.8
+  _slopeLimit: 60
+  _stepOffset: 0.45
+  _perchOffset: 0.4
+  _unperchOffset: 0
+  _perchAdditionalHeight: 0.4
+  _collideWithTriggers: 0
+  _groundMask:
+    serializedVersion: 2
+    m_Bits: 65
+  _groundProbingDistance: 0.5
+--- !u!114 &616281459798487498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616281459798487496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c5d7a2b9e84fb34b95dc5046e3822c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _lockCursor: 1
+  _invertLook: 1
+  _mouseHorizontalSensitivity: 0.1
+  _mouseVerticalSensitivity: 0.1
+  _controllerHorizontalSensitivity: 0.5
+  _controllerVerticalSensitivity: 0.5
+  _clampPitchRotation: 1
+  _minPitchAngle: -80
+  _maxPitchAngle: 80
 --- !u!114 &9197045308489517486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -682,7 +695,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.2816753, y: 1}
+    m_SensorSize: {x: 1.7777778, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
