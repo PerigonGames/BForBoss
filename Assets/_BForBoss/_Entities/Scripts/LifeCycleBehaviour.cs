@@ -8,8 +8,8 @@ namespace Perigon.Entities
 {
     public abstract class LifeCycleBehaviour : MonoBehaviour
     {
-        [Resolve][SerializeField] private StudioEventEmitter _enemyHitAudio = null;
-        [Resolve][SerializeField] private StudioEventEmitter _enemyKillAudio = null;
+        [Resolve][SerializeField] private StudioEventEmitter _onHitAudio = null;
+        [Resolve][SerializeField] private StudioEventEmitter _onDeathAudio = null;
         
         [InlineEditor]
         [SerializeField] private HealthScriptableObject _health = null;
@@ -49,11 +49,11 @@ namespace Perigon.Entities
         {
             if (_lifeCycle.IsAlive)
             {
-                _enemyHitAudio.Play();
+                _onHitAudio?.Play();
             }
             else
             {
-                _enemyKillAudio.Play();
+                _onDeathAudio?.Play();
             }
         }
 

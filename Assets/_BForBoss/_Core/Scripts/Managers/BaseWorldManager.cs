@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using Perigon.Character;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
@@ -54,7 +55,10 @@ namespace BForBoss
         
         private void SetupSubManagers()
         {
-            _playerBehaviour.Initialize(_inputSettings as InputSettings);
+            _playerBehaviour.Initialize(_inputSettings as InputSettings, onDeath: () =>
+            {
+                StateManager.Instance.SetState(State.Death);
+            });
             _freezeActionsUtility = new FreezeActionsUtility(_inputSettings);
         }
 
