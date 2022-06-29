@@ -51,19 +51,23 @@ namespace Perigon.Weapons
             return true;
         }
         
-        public void ApplyDamage()
+        public void ApplyDamage(Vector3 position)
         {
             if (_enemyBuffer.IsNullOrEmpty())
                 return;
             for (int i = 0; i < _hits; i++)
             {
-                DamageEnemy(_enemyBuffer[i]);
+                DamageEnemy(_enemyBuffer[i], position);
             }
         }
 
-        private void DamageEnemy(Collider enemyCollider)
+        private void DamageEnemy(Collider enemyCollider, Vector3 position)
         {
-            if(enemyCollider.TryGetComponent(out LifeCycleBehaviour lifeCycle))
+            if (enemyCollider.TryGetComponent(out IKnockback knockback))
+            {
+                knockback.ApplyKnockback(_meleeProperties.MeleeKnockbackForce, position);
+            }
+            if (enemyCollider.TryGetComponent(out LifeCycleBehaviour lifeCycle))
             {
                 lifeCycle.Damage(_meleeProperties.Damage);
                 _onHitEntity?.Invoke(!lifeCycle.IsAlive);

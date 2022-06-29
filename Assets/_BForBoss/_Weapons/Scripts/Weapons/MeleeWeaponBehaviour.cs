@@ -115,7 +115,8 @@ namespace Perigon.Weapons
 
         public void ApplyDamage()
         {
-            _weapon.ApplyDamage();
+            var t = _getTransform();
+            _weapon.ApplyDamage(t.position);
         }
     }
 }

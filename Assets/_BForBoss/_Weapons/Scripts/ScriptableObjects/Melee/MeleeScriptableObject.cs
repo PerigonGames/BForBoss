@@ -8,6 +8,8 @@ namespace Perigon.Weapons
         float AttackCoolDown { get; }
 
         int OverlapCapsule(Vector3 position, Vector3 forwardDirection, ref Collider[] buffer);
+        
+        float MeleeKnockbackForce { get; }
     }
     
     [CreateAssetMenu(fileName = "MeleeProperties", menuName = "PerigonGames/Melee", order = 1)]
@@ -15,12 +17,15 @@ namespace Perigon.Weapons
     {
         [SerializeField] private float _damage = 5f;
         [SerializeField] private float _coolDown = 0.5f;
+        [SerializeField] private float _knockback = 1f;
         
         [field: SerializeField] public float Range { get; set; } = 1f;
         [field: SerializeField] public float Height { get; set; } = 2f;
 
         public float Damage => _damage;
         public float AttackCoolDown => _coolDown;
+
+        public float MeleeKnockbackForce => _knockback;
 
         public float HalfRange => Range * 0.5f;
 
