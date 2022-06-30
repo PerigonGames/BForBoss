@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 
 namespace Perigon.Character
 {
-    public partial class FirstPersonPlayer : FirstPersonCharacter
+    public partial class PlayerMovementBehaviour : FirstPersonCharacter
     {
         [Header("Cinemachine")]
         public CinemachineVirtualCamera cmWalkingCamera;
@@ -50,7 +50,7 @@ namespace Perigon.Character
         {
             return IsWallRunning ? _wallRunBehaviour.GetMaxAcceleration() : base.GetMaxAcceleration();
         }
-
+        
         protected override void OnAwake()
         {            
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Perigon.Character
 {
-    public partial class FirstPersonPlayer
+    public partial class PlayerMovementBehaviour
     {
         private const string PLAYER_MODEL_LAYER = "PlayerModel";
         private const string FIRST_PERSON_WEAPON_LAYER = "FirstPersonWeapon";

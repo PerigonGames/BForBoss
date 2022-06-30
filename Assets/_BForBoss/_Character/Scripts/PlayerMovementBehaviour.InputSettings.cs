@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace Perigon.Character 
 {
-    public partial class FirstPersonPlayer : IInputSettings
+    public partial class PlayerMovementBehaviour : IInputSettings
     {
 
         private const string PlayerControlActionMapName = "Player Controls";
