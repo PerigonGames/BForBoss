@@ -38,9 +38,12 @@ namespace Perigon.Entities
 
         public virtual void Reset()
         {
-            _lifeCycle.Reset(); 
-            _lifeCycle.OnDeath += LifeCycleFinished;
-            _lifeCycle.OnDamageTaken += LifeCycleDamageTaken;
+            if (_lifeCycle != null)
+            {
+                _lifeCycle.Reset();
+                _lifeCycle.OnDeath += LifeCycleFinished;
+                _lifeCycle.OnDamageTaken += LifeCycleDamageTaken;
+            }
         }
 
         protected abstract void LifeCycleFinished();
@@ -59,8 +62,11 @@ namespace Perigon.Entities
 
         protected virtual void CleanUp()
         {
-            _lifeCycle.OnDeath -= LifeCycleFinished;
-            _lifeCycle.OnDamageTaken -= LifeCycleDamageTaken;
+            if (_lifeCycle != null)
+            {
+                _lifeCycle.OnDeath -= LifeCycleFinished;
+                _lifeCycle.OnDamageTaken -= LifeCycleDamageTaken;
+            }
         }
 
         protected void OnDisable()
