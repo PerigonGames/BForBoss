@@ -8,12 +8,14 @@ namespace Perigon.Entities
     [RequireComponent(typeof(NavMeshAgent))]
     public class AgentNavigationBehaviour : MonoBehaviour
     {
-        private Func<Vector3> Destination = null;
+        private Func<Vector3> _destination = null;
         private NavMeshAgent _agent = null;
+        private Action _onDestinationReached;
         
-        public void Initialize(Func<Vector3> navigationDestination)
+        public void Initialize(Func<Vector3> navigationDestination, Action onDestinationReached)
         {
-            Destination = navigationDestination;
+            _destination = navigationDestination;
+            _onDestinationReached = onDestinationReached;
         }
 
         private void Awake()
@@ -25,11 +27,21 @@ namespace Perigon.Entities
             }
         }
 
-        private void Update()
+        public void MovementUpdate()
         {
-            if (Destination != null)
+            if (_destination != null)
             {
-                _agent.destination = Destination();
+                var destination = _destination();
+                if (Vector3.Distance(transform.position, destination) > _agent.stoppingDistance * 2)
+                {
+                    _agent.isStopped = false;
+                    _agent.destination = destination;
+                }
+                else
+                {
+                    _agent.isStopped = true;
+                    _onDestinationReached?.Invoke();
+                }
             }
         }
     }

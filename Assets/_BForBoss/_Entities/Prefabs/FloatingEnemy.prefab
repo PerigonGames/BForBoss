@@ -239,12 +239,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7036539539005687782}
+  - component: {fileID: 9152685408524261552}
   - component: {fileID: 7287096135450198932}
   - component: {fileID: 6566670856885270489}
   - component: {fileID: 5329797527737827575}
   - component: {fileID: 548165371661106835}
   - component: {fileID: 548165371661106837}
   - component: {fileID: 7367245697506017707}
+  - component: {fileID: 9035717813286905027}
   m_Layer: 0
   m_Name: FloatingEnemy
   m_TagString: Untagged
@@ -268,6 +270,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9152685408524261552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7036539539005687787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8a51ff434a9bc94b8453bd02dfdacfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7287096135450198932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -358,7 +372,7 @@ NavMeshAgent:
   m_Acceleration: 300
   avoidancePriority: 50
   m_AngularSpeed: 300
-  m_StoppingDistance: 2
+  m_StoppingDistance: 5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -391,6 +405,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 2, z: 0}
+--- !u!114 &9035717813286905027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7036539539005687787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f53e5dac418cd84e96ff2423931af80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _shootDistance: 5
 --- !u!1 &7269235554992068622
 GameObject:
   m_ObjectHideFlags: 0

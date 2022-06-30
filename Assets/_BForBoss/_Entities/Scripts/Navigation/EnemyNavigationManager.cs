@@ -10,10 +10,8 @@ namespace Perigon.Entities
 
         public void Initialize(Func<Vector3> getPlayerPosition)
         {
-            foreach (var agent in _navMeshAgents)
-            {
-                agent.Initialize(getPlayerPosition);
-            }
+            var obj = FindObjectOfType<FloatingTargetBehaviour>();
+            obj.Initialize(getPlayerPosition);
         }
         
         private void Awake()

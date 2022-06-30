@@ -3,37 +3,54 @@ using UnityEngine;
 
 namespace Perigon.Entities
 {
-    public class FloatingTargetBehaviour : LifeCycleBehaviour
+    [RequireComponent(typeof(FloatingTargetLifeCycleBehaviour))]
+    [RequireComponent(typeof(AgentNavigationBehaviour))]
+    [RequireComponent(typeof(EnemyShootingBehaviour))]
+    public class FloatingTargetBehaviour : MonoBehaviour
     {
-        [SerializeField] private HealthbarViewBehaviour _healthbar;
+        private LifeCycleBehaviour _lifeCycle = null;
+        private AgentNavigationBehaviour _navigation = null;
+        private EnemyShootingBehaviour _shootingBehaviour = null;
 
-        public override void Initialize(Action onDeathCallback)
-        {
-            base.Initialize(onDeathCallback);
-            if (_healthbar != null)
-            {
-                _healthbar.Initialize(_lifeCycle);
-            }
-        }
+        private FloatingTargetState _state = FloatingTargetState.MoveTowardsDestination;
         
-        public override void Reset()
+        public void Initialize(Func<Vector3> getPlayerPosition)
         {
-            base.Reset();
-            gameObject.SetActive(true);
-            _healthbar.Reset();
+            _lifeCycle.Initialize(null);
+            _navigation.Initialize(getPlayerPosition, OnDestinationReached);
+            _shootingBehaviour.Initialize(getPlayerPosition);
         }
 
         private void Awake()
         {
-            if (_healthbar == null)
-            {                
-                Debug.LogWarning("A FloatingTargetBehaviour is missing a health bar");
+            _lifeCycle = GetComponent<LifeCycleBehaviour>();
+            _navigation = GetComponent<AgentNavigationBehaviour>();
+            _shootingBehaviour = GetComponent<EnemyShootingBehaviour>();
+        }
+
+        private void Update()
+        {
+            switch (_state)
+            {
+                case FloatingTargetState.MoveTowardsDestination:
+                    _navigation.MovementUpdate();
+                    break;
+                case FloatingTargetState.ShootTarget:
+                    _shootingBehaviour.ShootingUpdate();
+                    break;
             }
         }
 
-        protected override void LifeCycleFinished()
+        private void OnDestinationReached()
         {
-            gameObject.SetActive(false);
+            _state = FloatingTargetState.ShootTarget;
+            _shootingBehaviour.Reset();
         }
+    }
+
+    public enum FloatingTargetState
+    {
+        MoveTowardsDestination,
+        ShootTarget
     }
 }
