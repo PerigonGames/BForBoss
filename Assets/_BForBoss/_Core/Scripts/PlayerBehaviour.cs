@@ -22,7 +22,7 @@ namespace BForBoss
                 _playerLifeCycle.Initialize(onDeath);
             }
         }
-        
+
         public void SpawnAt(Vector3 position, Quaternion facing)
         {
             _playerMovement.SetVelocity(Vector3.zero);
