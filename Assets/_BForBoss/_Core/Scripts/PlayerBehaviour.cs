@@ -12,9 +12,9 @@ namespace BForBoss
 
         public PlayerMovementBehaviour PlayerMovement => _playerMovement;
         
-        public void Initialize()
+        public void Initialize(InputSettings inputSettings)
         {
-            _playerMovement.Initialize();
+            _playerMovement.Initialize(inputSettings);
         }
         
         public void SpawnAt(Vector3 position, Quaternion facing)

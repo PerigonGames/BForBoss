@@ -1,4 +1,5 @@
 using System;
+using Perigon.Character;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace BForBoss
         [Title("Base User Interface")] 
         [SerializeField] protected PauseMenu _pauseMenu;
 
+        private IInputSettings _inputSettings = null;
         protected FreezeActionsUtility _freezeActionsUtility = null;
 
         protected abstract Vector3 SpawnLocation { get; }
@@ -37,6 +39,7 @@ namespace BForBoss
         protected virtual void Awake()
         {
             _stateManager.OnStateChanged += HandleStateChange;
+            _inputSettings = new InputSettings();
 #if (UNITY_EDITOR || DEVELOPMENT_BUILD)            
             SceneManager.LoadScene("AdditiveDebugScene", LoadSceneMode.Additive);
 #endif
@@ -45,14 +48,14 @@ namespace BForBoss
         protected virtual void Start()
         {
             SetupSubManagers();
-            _pauseMenu.Initialize(_playerBehaviour.PlayerMovement, _freezeActionsUtility);
+            _pauseMenu.Initialize(_inputSettings, _freezeActionsUtility);
             _stateManager.SetState(State.PreGame);
         }
         
         private void SetupSubManagers()
         {
-            _playerBehaviour.Initialize();
-            _freezeActionsUtility = new FreezeActionsUtility(_playerBehaviour.PlayerMovement);
+            _playerBehaviour.Initialize(_inputSettings as InputSettings);
+            _freezeActionsUtility = new FreezeActionsUtility(_inputSettings);
         }
 
         protected virtual void OnDestroy()
