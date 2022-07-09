@@ -13,10 +13,10 @@ namespace BForBoss
     {
         protected readonly StateManager _stateManager = StateManager.Instance;
 
-        [Title("Base Component")] 
+        [Title("Base Component")]
         [SerializeField] protected PlayerBehaviour _playerBehaviour = null;
 
-        [Title("Base User Interface")] 
+        [Title("Base User Interface")]
         [SerializeField] protected PauseMenu _pauseMenu;
 
         private IInputSettings _inputSettings = null;
@@ -29,7 +29,7 @@ namespace BForBoss
         {
             Debug.Log("Cleaning Up");
         }
-        
+
         protected virtual void Reset()
         {
             _stateManager.SetState(State.Play);
@@ -40,7 +40,7 @@ namespace BForBoss
         {
             _stateManager.OnStateChanged += HandleStateChange;
             _inputSettings = new InputSettings();
-#if (UNITY_EDITOR || DEVELOPMENT_BUILD)            
+#if (UNITY_EDITOR || DEVELOPMENT_BUILD)
             SceneManager.LoadScene("AdditiveDebugScene", LoadSceneMode.Additive);
 #endif
         }
@@ -51,10 +51,13 @@ namespace BForBoss
             _pauseMenu.Initialize(_inputSettings, _freezeActionsUtility);
             _stateManager.SetState(State.PreGame);
         }
-        
+
         private void SetupSubManagers()
         {
-            _playerBehaviour.Initialize(_inputSettings as InputSettings);
+            _playerBehaviour.Initialize(_inputSettings as InputSettings, onDeath: () =>
+            {
+                StateManager.Instance.SetState(State.Death);
+            });
             _freezeActionsUtility = new FreezeActionsUtility(_inputSettings);
         }
 
@@ -69,13 +72,13 @@ namespace BForBoss
             {
                 PanicHelper.Panic(new Exception("_playerBehaviour is missing from World Manager"));
             }
-            
+
             if (_pauseMenu == null)
             {
                 PanicHelper.Panic(new Exception("PauseMenu is missing from World Manager"));
             }
         }
-        
+
         private void HandleStateChange(State newState)
         {
             switch (newState)
@@ -119,7 +122,7 @@ namespace BForBoss
         {
             Time.timeScale = 1.0f;
         }
-        
+
         protected virtual void HandleStatePause()
         {
             Time.timeScale = 0.0f;
@@ -127,7 +130,7 @@ namespace BForBoss
 
         protected virtual void HandleOnEndOfRace()
         {
-            
+
         }
 
         protected virtual void HandleOnDeath()
