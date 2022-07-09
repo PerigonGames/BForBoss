@@ -52,7 +52,7 @@ namespace Perigon.Entities
 
         private void RotateTowardPlayer()
         {
-            _shootDirection = _destination().position - transform.position; 
+            _shootDirection = _destination().position - _shootingFromPosition.position; 
             transform.LookAt(_destination());
         }
 
@@ -81,7 +81,7 @@ namespace Perigon.Entities
         private void Shoot()
         {
             var bullet = _bulletSpawner.SpawnBullet();
-            bullet.SetSpawnAndDirection(_shootingFromPosition.position, _shootDirection);
+            bullet.SetSpawnAndDirection(_shootingFromPosition.position, _shootDirection.normalized);
         }
     }
 }

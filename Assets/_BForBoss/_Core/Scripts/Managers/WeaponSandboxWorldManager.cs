@@ -66,7 +66,7 @@ namespace BForBoss
             _equipmentBehaviour.Initialize(_playerBehaviour.PlayerMovement.RootPivot);
             _ammunitionCountView.Initialize(_equipmentBehaviour);
             _reloadView.Initialize(_equipmentBehaviour);
-            _lifeCycleManager.Initialize(() => _playerBehaviour.PlayerMovement.RootPivot);
+            _lifeCycleManager.Initialize(() => _playerBehaviour.transform);
         }
         
         protected override void HandleOnDeath()
