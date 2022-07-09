@@ -57,8 +57,9 @@ namespace BForBoss
                     _debugOptions.Add(viewType);
                 }
             }
-            
-            IInputSettings input = FindObjectOfType<PlayerMovementBehaviour>();
+
+            var movement = FindObjectOfType<PlayerMovementBehaviour>();
+            var input = new Perigon.Character.InputSettings(movement.GetCharacterLook(), movement.actions);
             _freezeActionsUtility = new FreezeActionsUtility(input);
         }
 
