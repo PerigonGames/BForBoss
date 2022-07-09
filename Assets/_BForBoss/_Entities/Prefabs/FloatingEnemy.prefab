@@ -89,6 +89,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f86a4320cb4b804b82838af79e916c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &3187866616919492714
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2825255700424532233}
+  m_Layer: 0
+  m_Name: ShootPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2825255700424532233
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3187866616919492714}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.93, z: 1.37}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7036539539005687782}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4238233172188714045
 GameObject:
   m_ObjectHideFlags: 0
@@ -267,6 +298,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 945407814834448069}
+  - {fileID: 2825255700424532233}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -417,7 +449,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f53e5dac418cd84e96ff2423931af80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shootDistance: 5
+  _shootCountDown: 1
+  _aimCountDown: 0.5
+  _shootingFromPosition: {fileID: 2825255700424532233}
 --- !u!1 &7269235554992068622
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,7 +548,6 @@ GameObject:
   - component: {fileID: 7063318535373891977}
   - component: {fileID: 7778440901866662968}
   - component: {fileID: 252083410801941889}
-  - component: {fileID: 3820735569865396277}
   m_Layer: 0
   m_Name: Front
   m_TagString: Untagged
@@ -587,16 +620,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &3820735569865396277
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8101676642710590922}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}

@@ -1,4 +1,5 @@
 using System;
+using Perigon.Weapons;
 using UnityEngine;
 
 namespace Perigon.Entities
@@ -14,11 +15,11 @@ namespace Perigon.Entities
 
         private FloatingTargetState _state = FloatingTargetState.MoveTowardsDestination;
         
-        public void Initialize(Func<Vector3> getPlayerPosition)
+        public void Initialize(Func<Transform> getPlayerPosition, BulletSpawner bulletSpawner)
         {
             _lifeCycle.Initialize(null);
             _navigation.Initialize(getPlayerPosition, OnDestinationReached);
-            _shootingBehaviour.Initialize(getPlayerPosition);
+            _shootingBehaviour.Initialize(getPlayerPosition, bulletSpawner);
         }
 
         private void Awake()

@@ -1,78 +1,87 @@
 using System;
+using Perigon.Weapons;
 using UnityEngine;
 
 namespace Perigon.Entities
 {
     public class EnemyShootingBehaviour : MonoBehaviour
     {
-        private enum ShootingState
+        [SerializeField] private float _shootCountDown = 1;
+        [SerializeField] private float _aimCountDown = 0.5f;
+        [SerializeField] private Transform _shootingFromPosition = null;
+        private enum ShootState
         {
-            RotateTowards,
+            Aim,
             Shoot
         }
         
-        [SerializeField] private float _shootDistance = 5;
-        [SerializeField] private float _lookRotationSpeed = 100;
-        [SerializeField] private float _shootCountDown = 1;
-
         private float _elapsedShootCountDown = 0;
-        private float _shootCoolDown = 0;
-        private Func<Vector3> Destination = null;
-        private ShootingState _shootingState = ShootingState.RotateTowards;
+        private float _elapsedAimCountDown = 0;
+        private Func<Transform> _destination = null;
+        private BulletSpawner _bulletSpawner = null;
         
-        public void Initialize(Func<Vector3> getPlayerPosition)
+        private ShootState _state = ShootState.Aim;
+        
+        private Vector3 _shootDirection = Vector3.zero;
+
+        public void Initialize(Func<Transform> getPlayerPosition, BulletSpawner bulletSpawner)
         {
-            Destination = getPlayerPosition;
+            _destination = getPlayerPosition;
+            _bulletSpawner = bulletSpawner;
         }
 
         public void Reset()
         {
+            _elapsedAimCountDown = _aimCountDown;
             _elapsedShootCountDown = _shootCountDown;
         }
 
         public void ShootingUpdate()
         {
-            switch (_shootingState)
+            switch (_state)
             {
-                case ShootingState.RotateTowards:
+                case ShootState.Aim:
                     RotateTowardPlayer();
-                    ShootIfPossible();
+                    CountDownWhileAiming();
                     break;
-                case ShootingState.Shoot:
-                    CountDownToShoot();
+                case ShootState.Shoot:
+                    CountDownUntilShoot();
                     break;
             }
         }
 
         private void RotateTowardPlayer()
         {
-            Vector3 targetDirection = Destination() - transform.position;
-            float singleStep = _lookRotationSpeed * Time.deltaTime;
-
-            Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDirection, singleStep, 0.0f);
-            transform.rotation = Quaternion.LookRotation(newDirection);
+            _shootDirection = _destination().position - transform.position; 
+            transform.LookAt(_destination());
         }
 
-        private void ShootIfPossible()
+        private void CountDownWhileAiming()
         {
-            if (Physics.Raycast(transform.position, transform.forward, out var hit, _shootDistance))
+            _elapsedAimCountDown -= Time.deltaTime;
+            if (_elapsedAimCountDown <= 0)
             {
-                if (hit.collider.name == "First Person Character")
-                {
-                    _shootingState = ShootingState.Shoot;
-                }
+                _state = ShootState.Shoot;
+                _elapsedAimCountDown = _aimCountDown;
+                
             }
         }
 
-        private void CountDownToShoot()
+        private void CountDownUntilShoot()
         {
             _elapsedShootCountDown -= Time.deltaTime;
             if (_elapsedShootCountDown <= 0)
             {
-                // Shoot
-                _shootingState = ShootingState.RotateTowards;
+                Shoot();
+                _state = ShootState.Aim;
                 _elapsedShootCountDown = _shootCountDown;
             }
+        }
+
+        private void Shoot()
+        {
+            var bullet = _bulletSpawner.SpawnBullet();
+            bullet.SetSpawnAndDirection(_shootingFromPosition.position, _shootDirection);
         }
     }
 }

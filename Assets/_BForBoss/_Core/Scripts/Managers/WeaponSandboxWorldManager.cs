@@ -19,7 +19,6 @@ namespace BForBoss
         
         [Title("Component")]
         [SerializeField] private LifeCycleManager _lifeCycleManager = null;
-        [SerializeField] private EnemyNavigationManager _enemyNavigationManager = null;
         
         [Title("Weapon/Equipment Component")] 
         [SerializeField] private WeaponAnimationController weaponAnimationController = null;
@@ -67,10 +66,7 @@ namespace BForBoss
             _equipmentBehaviour.Initialize(_playerBehaviour.PlayerMovement.RootPivot);
             _ammunitionCountView.Initialize(_equipmentBehaviour);
             _reloadView.Initialize(_equipmentBehaviour);
-            if (_enemyNavigationManager != null)
-            {
-                _enemyNavigationManager.Initialize(() => _playerBehaviour.PlayerMovement.RootPivot.position);
-            }
+            _lifeCycleManager.Initialize(() => _playerBehaviour.PlayerMovement.RootPivot);
         }
         
         protected override void HandleOnDeath()
@@ -106,11 +102,6 @@ namespace BForBoss
             if (_lifeCycleManager == null)
             {
                 Debug.LogWarning("Life Cycle Manager missing from World Manager");
-            }
-
-            if (_enemyNavigationManager == null)
-            {
-                Debug.LogWarning("Enemy Navigation Manager missing from world manager");
             }
         }
     }
