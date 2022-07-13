@@ -8,8 +8,8 @@ namespace Perigon.Entities
 {
     public abstract class LifeCycleBehaviour : MonoBehaviour
     {
-        [Resolve][SerializeField] private StudioEventEmitter _enemyHitAudio = null;
-        [Resolve][SerializeField] private StudioEventEmitter _enemyKillAudio = null;
+        [Resolve][SerializeField] private StudioEventEmitter _onHitAudio = null;
+        [Resolve][SerializeField] private StudioEventEmitter _onDeathAudio = null;
         
         [InlineEditor]
         [SerializeField] private HealthScriptableObject _health = null;
@@ -38,9 +38,12 @@ namespace Perigon.Entities
 
         public virtual void Reset()
         {
-            _lifeCycle.Reset(); 
-            _lifeCycle.OnDeath += LifeCycleFinished;
-            _lifeCycle.OnDamageTaken += LifeCycleDamageTaken;
+            if (_lifeCycle != null)
+            {
+                _lifeCycle.Reset();
+                _lifeCycle.OnDeath += LifeCycleFinished;
+                _lifeCycle.OnDamageTaken += LifeCycleDamageTaken;
+            }
         }
 
         protected abstract void LifeCycleFinished();
@@ -49,18 +52,21 @@ namespace Perigon.Entities
         {
             if (_lifeCycle.IsAlive)
             {
-                _enemyHitAudio.Play();
+                _onHitAudio?.Play();
             }
             else
             {
-                _enemyKillAudio.Play();
+                _onDeathAudio?.Play();
             }
         }
 
         protected virtual void CleanUp()
         {
-            _lifeCycle.OnDeath -= LifeCycleFinished;
-            _lifeCycle.OnDamageTaken -= LifeCycleDamageTaken;
+            if (_lifeCycle != null)
+            {
+                _lifeCycle.OnDeath -= LifeCycleFinished;
+                _lifeCycle.OnDamageTaken -= LifeCycleDamageTaken;
+            }
         }
 
         protected void OnDisable()
