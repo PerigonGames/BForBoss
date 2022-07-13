@@ -9,7 +9,7 @@ namespace Perigon.Entities
     {
         private const string HEALTH_PASS_EMISSION_KEY = "_EmissionStrength";
         [SerializeField] private CustomPassVolume _healthPassVolume = null;
-        [SerializeField] private HealthbarViewBehaviour _healthBarView = null;
+        [SerializeField] private PlayerHealthViewBehaviour _healthBarView = null;
         private Action _onDeathCallBack = null;
         private CustomPassVolumeWeightTool _customPassTool = null;
         
