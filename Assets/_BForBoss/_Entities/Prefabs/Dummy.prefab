@@ -29,6 +29,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3738998167894012315}
   m_RootOrder: 0
@@ -119,6 +120,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 401769495}
   m_Father: {fileID: 7367245696679564808}
@@ -258,6 +260,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 7}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2542002864332411438}
   - {fileID: 3738998167894012315}
@@ -276,8 +279,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61afec44d0414484d98112d6bc849be6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyHitAudio: {fileID: 6681927712669361719}
-  _enemyKillAudio: {fileID: 5650969820584284441}
+  _onHitAudio: {fileID: 6681927712669361719}
+  _onDeathAudio: {fileID: 5650969820584284441}
   _health: {fileID: 11400000, guid: 28e47defb68c3f1438ce87e9a9832e8a, type: 2}
   _healthbar: {fileID: 401769492}
   _dissolveVFXDuration: 1
