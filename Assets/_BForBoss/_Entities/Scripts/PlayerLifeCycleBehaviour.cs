@@ -44,7 +44,7 @@ namespace Perigon.Entities
 
             if (_healthBarView == null)
             {
-                PanicHelper.Panic(new Exception("HealthBarView missing from PlayerLifeCycleBehaviour"));
+                Debug.LogWarning("Missing Health Bar View from PlayerLifeCycleBehaviour");
             }
         }
     }
