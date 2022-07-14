@@ -1,5 +1,5 @@
 {
-    "m_SGVersion": 2,
+    "m_SGVersion": 3,
     "m_Type": "UnityEditor.ShaderGraph.GraphData",
     "m_ObjectId": "3786d53c70ab4321ac5e760309a0f138",
     "m_Properties": [
@@ -11,6 +11,12 @@
         }
     ],
     "m_Keywords": [],
+    "m_Dropdowns": [],
+    "m_CategoryData": [
+        {
+            "m_Id": "c4d8160212a44c26bc3819185c8543f1"
+        }
+    ],
     "m_Nodes": [
         {
             "m_Id": "b01717f24aa04588832ef349ddc0a243"
@@ -82,10 +88,11 @@
         "serializedMesh": {
             "m_SerializedMesh": "{\"mesh\":{\"instanceID\":0}}",
             "m_Guid": ""
-        }
+        },
+        "preventRotation": false
     },
     "m_Path": "Shader Graphs",
-    "m_ConcretePrecision": 0,
+    "m_GraphPrecision": 0,
     "m_PreviewMode": 2,
     "m_OutputNode": {
         "m_Id": ""
@@ -276,9 +283,13 @@
         "m_GuidSerialized": "a2cc2d30-cfbc-4356-bb46-cee1d9f55ae0"
     },
     "m_Name": "_Alpha",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_9e50d491fdaf42c7b0d24e5ab4978355",
     "m_OverrideReferenceName": "_Alpha",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -340,6 +351,21 @@
 }
 
 {
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "c4d8160212a44c26bc3819185c8543f1",
+    "m_Name": "",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "9e50d491fdaf42c7b0d24e5ab4978355"
+        },
+        {
+            "m_Id": "dcae3c99485f42a2af7a3f78620cb731"
+        }
+    ]
+}
+
+{
     "m_SGVersion": 1,
     "m_Type": "UnityEditor.ShaderGraph.Internal.Vector3ShaderProperty",
     "m_ObjectId": "dcae3c99485f42a2af7a3f78620cb731",
@@ -347,9 +373,13 @@
         "m_GuidSerialized": "569623c8-0dd1-4341-8d81-3d013978cc1c"
     },
     "m_Name": "_Color",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector3_dcae3c99485f42a2af7a3f78620cb731",
     "m_OverrideReferenceName": "_Color",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
