@@ -9,19 +9,21 @@ namespace Perigon.Entities
     {
         private const string HEALTH_PASS_EMISSION_KEY = "_EmissionStrength";
         [SerializeField] private CustomPassVolume _healthPassVolume = null;
+        [SerializeField] private PlayerHealthViewBehaviour _healthBarView = null;
         private Action _onDeathCallBack = null;
         private CustomPassVolumeWeightTool _customPassTool = null;
         
         public override void Initialize(Action onDeathCallback)
         {
             base.Initialize(onDeathCallback);
+            _healthBarView.Initialize(_lifeCycle);
             _onDeathCallBack = onDeathCallback;
         }
 
         protected override void LifeCycleDamageTaken()
         {
             base.LifeCycleDamageTaken();
-            _customPassTool.InstantDistortAndRevert(delayBeforeRevert: 1f);
+            _customPassTool?.InstantDistortAndRevert(delayBeforeRevert: 1f);
         }
 
         protected override void LifeCycleFinished()
@@ -38,6 +40,11 @@ namespace Perigon.Entities
             else
             {
                 _customPassTool = new CustomPassVolumeWeightTool(_healthPassVolume, HEALTH_PASS_EMISSION_KEY);
+            }
+
+            if (_healthBarView == null)
+            {
+                Debug.LogWarning("Missing Health Bar View from PlayerLifeCycleBehaviour");
             }
         }
     }
