@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Perigon.Entities;
 using PerigonGames;
 using UnityEngine;
@@ -51,27 +52,32 @@ namespace Perigon.Weapons
             return true;
         }
         
-        public void ApplyDamage(Vector3 position)
+        public IList<Vector3> ApplyDamage(Vector3 position)
         {
             if (_enemyBuffer.IsNullOrEmpty())
-                return;
+                return null;
+            var pointsHit = new List<Vector3>();
             for (int i = 0; i < _hits; i++)
             {
-                DamageEnemy(_enemyBuffer[i], position);
+                pointsHit.Add(DamageEnemy(_enemyBuffer[i], position));
             }
+
+            return pointsHit;
         }
 
-        private void DamageEnemy(Collider enemyCollider, Vector3 position)
+        private Vector3 DamageEnemy(Collider enemyCollider, Vector3 position)
         {
             if (enemyCollider.TryGetComponent(out IKnockback knockback))
             {
                 knockback.ApplyKnockback(_meleeProperties.MeleeKnockbackForce, position);
             }
+
             if (enemyCollider.TryGetComponent(out LifeCycleBehaviour lifeCycle))
             {
                 lifeCycle.Damage(_meleeProperties.Damage);
                 _onHitEntity?.Invoke(!lifeCycle.IsAlive);
             }
+            return enemyCollider.ClosestPointOnBounds(position);
         }
     }
 }

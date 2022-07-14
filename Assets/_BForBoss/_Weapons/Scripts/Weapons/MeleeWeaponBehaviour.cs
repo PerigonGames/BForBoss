@@ -1,7 +1,9 @@
 using System;
+using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.VFX;
 
 namespace Perigon.Weapons
 {
@@ -19,13 +21,15 @@ namespace Perigon.Weapons
         [SerializeField] private MeleeScriptableObject _meleeScriptable;
         [Tooltip("Used for previewing melee radius in editor")]
         [SerializeField] private Transform _playerTransform;
-
+    
         [SerializeField] private bool _canAttackMany = true;
-
+        [SerializeField] private VisualEffect _meleeVFXPrefab = null;
+        
         private MeleeWeapon _weapon;
         private InputAction _meleeActionInputAction;
         private Func<Transform> _getTransform;
         private Action _onSuccessfulAttack;
+        private ObjectPooler<VisualEffect> _meleeVFXPool;
 
         public float CurrentCooldown => _weapon?.CurrentCooldown ?? 0f;
         public float MaxCooldown => _meleeScriptable != null ? _meleeScriptable.AttackCoolDown : 1f;
@@ -40,6 +44,23 @@ namespace Perigon.Weapons
             _getTransform = getTransform;
             _onSuccessfulAttack = onSuccessfulAttack;
             _weapon = new MeleeWeapon(properties ?? _meleeScriptable);
+
+            if (_meleeVFXPrefab != null)
+            {
+                _meleeVFXPool = new ObjectPooler<VisualEffect>(
+                    () => Instantiate(_meleeVFXPrefab), 
+                    (effect =>
+                    {
+                        effect.Reinit();
+                        effect.gameObject.SetActive(true);
+                    }),
+                    (effect =>
+                    {
+                        effect.Stop();
+                        effect.gameObject.SetActive(true);
+                    }));
+            }
+            
             BindActions();
         }
 
@@ -116,7 +137,16 @@ namespace Perigon.Weapons
         public void ApplyDamage()
         {
             var t = _getTransform();
-            _weapon.ApplyDamage(t.position);
+            var pointsHit = _weapon.ApplyDamage(t.position + t.up); // use player's torso instead of feet
+
+            if (_meleeVFXPool == null) 
+                return;
+            foreach(var point in pointsHit)
+            {
+                var vfx = _meleeVFXPool.Get();
+                vfx.transform.SetPositionAndRotation(point, Quaternion.LookRotation(-t.forward));
+                vfx.Play();
+            }
         }
     }
 }
