@@ -6,7 +6,7 @@ using UnityEngine.AI;
 namespace Perigon.Entities
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    public class AgentNavigationBehaviour : MonoBehaviour
+    public class AgentNavigationBehaviour : MonoBehaviour, IKnockback
     {
         private Func<Vector3> Destination = null;
         private NavMeshAgent _agent = null;
@@ -31,6 +31,12 @@ namespace Perigon.Entities
             {
                 _agent.destination = Destination();
             }
+        }
+
+        public void ApplyKnockback(float force, Vector3 originPosition)
+        {
+            var direction = transform.position - originPosition;
+            _agent.Move(direction * force);
         }
     }
 }
