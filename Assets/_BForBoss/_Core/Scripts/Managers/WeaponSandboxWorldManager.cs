@@ -20,6 +20,7 @@ namespace BForBoss
         [Title("Component")]
         [SerializeField] private LifeCycleManager _lifeCycleManager = null;
         [SerializeField] private EnemyNavigationManager _enemyNavigationManager = null;
+        [SerializeField] private EnemySpawnerManager _enemySpawnerManager = null;
         
         [Title("Weapon/Equipment Component")] 
         [SerializeField] private WeaponAnimationController weaponAnimationController = null;
@@ -70,6 +71,11 @@ namespace BForBoss
             if (_enemyNavigationManager != null)
             {
                 _enemyNavigationManager.Initialize(() => _playerBehaviour.PlayerMovement.RootPivot.position);
+            }
+
+            if (_enemySpawnerManager != null)
+            {
+                _enemySpawnerManager.Initialize(_lifeCycleManager);
             }
         }
         
