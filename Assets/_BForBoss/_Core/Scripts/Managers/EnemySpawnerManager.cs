@@ -1,3 +1,4 @@
+using System;
 using Perigon.Entities;
 using UnityEngine;
 
@@ -21,8 +22,6 @@ namespace BForBoss
 
         public void Initialize(LifeCycleManager lifeCycleManager)
         {
-            _enemySpawners = FindObjectsOfType<EnemySpawner>();
-
             if (_enemySpawners == null)
             {
                 return;
@@ -32,6 +31,11 @@ namespace BForBoss
             {
                 spawner.Initialize(lifeCycleManager);
             }
+        }
+
+        private void Awake()
+        {
+            _enemySpawners = FindObjectsOfType<EnemySpawner>();
         }
     }
 }

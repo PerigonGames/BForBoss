@@ -46,6 +46,12 @@ namespace BForBoss
         {
             base.Reset();
             _lifeCycleManager.Reset();
+            
+            if (_enemySpawnerManager != null)
+            {
+                _enemySpawnerManager.Reset();
+            }
+            
             FindObjectsOfType<PatrolBehaviour>().ForEach(pb => pb.Reset());
         }
 
@@ -71,6 +77,11 @@ namespace BForBoss
             if (_enemyNavigationManager != null)
             {
                 _enemyNavigationManager.Initialize(() => _playerBehaviour.PlayerMovement.RootPivot.position);
+            }
+
+            if (_lifeCycleManager != null)
+            {
+                _lifeCycleManager.Initialize(() => _playerBehaviour.PlayerMovement.RootPivot.position);
             }
 
             if (_enemySpawnerManager != null)
@@ -117,6 +128,11 @@ namespace BForBoss
             if (_enemyNavigationManager == null)
             {
                 Debug.LogWarning("Enemy Navigation Manager missing from world manager");
+            }
+
+            if (_enemySpawnerManager == null)
+            {
+                Debug.LogWarning("Enemy Spawner Manager missing from the world manager");
             }
         }
     }
