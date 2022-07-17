@@ -1,5 +1,4 @@
 using System;
-using Perigon.Entities;
 using PerigonGames;
 using UnityEngine;
 
@@ -63,7 +62,7 @@ namespace Perigon.Weapons
 
         private void DamageEnemy(Collider enemyCollider)
         {
-            if(enemyCollider.TryGetComponent(out LifeCycleBehaviour lifeCycle))
+            if(enemyCollider.TryGetComponent(out ILifeCycleBehaviour lifeCycle))
             {
                 lifeCycle.Damage(_meleeProperties.Damage);
                 _onHitEntity?.Invoke(!lifeCycle.IsAlive);
