@@ -76,7 +76,7 @@ namespace BForBoss
 
             if (_lifeCycleManager != null)
             {
-                _lifeCycleManager.Initialize(() => _playerBehaviour.PlayerMovement.RootPivot.position);
+                _lifeCycleManager.Initialize(() => _playerBehaviour.transform.position);
             }
 
             if (_enemySpawnerManager != null)

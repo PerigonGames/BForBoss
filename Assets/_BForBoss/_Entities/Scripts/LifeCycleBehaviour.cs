@@ -1,12 +1,13 @@
 using System;
 using FMODUnity;
 using Perigon.Utility;
+using Perigon.Weapons;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Perigon.Entities
 {
-    public abstract class LifeCycleBehaviour : MonoBehaviour
+    public abstract class LifeCycleBehaviour : MonoBehaviour, ILifeCycleBehaviour
     {
         [Resolve][SerializeField] private StudioEventEmitter _onHitAudio = null;
         [Resolve][SerializeField] private StudioEventEmitter _onDeathAudio = null;

@@ -17,13 +17,22 @@ namespace BForBoss
             base.Initialize(getPlayerPosition, onDeathCallback, onReleaseToSpawner);
             
             _navigationBehaviour = GetComponent<AgentNavigationBehaviour>();
-            _navigationBehaviour.Initialize(getPlayerPosition, OnDestinationReached);
+            _navigationBehaviour.Initialize(getPlayerPosition, () =>
+            {
+                _state = FloatingTargetState.ShootTarget;
+                _shootingBehaviour.Reset();
+            });
             
             if (_healthbar != null)
             {
                 _healthbar.Initialize(_lifeCycle);
             }
-            _shootingBehaviour.Initialize(getPlayerPosition, bulletSpawner);
+
+            _shootingBehaviour = GetComponent<EnemyShootingBehaviour>();
+            _shootingBehaviour.Initialize(getPlayerPosition, bulletSpawner, () =>
+            {
+                _state = FloatingTargetState.MoveTowardsDestination;
+            });
         }
 
         public override void Reset()
@@ -45,12 +54,6 @@ namespace BForBoss
             }
         }
 
-        private void OnDestinationReached()
-        {
-            _state = FloatingTargetState.ShootTarget;
-            _shootingBehaviour.Reset();
-        }
-        
         private void Awake()
         {
             if (_healthbar == null)

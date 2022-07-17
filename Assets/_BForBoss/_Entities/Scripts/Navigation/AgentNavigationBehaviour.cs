@@ -1,5 +1,6 @@
 using System;
 using Perigon.Utility;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,9 +9,12 @@ namespace Perigon.Entities
     [RequireComponent(typeof(NavMeshAgent))]
     public class AgentNavigationBehaviour : MonoBehaviour
     {
+        [SerializeField] 
+        private float _stopDistanceBeforeReachingDestination = 5;
         private Func<Vector3> Destination = null;
         private NavMeshAgent _agent = null;
         private Action OnDestinationReached;
+        
         
         public void Initialize(Func<Vector3> navigationDestination, Action onDestinationReached)
         {
@@ -25,6 +29,7 @@ namespace Perigon.Entities
             {
                 PanicHelper.Panic(new Exception("AgentNavigationBehaviour is missing a NavMeshAgent"));
             }
+            _agent.stoppingDistance = _stopDistanceBeforeReachingDestination;
         }
 
         public void MovementUpdate()
@@ -32,7 +37,8 @@ namespace Perigon.Entities
             if (Destination != null)
             {
                 var destination = Destination();
-                if (Vector3.Distance(transform.position, destination) > _agent.stoppingDistance * 2)
+                
+                if (Vector3.Distance(transform.position, destination) > _stopDistanceBeforeReachingDestination)
                 {
                     _agent.isStopped = false;
                     _agent.destination = destination;
@@ -43,6 +49,12 @@ namespace Perigon.Entities
                     OnDestinationReached?.Invoke();
                 }
             }
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = new Color(1, 0, 0, 0.5f);
+            Gizmos.DrawWireSphere(transform.position, _stopDistanceBeforeReachingDestination);
         }
     }
 }
