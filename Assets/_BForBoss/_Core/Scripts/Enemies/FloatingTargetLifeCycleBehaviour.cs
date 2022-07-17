@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Perigon.Entities
+namespace BForBoss
 {
     public class FloatingTargetBehaviour : EnemyBehaviour
     {

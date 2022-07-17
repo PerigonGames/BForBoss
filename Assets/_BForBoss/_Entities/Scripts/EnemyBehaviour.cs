@@ -15,7 +15,7 @@ namespace Perigon.Entities
         {
             AgentNavigationBehaviour agentNavigationBehaviour = GetComponent<AgentNavigationBehaviour>();
             
-            agentNavigationBehaviour.Initialize(getPlayerPosition);
+            agentNavigationBehaviour.Initialize(getPlayerPosition, () => { });
             Initialize(onDeathCallback);
             _onReleaseToSpawner = onReleaseToSpawner;
         }
