@@ -14,17 +14,18 @@ namespace Perigon.Entities
         private FloatingTargetBehaviour[] _floatingTargetBehaviours = null;
         private int _totalEnemiesEliminated = 0;
         private BulletSpawner _bulletSpawner = null;
-        
+        private Func<Vector3> _getPlayerPosition;
+
         public int LivingEntities => _lifeCycleBehaviours.Count(life => life.IsAlive);
 
         public void Initialize(Func<Transform> getPlayerPosition)
         {
             _floatingTargetBehaviours.ForEach(target => target.Initialize(getPlayerPosition, _bulletSpawner));
         }
-        
+
         public void Reset()
         {
-            if (_lifeCycleBehaviours == null) 
+            if (_lifeCycleBehaviours == null)
             {
                 return;
             }
@@ -37,12 +38,9 @@ namespace Perigon.Entities
             OnLivingEntityEliminated?.Invoke(_totalEnemiesEliminated);
         }
 
-        private void Awake()
+        public void Initialize(Func<Vector3> getPlayerPosition)
         {
-            _floatingTargetBehaviours = FindObjectsOfType<FloatingTargetBehaviour>();
-            _bulletSpawner = GetComponent<BulletSpawner>();
-            _lifeCycleBehaviours = FindObjectsOfType<LifeCycleBehaviour>();
-
+            _getPlayerPosition = getPlayerPosition;
             if (_lifeCycleBehaviours == null)
             {
                 return;
@@ -56,6 +54,20 @@ namespace Perigon.Entities
                     OnLivingEntityEliminated?.Invoke(_totalEnemiesEliminated);
                 });
             }
+        }
+
+        public void AddEnemyBehaviourFromSpawner(EnemyBehaviour enemyBehaviour, Action<EnemyBehaviour> onReleaseToSpawner)
+        {
+            enemyBehaviour.Initialize(_getPlayerPosition, () =>
+            {
+                _totalEnemiesEliminated++;
+                OnLivingEntityEliminated?.Invoke(_totalEnemiesEliminated);
+            }, onReleaseToSpawner);
+        }
+
+        private void Awake()
+        {
+            _lifeCycleBehaviours = FindObjectsOfType<LifeCycleBehaviour>();
         }
     }
 }

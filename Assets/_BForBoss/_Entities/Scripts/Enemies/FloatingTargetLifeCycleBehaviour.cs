@@ -3,10 +3,9 @@ using UnityEngine;
 
 namespace Perigon.Entities
 {
-    public class FloatingTargetLifeCycleBehaviour : LifeCycleBehaviour
+    public class FloatingTargetBehaviour : EnemyBehaviour
     {
         [SerializeField] private HealthbarViewBehaviour _healthbar;
-
         public override void Initialize(Action onDeathCallback)
         {
             base.Initialize(onDeathCallback);
@@ -15,7 +14,7 @@ namespace Perigon.Entities
                 _healthbar.Initialize(_lifeCycle);
             }
         }
-        
+
         public override void Reset()
         {
             base.Reset();
@@ -26,14 +25,21 @@ namespace Perigon.Entities
         private void Awake()
         {
             if (_healthbar == null)
-            {                
+            {
                 Debug.LogWarning("A FloatingTargetBehaviour is missing a health bar");
             }
         }
 
         protected override void LifeCycleFinished()
         {
-            gameObject.SetActive(false);
+            if (_onReleaseToSpawner != null)
+            {
+                _onReleaseToSpawner.Invoke(this);
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
         }
     }
 }

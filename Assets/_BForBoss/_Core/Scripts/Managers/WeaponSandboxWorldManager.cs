@@ -13,22 +13,24 @@ namespace BForBoss
         private const float DEATH_POST_PROCESSING_DURATION = 0.1F;
         private const float DEATH_POST_PROCESSING_START = 0F;
         private const float DEATH_POST_PROCESSING_END = 0.1f;
-        
-        [SerializeField] 
+
+        [SerializeField]
         private Transform _spawnLocation = null;
-        
+
         [Title("Component")]
         [SerializeField] private LifeCycleManager _lifeCycleManager = null;
-        
-        [Title("Weapon/Equipment Component")] 
+        [SerializeField] private EnemyNavigationManager _enemyNavigationManager = null;
+        [SerializeField] private EnemySpawnerManager _enemySpawnerManager = null;
+
+        [Title("Weapon/Equipment Component")]
         [SerializeField] private WeaponAnimationController weaponAnimationController = null;
         [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
         [SerializeField] private AmmunitionCountViewBehaviour _ammunitionCountView = null;
         [SerializeField] private ReloadViewBehaviour _reloadView = null;
-        
-        [Title("Effects")] 
+
+        [Title("Effects")]
         [SerializeField] private Volume _deathVolume = null;
-        
+
         private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
 
         protected override Vector3 SpawnLocation => _spawnLocation.position;
@@ -44,6 +46,12 @@ namespace BForBoss
         {
             base.Reset();
             _lifeCycleManager.Reset();
+
+            if (_enemySpawnerManager != null)
+            {
+                _enemySpawnerManager.Reset();
+            }
+
             FindObjectsOfType<PatrolBehaviour>().ForEach(pb => pb.Reset());
         }
 
@@ -66,16 +74,29 @@ namespace BForBoss
             _equipmentBehaviour.Initialize(_playerBehaviour.PlayerMovement.RootPivot);
             _ammunitionCountView.Initialize(_equipmentBehaviour);
             _reloadView.Initialize(_equipmentBehaviour);
-            _lifeCycleManager.Initialize(() => _playerBehaviour.transform);
+            if (_enemyNavigationManager != null)
+            {
+                _enemyNavigationManager.Initialize(() => _playerBehaviour.PlayerMovement.RootPivot.position);
+            }
+
+            if (_lifeCycleManager != null)
+            {
+                _lifeCycleManager.Initialize(() => _playerBehaviour.PlayerMovement.RootPivot.position);
+            }
+
+            if (_enemySpawnerManager != null)
+            {
+                _enemySpawnerManager.Initialize(_lifeCycleManager);
+            }
         }
-        
+
         protected override void HandleOnDeath()
         {
             _postProcessingVolumeWeightTool.InstantDistortAndRevert();
-            _lifeCycleManager.Reset();            
+            _lifeCycleManager.Reset();
             base.HandleOnDeath();
         }
-        
+
         protected override void OnValidate()
         {
             base.OnValidate();
@@ -83,17 +104,17 @@ namespace BForBoss
             {
                 Debug.LogWarning("Weapons Manager missing from World Manager");
             }
-            
+
             if (_equipmentBehaviour == null)
             {
                 Debug.LogWarning("Equipment Behaviour missing from World Manager");
             }
-            
+
             if (_ammunitionCountView == null)
             {
                 Debug.LogWarning("Ammunition Count View missing from World Manager");
             }
-            
+
             if (_reloadView == null)
             {
                 Debug.LogWarning("Reload View missing from World Manager");
@@ -102,6 +123,16 @@ namespace BForBoss
             if (_lifeCycleManager == null)
             {
                 Debug.LogWarning("Life Cycle Manager missing from World Manager");
+            }
+
+            if (_enemyNavigationManager == null)
+            {
+                Debug.LogWarning("Enemy Navigation Manager missing from world manager");
+            }
+
+            if (_enemySpawnerManager == null)
+            {
+                Debug.LogWarning("Enemy Spawner Manager missing from the world manager");
             }
         }
     }
