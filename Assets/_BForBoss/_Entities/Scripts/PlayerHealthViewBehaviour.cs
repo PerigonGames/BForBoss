@@ -21,14 +21,14 @@ namespace Perigon.Entities
         
         private void OnHealthChanged()
         {
-            _healthPercentageLabel.text = GetHealthAmount() + "%";
+            _healthPercentageLabel.text = Math.Floor(GetHealthAmount()) + "%";
         }
         
-        private int GetHealthAmount()
+        private float GetHealthAmount()
         {
             if (_lifeCycle != null)
             {
-                return (int)(_lifeCycle.CurrentHealth / _lifeCycle.MaxHealth) * 100;
+                return _lifeCycle.CurrentHealth / _lifeCycle.MaxHealth * 100;
             }
             
             return 0;
