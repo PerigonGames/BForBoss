@@ -91,7 +91,7 @@ namespace Perigon.Weapons
         {
             if (_playerTransform == null)
             {
-                _playerTransform = GameObject.Find("Root").transform;
+                Debug.LogWarning("Player Transform Missing from MeleeWeaponBehaviour");
             }
         }
 
