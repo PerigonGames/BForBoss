@@ -42,7 +42,7 @@ namespace BForBoss
             OnFinishedShooting = onFinishedShooting;
         }
 
-        public void Reset()
+        private void Reset()
         {
             _elapsedAimCountDown = _aimCountDownInSeconds;
             _elapsedShootCountDown = _shootCountDownInSeconds;
@@ -97,6 +97,7 @@ namespace BForBoss
         {
             if (Vector3.Distance(transform.position, _destination()) > _distanceToShootAt)
             {
+                Reset();
                 OnFinishedShooting?.Invoke();
             }
             else

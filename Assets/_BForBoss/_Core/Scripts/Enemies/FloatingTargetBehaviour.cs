@@ -26,7 +26,6 @@ namespace BForBoss
             _navigationBehaviour.Initialize(getPlayerPosition, () =>
             {
                 _state = FloatingTargetState.ShootTarget;
-                _shootingBehaviour.Reset();
             });
             
             if (_healthbar != null)
