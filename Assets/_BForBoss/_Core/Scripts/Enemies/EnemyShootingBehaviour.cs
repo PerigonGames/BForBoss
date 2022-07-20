@@ -118,5 +118,11 @@ namespace BForBoss
                 PanicHelper.Panic(new Exception("Shooting from transform missing from EnemyShootingBehaviour"));
             }
         }
+        
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = new Color(0, 1, 0, 0.5f);
+            Gizmos.DrawWireSphere(transform.position, _distanceToShootAt);
+        }
     }
 }
