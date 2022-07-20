@@ -11,6 +11,12 @@ namespace BForBoss
         private AgentNavigationBehaviour _navigationBehaviour = null;
         private EnemyShootingBehaviour _shootingBehaviour = null;
         private FloatingTargetState _state = FloatingTargetState.MoveTowardsDestination;
+
+        private enum FloatingTargetState
+        {
+            MoveTowardsDestination,
+            ShootTarget
+        }
         
         public void Initialize(Func<Vector3> getPlayerPosition, BulletSpawner bulletSpawner, Action onDeathCallback, Action<EnemyBehaviour> onReleaseToSpawner = null)
         {
@@ -75,10 +81,6 @@ namespace BForBoss
             }
         }
         
-        public enum FloatingTargetState
-        {
-            MoveTowardsDestination,
-            ShootTarget
-        }
+
     }
 }

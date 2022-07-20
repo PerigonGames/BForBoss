@@ -1,16 +1,22 @@
 using System;
 using Perigon.Utility;
 using Perigon.Weapons;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BForBoss
 {
     public class EnemyShootingBehaviour : MonoBehaviour
     {
+        [InfoBox("Player must be within this distance for AI to shoot, when outside, AI will move closer")]
         [SerializeField] private float _distanceToShootAt = 4;
+        [InfoBox("Time taken in seconds for AI to aim at players direction before shooting")]
+        [SerializeField] private float _aimCountDownInSeconds = 0.5f;
+        [InfoBox("Rotation Lerp Speed - Speed at which AI rotates and aims at player")]
         [SerializeField] private float _rotationSpeed = 15f;
-        [SerializeField] private float _shootCountDown = 1f;
-        [SerializeField] private float _aimCountDown = 0.5f;
+        [InfoBox("Time taken in seconds for AI to shoot after taking aim")]
+        [SerializeField] private float _shootCountDownInSeconds = 1f;
+
         [SerializeField] private Transform _shootingFromPosition = null;
         private enum ShootState
         {
@@ -38,8 +44,8 @@ namespace BForBoss
 
         public void Reset()
         {
-            _elapsedAimCountDown = _aimCountDown;
-            _elapsedShootCountDown = _shootCountDown;
+            _elapsedAimCountDown = _aimCountDownInSeconds;
+            _elapsedShootCountDown = _shootCountDownInSeconds;
         }
 
         public void ShootingUpdate()
@@ -72,7 +78,7 @@ namespace BForBoss
             if (_elapsedAimCountDown <= 0)
             {
                 _state = ShootState.Shoot;
-                _elapsedAimCountDown = _aimCountDown;
+                _elapsedAimCountDown = _aimCountDownInSeconds;
             }
         }
 
@@ -83,7 +89,7 @@ namespace BForBoss
             {
                 Shoot();
                 _state = ShootState.DistanceCheck;
-                _elapsedShootCountDown = _shootCountDown;
+                _elapsedShootCountDown = _shootCountDownInSeconds;
             }
         }
 

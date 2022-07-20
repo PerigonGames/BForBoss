@@ -1,6 +1,5 @@
 using System;
 using Perigon.Utility;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -21,17 +20,7 @@ namespace Perigon.Entities
             Destination = navigationDestination;
             OnDestinationReached = onDestinationReached;
         }
-
-        private void Awake()
-        {
-            _agent = GetComponent<NavMeshAgent>();
-            if (_agent == null)
-            {
-                PanicHelper.Panic(new Exception("AgentNavigationBehaviour is missing a NavMeshAgent"));
-            }
-            _agent.stoppingDistance = _stopDistanceBeforeReachingDestination;
-        }
-
+        
         public void MovementUpdate()
         {
             if (Destination != null)
@@ -51,6 +40,16 @@ namespace Perigon.Entities
             }
         }
 
+        private void Awake()
+        {
+            _agent = GetComponent<NavMeshAgent>();
+            if (_agent == null)
+            {
+                PanicHelper.Panic(new Exception("AgentNavigationBehaviour is missing a NavMeshAgent"));
+            }
+            _agent.stoppingDistance = _stopDistanceBeforeReachingDestination;
+        }
+        
         private void OnDrawGizmos()
         {
             Gizmos.color = new Color(1, 0, 0, 0.5f);
