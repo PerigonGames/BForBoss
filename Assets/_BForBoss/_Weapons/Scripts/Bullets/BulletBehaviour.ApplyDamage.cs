@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace Perigon.Weapons
 {
-    public interface ILifeCycleBehaviour
+    public interface IWeaponHolder
     {
-        void Damage(float amount);
+        void DamagedBy(float amount);
         bool IsAlive { get; }
     }
     
@@ -12,10 +12,10 @@ namespace Perigon.Weapons
     {
         protected void HitObject(Collider col, Vector3 hitPosition, Vector3 hitNormal)
         {
-            if(col.TryGetComponent(out ILifeCycleBehaviour lifeCycle))
+            if(col.TryGetComponent(out IWeaponHolder weaponHolder))
             {
-                lifeCycle.Damage(_properties.Damage);
-                OnBulletHitEntity?.Invoke(this, !lifeCycle.IsAlive);
+                weaponHolder.DamagedBy(_properties.Damage);
+                OnBulletHitEntity?.Invoke(this, !weaponHolder.IsAlive);
             }
             else
             {

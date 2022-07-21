@@ -62,10 +62,10 @@ namespace Perigon.Weapons
 
         private void DamageEnemy(Collider enemyCollider)
         {
-            if(enemyCollider.TryGetComponent(out ILifeCycleBehaviour lifeCycle))
+            if(enemyCollider.TryGetComponent(out IWeaponHolder weaponHolder))
             {
-                lifeCycle.Damage(_meleeProperties.Damage);
-                _onHitEntity?.Invoke(!lifeCycle.IsAlive);
+                weaponHolder.DamagedBy(_meleeProperties.Damage);
+                _onHitEntity?.Invoke(!weaponHolder.IsAlive);
             }
         }
     }

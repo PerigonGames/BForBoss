@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Perigon.Entities
 {
-    public abstract class LifeCycleBehaviour : MonoBehaviour, ILifeCycleBehaviour
+    public abstract class LifeCycleBehaviour : MonoBehaviour, IWeaponHolder
     {
         [Resolve][SerializeField] private StudioEventEmitter _onHitAudio = null;
         [Resolve][SerializeField] private StudioEventEmitter _onDeathAudio = null;
@@ -27,7 +27,7 @@ namespace Perigon.Entities
             _lifeCycle.NotifyOnDeath(onDeathCallback);
         }
 
-        public void Damage(float amount)
+        public void DamagedBy(float amount)
         {
             _lifeCycle.DamageBy(amount);
         }
