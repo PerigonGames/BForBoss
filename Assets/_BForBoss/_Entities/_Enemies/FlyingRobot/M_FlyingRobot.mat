@@ -94,8 +94,8 @@ Material:
     - _ConservativeDepthOffsetEnable: 0
     - _CullMode: 0
     - _CullModeForward: 0
-    - _Cutoff_Height: 0.993
-    - _Cutoff_Height_Multiplier: 3.28
+    - _Cutoff_Height: 1
+    - _Cutoff_Height_Multiplier: 0.7
     - _DepthOffsetEnable: 0
     - _DoubleSidedEnable: 1
     - _DoubleSidedGIMode: 0
@@ -141,7 +141,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _DoubleSidedConstants: {r: 1, g: 1, b: 1, a: 0}
-    - _Edge_Colour: {r: 0, g: 65536, b: 65021.992, a: 0}
+    - _Edge_Colour: {r: 0, g: 2.9960766, b: 2.9960766, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _Glow_Colour: {r: 0.383, g: 0.055829544, b: 0, a: 0}
   m_BuildTextureStacks: []
