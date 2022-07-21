@@ -1,4 +1,3 @@
-using Perigon.Entities;
 using Perigon.Utility;
 using UnityEngine;
 
@@ -20,10 +19,10 @@ namespace Perigon.Weapons
         {
             if (Physics.Raycast(from, MainCamera.transform.TransformDirection(towards), out var hit, Mathf.Infinity, ~TagsAndLayers.Layers.TriggerArea))
             {
-                if (hit.collider.TryGetComponent(out LifeCycleBehaviour lifeCycle))
+                if (hit.collider.TryGetComponent(out IWeaponHolder weaponHolder))
                 {
-                    lifeCycle.Damage(_weapon.DamagePerRayCast);
-                    _crosshair.ActivateHitMarker(!lifeCycle.IsAlive);
+                    weaponHolder.DamagedBy(_weapon.DamagePerRayCast);
+                    _crosshair.ActivateHitMarker(!weaponHolder.IsAlive);
                 }
                 else
                 {

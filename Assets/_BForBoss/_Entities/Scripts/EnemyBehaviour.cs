@@ -13,9 +13,6 @@ namespace Perigon.Entities
         public virtual void Initialize(Func<Vector3> getPlayerPosition, Action onDeathCallback,
             Action<EnemyBehaviour> onReleaseToSpawner = null)
         {
-            AgentNavigationBehaviour agentNavigationBehaviour = GetComponent<AgentNavigationBehaviour>();
-            
-            agentNavigationBehaviour.Initialize(getPlayerPosition);
             Initialize(onDeathCallback);
             _onReleaseToSpawner = onReleaseToSpawner;
         }
