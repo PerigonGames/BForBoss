@@ -86,7 +86,7 @@ namespace Perigon.Weapons
         {
             if (_equipmentBehaviour == null)
             {
-                PanicHelper.Panic(new Exception("Equipment Behaviour missing from WeaponsManager"));
+                PanicHelper.Panic(new Exception("Equipment Behaviour missing from WeaponAnimationController"));
             }
         }
 
