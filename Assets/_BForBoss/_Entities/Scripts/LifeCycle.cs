@@ -43,8 +43,8 @@ namespace Perigon.Entities
         
         public void HealBy(float amount)
         {
-            OnHeal?.Invoke();
             _currentHealth = Mathf.Min(_maxHealth, _currentHealth + amount);
+            OnHeal?.Invoke();
         }
         
         public void NotifyOnDeath(Action onDeathCallback)

@@ -20,6 +20,7 @@ namespace BForBoss
         [Title("Component")]
         [SerializeField] private LifeCycleManager _lifeCycleManager = null;
         [SerializeField] private EnemyNavigationManager _enemyNavigationManager = null;
+        [SerializeField] private EnemySpawnerManager _enemySpawnerManager = null;
         
         [Title("Weapon/Equipment Component")] 
         [SerializeField] private WeaponAnimationController weaponAnimationController = null;
@@ -45,6 +46,12 @@ namespace BForBoss
         {
             base.Reset();
             _lifeCycleManager.Reset();
+            
+            if (_enemySpawnerManager != null)
+            {
+                _enemySpawnerManager.Reset();
+            }
+            
             FindObjectsOfType<PatrolBehaviour>().ForEach(pb => pb.Reset());
         }
 
@@ -70,6 +77,16 @@ namespace BForBoss
             if (_enemyNavigationManager != null)
             {
                 _enemyNavigationManager.Initialize(() => _playerBehaviour.PlayerMovement.RootPivot.position);
+            }
+
+            if (_lifeCycleManager != null)
+            {
+                _lifeCycleManager.Initialize(() => _playerBehaviour.PlayerMovement.RootPivot.position);
+            }
+
+            if (_enemySpawnerManager != null)
+            {
+                _enemySpawnerManager.Initialize(_lifeCycleManager);
             }
         }
         
@@ -111,6 +128,11 @@ namespace BForBoss
             if (_enemyNavigationManager == null)
             {
                 Debug.LogWarning("Enemy Navigation Manager missing from world manager");
+            }
+
+            if (_enemySpawnerManager == null)
+            {
+                Debug.LogWarning("Enemy Spawner Manager missing from the world manager");
             }
         }
     }

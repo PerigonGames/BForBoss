@@ -9,6 +9,7 @@ namespace Perigon.Entities
         public Action<int> OnLivingEntityEliminated;
         private LifeCycleBehaviour[] _lifeCycleBehaviours = null;
         private int _totalEnemiesEliminated = 0;
+        private Func<Vector3> _getPlayerPosition;
         
         public int LivingEntities => _lifeCycleBehaviours.Count(life => life.IsAlive);
         
@@ -27,10 +28,10 @@ namespace Perigon.Entities
             OnLivingEntityEliminated?.Invoke(_totalEnemiesEliminated);
         }
 
-        private void Awake()
+        public void Initialize(Func<Vector3> getPlayerPosition)
         {
-            _lifeCycleBehaviours = FindObjectsOfType<LifeCycleBehaviour>();
-
+            _getPlayerPosition = getPlayerPosition;
+            
             if (_lifeCycleBehaviours == null)
             {
                 return;
@@ -44,6 +45,20 @@ namespace Perigon.Entities
                     OnLivingEntityEliminated?.Invoke(_totalEnemiesEliminated);
                 });
             }
+        }
+
+        public void AddEnemyBehaviourFromSpawner(EnemyBehaviour enemyBehaviour, Action<EnemyBehaviour> onReleaseToSpawner)
+        {
+            enemyBehaviour.Initialize(_getPlayerPosition, () =>
+            {
+                _totalEnemiesEliminated++;
+                OnLivingEntityEliminated?.Invoke(_totalEnemiesEliminated);
+            }, onReleaseToSpawner);
+        }
+
+        private void Awake()
+        {
+            _lifeCycleBehaviours = FindObjectsOfType<LifeCycleBehaviour>();
         }
     }
 }

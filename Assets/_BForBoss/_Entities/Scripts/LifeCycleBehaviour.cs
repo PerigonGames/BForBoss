@@ -26,7 +26,7 @@ namespace Perigon.Entities
             _lifeCycle.NotifyOnDeath(onDeathCallback);
         }
 
-        public void Damage(float amount = 5f)
+        public void Damage(float amount)
         {
             _lifeCycle.DamageBy(amount);
         }
