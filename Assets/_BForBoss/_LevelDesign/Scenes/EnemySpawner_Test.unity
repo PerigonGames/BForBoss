@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.008269848, g: 0.006524835, b: 0.0075462013, a: 1}
+  m_IndirectSpecularColor: {r: 0.006218847, g: 0.005201811, b: 0.0066050803, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1715,6 +1715,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32effb133c1fc884a9051e5c12cba2ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &1418917651 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 616281458356855404, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
+  m_PrefabInstance: {fileID: 1418917649}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1554401443
 GameObject:
   m_ObjectHideFlags: 0
@@ -2086,7 +2091,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2061070007434329460, guid: c7cd698ab65444f38b1e49e2e17d8e9f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.001016286
+      value: 204.24025
       objectReference: {fileID: 0}
     - target: {fileID: 3924296612012996776, guid: c7cd698ab65444f38b1e49e2e17d8e9f, type: 3}
       propertyPath: m_Name
@@ -2270,7 +2275,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6758736603576299658, guid: c7cd698ab65444f38b1e49e2e17d8e9f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.001016286
+      value: 204.24025
       objectReference: {fileID: 0}
     - target: {fileID: 7649166824825422377, guid: c7cd698ab65444f38b1e49e2e17d8e9f, type: 3}
       propertyPath: m_AnchorMax.x
@@ -2893,6 +2898,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6420529781571845753, guid: d1b6eae1f0bf4054badf84daebd18c5e, type: 3}
+      propertyPath: _playerTransform
+      value: 
+      objectReference: {fileID: 1418917651}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1b6eae1f0bf4054badf84daebd18c5e, type: 3}
 --- !u!114 &2047271910 stripped
