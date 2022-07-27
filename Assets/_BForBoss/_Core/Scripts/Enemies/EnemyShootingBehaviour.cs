@@ -29,16 +29,22 @@ namespace BForBoss
         private float _elapsedAimCountDown = 0;
         private Func<Vector3> _destination = null;
         private BulletSpawner _bulletSpawner = null;
+        private IFloatingEnemyAnimation _enemyAnimation = null;
         private Action OnFinishedShooting = null;
         
         private ShootState _state = ShootState.Aim;
         
         private Vector3 _shootDirection = Vector3.zero;
 
-        public void Initialize(Func<Vector3> getPlayerPosition, BulletSpawner bulletSpawner, Action onFinishedShooting)
+        public void Initialize(Func<Vector3> getPlayerPosition, 
+            BulletSpawner bulletSpawner,
+            IFloatingEnemyAnimation enemyAnimation,
+            Action onFinishedShooting
+            )
         {
             _destination = getPlayerPosition;
             _bulletSpawner = bulletSpawner;
+            _enemyAnimation = enemyAnimation;
             OnFinishedShooting = onFinishedShooting;
         }
 
@@ -69,11 +75,12 @@ namespace BForBoss
         {
             _shootDirection = _destination() - _shootingFromPosition.position;
             Quaternion toRotation = Quaternion.LookRotation(_shootDirection);
-            transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, _rotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, _rotationSpeed * Time.fixedDeltaTime);
         }
 
         private void CountDownWhileAiming()
         {
+            _enemyAnimation.SetIdleAnimation();
             _elapsedAimCountDown -= Time.deltaTime;
             if (_elapsedAimCountDown <= 0)
             {
@@ -84,6 +91,7 @@ namespace BForBoss
 
         private void CountDownUntilShoot()
         {
+            _enemyAnimation.SetShootingAnimation();
             _elapsedShootCountDown -= Time.deltaTime;
             if (_elapsedShootCountDown <= 0)
             {
@@ -97,6 +105,8 @@ namespace BForBoss
         {
             if (Vector3.Distance(transform.position, _destination()) > _distanceToShootAt)
             {
+                Debug.Log("Movement Animation");
+                _enemyAnimation.SetMovementAnimation();
                 Reset();
                 OnFinishedShooting?.Invoke();
             }
