@@ -105,7 +105,6 @@ namespace BForBoss
         {
             if (Vector3.Distance(transform.position, _destination()) > _distanceToShootAt)
             {
-                Debug.Log("Movement Animation");
                 _enemyAnimation.SetMovementAnimation();
                 Reset();
                 OnFinishedShooting?.Invoke();
