@@ -1,8 +1,10 @@
 using UnityEngine;
 using System;
 using System.Linq;
+using Perigon.Entities;
+using Perigon.Weapons;
 
-namespace Perigon.Entities
+namespace BForBoss
 {
     public class LifeCycleManager : MonoBehaviour
     {
@@ -10,6 +12,7 @@ namespace Perigon.Entities
         private LifeCycleBehaviour[] _lifeCycleBehaviours = null;
         private int _totalEnemiesEliminated = 0;
         private Func<Vector3> _getPlayerPosition;
+        private BulletSpawner _bulletSpawner;
         
         public int LivingEntities => _lifeCycleBehaviours.Count(life => life.IsAlive);
         
@@ -31,6 +34,7 @@ namespace Perigon.Entities
         public void Initialize(Func<Vector3> getPlayerPosition)
         {
             _getPlayerPosition = getPlayerPosition;
+            _bulletSpawner = GetComponent<BulletSpawner>();
             
             if (_lifeCycleBehaviours == null)
             {
@@ -49,7 +53,8 @@ namespace Perigon.Entities
 
         public void AddEnemyBehaviourFromSpawner(EnemyBehaviour enemyBehaviour, Action<EnemyBehaviour> onReleaseToSpawner)
         {
-            enemyBehaviour.Initialize(_getPlayerPosition, () =>
+            var floatingTarget = enemyBehaviour as FloatingTargetBehaviour;
+            floatingTarget.Initialize(_getPlayerPosition, _bulletSpawner, () =>
             {
                 _totalEnemiesEliminated++;
                 OnLivingEntityEliminated?.Invoke(_totalEnemiesEliminated);

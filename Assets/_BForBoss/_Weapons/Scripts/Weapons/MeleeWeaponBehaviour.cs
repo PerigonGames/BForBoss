@@ -7,24 +7,24 @@ using UnityEngine.VFX;
 
 namespace Perigon.Weapons
 {
-    
+
     public interface IMeleeWeapon
     {
         float CurrentCooldown { get; }
         float MaxCooldown { get; }
         bool CanMelee { get; }
     }
-    
+
     public class MeleeWeaponBehaviour : MonoBehaviour, IMeleeWeapon
     {
         [InlineEditor]
         [SerializeField] private MeleeScriptableObject _meleeScriptable;
         [Tooltip("Used for previewing melee radius in editor")]
         [SerializeField] private Transform _playerTransform;
-    
+
         [SerializeField] private bool _canAttackMany = true;
         [SerializeField] private VisualEffect _meleeVFXPrefab = null;
-        
+
         private MeleeWeapon _weapon;
         private InputAction _meleeActionInputAction;
         private Func<Transform> _getTransform;
@@ -35,9 +35,9 @@ namespace Perigon.Weapons
         public float MaxCooldown => _meleeScriptable != null ? _meleeScriptable.AttackCoolDown : 1f;
         public bool CanMelee => _weapon?.CanMelee ?? false;
 
-        public void Initialize(InputAction meleeAttackAction, 
+        public void Initialize(InputAction meleeAttackAction,
             Func<Transform> getTransform,
-            IMeleeProperties properties = null, 
+            IMeleeProperties properties = null,
             Action onSuccessfulAttack = null)
         {
             _meleeActionInputAction = meleeAttackAction;
@@ -48,7 +48,7 @@ namespace Perigon.Weapons
             if (_meleeVFXPrefab != null)
             {
                 _meleeVFXPool = new ObjectPooler<VisualEffect>(
-                    () => Instantiate(_meleeVFXPrefab), 
+                    () => Instantiate(_meleeVFXPrefab),
                     (effect =>
                     {
                         effect.Reinit();
@@ -60,7 +60,7 @@ namespace Perigon.Weapons
                         effect.gameObject.SetActive(true);
                     }));
             }
-            
+
             BindActions();
         }
 
@@ -69,8 +69,8 @@ namespace Perigon.Weapons
             if (context.performed)
             {
                 var t = _getTransform();
-                var isAttackSuccessful = _canAttackMany ? 
-                    _weapon.TryAttackMany(t.position, t.forward) : 
+                var isAttackSuccessful = _canAttackMany ?
+                    _weapon.TryAttackMany(t.position, t.forward) :
                     _weapon.TryAttackOne(t.position, t.forward);
 
                 if (isAttackSuccessful)
@@ -107,12 +107,12 @@ namespace Perigon.Weapons
                 _meleeActionInputAction.canceled -= OnMeleeInputAction;
             }
         }
-        
+
         private void OnValidate()
         {
             if (_playerTransform == null)
             {
-                Debug.LogWarning("Melee gizmos will not be drawn correctly, please set the player transform in the MeleeWeaponBehavior!");
+                Debug.LogWarning("Player Transform Missing from MeleeWeaponBehaviour");
             }
         }
 
@@ -139,7 +139,7 @@ namespace Perigon.Weapons
             var t = _getTransform();
             var pointsHit = _weapon.ApplyDamage(t.position + t.up); // use player's torso instead of feet
 
-            if (_meleeVFXPool == null) 
+            if (_meleeVFXPool == null)
                 return;
             foreach(var point in pointsHit)
             {

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Perigon.Entities;
 using PerigonGames;
 using UnityEngine;
 
@@ -72,10 +71,10 @@ namespace Perigon.Weapons
                 knockback.ApplyKnockback(_meleeProperties.MeleeKnockbackForce, position);
             }
 
-            if (enemyCollider.TryGetComponent(out LifeCycleBehaviour lifeCycle))
+            if(enemyCollider.TryGetComponent(out IWeaponHolder weaponHolder))
             {
-                lifeCycle.Damage(_meleeProperties.Damage);
-                _onHitEntity?.Invoke(!lifeCycle.IsAlive);
+                weaponHolder.DamagedBy(_meleeProperties.Damage);
+                _onHitEntity?.Invoke(!weaponHolder.IsAlive);
             }
             return enemyCollider.ClosestPointOnBounds(position);
         }
