@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace BForBoss
 {
+    [RequireComponent(typeof(AgentNavigationBehaviour))]
     public class FloatingTargetBehaviour : EnemyBehaviour
     {
         [SerializeField] private HealthbarViewBehaviour _healthbar;
