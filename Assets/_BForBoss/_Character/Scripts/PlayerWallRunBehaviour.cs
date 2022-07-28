@@ -245,14 +245,14 @@ namespace Perigon.Character
         
         private bool ShouldStartWallRun(out RaycastHit hit)
         {
-            var isRayCastingLastWallFromCenterBodyPosition = ProcessRaycasts(_startWallRunDirections, out hit,
+            var isRaycastingLastWallFromCenterBodyPosition = ProcessRaycasts(_startWallRunDirections, out hit,
                                                                  ChildTransform, _parkourWallMask, _wallMaxDistance)
                                                              && hit.collider != _lastWall;
-            var isRayCastingLastWallFromEyePosition = ProcessRaycasts(_startWallRunDirections, out hit,
+            var isRaycastingLastWallFromEyePosition = ProcessRaycasts(_startWallRunDirections, out hit,
                                                           _fpsCharacter.eyePivot, _parkourWallMask, _wallMaxDistance)
                                                       && hit.collider != _lastWall;
-            var shouldStartWallRun = isRayCastingLastWallFromCenterBodyPosition 
-                                     && isRayCastingLastWallFromEyePosition
+            var shouldStartWallRun = isRaycastingLastWallFromCenterBodyPosition 
+                                     && isRaycastingLastWallFromEyePosition
                                      && IsClearOfGround();
                 
             return shouldStartWallRun;
