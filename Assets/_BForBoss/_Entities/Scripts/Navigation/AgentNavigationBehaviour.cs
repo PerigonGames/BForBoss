@@ -2,11 +2,12 @@ using System;
 using Perigon.Utility;
 using UnityEngine;
 using UnityEngine.AI;
+using Perigon.Weapons;
 
 namespace Perigon.Entities
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    public class AgentNavigationBehaviour : MonoBehaviour
+    public class AgentNavigationBehaviour : MonoBehaviour, IKnockback
     {
         [SerializeField] 
         private float _stopDistanceBeforeReachingDestination = 5;
@@ -54,6 +55,12 @@ namespace Perigon.Entities
         {
             Gizmos.color = new Color(1, 0, 0, 0.5f);
             Gizmos.DrawWireSphere(transform.position, _stopDistanceBeforeReachingDestination);
+        }
+
+        public void ApplyKnockback(float force, Vector3 originPosition)
+        {
+            var direction = transform.position - originPosition;
+            _agent.Move(direction * force);
         }
     }
 }
