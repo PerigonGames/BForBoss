@@ -3,12 +3,7 @@
 //     Copyright (c) PERIGON GAMES. 2020 All Rights Reserved
 // </copyright>
 //-----------------------------------------------------------------------
-
-using System.Collections;
-using System.Collections.Generic;
-using PerigonGames;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Perigon.VFX
 {
