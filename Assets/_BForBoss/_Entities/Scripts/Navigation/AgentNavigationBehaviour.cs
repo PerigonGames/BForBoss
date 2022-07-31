@@ -2,6 +2,7 @@ using System;
 using Perigon.Utility;
 using UnityEngine;
 using UnityEngine.AI;
+using Perigon.Weapons;
 
 namespace Perigon.Entities
 {
