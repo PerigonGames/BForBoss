@@ -3,7 +3,7 @@ using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.VFX;
+using Perigon.VFX;
 
 namespace Perigon.Weapons
 {
@@ -23,13 +23,13 @@ namespace Perigon.Weapons
         [SerializeField] private Transform _playerTransform;
 
         [SerializeField] private bool _canAttackMany = true;
-        [SerializeField] private VisualEffect _meleeVFXPrefab = null;
+        [SerializeField] private TimedVFXEffect _meleeVFXPrefab = null;
 
         private MeleeWeapon _weapon;
         private InputAction _meleeActionInputAction;
         private Func<Transform> _getTransform;
         private Action _onSuccessfulAttack;
-        private ObjectPooler<VisualEffect> _meleeVFXPool;
+        private ObjectPooler<TimedVFXEffect> _meleeVFXPool;
 
         public float CurrentCooldown => _weapon?.CurrentCooldown ?? 0f;
         public float MaxCooldown => _meleeScriptable != null ? _meleeScriptable.AttackCoolDown : 1f;
@@ -47,17 +47,23 @@ namespace Perigon.Weapons
 
             if (_meleeVFXPrefab != null)
             {
-                _meleeVFXPool = new ObjectPooler<VisualEffect>(
-                    () => Instantiate(_meleeVFXPrefab),
+                _meleeVFXPool = new ObjectPooler<TimedVFXEffect>(
+                    () =>
+                    {
+                        var newVFX = Instantiate(_meleeVFXPrefab);
+                        newVFX.OnEffectStop += () =>
+                        {
+                            _meleeVFXPool.Reclaim(newVFX);
+                        };
+                        return newVFX;
+                    },
                     (effect =>
                     {
-                        effect.Reinit();
                         effect.gameObject.SetActive(true);
                     }),
                     (effect =>
                     {
-                        effect.Stop();
-                        effect.gameObject.SetActive(true);
+                        effect.gameObject.SetActive(false);
                     }));
             }
 
@@ -145,7 +151,7 @@ namespace Perigon.Weapons
             {
                 var vfx = _meleeVFXPool.Get();
                 vfx.transform.SetPositionAndRotation(point, Quaternion.LookRotation(-t.forward));
-                vfx.Play();
+                vfx.StartEffect();
             }
         }
     }

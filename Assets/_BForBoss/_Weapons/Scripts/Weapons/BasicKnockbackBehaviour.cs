@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Perigon.Entities
+namespace Perigon.Weapons
 {
     public interface IKnockback
     {

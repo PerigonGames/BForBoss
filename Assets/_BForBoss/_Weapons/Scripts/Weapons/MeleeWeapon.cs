@@ -58,6 +58,9 @@ namespace Perigon.Weapons
             var pointsHit = new List<Vector3>();
             for (int i = 0; i < _hits; i++)
             {
+                var collider = _enemyBuffer[i];
+                if(collider.CompareTag("Player"))
+                    continue;
                 pointsHit.Add(DamageEnemy(_enemyBuffer[i], position));
             }
 
