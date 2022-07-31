@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Perigon.Entities
 {
-    [RequireComponent(typeof(AgentNavigationBehaviour))]
     public abstract class EnemyBehaviour : LifeCycleBehaviour
     {
         protected Action<EnemyBehaviour> _onReleaseToSpawner = null;

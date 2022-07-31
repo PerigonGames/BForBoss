@@ -5,11 +5,13 @@ using UnityEngine;
 
 namespace BForBoss
 {
+    [RequireComponent(typeof(AgentNavigationBehaviour))]
     public class FloatingTargetBehaviour : EnemyBehaviour
     {
         [SerializeField] private HealthbarViewBehaviour _healthbar;
         private AgentNavigationBehaviour _navigationBehaviour = null;
         private EnemyShootingBehaviour _shootingBehaviour = null;
+        private FloatingEnemyAnimationBehaviour _animationBehaviour = null;
         private FloatingTargetState _state = FloatingTargetState.MoveTowardsDestination;
 
         private enum FloatingTargetState
@@ -21,6 +23,10 @@ namespace BForBoss
         public void Initialize(Func<Vector3> getPlayerPosition, BulletSpawner bulletSpawner, Action onDeathCallback, Action<EnemyBehaviour> onReleaseToSpawner = null)
         {
             base.Initialize(getPlayerPosition, onDeathCallback, onReleaseToSpawner);
+
+            _animationBehaviour = GetComponent<FloatingEnemyAnimationBehaviour>();
+            _animationBehaviour.Initialize();
+            _animationBehaviour.SetMovementAnimation();
             
             _navigationBehaviour = GetComponent<AgentNavigationBehaviour>();
             _navigationBehaviour.Initialize(getPlayerPosition, () =>
@@ -34,7 +40,7 @@ namespace BForBoss
             }
 
             _shootingBehaviour = GetComponent<EnemyShootingBehaviour>();
-            _shootingBehaviour.Initialize(getPlayerPosition, bulletSpawner, () =>
+            _shootingBehaviour.Initialize(getPlayerPosition, bulletSpawner, _animationBehaviour,() =>
             {
                 _state = FloatingTargetState.MoveTowardsDestination;
             });
@@ -67,7 +73,7 @@ namespace BForBoss
             }
         }
         
-        private void Update()
+        private void FixedUpdate()
         {
             switch (_state)
             {
