@@ -3,9 +3,7 @@ using Perigon.Character;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
 using UnityEngine.SceneManagement;
-#endif
 
 namespace BForBoss
 {
@@ -21,6 +19,21 @@ namespace BForBoss
 
         private IInputSettings _inputSettings = null;
         protected FreezeActionsUtility _freezeActionsUtility = null;
+
+        protected WeaponSceneManager WeaponSceneManager
+        {
+            get
+            {
+                if (_weaponSceneManager == null)
+                {
+                    _weaponSceneManager = FindObjectOfType<WeaponSceneManager>();
+                }
+
+                return _weaponSceneManager;
+            }
+        }
+
+        private WeaponSceneManager _weaponSceneManager = null;
 
         protected abstract Vector3 SpawnLocation { get; }
         protected abstract Quaternion SpawnLookDirection { get; }
@@ -40,6 +53,7 @@ namespace BForBoss
         {
             _stateManager.OnStateChanged += HandleStateChange;
             _inputSettings = new InputSettings();
+            SceneManager.LoadScene("WeaponManager", LoadSceneMode.Additive);
 #if (UNITY_EDITOR || DEVELOPMENT_BUILD)
             SceneManager.LoadScene("AdditiveDebugScene", LoadSceneMode.Additive);
 #endif
@@ -47,6 +61,7 @@ namespace BForBoss
 
         protected virtual void Start()
         {
+            WeaponSceneManager.Initialize(_playerBehaviour);
             SetupSubManagers();
             _pauseMenu.Initialize(_inputSettings, _freezeActionsUtility);
             _stateManager.SetState(State.PreGame);
