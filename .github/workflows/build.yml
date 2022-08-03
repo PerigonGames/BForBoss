@@ -1,6 +1,7 @@
 name: Build project
 
-on: [pull_request]
+on:
+  push: { branches: [develop] }
   # push: {}
 
 env:
