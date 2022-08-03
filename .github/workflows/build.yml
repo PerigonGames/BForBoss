@@ -1,6 +1,6 @@
 name: Build project
 
-on: [push, pull_request]
+on: [pull_request]
   # push: {}
 
 env:
@@ -40,12 +40,11 @@ jobs:
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
       - uses: game-ci/unity-builder@v2
-        with:
-          buildMethod: DevBuildScript.MyBuild
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
+          buildMethod: DevBuildScript.MyBuild
       - uses: actions/upload-artifact@v2
         with:
           name: Build-${{ matrix.targetPlatform }}
