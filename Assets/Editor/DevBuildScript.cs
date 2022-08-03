@@ -21,7 +21,8 @@ public class DevBuildScript : MonoBehaviour
         }
 
         buildPlayerOptions.scenes = scenePaths.ToArray();
-        buildPlayerOptions.locationPathName = "C:/Users/Developer/OneDrive/_PerigonGames/new_dev_build/windowsBuild.exe";
+        buildPlayerOptions.locationPathName = "build/StandaloneWindows64";
+        // buildPlayerOptions.locationPathName = "C:/Users/Developer/OneDrive/_PerigonGames/new_dev_build/windowsBuild.exe";
         buildPlayerOptions.target = BuildTarget.StandaloneWindows64;
         buildPlayerOptions.options = BuildOptions.Development;
 
