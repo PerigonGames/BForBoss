@@ -62,7 +62,6 @@ namespace BForBoss
 
         protected override void Start()
         {
-            base.Start();
             weaponAnimationController.Initialize(
                 () => _playerBehaviour.PlayerMovement.CharacterVelocity,
                 () => _playerBehaviour.PlayerMovement.CharacterMaxSpeed,
@@ -83,6 +82,7 @@ namespace BForBoss
             {
                 _enemySpawnerManager.Initialize(_lifeCycleManager);
             }
+            base.Start();
         }
         
         protected override void HandleOnDeath()
