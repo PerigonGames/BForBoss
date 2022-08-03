@@ -1,0 +1,57 @@
+name: Build project
+
+on:
+  push: { branches: [develop] }
+  # push: {}
+
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+
+jobs:
+  # activation:
+  #   name: Request manual activation file 🔑
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Request manual activation file
+  #       id: getManualLicenseFile
+  #       uses: webbertakken/unity-request-manual-activation-file@v1.1
+  #       with:
+  #         unityVersion: 2019.3.0f6
+  #     - name: Upload activation life
+  #       uses: actions/upload-artifact@v1
+  #       with:
+  #         name: Unity_v2019.3.0f6.alf
+  #         path: Unity_v2019.3.0f6.alf
+  buildForSomePlatforms:
+    name: Build for ${{ matrix.targetPlatform }} on version ${{ matrix.unityVersion }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        projectPath:
+          - 
+        unityVersion:
+          - 2019.3.0f6
+        targetPlatform:
+          - StandaloneOSX # Build a macOS standalone (Intel 64-bit).
+          - StandaloneWindows64 # Build a Windows 64-bit standalone.
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          lfs: false
+      - uses: actions/cache@v1.1.0
+        with:
+          path: ${{ matrix.projectPath }}/Library
+          key: Library-${{ matrix.projectPath }}-${{ matrix.targetPlatform }}
+          restore-keys: |
+            Library-${{ matrix.projectPath }}-
+            Library-
+      - uses: webbertakken/unity-builder@v0.11
+        with:
+          projectPath: ${{ matrix.projectPath }}
+          unityVersion: ${{ matrix.unityVersion }}
+          targetPlatform: ${{ matrix.targetPlatform }}
+      - uses: actions/upload-artifact@v1
+        with:
+          name: Build
+          path: build
