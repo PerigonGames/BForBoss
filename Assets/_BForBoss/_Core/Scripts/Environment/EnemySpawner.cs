@@ -33,22 +33,7 @@ namespace BForBoss
                 SetupPool();
             }
             
-            if (_burstInitialSpawn)
-            {
-                for (int i = 0; i < _enemiesToSpawn; i++)
-                {
-                    if (!_canSpawn)
-                    {
-                        return;
-                    }
-                    
-                    SpawnEnemy();
-                }
-            }
-            else
-            {
-                StartCoroutine(SpawnEnemies(_enemiesToSpawn));
-            }
+            SpawnInitialEnemies();
         }
 
         public void Reset()
@@ -59,9 +44,16 @@ namespace BForBoss
             }
         }
 
-        public void ToggleSpawning(bool toggle)
+        public void PauseSpawning()
         {
-            _canSpawn = toggle;
+            _canSpawn = false;
+            StopCoroutine(nameof(SpawnEnemies));
+        }
+
+        public void ResumeSpawning()
+        {
+            _canSpawn = true;
+            SpawnInitialEnemies();
         }
         
         private void SetupPool()
@@ -91,6 +83,26 @@ namespace BForBoss
             //     StartCoroutine(SpawnEnemies(1));
             // }
         }
+        
+        private void SpawnInitialEnemies()
+        {
+            if (_burstInitialSpawn)
+            {
+                for (int i = 0; i < _enemiesToSpawn; i++)
+                {
+                    if (!_canSpawn)
+                    {
+                        return;
+                    }
+
+                    SpawnEnemy();
+                }
+            }
+            else
+            {
+                StartCoroutine(SpawnEnemies(_enemiesToSpawn));
+            }
+        }
 
         private IEnumerator SpawnEnemies(int count)
         {
@@ -98,7 +110,6 @@ namespace BForBoss
             {
                 if (!_canSpawn)
                 {
-                    Debug.Log("Why");
                     yield break;
                 }
 

@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.IO;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -24,16 +23,15 @@ namespace BForBoss
         public void Initialize(LifeCycleManager lifeCycleManager)
         {
             _maxEnemyCountForCurrentWave = _initialNumberOfEnemies;
-            //Create
             _enemySpawnerManager.Initialize(lifeCycleManager, OnEnemySpawned, OnEnemyKilled);
         }
 
         public void Reset()
         {
-            //_maxEnemyCountForCurrentWave = _initialNumberOfEnemies;
-            //_currentEnemySpawnCount = 0;
-            //_currentEnemyKillCount = 0;
-            //_currentWaveNumber = 1;
+            _maxEnemyCountForCurrentWave = _initialNumberOfEnemies;
+            _currentEnemySpawnCount = 0;
+            _currentEnemyKillCount = 0;
+            _currentWaveNumber = 1;
 
             _enemySpawnerManager.Reset();
         }
@@ -50,23 +48,17 @@ namespace BForBoss
             }
         }
 
-        private bool OnCanEnemySpawn()
-        {
-            _currentEnemySpawnCount++;
-
-            return _currentEnemySpawnCount >= _maxEnemyCountForCurrentWave;
-        }
-
         private void OnEnemyKilled()
         {
             _currentEnemyKillCount++;
             Debug.Log($"<color=red>Current Enemy Kill Count : {_currentEnemyKillCount}</color>");
             
-            if (_currentEnemyKillCount >= _maxEnemyCountForCurrentWave)
+            //Add the second clause just in case no spawned > max allowed
+            if (_currentEnemyKillCount >= _maxEnemyCountForCurrentWave && _currentEnemyKillCount == _currentEnemySpawnCount)
             {
                 _enemySpawnerManager.Reset();
                 Debug.Log($"Wave {_currentWaveNumber} Ended. Please wait {_timeBetweenWaves} seconds before next wave");
-                //StartCoroutine(InitiateNextWave());
+                StartCoroutine(InitiateNextWave());
             }
         }
 
@@ -80,17 +72,17 @@ namespace BForBoss
             _currentWaveNumber++;
             
             Debug.Log($"Wave {_currentWaveNumber} is starting with {_maxEnemyCountForCurrentWave} Enemies. good luck");
-            //ResumeSpawning();
+            ResumeSpawning();
         }
 
         private void PauseSpawning()
         {
-            _enemySpawnerManager.ToggleSpawning(false);
+            _enemySpawnerManager.PauseSpawning();
         }
 
         private void ResumeSpawning()
         {
-            _enemySpawnerManager.ToggleSpawning(true);
+            _enemySpawnerManager.ResumeSpawning();
         }
 
         private void OnValidate()

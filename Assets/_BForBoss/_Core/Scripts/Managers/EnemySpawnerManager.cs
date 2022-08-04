@@ -21,7 +21,7 @@ namespace BForBoss
             }
         }
 
-        public void ToggleSpawning(bool toggle)
+        public void PauseSpawning()
         {
             if (_enemySpawners == null)
             {
@@ -30,10 +30,22 @@ namespace BForBoss
 
             foreach (EnemySpawner spawner in _enemySpawners)
             {
-                spawner.ToggleSpawning(toggle);
+                spawner.PauseSpawning();
             }
         }
-        
+
+        public void ResumeSpawning()
+        {
+            if (_enemySpawners == null)
+            {
+                return;
+            }
+
+            foreach (EnemySpawner spawner in _enemySpawners)
+            {
+                spawner.ResumeSpawning();
+            }
+        }
 
         public void Initialize(LifeCycleManager lifeCycleManager, Action onEnemySpawned = null, Action onEnemyKilled = null)
         {
