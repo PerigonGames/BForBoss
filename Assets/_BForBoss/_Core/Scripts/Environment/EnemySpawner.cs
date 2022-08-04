@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Perigon.Entities;
 using UnityEngine;
@@ -16,10 +17,16 @@ namespace BForBoss
 
         private ObjectPool<EnemyBehaviour> _pool;
         private LifeCycleManager _lifeCycleManager = null;
+        private bool _canSpawn = true;
+        
+        private Action _onEnemySpawned = null;
+        private Action _onEnemyKilled = null;
 
-        public void Initialize(LifeCycleManager lifeCycleManager)
+        public void Initialize(LifeCycleManager lifeCycleManager, Action onEnemySpawned, Action onEnemyKilled)
         {
             _lifeCycleManager = lifeCycleManager;
+            _onEnemySpawned = onEnemySpawned;
+            _onEnemyKilled = onEnemyKilled;
             
             if (_pool == null)
             {
@@ -30,7 +37,12 @@ namespace BForBoss
             {
                 for (int i = 0; i < _enemiesToSpawn; i++)
                 {
-                    _lifeCycleManager.AddEnemyBehaviourFromSpawner(_pool.Get(), Release);
+                    if (!_canSpawn)
+                    {
+                        return;
+                    }
+                    
+                    SpawnEnemy();
                 }
             }
             else
@@ -45,6 +57,11 @@ namespace BForBoss
             {
                 _pool.Clear();
             }
+        }
+
+        public void ToggleSpawning(bool toggle)
+        {
+            _canSpawn = toggle;
         }
         
         private void SetupPool()
@@ -66,16 +83,34 @@ namespace BForBoss
         private void Release(EnemyBehaviour behaviour)
         {
             _pool.Release(behaviour);
+            _onEnemyKilled?.Invoke();
             StartCoroutine(SpawnEnemies(1));
+            
+            // if (_canSpawn)
+            // {
+            //     StartCoroutine(SpawnEnemies(1));
+            // }
         }
 
         private IEnumerator SpawnEnemies(int count)
         {
             for (int i = 0; i < count; i++)
             {
+                if (!_canSpawn)
+                {
+                    Debug.Log("Why");
+                    yield break;
+                }
+
                 yield return new WaitForSeconds(_timeBetweenSpawns);
-                _lifeCycleManager.AddEnemyBehaviourFromSpawner(_pool.Get(), Release);
+                SpawnEnemy();
             }
+        }
+
+        private void SpawnEnemy()
+        {
+            _lifeCycleManager.AddEnemyBehaviourFromSpawner(_pool.Get(), Release);
+            _onEnemySpawned?.Invoke();
         }
 
         private EnemyBehaviour GenerateEnemy(EnemyBehaviour enemyAgent)

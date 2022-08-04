@@ -1,4 +1,4 @@
-using Perigon.Entities;
+using System;
 using UnityEngine;
 
 namespace BForBoss
@@ -6,6 +6,7 @@ namespace BForBoss
     public class EnemySpawnerManager : MonoBehaviour
     {
         private EnemySpawner[] _enemySpawners = null;
+        //private Action _onEnemySpawned = null;
 
         public void Reset()
         {
@@ -20,7 +21,21 @@ namespace BForBoss
             }
         }
 
-        public void Initialize(LifeCycleManager lifeCycleManager)
+        public void ToggleSpawning(bool toggle)
+        {
+            if (_enemySpawners == null)
+            {
+                return;
+            }
+
+            foreach (EnemySpawner spawner in _enemySpawners)
+            {
+                spawner.ToggleSpawning(toggle);
+            }
+        }
+        
+
+        public void Initialize(LifeCycleManager lifeCycleManager, Action onEnemySpawned = null, Action onEnemyKilled = null)
         {
             if (_enemySpawners == null)
             {
@@ -30,7 +45,7 @@ namespace BForBoss
             foreach (EnemySpawner spawner in _enemySpawners)
             {
                 // Add callback so that each time the spawner spawns the action is called
-                spawner.Initialize(lifeCycleManager);
+                spawner.Initialize(lifeCycleManager, onEnemySpawned, onEnemyKilled);
             }
         }
 
