@@ -6,7 +6,6 @@ namespace BForBoss
     public class EnemySpawnerManager : MonoBehaviour
     {
         private EnemySpawner[] _enemySpawners = null;
-        //private Action _onEnemySpawned = null;
 
         public void Reset()
         {
@@ -56,7 +55,6 @@ namespace BForBoss
 
             foreach (EnemySpawner spawner in _enemySpawners)
             {
-                // Add callback so that each time the spawner spawns the action is called
                 spawner.Initialize(lifeCycleManager, onEnemySpawned, onEnemyKilled);
             }
         }
@@ -66,7 +64,4 @@ namespace BForBoss
             _enemySpawners = FindObjectsOfType<EnemySpawner>();
         }
     }
-    
-    //When the callback incentive is hit, Call WaveManager Callback - then reset current counter
-    //The WaveManager should be make calls for the wave to end and when for the wave to start again
 }
