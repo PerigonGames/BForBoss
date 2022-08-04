@@ -15,49 +15,46 @@ namespace BForBoss
         [SerializeField, Tooltip("Cooldown time between waves")] private float _timeBetweenWaves = 2.5f;
         [SerializeField, Tooltip("Number of enemies per wave is the number of enemies from the previous wave multiplied by this multiplier")] private float _EnemyAmountMultiplier = 1.2f;
 
-        private int _maxEnemyCountForCurrentWave = 0;
-        private int _currentEnemySpawnCount = 0;
-        private int _currentEnemyKillCount = 0;
-        private int _currentWaveNumber = 1;
+        private int _maxCountForCurrentWave = 0;
+        private int _spawnCount = 0;
+        private int _killCount = 0;
+        private int _waveNumber = 1;
 
         public void Initialize(LifeCycleManager lifeCycleManager)
         {
-            _maxEnemyCountForCurrentWave = _initialNumberOfEnemies;
+            _maxCountForCurrentWave = _initialNumberOfEnemies;
             _enemySpawnerManager.Initialize(lifeCycleManager, OnEnemySpawned, OnEnemyKilled);
         }
 
         public void Reset()
         {
-            _maxEnemyCountForCurrentWave = _initialNumberOfEnemies;
-            _currentEnemySpawnCount = 0;
-            _currentEnemyKillCount = 0;
-            _currentWaveNumber = 1;
+            _maxCountForCurrentWave = _initialNumberOfEnemies;
+            _spawnCount = 0;
+            _killCount = 0;
+            _waveNumber = 1;
 
             _enemySpawnerManager.Reset();
         }
 
         private void OnEnemySpawned()
         {
-            _currentEnemySpawnCount++;
-            Debug.Log($"<color=blue>Current Enemy Spawn Count : {_currentEnemySpawnCount}</color>");
+            _spawnCount++;
 
-            if (_currentEnemySpawnCount >= _maxEnemyCountForCurrentWave)
+            if (_spawnCount >= _maxCountForCurrentWave)
             {
-                Debug.Log($"All {_maxEnemyCountForCurrentWave} spawned");
                 PauseSpawning();
             }
         }
 
         private void OnEnemyKilled()
         {
-            _currentEnemyKillCount++;
-            Debug.Log($"<color=red>Current Enemy Kill Count : {_currentEnemyKillCount}</color>");
+            _killCount++;
             
-            //Add the second clause just in case no spawned > max allowed
-            if (_currentEnemyKillCount >= _maxEnemyCountForCurrentWave && _currentEnemyKillCount == _currentEnemySpawnCount)
+            //Added the second clause just in case no. spawned > max allowed
+            if (_killCount >= _maxCountForCurrentWave && _killCount == _spawnCount)
             {
                 _enemySpawnerManager.Reset();
-                Debug.Log($"Wave {_currentWaveNumber} Ended. Please wait {_timeBetweenWaves} seconds before next wave");
+                Debug.Log($"<b>Wave {_waveNumber}</b> Ended. Please wait <b>{_timeBetweenWaves} seconds</b> before the next wave");
                 StartCoroutine(InitiateNextWave());
             }
         }
@@ -66,12 +63,12 @@ namespace BForBoss
         {
             yield return new WaitForSeconds(_timeBetweenWaves);
             
-            _currentEnemySpawnCount = 0;
-            _currentEnemyKillCount = 0;
-            _maxEnemyCountForCurrentWave = (int)Math.Ceiling(_maxEnemyCountForCurrentWave * _EnemyAmountMultiplier);
-            _currentWaveNumber++;
+            _spawnCount = 0;
+            _killCount = 0;
+            _maxCountForCurrentWave = (int)Math.Ceiling(_maxCountForCurrentWave * _EnemyAmountMultiplier);
+            _waveNumber++;
             
-            Debug.Log($"Wave {_currentWaveNumber} is starting with {_maxEnemyCountForCurrentWave} Enemies. good luck");
+            Debug.Log($"<b>Wave {_waveNumber}</b> has <b>{_maxCountForCurrentWave}</b> Enemies to kill. good luck");
             ResumeSpawning();
         }
 

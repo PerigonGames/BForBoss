@@ -77,11 +77,6 @@ namespace BForBoss
             _pool.Release(behaviour);
             _onEnemyKilled?.Invoke();
             StartCoroutine(SpawnEnemies(1));
-            
-            // if (_canSpawn)
-            // {
-            //     StartCoroutine(SpawnEnemies(1));
-            // }
         }
         
         private void SpawnInitialEnemies()
@@ -108,12 +103,13 @@ namespace BForBoss
         {
             for (int i = 0; i < count; i++)
             {
+                yield return new WaitForSeconds(_timeBetweenSpawns);
+                
                 if (!_canSpawn)
                 {
                     yield break;
                 }
-
-                yield return new WaitForSeconds(_timeBetweenSpawns);
+                
                 SpawnEnemy();
             }
         }
