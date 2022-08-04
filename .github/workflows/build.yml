@@ -1,0 +1,52 @@
+name: Build project
+
+on:
+  push: { branches: [develop] }
+  # push: {}
+
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+
+jobs:
+  # activation:
+  #   name: Request manual activation file 🔑
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Request manual activation file
+  #       id: getManualLicenseFile
+  #       uses: webbertakken/unity-request-manual-activation-file@v1.1
+  #       with:
+  #         unityVersion: 2019.3.0f6
+  #     - name: Upload activation life
+  #       uses: actions/upload-artifact@v1
+  #       with:
+  #         name: Unity_v2019.3.0f6.alf
+  #         path: Unity_v2019.3.0f6.alf
+  buildForAllSupportedPlatforms:
+    name: Build for ${{ matrix.targetPlatform }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneWindows64 # Build a Windows 64-bit standalone.
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          lfs: true
+      - uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
+      - uses: game-ci/unity-builder@v2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildMethod: DevBuildScript.MyBuild
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
