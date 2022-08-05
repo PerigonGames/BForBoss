@@ -13,7 +13,7 @@ namespace BForBoss
         [Title("Settings")] 
         [SerializeField, Tooltip("Number of enemies for the first wave")] private int _initialNumberOfEnemies = 10;
         [SerializeField, Tooltip("Cooldown time between waves")] private float _timeBetweenWaves = 2.5f;
-        [SerializeField, Tooltip("Number of enemies per wave is the number of enemies from the previous wave multiplied by this multiplier")] private float _EnemyAmountMultiplier = 1.2f;
+        [SerializeField, Tooltip("Number of enemies per wave is the number of enemies from the previous wave multiplied by this multiplier")] private float _enemyAmountMultiplier = 1.2f;
 
         private int _maxCountForCurrentWave = 0;
         private int _spawnCount = 0;
@@ -65,7 +65,7 @@ namespace BForBoss
             
             _spawnCount = 0;
             _killCount = 0;
-            _maxCountForCurrentWave = (int)Math.Ceiling(_maxCountForCurrentWave * _EnemyAmountMultiplier);
+            _maxCountForCurrentWave = (int)Math.Ceiling(_maxCountForCurrentWave * _enemyAmountMultiplier);
             _waveNumber++;
             
             Debug.Log($"<b>Wave {_waveNumber}</b> has <b>{_maxCountForCurrentWave}</b> Enemies to kill. good luck");

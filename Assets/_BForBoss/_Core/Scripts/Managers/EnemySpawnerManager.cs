@@ -5,15 +5,10 @@ namespace BForBoss
 {
     public class EnemySpawnerManager : MonoBehaviour
     {
-        private EnemySpawner[] _enemySpawners = null;
+        private EnemySpawner[] _enemySpawners = new EnemySpawner[]{};
 
         public void Reset()
-        {
-            if (_enemySpawners == null)
-            {
-                return;
-            }
-
+        { 
             foreach (EnemySpawner spawner in _enemySpawners)
             {
                 spawner.Reset();
@@ -22,11 +17,6 @@ namespace BForBoss
 
         public void PauseSpawning()
         {
-            if (_enemySpawners == null)
-            {
-                return;
-            }
-
             foreach (EnemySpawner spawner in _enemySpawners)
             {
                 spawner.PauseSpawning();
@@ -35,11 +25,6 @@ namespace BForBoss
 
         public void ResumeSpawning()
         {
-            if (_enemySpawners == null)
-            {
-                return;
-            }
-
             foreach (EnemySpawner spawner in _enemySpawners)
             {
                 spawner.ResumeSpawning();
@@ -48,11 +33,6 @@ namespace BForBoss
 
         public void Initialize(LifeCycleManager lifeCycleManager, Action onEnemySpawned = null, Action onEnemyKilled = null)
         {
-            if (_enemySpawners == null)
-            {
-                return;
-            }
-
             foreach (EnemySpawner spawner in _enemySpawners)
             {
                 spawner.Initialize(lifeCycleManager, onEnemySpawned, onEnemyKilled);
