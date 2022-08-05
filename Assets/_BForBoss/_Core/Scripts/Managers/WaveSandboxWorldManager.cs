@@ -19,6 +19,7 @@ namespace BForBoss
         [Title("Component")]
         [SerializeField] private LifeCycleManager _lifeCycleManager = null;
         [SerializeField] private WaveManager _waveManager;
+        [SerializeField] private EnemySpawnerManager _enemySpawnerManager;
         
         [Title("Weapon/Equipment Component")] 
         [SerializeField] private WeaponAnimationController weaponAnimationController = null;
@@ -77,10 +78,11 @@ namespace BForBoss
             {
                 _lifeCycleManager.Initialize(() => _playerBehaviour.transform.position);
             }
-
+            
+            WaveModel waveModel = new WaveModel();
             if (_waveManager != null)
             {
-                _waveManager.Initialize(_lifeCycleManager);
+                _waveManager.Initialize(_lifeCycleManager, _enemySpawnerManager, waveModel);
             }
         }
         
@@ -122,6 +124,11 @@ namespace BForBoss
             if (_waveManager == null)
             {
                 Debug.LogWarning("Wave Manager missing from the world manager");
+            }
+
+            if (_enemySpawnerManager == null)
+            {
+                Debug.LogWarning("Enemy Spawner Manager missing from the world manager");
             }
         }
     }

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace BForBoss
@@ -31,11 +30,11 @@ namespace BForBoss
             }
         }
 
-        public void Initialize(LifeCycleManager lifeCycleManager, Action onEnemySpawned = null, Action onEnemyKilled = null)
+        public void Initialize(LifeCycleManager lifeCycleManager, WaveModel waveModel = null)
         {
             foreach (EnemySpawner spawner in _enemySpawners)
             {
-                spawner.Initialize(lifeCycleManager, onEnemySpawned, onEnemyKilled);
+                spawner.Initialize(lifeCycleManager, waveModel);
             }
         }
 

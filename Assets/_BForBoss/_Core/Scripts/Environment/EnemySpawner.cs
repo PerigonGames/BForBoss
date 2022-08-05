@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Perigon.Entities;
 using UnityEngine;
@@ -18,15 +17,13 @@ namespace BForBoss
         private ObjectPool<EnemyBehaviour> _pool;
         private LifeCycleManager _lifeCycleManager = null;
         private bool _canSpawn = true;
-        
-        private Action _onEnemySpawned = null;
-        private Action _onEnemyKilled = null;
 
-        public void Initialize(LifeCycleManager lifeCycleManager, Action onEnemySpawned, Action onEnemyKilled)
+        private WaveModel _waveModel;
+
+        public void Initialize(LifeCycleManager lifeCycleManager, WaveModel waveModel)
         {
             _lifeCycleManager = lifeCycleManager;
-            _onEnemySpawned = onEnemySpawned;
-            _onEnemyKilled = onEnemyKilled;
+            _waveModel = waveModel;
             
             if (_pool == null)
             {
@@ -75,7 +72,7 @@ namespace BForBoss
         private void Release(EnemyBehaviour behaviour)
         {
             _pool.Release(behaviour);
-            _onEnemyKilled?.Invoke();
+            _waveModel?.OnEnemyKilled?.Invoke();
             StartCoroutine(SpawnEnemies(1));
         }
         
@@ -117,7 +114,7 @@ namespace BForBoss
         private void SpawnEnemy()
         {
             _lifeCycleManager.AddEnemyBehaviourFromSpawner(_pool.Get(), Release);
-            _onEnemySpawned?.Invoke();
+            _waveModel?.OnEnemySpawned?.Invoke();
         }
 
         private EnemyBehaviour GenerateEnemy(EnemyBehaviour enemyAgent)
