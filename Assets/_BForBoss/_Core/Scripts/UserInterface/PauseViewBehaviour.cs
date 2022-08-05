@@ -1,6 +1,5 @@
 using System;
 using Sirenix.OdinInspector;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,11 +13,11 @@ namespace BForBoss
         [SerializeField] private Button _quitButton = null;
         [SerializeField] private Button _settingsButton = null;
 
-        private Action OnSettingsPressed;
+        private Action _onSettingsPressed;
 
         public void Initialize(Action onSettingsPressed)
         {
-            OnSettingsPressed = onSettingsPressed;
+            _onSettingsPressed = onSettingsPressed;
         }
 
         private void ResetGame()
@@ -34,7 +33,7 @@ namespace BForBoss
         private void QuitGame()
         {
 #if UNITY_EDITOR
-            EditorApplication.ExitPlaymode();
+            UnityEditor.EditorApplication.ExitPlaymode();
 #else
             Application.Quit();
 #endif
@@ -47,7 +46,7 @@ namespace BForBoss
             _quitButton.onClick.AddListener(QuitGame);
             _settingsButton.onClick.AddListener(() =>
             {
-                OnSettingsPressed?.Invoke();
+                _onSettingsPressed?.Invoke();
             });
         }
         
