@@ -152,13 +152,13 @@ namespace BForBoss
         protected virtual void HandleStatePlay()
         {
             Time.timeScale = 1.0f;
-            _freezeActionsUtility.LockInput();
+            _freezeActionsUtility.UnlockInput();
         }
 
         protected virtual void HandleStatePause()
         {
             Time.timeScale = 0.0f;
-            _freezeActionsUtility.UnlockInput();
+            _freezeActionsUtility.LockInput();
         }
 
         protected virtual void HandleOnEndOfRace()

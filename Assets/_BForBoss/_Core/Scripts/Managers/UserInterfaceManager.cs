@@ -13,8 +13,8 @@ namespace BForBoss
             SettingsView
         }
         
-        [Resolve][SerializeField] private SettingsViewBehaviour _settingsViewBehaviour = null;
-        [Resolve][SerializeField] private PauseViewBehaviour _pauseViewBehaviour = null;
+        [SerializeField] private SettingsViewBehaviour _settingsViewBehaviour = null;
+        [SerializeField] private PauseViewBehaviour _pauseViewBehaviour = null;
         
         private UserInterfaceState UIState
         {
