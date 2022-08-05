@@ -1,5 +1,4 @@
 using Perigon.Utility;
-using Perigon.Weapons;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -20,12 +19,6 @@ namespace BForBoss
         [SerializeField] private LifeCycleManager _lifeCycleManager = null;
         [SerializeField] private WaveManager _waveManager;
         [SerializeField] private EnemySpawnerManager _enemySpawnerManager;
-        
-        [Title("Weapon/Equipment Component")] 
-        [SerializeField] private WeaponAnimationController weaponAnimationController = null;
-        [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
-        [SerializeField] private AmmunitionCountViewBehaviour _ammunitionCountView = null;
-        [SerializeField] private ReloadViewBehaviour _reloadView = null;
         
         [Title("Effects")] 
         [SerializeField] private Volume _deathVolume = null;
@@ -63,16 +56,6 @@ namespace BForBoss
         protected override void Start()
         {
             base.Start();
-            weaponAnimationController.Initialize(
-                () => _playerBehaviour.PlayerMovement.CharacterVelocity,
-                () => _playerBehaviour.PlayerMovement.CharacterMaxSpeed,
-                () => _playerBehaviour.PlayerMovement.IsWallRunning,
-                () => _playerBehaviour.PlayerMovement.IsGrounded,
-                () => _playerBehaviour.PlayerMovement.IsSliding,
-                () => _playerBehaviour.PlayerMovement.IsDashing);
-            _equipmentBehaviour.Initialize(_playerBehaviour.PlayerMovement.RootPivot);
-            _ammunitionCountView.Initialize(_equipmentBehaviour);
-            _reloadView.Initialize(_equipmentBehaviour);
 
             if (_lifeCycleManager != null)
             {
@@ -96,25 +79,6 @@ namespace BForBoss
         protected override void OnValidate()
         {
             base.OnValidate();
-            if (weaponAnimationController == null)
-            {
-                Debug.LogWarning("Weapons Manager missing from World Manager");
-            }
-            
-            if (_equipmentBehaviour == null)
-            {
-                Debug.LogWarning("Equipment Behaviour missing from World Manager");
-            }
-            
-            if (_ammunitionCountView == null)
-            {
-                Debug.LogWarning("Ammunition Count View missing from World Manager");
-            }
-            
-            if (_reloadView == null)
-            {
-                Debug.LogWarning("Reload View missing from World Manager");
-            }
 
             if (_lifeCycleManager == null)
             {
