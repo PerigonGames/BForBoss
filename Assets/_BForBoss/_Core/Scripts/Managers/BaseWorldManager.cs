@@ -20,6 +20,8 @@ namespace BForBoss
         private IInputSettings _inputSettings = null;
         protected FreezeActionsUtility _freezeActionsUtility = null;
 
+        private WeaponSceneManager _weaponSceneManager = null;
+
         protected WeaponSceneManager WeaponSceneManager
         {
             get
@@ -32,8 +34,6 @@ namespace BForBoss
                 return _weaponSceneManager;
             }
         }
-
-        private WeaponSceneManager _weaponSceneManager = null;
 
         protected abstract Vector3 SpawnLocation { get; }
         protected abstract Quaternion SpawnLookDirection { get; }
@@ -53,7 +53,7 @@ namespace BForBoss
         {
             _stateManager.OnStateChanged += HandleStateChange;
             _inputSettings = new InputSettings();
-            SceneManager.LoadScene("WeaponManager", LoadSceneMode.Additive);
+            SceneManager.LoadScene("AdditiveWeaponManager", LoadSceneMode.Additive);
 #if (UNITY_EDITOR || DEVELOPMENT_BUILD)
             SceneManager.LoadScene("AdditiveDebugScene", LoadSceneMode.Additive);
 #endif

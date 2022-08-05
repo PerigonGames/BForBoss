@@ -12,6 +12,8 @@ namespace Perigon.Weapons
 
         [Resolve] [SerializeField] private GameObject _weaponHolder = null;
         [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
+
+        private Camera _mainCam;
         
         private Func<Vector3> _characterVelocity = null;
         private Func<float> _characterMaxSpeed = null;
@@ -66,6 +68,7 @@ namespace Perigon.Weapons
         private void Start()
         {
             _equipmentBehaviour.Weapons.ForEach(weapon => weapon.OnFireWeapon += OnWeaponFired);
+            _mainCam = Camera.main;
         }
 
         private void OnDestroy()
@@ -93,7 +96,7 @@ namespace Perigon.Weapons
             UpdateBobbingWeaponOnMovement();
             UpdateWeaponRecoil();
             
-            var camTransform = Camera.main.transform;
+            var camTransform = _mainCam.transform;
             _weaponHolder.transform.SetPositionAndRotation(
                 camTransform.TransformPoint(_weaponBobLocalPosition + _weaponRecoilLocalPosition),
                 camTransform.rotation);
