@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace BForBoss
 {
-    public class SettingsViewBehaviour : MonoBehaviour
+    public class SettingsViewBehaviour : TabbedPanelViewBehaviour
     {
         [Title("Buttons")]
         [Resolve][SerializeField] private Button _backButton = null;
@@ -15,7 +15,6 @@ namespace BForBoss
         [Title("Panel")]
         [SerializeField] private InputSettingsViewBehaviour _mouseKeyboardInputSettingsView = null;
         [SerializeField] private InputSettingsViewBehaviour _controllerInputSettingsView = null;
-        private TabbedPanelViewBehaviour _tabbedPanelViews = null;
         private GameplaySettingsViewBehaviour _gameplaySettingsView = null;
         private AudioSettingsViewBehaviour _audioSettingsView = null;
         
@@ -23,9 +22,9 @@ namespace BForBoss
 
         public void Initialize(IInputSettings inputSettings, Action onBackPressed)
         {
+            base.Initialize();
             _mouseKeyboardInputSettingsView.Initialize(new MouseKeyboardInputSettingsViewModel(inputSettings));
             _controllerInputSettingsView.Initialize(new ControllerInputSettingsViewModel(inputSettings));
-            _tabbedPanelViews.Initialize();
             _gameplaySettingsView.Initialize();
             _audioSettingsView.Initialize();
             OnBackPressed = onBackPressed;
@@ -48,7 +47,6 @@ namespace BForBoss
                 OnBackPressed();
             });
             
-            _tabbedPanelViews = GetComponentInChildren<TabbedPanelViewBehaviour>(true);
             _gameplaySettingsView = GetComponentInChildren<GameplaySettingsViewBehaviour>(true);
             _audioSettingsView = GetComponentInChildren<AudioSettingsViewBehaviour>(true);
 

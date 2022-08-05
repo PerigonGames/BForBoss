@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace Perigon.UserInterface
 {
-    public sealed class TabbedPanelViewBehaviour : MonoBehaviour
+    public class TabbedPanelViewBehaviour : MonoBehaviour
     {
         [SerializeField] private TabbedContent[] _tabbedContent = null;
 
-        public void Initialize()
+        protected void Initialize()
         {
             if (_tabbedContent.IsNullOrEmpty())
             {
