@@ -6,14 +6,14 @@ using UnityEngine;
 
 namespace Perigon.Weapons
 {
-
-    
     public class WeaponAnimationController : MonoBehaviour
     {
         private const float ACCUMULATED_RECOIL_PERCENTAGE = 0.99F;
 
         [Resolve] [SerializeField] private GameObject _weaponHolder = null;
         [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
+
+        private Camera _mainCam;
         
         private Func<Vector3> _characterVelocity = null;
         private Func<float> _characterMaxSpeed = null;
@@ -21,7 +21,7 @@ namespace Perigon.Weapons
         private Func<bool> _isSliding = null;
         private Func<bool> _isDashing = null;
         private Func<bool> _isGrounded = null;
-        
+
         [Title("Weapon Bob Properties")] 
         [SerializeField]
         private float _hipFireBobAmount = 0.05f;
@@ -68,6 +68,7 @@ namespace Perigon.Weapons
         private void Start()
         {
             _equipmentBehaviour.Weapons.ForEach(weapon => weapon.OnFireWeapon += OnWeaponFired);
+            _mainCam = Camera.main;
         }
 
         private void OnDestroy()
@@ -94,8 +95,11 @@ namespace Perigon.Weapons
         {
             UpdateBobbingWeaponOnMovement();
             UpdateWeaponRecoil();
-
-            _weaponHolder.transform.localPosition = _weaponBobLocalPosition + _weaponRecoilLocalPosition;
+            
+            var camTransform = _mainCam.transform;
+            _weaponHolder.transform.SetPositionAndRotation(
+                camTransform.TransformPoint(_weaponBobLocalPosition + _weaponRecoilLocalPosition),
+                camTransform.rotation);
         }
 
         private void UpdateBobbingWeaponOnMovement()
@@ -112,7 +116,7 @@ namespace Perigon.Weapons
             var bobAmount = _hipFireBobAmount * (_isWallRunning() ? _wallRunningBobMultiplier : 1);
             
             var hBobValue = Mathf.Sin(Time.time * _weaponBobFrequency) * bobAmount * _weaponBobFactor;
-            /// Trignometric Graph Tranformation: y = A * Sin(b * x - c) + d
+            // Trignometric Graph Tranformation: y = A * Sin(b * x - c) + d
             var vBobValue = (Mathf.Sin(Time.time * _weaponBobFrequency * 2f) * 0.5f + 0.5f) * _weaponBobFactor * bobAmount;
             var xPosition = hBobValue;
             var yPosition = Mathf.Abs(vBobValue);
