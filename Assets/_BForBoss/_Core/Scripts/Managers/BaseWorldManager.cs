@@ -17,6 +17,10 @@ namespace BForBoss
         [Title("Base User Interface")]
         [SerializeField] protected PauseMenu _pauseMenu;
 
+        
+        [Title("Visual Effects")] 
+        [SerializeField] private VisualEffectsManager _visualEffectsManager = null;
+        
         private IInputSettings _inputSettings = null;
         protected FreezeActionsUtility _freezeActionsUtility = null;
 
@@ -69,6 +73,7 @@ namespace BForBoss
 
         private void SetupSubManagers()
         {
+            _visualEffectsManager.Initialize();
             _playerBehaviour.Initialize(_inputSettings as InputSettings, onDeath: () =>
             {
                 StateManager.Instance.SetState(State.Death);
@@ -86,6 +91,11 @@ namespace BForBoss
             if (_playerBehaviour == null)
             {
                 PanicHelper.Panic(new Exception("_playerBehaviour is missing from World Manager"));
+            }
+
+            if (_visualEffectsManager == null)
+            {
+                PanicHelper.Panic(new Exception("VisualEffectsManager missing from BaseWorldManager"));
             }
 
             if (_pauseMenu == null)

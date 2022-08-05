@@ -1,11 +1,9 @@
 using System;
 using ECM2.Components;
-using ECM2.Characters;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 
 namespace Perigon.Character
 {
@@ -13,14 +11,13 @@ namespace Perigon.Character
     {
         [Title("Visual Effects")]
         [SerializeField] private DashLinesEffectBehaviour _dashEffectBehaviour = null;
-        [SerializeField] private Volume _dashPostProcessingEffects = null;        
         
         [Title("Properties")]
         [SerializeField] private float _dashImpulse = 20.0f;
         [SerializeField] private float _dashDuration = 0.2f;
         [SerializeField] private float _dashCoolDown = 0.5f;
-        private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
         
+        private VisualEffectsManager _visualEffectsManager = null;
         private float _dashElapsedTime = 0;
         private float _dashCoolDownElapsedTime = 0;
         private bool _isDashing = false;
@@ -143,7 +140,7 @@ namespace Perigon.Character
                 return;
             }
 
-            _postProcessingVolumeWeightTool?.Revert();
+            _visualEffectsManager?.Revert(HUDVisualEffect.Dash);
             _dashCoolDownElapsedTime = _dashCoolDown;
             _dashElapsedTime = 0f;
             _isDashing = false;
@@ -169,7 +166,7 @@ namespace Perigon.Character
                 _dashEffectBehaviour.Play();
             }
 
-            _postProcessingVolumeWeightTool?.Distort();
+            _visualEffectsManager?.Distort(HUDVisualEffect.Dash);
         }
         
         #region Mono
@@ -181,13 +178,10 @@ namespace Perigon.Character
 
         private void SetupVisualEffects()
         {
-            if (_dashPostProcessingEffects != null)
+            _visualEffectsManager = FindObjectOfType<VisualEffectsManager>();
+            if (_visualEffectsManager == null)
             {
-                _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_dashPostProcessingEffects, _dashDuration);
-            }
-            else
-            {
-                Debug.LogWarning("There was an issue finding PostProcessing LensDistortion");
+                Debug.LogWarning("There was an issue finding VisualEffectsManager on PlayerDashBehaviour");
             }
             
             if (_dashEffectBehaviour == null)

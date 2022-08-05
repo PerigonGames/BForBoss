@@ -1,18 +1,15 @@
 using System;
 using UnityEngine;
-using UnityEngine.Rendering.HighDefinition;
 using Perigon.Utility;
 
 namespace Perigon.Entities
 {
     public class PlayerLifeCycleBehaviour : LifeCycleBehaviour
     {
-        private const string HEALTH_PASS_EMISSION_KEY = "_EmissionStrength";
-        [SerializeField] private CustomPassVolume _healthPassVolume = null;
         [SerializeField] private PlayerHealthViewBehaviour _healthBarView = null;
+        private VisualEffectsManager _visualEffectsManager = null;
         private Action _onDeathCallBack = null;
-        private CustomPassVolumeWeightTool _customPassTool = null;
-        
+
         public override void Initialize(Action onDeathCallback)
         {
             base.Initialize(onDeathCallback);
@@ -23,25 +20,23 @@ namespace Perigon.Entities
         protected override void LifeCycleDamageTaken()
         {
             base.LifeCycleDamageTaken();
-            _customPassTool?.InstantDistortAndRevert(delayBeforeRevert: 1f);
+            _visualEffectsManager.DistortAndRevert(HUDVisualEffect.Health);
         }
 
         protected override void LifeCycleFinished()
         {
-            _onDeathCallBack?.Invoke();
+            _onDeathCallBack.Invoke();
         }
 
         private void Awake()
         {
-            if (_healthPassVolume == null)
-            {
-                Debug.LogWarning("Missing Health Pass Volume VFX from PlayerLifeCycleBehaviour");
-            }
-            else
-            {
-                _customPassTool = new CustomPassVolumeWeightTool(_healthPassVolume, HEALTH_PASS_EMISSION_KEY);
-            }
+            _visualEffectsManager = FindObjectOfType<VisualEffectsManager>();
 
+            if (_visualEffectsManager == null)
+            {
+                Debug.LogWarning("Missing Visual effects manager from PlayerLifeCycleBehaviour");
+            }
+            
             if (_healthBarView == null)
             {
                 Debug.LogWarning("Missing Health Bar View from PlayerLifeCycleBehaviour");

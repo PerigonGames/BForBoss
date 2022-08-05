@@ -1,30 +1,17 @@
-using Perigon.Entities;
-using Perigon.Utility;
-using Perigon.Weapons;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace BForBoss
 {
     public class WeaponSandboxWorldManager : BaseWorldManager
     {
-        private const float DEATH_POST_PROCESSING_DURATION = 0.1F;
-        private const float DEATH_POST_PROCESSING_START = 0F;
-        private const float DEATH_POST_PROCESSING_END = 0.1f;
-        
         [SerializeField] 
         private Transform _spawnLocation = null;
         
         [Title("Component")]
         [SerializeField] private LifeCycleManager _lifeCycleManager = null;
         [SerializeField] private EnemySpawnerManager _enemySpawnerManager = null;
-
-        [Title("Effects")] 
-        [SerializeField] private Volume _deathVolume = null;
-        
-        private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
 
         protected override Vector3 SpawnLocation => _spawnLocation.position;
         protected override Quaternion SpawnLookDirection => _spawnLocation.rotation;
@@ -48,12 +35,6 @@ namespace BForBoss
             FindObjectsOfType<PatrolBehaviour>().ForEach(pb => pb.Reset());
         }
 
-        protected override void Awake()
-        {
-            base.Awake();
-            _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_deathVolume, DEATH_POST_PROCESSING_DURATION, DEATH_POST_PROCESSING_START, DEATH_POST_PROCESSING_END);
-        }
-
         protected override void Start()
         {
             if (_lifeCycleManager != null)
@@ -70,7 +51,6 @@ namespace BForBoss
         
         protected override void HandleOnDeath()
         {
-            _postProcessingVolumeWeightTool.InstantDistortAndRevert();
             _lifeCycleManager.Reset();            
             base.HandleOnDeath();
         }

@@ -12,9 +12,6 @@ namespace BForBoss
     {
         private const float RACE_COURSE_PENALTY_TIME = 5F;
         private const float MAP_SECONDS_TO_MILLISECONDS = 1000f;
-        private const float DEATH_POST_PROCESSING_DURATION = 0.1F;
-        private const float DEATH_POST_PROCESSING_START = 0F;
-        private const float DEATH_POST_PROCESSING_END = 0.1f;
         
         [Title("Component")] 
         [SerializeField] private TimeManager _timeManager = null;
@@ -26,11 +23,7 @@ namespace BForBoss
         [SerializeField] private ForcedSetUsernameViewBehaviour _forcedUploadView = null;
         [SerializeField] private EntityCounterViewBehaviour _entityCounterView = null;
 
-        [Title("Effects")] 
-        [SerializeField] private Volume _deathVolume = null;
-
         private readonly BForBossAnalytics _analytics = BForBossAnalytics.Instance;
-        private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
         private readonly TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
         private UploadPlayerScoreDataSource _uploadPlayerScoreDataSource = null;
 
@@ -50,7 +43,6 @@ namespace BForBoss
         protected override void Awake()
         {
             base.Awake();
-            _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_deathVolume, DEATH_POST_PROCESSING_DURATION, DEATH_POST_PROCESSING_START, DEATH_POST_PROCESSING_END);
             _uploadPlayerScoreDataSource = new UploadPlayerScoreDataSource();
         }
 
@@ -80,12 +72,6 @@ namespace BForBoss
             _pauseMenu.ForceOpenLeaderboardWithScore(gameTime);
         }
 
-        protected override void HandleOnDeath()
-        {
-            _postProcessingVolumeWeightTool.InstantDistortAndRevert();
-            base.HandleOnDeath();
-        }
-        
         protected override void OnValidate()
         {
             base.OnValidate();

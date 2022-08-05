@@ -45,6 +45,11 @@ namespace Perigon.Utility
             return DOTween.To(intensity => _material.SetFloat(_materialKey, intensity), _endValue, _startValue, _revertDuration);
         }
 
+        public void Reset()
+        {
+            _material.SetFloat(_materialKey, _startValue);
+        }
+
         public void InstantDistortAndRevert(float delayBeforeRevert = 0)
         {
             var sequence = DOTween.Sequence();
