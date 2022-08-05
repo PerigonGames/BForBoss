@@ -1,6 +1,4 @@
-using Perigon.Entities;
 using Perigon.Utility;
-using Perigon.Weapons;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
