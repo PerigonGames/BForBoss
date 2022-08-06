@@ -16,27 +16,21 @@ namespace BForBoss
 
         private ObjectPool<EnemyBehaviour> _pool;
         private LifeCycleManager _lifeCycleManager = null;
+        private bool _canSpawn = true;
 
-        public void Initialize(LifeCycleManager lifeCycleManager)
+        private WaveModel _waveModel;
+
+        public void Initialize(LifeCycleManager lifeCycleManager, WaveModel waveModel)
         {
             _lifeCycleManager = lifeCycleManager;
+            _waveModel = waveModel;
             
             if (_pool == null)
             {
                 SetupPool();
             }
             
-            if (_burstInitialSpawn)
-            {
-                for (int i = 0; i < _enemiesToSpawn; i++)
-                {
-                    _lifeCycleManager.AddEnemyBehaviourFromSpawner(_pool.Get(), Release);
-                }
-            }
-            else
-            {
-                StartCoroutine(SpawnEnemies(_enemiesToSpawn));
-            }
+            SpawnInitialEnemies();
         }
 
         public void Reset()
@@ -45,6 +39,18 @@ namespace BForBoss
             {
                 _pool.Clear();
             }
+        }
+
+        public void PauseSpawning()
+        {
+            _canSpawn = false;
+            StopCoroutine(nameof(SpawnEnemies));
+        }
+
+        public void ResumeSpawning()
+        {
+            _canSpawn = true;
+            SpawnInitialEnemies();
         }
         
         private void SetupPool()
@@ -66,7 +72,28 @@ namespace BForBoss
         private void Release(EnemyBehaviour behaviour)
         {
             _pool.Release(behaviour);
+            _waveModel?.IncrementKillCount();
             StartCoroutine(SpawnEnemies(1));
+        }
+        
+        private void SpawnInitialEnemies()
+        {
+            if (_burstInitialSpawn)
+            {
+                for (int i = 0; i < _enemiesToSpawn; i++)
+                {
+                    if (!_canSpawn)
+                    {
+                        return;
+                    }
+
+                    SpawnEnemy();
+                }
+            }
+            else
+            {
+                StartCoroutine(SpawnEnemies(_enemiesToSpawn));
+            }
         }
 
         private IEnumerator SpawnEnemies(int count)
@@ -74,8 +101,20 @@ namespace BForBoss
             for (int i = 0; i < count; i++)
             {
                 yield return new WaitForSeconds(_timeBetweenSpawns);
-                _lifeCycleManager.AddEnemyBehaviourFromSpawner(_pool.Get(), Release);
+                
+                if (!_canSpawn)
+                {
+                    yield break;
+                }
+                
+                SpawnEnemy();
             }
+        }
+
+        private void SpawnEnemy()
+        {
+            _lifeCycleManager.AddEnemyBehaviourFromSpawner(_pool.Get(), Release);
+            _waveModel?.IncrementSpawnCount();
         }
 
         private EnemyBehaviour GenerateEnemy(EnemyBehaviour enemyAgent)
