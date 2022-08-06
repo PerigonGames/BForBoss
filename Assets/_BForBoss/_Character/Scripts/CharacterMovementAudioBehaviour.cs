@@ -87,7 +87,7 @@ namespace Perigon.Character
             RuntimeManager.PlayOneShot(_slideAudio, transform.position);
         }
         
-        private void PlayOnDashSound(bool isDashActivated)
+        private void PlayOnDashSound()
         {
             RuntimeManager.PlayOneShot(_dashAudio, transform.position);
         }
