@@ -13,49 +13,25 @@ namespace BForBoss
         private PlayerMovementBehaviour _playerMovement = null;
         private PlayerLifeCycleBehaviour _playerLifeCycle = null;
         private PlayerSlowMotionBehaviour _playerSlowMotion = null;
-        private VisualEffectsManager _visualEffectsManager = null;
 
         public PlayerMovementBehaviour PlayerMovement => _playerMovement;
 
-        public void Initialize(InputSettings inputSettings, VisualEffectsManager visualEffectsManager, Action onDeath)
+        public void Initialize(InputSettings inputSettings, Action onDeath)
         {
-            _visualEffectsManager = visualEffectsManager;
             _playerMovement.Initialize(inputSettings);
-            _playerSlowMotion.OnSlowMotionStart = OnSlowMotionStart;
-            _playerSlowMotion.OnSlowMotionStopped = OnSlowMotionStopped;
             if (_playerLifeCycle != null)
             {
                 _playerLifeCycle.Initialize(onDeath);
-                _playerLifeCycle.OnDamageTaken = HandleOnHeal;
             }
         }
-        
+
+
         public void SpawnAt(Vector3 position, Quaternion facing)
         {
             _playerMovement.SetVelocity(Vector3.zero);
             _playerMovement.SetPosition(position);
             _playerMovement.rootPivot.rotation = facing;
             _playerMovement.eyePivot.rotation = facing;
-        }
-
-        private void HandleOnDamageTaken()
-        {
-            _visualEffectsManager.DistortAndRevert(HUDVisualEffect.Health);
-        }
-
-        private void HandleOnHeal()
-        {
-            
-        }
-
-        private Tween OnSlowMotionStart()
-        {
-            return _visualEffectsManager.Distort(HUDVisualEffect.SlowMotion);
-        }
-        
-        private Tween OnSlowMotionStopped()
-        {
-            return _visualEffectsManager.Revert(HUDVisualEffect.SlowMotion);
         }
 
         private void Awake()

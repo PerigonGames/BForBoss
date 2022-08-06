@@ -17,7 +17,6 @@ namespace Perigon.Character
         [SerializeField] private float _dashDuration = 0.2f;
         [SerializeField] private float _dashCoolDown = 0.5f;
         
-        private VisualEffectsManager _visualEffectsManager = null;
         private float _dashElapsedTime = 0;
         private float _dashCoolDownElapsedTime = 0;
         private bool _isDashing = false;
@@ -26,18 +25,16 @@ namespace Perigon.Character
 
         private ECM2.Characters.Character _baseCharacter = null;
         private InputAction _dashInputAction = null;
-        private Action _onDashing = null;
+        private Action _isDashActivated = null;
 
         public bool IsDashing => _isDashing;
         private bool IsCoolDownOver => _dashCoolDownElapsedTime <= 0;
-
         
-        
-        public void Initialize(ECM2.Characters.Character baseCharacter, Func<Vector2> characterMovement, Action onDash)
+        public void Initialize(ECM2.Characters.Character baseCharacter, Func<Vector2> characterMovement, Action isDashActivated)
         {
             _baseCharacter = baseCharacter;
             _characterInputMovement = characterMovement;
-            _onDashing = onDash;
+            _isDashActivated = isDashActivated;
         }
         
         public void SetupPlayerInput(InputAction dashAction)
@@ -123,7 +120,6 @@ namespace Perigon.Character
             }
 
             PlayerDashVisuals();
-            _onDashing?.Invoke();
             _isDashing = true;
             
             _baseCharacter.brakingFriction = 0.0f;
@@ -140,22 +136,18 @@ namespace Perigon.Character
                 return;
             }
 
-            _visualEffectsManager?.Revert(HUDVisualEffect.Dash);
             _dashCoolDownElapsedTime = _dashCoolDown;
             _dashElapsedTime = 0f;
+            VisualEffectsManager.Instance.Revert(HUDVisualEffect.Dash);
             _isDashing = false;
             _baseCharacter.useSeparateBrakingFriction = false;
         }
         
         private bool CanDash()
         {
-            // Do not allow to dash if crouched
-
             if (_baseCharacter.IsCrouching())
                 return false;
-
-            // Only allow to dash if IsWalking or IsFalling (Eg: in air)
-
+            
             return _baseCharacter.IsWalking() || _baseCharacter.IsFalling();
         }
 
@@ -166,7 +158,7 @@ namespace Perigon.Character
                 _dashEffectBehaviour.Play();
             }
 
-            _visualEffectsManager?.Distort(HUDVisualEffect.Dash);
+            VisualEffectsManager.Instance.Distort(HUDVisualEffect.Dash);
         }
         
         #region Mono
@@ -178,17 +170,10 @@ namespace Perigon.Character
 
         private void SetupVisualEffects()
         {
-            _visualEffectsManager = FindObjectOfType<VisualEffectsManager>();
-            if (_visualEffectsManager == null)
-            {
-                Debug.LogWarning("There was an issue finding VisualEffectsManager on PlayerDashBehaviour");
-            }
-            
             if (_dashEffectBehaviour == null)
             {
                 Debug.LogWarning("Dash Effect Missing from PlayerDashBehaviour.cs");
             }
-            
         }
 
         private void Update()

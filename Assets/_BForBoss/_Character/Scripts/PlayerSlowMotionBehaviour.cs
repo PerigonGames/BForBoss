@@ -1,5 +1,6 @@
 using System;
 using DG.Tweening;
+using Perigon.Utility;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,9 +19,6 @@ namespace Perigon.Character
         private bool _isSlowMotionActive = false;
         private float _fixedDeltaTime;
         private Sequence _timeScaleTween;
-
-        public Func<Tween> OnSlowMotionStart { private get; set; }
-        public Func<Tween> OnSlowMotionStopped { private get; set; }
 
         private float CurrentTimeScale => Time.timeScale;
         
@@ -51,13 +49,13 @@ namespace Perigon.Character
         private void StartSlowMotion()
         {
             _isSlowMotionActive = true;
-            SetupSlowMotionTweens(_targetTimeScale, OnSlowMotionStart?.Invoke());
+            SetupSlowMotionTweens(_targetTimeScale, VisualEffectsManager.Instance.Distort(HUDVisualEffect.SlowMotion));
         }
 
         private void StopSlowMotion()
         {
             _isSlowMotionActive = false;
-            SetupSlowMotionTweens(DEFAULT_TIME_SCALE, OnSlowMotionStopped?.Invoke());
+            SetupSlowMotionTweens(DEFAULT_TIME_SCALE, VisualEffectsManager.Instance.Revert(HUDVisualEffect.SlowMotion));
         }
 
         private void SetupSlowMotionTweens(float targetVal, Tween vfxTween)

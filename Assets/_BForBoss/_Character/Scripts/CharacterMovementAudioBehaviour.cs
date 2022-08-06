@@ -62,7 +62,7 @@ namespace Perigon.Character
             if (_playerMovementBehaviour != null)
             {
                 _playerMovementBehaviour.Jumped += PlayJumpSound;
-                _playerMovementBehaviour.Dashed += PlayDashSound;
+                _playerMovementBehaviour.OnDashActivated += PlayOnDashSound;
                 _playerMovementBehaviour.Slid += PlaySlideSound;
             }
         }
@@ -72,7 +72,7 @@ namespace Perigon.Character
             if (_playerMovementBehaviour != null)
             {
                 _playerMovementBehaviour.Jumped -= PlayJumpSound;
-                _playerMovementBehaviour.Dashed -= PlayDashSound;
+                _playerMovementBehaviour.OnDashActivated -= PlayOnDashSound;
                 _playerMovementBehaviour.Slid -= PlaySlideSound;
             }
         }
@@ -87,7 +87,7 @@ namespace Perigon.Character
             RuntimeManager.PlayOneShot(_slideAudio, transform.position);
         }
         
-        private void PlayDashSound()
+        private void PlayOnDashSound(bool isDashActivated)
         {
             RuntimeManager.PlayOneShot(_dashAudio, transform.position);
         }

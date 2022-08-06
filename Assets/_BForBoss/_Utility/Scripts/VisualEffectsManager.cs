@@ -15,11 +15,16 @@ namespace Perigon.Utility
         private const float HEALTH_VFX_DELAY_BEFORE_REVERT = 1f;
         private const string HEALTH_PASS_EMISSION_KEY = "_EmissionStrength";
 
+        private static VisualEffectsManager _instance = null;
+
         [Resolve][SerializeField] private CustomPassVolume _healthPassVolume = null;
         private CustomPassVolumeWeightTool _healthVFXTool;
 
-        public void Initialize()
+        public static VisualEffectsManager Instance => _instance;
+
+        public void Awake()
         {
+            _instance = this;
             _healthVFXTool = new CustomPassVolumeWeightTool(_healthPassVolume, HEALTH_PASS_EMISSION_KEY);
         }
         

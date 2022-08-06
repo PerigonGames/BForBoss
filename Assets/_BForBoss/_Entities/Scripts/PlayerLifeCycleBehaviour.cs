@@ -1,16 +1,13 @@
 using System;
-using UnityEngine;
 using Perigon.Utility;
+using UnityEngine;
 
 namespace Perigon.Entities
 {
     public class PlayerLifeCycleBehaviour : LifeCycleBehaviour
     {
         [SerializeField] private PlayerHealthViewBehaviour _healthBarView = null;
-        private VisualEffectsManager _visualEffectsManager = null;
         private Action _onDeathCallBack = null;
-        public Action OnDamageTaken { private get; set; }
-        public Action OnHeal { private get; set; }
 
         public override void Initialize(Action onDeathCallback)
         {
@@ -22,7 +19,7 @@ namespace Perigon.Entities
         protected override void LifeCycleDamageTaken()
         {
             base.LifeCycleDamageTaken();
-            OnDamageTaken?.Invoke();
+            VisualEffectsManager.Instance.DistortAndRevert(HUDVisualEffect.Health);
         }
 
         protected override void LifeCycleFinished()
@@ -32,13 +29,6 @@ namespace Perigon.Entities
 
         private void Awake()
         {
-            _visualEffectsManager = FindObjectOfType<VisualEffectsManager>();
-
-            if (_visualEffectsManager == null)
-            {
-                Debug.LogWarning("Missing Visual effects manager from PlayerLifeCycleBehaviour");
-            }
-            
             if (_healthBarView == null)
             {
                 Debug.LogWarning("Missing Health Bar View from PlayerLifeCycleBehaviour");
