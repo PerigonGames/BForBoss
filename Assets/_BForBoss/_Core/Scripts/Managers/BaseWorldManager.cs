@@ -74,7 +74,7 @@ namespace BForBoss
         private void SetupSubManagers()
         {
             _visualEffectsManager.Initialize();
-            _playerBehaviour.Initialize(_inputSettings as InputSettings, onDeath: () =>
+            _playerBehaviour.Initialize(_inputSettings as InputSettings, _visualEffectsManager, onDeath: () =>
             {
                 StateManager.Instance.SetState(State.Death);
             });

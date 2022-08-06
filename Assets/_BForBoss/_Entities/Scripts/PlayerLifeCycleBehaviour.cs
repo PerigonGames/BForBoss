@@ -9,6 +9,8 @@ namespace Perigon.Entities
         [SerializeField] private PlayerHealthViewBehaviour _healthBarView = null;
         private VisualEffectsManager _visualEffectsManager = null;
         private Action _onDeathCallBack = null;
+        public Action OnDamageTaken { private get; set; }
+        public Action OnHeal { private get; set; }
 
         public override void Initialize(Action onDeathCallback)
         {
@@ -20,7 +22,7 @@ namespace Perigon.Entities
         protected override void LifeCycleDamageTaken()
         {
             base.LifeCycleDamageTaken();
-            _visualEffectsManager.DistortAndRevert(HUDVisualEffect.Health);
+            OnDamageTaken?.Invoke();
         }
 
         protected override void LifeCycleFinished()

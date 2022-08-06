@@ -1,6 +1,5 @@
 using System;
 using DG.Tweening;
-using Perigon.Utility;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,23 +14,16 @@ namespace Perigon.Character
 
         [SerializeField] private float _tweenDuration = 1.0f;
         
-        private VisualEffectsManager _visualEffectsManager;
         private InputAction _slowMotionInputAction;
         private bool _isSlowMotionActive = false;
         private float _fixedDeltaTime;
         private Sequence _timeScaleTween;
 
-        public float CurrentTimeScale => Time.timeScale;
+        public Func<Tween> OnSlowMotionStart { private get; set; }
+        public Func<Tween> OnSlowMotionStopped { private get; set; }
 
-        private void Awake()
-        {
-            _visualEffectsManager = FindObjectOfType<VisualEffectsManager>();
-            if (_visualEffectsManager == null)
-            {
-                Debug.LogWarning("Missing Visual effects manager from PlayerLifeCycleBehaviour");
-            }
-        }
-
+        private float CurrentTimeScale => Time.timeScale;
+        
         private void Start()
         {
             _fixedDeltaTime = Time.fixedDeltaTime;
@@ -59,16 +51,16 @@ namespace Perigon.Character
         private void StartSlowMotion()
         {
             _isSlowMotionActive = true;
-            SetupSlowMotionTweens(_targetTimeScale, tool => tool.Distort(HUDVisualEffect.SlowMotion));
+            SetupSlowMotionTweens(_targetTimeScale, OnSlowMotionStart?.Invoke());
         }
 
         private void StopSlowMotion()
         {
             _isSlowMotionActive = false;
-            SetupSlowMotionTweens(DEFAULT_TIME_SCALE, tool => tool.Revert(HUDVisualEffect.SlowMotion));
+            SetupSlowMotionTweens(DEFAULT_TIME_SCALE, OnSlowMotionStopped?.Invoke());
         }
 
-        private void SetupSlowMotionTweens(float targetVal, Func<VisualEffectsManager, Tweener> postProcessingFunc)
+        private void SetupSlowMotionTweens(float targetVal, Tween vfxTween)
         {
             if (_timeScaleTween.IsActive())
             {
@@ -79,9 +71,9 @@ namespace Perigon.Character
                 SetTimeScale, 
                 targetVal,
                 _tweenDuration));
-            if (_visualEffectsManager != null)
+            if (vfxTween != null)
             {
-                _timeScaleTween.Join(postProcessingFunc(_visualEffectsManager));
+                _timeScaleTween.Join(vfxTween);
             }
             _timeScaleTween.timeScale = 1f;
             _timeScaleTween.Play();

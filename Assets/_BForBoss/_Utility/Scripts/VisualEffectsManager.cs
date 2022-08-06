@@ -46,10 +46,12 @@ namespace Perigon.Utility
             switch (effect)
             {
                 case HUDVisualEffect.Dash:
+                    Debug.LogWarning("Missing Dash VFX from VisualEffectsManager");
                     return null;
                 case HUDVisualEffect.Health:
                     return _healthVFXTool;
                 case HUDVisualEffect.SlowMotion:
+                    Debug.LogWarning("Missing SlowMotion VFX from VisualEffectsManager");
                     return null;
             }
 
