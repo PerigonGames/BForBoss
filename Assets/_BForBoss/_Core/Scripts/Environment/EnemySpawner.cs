@@ -72,7 +72,7 @@ namespace BForBoss
         private void Release(EnemyBehaviour behaviour)
         {
             _pool.Release(behaviour);
-            _waveModel?.OnEnemyKilled?.Invoke();
+            _waveModel?.IncrementKillCount();
             StartCoroutine(SpawnEnemies(1));
         }
         
@@ -114,7 +114,7 @@ namespace BForBoss
         private void SpawnEnemy()
         {
             _lifeCycleManager.AddEnemyBehaviourFromSpawner(_pool.Get(), Release);
-            _waveModel?.OnEnemySpawned?.Invoke();
+            _waveModel?.IncrementSpawnCount();
         }
 
         private EnemyBehaviour GenerateEnemy(EnemyBehaviour enemyAgent)

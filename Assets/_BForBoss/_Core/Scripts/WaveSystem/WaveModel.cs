@@ -4,18 +4,68 @@ namespace BForBoss
 {
     public class WaveModel
     {
-        public int waveNumber;
-        public int maxEnemyCountforWave;
-        public int killCount;
+        private int _waveNumber;
+        private int _initialMaxEnemyCount;
+        private int _maxEnemyCount;
+        private int _killCount;
 
         public Action OnEnemySpawned;
-        public Action OnEnemyKilled;
+        public Action<int> OnEnemyKillCountChanged;
+        public Action<int, int> OnWaveCountChanged;
+        
+        public int WaveNumber
+        {
+            get => _waveNumber;
+            private set => _waveNumber = value;
+        }
+
+        public int MaxEnemyCount
+        {
+            get => _maxEnemyCount;
+            private set => _maxEnemyCount = value;
+        }
+
+        public int KillCount
+        {
+            get => _killCount;
+            private set
+            {
+                _killCount = value;
+                OnEnemyKillCountChanged?.Invoke(_killCount);
+            }
+            
+        }
+
+        public void SetupInitialWave(int maxEnemyCount)
+        {
+            _initialMaxEnemyCount = maxEnemyCount;
+            IncrementWave(maxEnemyCount);
+        }
+
+        public void IncrementSpawnCount()
+        {
+            OnEnemySpawned?.Invoke();
+        }
+
+        public void IncrementKillCount()
+        {
+            KillCount++;
+        }
+
+        public void IncrementWave(int newMaxEnemyCount)
+        {
+            WaveNumber++;
+            MaxEnemyCount = newMaxEnemyCount;
+            OnWaveCountChanged?.Invoke(_waveNumber, _maxEnemyCount);
+            KillCount = 0;
+        }
 
         public void ResetData()
         {
-            waveNumber = 0;
-            maxEnemyCountforWave = 0;
-            killCount = 0;
+            WaveNumber = 1;
+            MaxEnemyCount = _initialMaxEnemyCount;
+            OnWaveCountChanged?.Invoke(_waveNumber, _maxEnemyCount);
+            KillCount = 0;
         }
     }
 }

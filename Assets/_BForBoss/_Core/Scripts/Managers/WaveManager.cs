@@ -23,12 +23,9 @@ namespace BForBoss
             _enemySpawnerManager = enemySpawnerManager;
 
             _waveModel = waveModel;
-            _waveModel.waveNumber = 1;
-            _waveModel.maxEnemyCountforWave = _initialNumberOfEnemies;
-            _waveModel.killCount = 0;
-
             _waveModel.OnEnemySpawned += OnEnemySpawned;
-            _waveModel.OnEnemyKilled += OnEnemyKilled;
+            _waveModel.OnEnemyKillCountChanged += OnEnemyKilled;
+            _waveModel.SetupInitialWave(_initialNumberOfEnemies);
             
             _enemySpawnerManager.Initialize(lifeCycleManager, waveModel);
         }
@@ -40,8 +37,6 @@ namespace BForBoss
             if (_waveModel != null)
             {
                 _waveModel.ResetData();
-                _waveModel.OnEnemySpawned -= OnEnemySpawned;
-                _waveModel.OnEnemyKilled -= OnEnemyKilled;
             }
 
             if (_enemySpawnerManager != null)
@@ -54,20 +49,18 @@ namespace BForBoss
         {
             _spawnCount++;
 
-            if (_spawnCount >= _waveModel.maxEnemyCountforWave)
+            if (_spawnCount >= _waveModel.MaxEnemyCount)
             {
                 PauseSpawning();
             }
         }
 
-        private void OnEnemyKilled()
+        private void OnEnemyKilled(int killCount)
         {
-            _waveModel.killCount++;
-
             //Added the second clause just in case no. spawned > max allowed
-            if (_waveModel.killCount >= _waveModel.maxEnemyCountforWave && _waveModel.killCount == _spawnCount)
+            if (killCount >= _waveModel.MaxEnemyCount && killCount == _spawnCount)
             {
-                Debug.Log($"<b>Wave {_waveModel.waveNumber}</b> Ended. Please wait <b>{_timeBetweenWaves} seconds</b> before the next wave");
+                Debug.Log($"<b>Wave {_waveModel.WaveNumber}</b> Ended. Please wait <b>{_timeBetweenWaves} seconds</b> before the next wave");
                 StartCoroutine(InitiateNextWave());
             }
         }
@@ -77,11 +70,9 @@ namespace BForBoss
             yield return new WaitForSeconds(_timeBetweenWaves);
             
             _spawnCount = 0;
-            _waveModel.killCount = 0;
-            _waveModel.maxEnemyCountforWave = (int)Math.Ceiling(_waveModel.maxEnemyCountforWave * _enemyAmountMultiplier);
-            _waveModel.waveNumber++;
+            _waveModel.IncrementWave((int)Math.Ceiling(_waveModel.MaxEnemyCount * _enemyAmountMultiplier));
             
-            Debug.Log($"<b>Wave {_waveModel.waveNumber}</b> has <b>{_waveModel.maxEnemyCountforWave}</b> Enemies to kill. good luck");
+            Debug.Log($"<b>Wave {_waveModel.WaveNumber}</b> has <b>{_waveModel.MaxEnemyCount}</b> Enemies to kill. good luck");
             ResumeSpawning();
         }
 
@@ -95,11 +86,12 @@ namespace BForBoss
             _enemySpawnerManager.ResumeSpawning();
         }
 
-        private void OnValidate()
+        private void OnDestroy()
         {
-            if (_enemySpawnerManager == null)
+            if (_waveModel != null)
             {
-                Debug.LogWarning("Enemy Spawner Manager missing from the Wave Manager");
+                _waveModel.OnEnemySpawned -= OnEnemySpawned;
+                _waveModel.OnEnemyKillCountChanged -= OnEnemyKilled;
             }
         }
     }
