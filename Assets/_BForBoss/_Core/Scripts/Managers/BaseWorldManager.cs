@@ -1,9 +1,10 @@
 using System;
-using Perigon.Character;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using InputSettings = Perigon.Character.InputSettings;
 
 namespace BForBoss
 {
@@ -14,13 +15,24 @@ namespace BForBoss
         [Title("Base Component")]
         [SerializeField] protected PlayerBehaviour _playerBehaviour = null;
 
-        [Title("Base User Interface")]
-        [SerializeField] protected PauseMenu _pauseMenu;
-
         private IInputSettings _inputSettings = null;
         protected FreezeActionsUtility _freezeActionsUtility = null;
 
         private WeaponSceneManager _weaponSceneManager = null;
+        private UserInterfaceManager _userInterfaceManager = null;
+
+        protected UserInterfaceManager UserInterfaceManager
+        {
+            get
+            {
+                if (_userInterfaceManager == null)
+                {
+                    _userInterfaceManager = FindObjectOfType<UserInterfaceManager>();
+                }
+
+                return _userInterfaceManager;
+            }
+        }
 
         protected WeaponSceneManager WeaponSceneManager
         {
@@ -54,16 +66,25 @@ namespace BForBoss
             _stateManager.OnStateChanged += HandleStateChange;
             _inputSettings = new InputSettings();
             SceneManager.LoadScene("AdditiveWeaponManager", LoadSceneMode.Additive);
+            SceneManager.LoadScene("AdditiveUserInterfaceScene", LoadSceneMode.Additive);
 #if (UNITY_EDITOR || DEVELOPMENT_BUILD)
             SceneManager.LoadScene("AdditiveDebugScene", LoadSceneMode.Additive);
 #endif
         }
+        
+        protected virtual void Update()
+        {
+            if (Keyboard.current.escapeKey.isPressed)
+            {
+                _stateManager.SetState(State.Pause);
+            }
+        }
 
         protected virtual void Start()
         {
-            WeaponSceneManager.Initialize(_playerBehaviour);
             SetupSubManagers();
-            _pauseMenu.Initialize(_inputSettings, _freezeActionsUtility);
+            WeaponSceneManager.Initialize(_playerBehaviour);
+            UserInterfaceManager.Initialize(_inputSettings);
             _stateManager.SetState(State.PreGame);
         }
 
@@ -86,11 +107,6 @@ namespace BForBoss
             if (_playerBehaviour == null)
             {
                 PanicHelper.Panic(new Exception("_playerBehaviour is missing from World Manager"));
-            }
-
-            if (_pauseMenu == null)
-            {
-                PanicHelper.Panic(new Exception("PauseMenu is missing from World Manager"));
             }
         }
 
@@ -136,11 +152,13 @@ namespace BForBoss
         protected virtual void HandleStatePlay()
         {
             Time.timeScale = 1.0f;
+            _freezeActionsUtility.UnlockInput();
         }
 
         protected virtual void HandleStatePause()
         {
             Time.timeScale = 0.0f;
+            _freezeActionsUtility.LockInput();
         }
 
         protected virtual void HandleOnEndOfRace()

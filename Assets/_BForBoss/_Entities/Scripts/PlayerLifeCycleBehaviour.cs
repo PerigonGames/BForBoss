@@ -16,7 +16,7 @@ namespace Perigon.Entities
         public override void Initialize(Action onDeathCallback)
         {
             base.Initialize(onDeathCallback);
-            _healthBarView.Initialize(_lifeCycle);
+            _healthBarView?.Initialize(_lifeCycle);
             _onDeathCallBack = onDeathCallback;
         }
 
