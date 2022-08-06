@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace Perigon.UserInterface
 {
-    public sealed class TabbedPanelViewBehaviour : MonoBehaviour
+    public class TabbedPanelViewBehaviour : MonoBehaviour
     {
         [SerializeField] private TabbedContent[] _tabbedContent = null;
 
-        public void Initialize()
+        protected void Initialize()
         {
             if (_tabbedContent.IsNullOrEmpty())
             {
@@ -16,21 +16,14 @@ namespace Perigon.UserInterface
             }
 
             BindAllTabs();
-            OpenFirstTab();
-        }
-
-        public void Reset()
-        {
-            TurnOffAllContent();
-            OpenFirstTab();
         }
         
-        public void TurnOffAllContent()
+        private void BindTab(TabbedContent tabbedContent)
         {
-            foreach (var content in _tabbedContent)
+            tabbedContent.Tab.onClick.AddListener(() =>
             {
-                content.Content.SetActive(false);
-            }
+                TurnOnTab(tabbedContent.Content);
+            });
         }
 
         private void OpenFirstTab()
@@ -38,6 +31,15 @@ namespace Perigon.UserInterface
             if (!_tabbedContent.IsNullOrEmpty())
             {
                 TurnOnTab(_tabbedContent[0].Content);
+                _tabbedContent[0].Tab.Select();
+            }
+        }
+        
+        private void TurnOffAllContent()
+        {
+            foreach (var content in _tabbedContent)
+            {
+                content.Content.SetActive(false);
             }
         }
 
@@ -49,18 +51,16 @@ namespace Perigon.UserInterface
             }
         }
 
-        private void BindTab(TabbedContent tabbedContent)
-        {
-            tabbedContent.Tab.onClick.AddListener(() =>
-            {
-                TurnOnTab(tabbedContent.Content);
-            });
-        }
-
         private void TurnOnTab(GameObject content)
         {
             TurnOffAllContent();
             content.SetActive(true);
+        }
+
+        private void OnEnable()
+        {
+            TurnOffAllContent();
+            OpenFirstTab();
         }
     }
 
