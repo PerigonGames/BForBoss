@@ -1,5 +1,4 @@
 using System;
-using DG.Tweening;
 using Perigon.Character;
 using Perigon.Entities;
 using Perigon.Utility;
