@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1114670888653822638}
-  - component: {fileID: 7806059799715926813}
-  - component: {fileID: 2500950832949760121}
+  - component: {fileID: 276669621920954743}
+  - component: {fileID: 494813333301958241}
   m_Layer: 0
   m_Name: P_HealthPickup
   m_TagString: Untagged
@@ -34,7 +34,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7806059799715926813
+--- !u!114 &276669621920954743
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _healAmount: 50
---- !u!65 &2500950832949760121
+--- !u!65 &494813333301958241
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -58,8 +58,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.5807247, z: 1}
-  m_Center: {x: 0, y: 0.04697323, z: 0}
+  m_Size: {x: 1.3974302, y: 2.4415398, z: 1.2384713}
+  m_Center: {x: 0, y: 0.7207696, z: 0}
 --- !u!1001 &1917517816335985358
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -77,7 +77,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1020e89b4aa6eea458eacf17bc908ad4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1020e89b4aa6eea458eacf17bc908ad4, type: 3}
       propertyPath: m_LocalPosition.z
