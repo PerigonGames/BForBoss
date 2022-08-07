@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0060808607, g: 0.0051552732, b: 0.006794371, a: 1}
+  m_IndirectSpecularColor: {r: 0.008269796, g: 0.0065247677, b: 0.0075460374, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -593,7 +593,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 503
+    m_Bits: 6647
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1384,6 +1384,10 @@ PrefabInstance:
       propertyPath: _healthPassVolume
       value: 
       objectReference: {fileID: 210978766}
+    - target: {fileID: 7120097269958552082, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
+      propertyPath: m_Lens.m_SensorSize.x
+      value: 1.4595513
+      objectReference: {fileID: 0}
     - target: {fileID: 7120097269958552083, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.6
