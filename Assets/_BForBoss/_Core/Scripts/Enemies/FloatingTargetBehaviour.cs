@@ -55,6 +55,14 @@ namespace BForBoss
                 _state = FloatingTargetState.MoveTowardsDestination;
             });
         }
+        
+        public void ApplyKnockback(float force, Vector3 originPosition)
+        {
+            if (_rb == null || !_lifeCycle.IsAlive)
+                return;
+            ToggleKnockbackState(true);
+            _rb.AddExplosionForce(force, originPosition, _knockbackRadiusModifier, _knockbackUpwardsForceModifier);
+        }
 
         public override void Reset()
         {
@@ -131,15 +139,6 @@ namespace BForBoss
                     CheckKnockback(Time.fixedDeltaTime);
                     break;
             }
-        }
-
-
-        public void ApplyKnockback(float force, Vector3 originPosition)
-        {
-            if (_rb == null || !_lifeCycle.IsAlive)
-                return;
-            ToggleKnockbackState(true);
-            _rb.AddExplosionForce(force, originPosition, _knockbackRadiusModifier, _knockbackUpwardsForceModifier);
         }
     }
 }

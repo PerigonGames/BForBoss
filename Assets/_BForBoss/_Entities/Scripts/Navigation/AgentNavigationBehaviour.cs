@@ -64,11 +64,6 @@ namespace Perigon.Entities
         private void Awake()
         {
             _agent = GetComponent<NavMeshAgent>();
-            if (_agent == null)
-            {
-                //Do we need this? the component has a RequireComponent flag on it already
-                PanicHelper.Panic(new Exception("AgentNavigationBehaviour is missing a NavMeshAgent"));
-            }
             _agent.stoppingDistance = _stopDistanceBeforeReachingDestination;
         }
         
