@@ -16,6 +16,8 @@ namespace Perigon.Weapons
         private Action<bool> _onHitEntity;
         public bool CanMelee => _currentCooldown <= 0f;
         private int _hits;
+
+        private int layerMask = ~LayerMask.GetMask("Player");
         
         public float CurrentCooldown => _currentCooldown;
 
@@ -35,7 +37,7 @@ namespace Perigon.Weapons
                 return false;
             _currentCooldown += _meleeProperties.AttackCoolDown;
             
-            _hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, ref _enemyBuffer);
+            _hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, layerMask, ref _enemyBuffer);
             return true;
         }
         
@@ -45,7 +47,7 @@ namespace Perigon.Weapons
                 return false;
             _currentCooldown += _meleeProperties.AttackCoolDown;
             
-            _hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, ref _enemyBuffer);
+            _hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, layerMask, ref _enemyBuffer);
             if (_hits > 1)
                 _hits = 1; //ensure we only damage first enemy
             return true;
@@ -59,8 +61,6 @@ namespace Perigon.Weapons
             for (int i = 0; i < _hits; i++)
             {
                 var collider = _enemyBuffer[i];
-                if(collider.CompareTag("Player"))
-                    continue;
                 pointsHit.Add(DamageEnemy(_enemyBuffer[i], position));
             }
 
