@@ -1,11 +1,10 @@
 using System;
-using Perigon.Character;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-#endif
+using InputSettings = Perigon.Character.InputSettings;
 
 namespace BForBoss
 {
@@ -16,11 +15,37 @@ namespace BForBoss
         [Title("Base Component")]
         [SerializeField] protected PlayerBehaviour _playerBehaviour = null;
 
-        [Title("Base User Interface")]
-        [SerializeField] protected PauseMenu _pauseMenu;
-
         private IInputSettings _inputSettings = null;
         protected FreezeActionsUtility _freezeActionsUtility = null;
+
+        private WeaponSceneManager _weaponSceneManager = null;
+        private UserInterfaceManager _userInterfaceManager = null;
+
+        protected UserInterfaceManager UserInterfaceManager
+        {
+            get
+            {
+                if (_userInterfaceManager == null)
+                {
+                    _userInterfaceManager = FindObjectOfType<UserInterfaceManager>();
+                }
+
+                return _userInterfaceManager;
+            }
+        }
+
+        protected WeaponSceneManager WeaponSceneManager
+        {
+            get
+            {
+                if (_weaponSceneManager == null)
+                {
+                    _weaponSceneManager = FindObjectOfType<WeaponSceneManager>();
+                }
+
+                return _weaponSceneManager;
+            }
+        }
 
         protected abstract Vector3 SpawnLocation { get; }
         protected abstract Quaternion SpawnLookDirection { get; }
@@ -40,15 +65,26 @@ namespace BForBoss
         {
             _stateManager.OnStateChanged += HandleStateChange;
             _inputSettings = new InputSettings();
+            SceneManager.LoadScene("AdditiveWeaponManager", LoadSceneMode.Additive);
+            SceneManager.LoadScene("AdditiveUserInterfaceScene", LoadSceneMode.Additive);
 #if (UNITY_EDITOR || DEVELOPMENT_BUILD)
             SceneManager.LoadScene("AdditiveDebugScene", LoadSceneMode.Additive);
 #endif
+        }
+        
+        protected virtual void Update()
+        {
+            if (Keyboard.current.escapeKey.isPressed)
+            {
+                _stateManager.SetState(State.Pause);
+            }
         }
 
         protected virtual void Start()
         {
             SetupSubManagers();
-            _pauseMenu.Initialize(_inputSettings, _freezeActionsUtility);
+            WeaponSceneManager.Initialize(_playerBehaviour);
+            UserInterfaceManager.Initialize(_inputSettings);
             _stateManager.SetState(State.PreGame);
         }
 
@@ -71,11 +107,6 @@ namespace BForBoss
             if (_playerBehaviour == null)
             {
                 PanicHelper.Panic(new Exception("_playerBehaviour is missing from World Manager"));
-            }
-
-            if (_pauseMenu == null)
-            {
-                PanicHelper.Panic(new Exception("PauseMenu is missing from World Manager"));
             }
         }
 
@@ -121,11 +152,13 @@ namespace BForBoss
         protected virtual void HandleStatePlay()
         {
             Time.timeScale = 1.0f;
+            _freezeActionsUtility.UnlockInput();
         }
 
         protected virtual void HandleStatePause()
         {
             Time.timeScale = 0.0f;
+            _freezeActionsUtility.LockInput();
         }
 
         protected virtual void HandleOnEndOfRace()

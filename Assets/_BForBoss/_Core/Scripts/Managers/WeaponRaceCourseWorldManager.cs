@@ -1,9 +1,7 @@
 using System;
 using Perigon.Analytics;
-using Perigon.Entities;
 using Perigon.Leaderboard;
 using Perigon.Utility;
-using Perigon.Weapons;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -22,15 +20,9 @@ namespace BForBoss
         [SerializeField] private TimeManager _timeManager = null;
         [SerializeField] private CheckpointManager _checkpointManager = null;
         [SerializeField] private LifeCycleManager _lifeCycleManager = null;
-        [Title("Weapon/Equipment Component")] 
-        [SerializeField] private WeaponAnimationController _weaponAnimationController = null;
-        [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
-        [SerializeField] private AmmunitionCountViewBehaviour _ammunitionCountView = null;
-        [SerializeField] private ReloadViewBehaviour _reloadView = null;
-        
+
         [Title("User Interface")]
         [SerializeField] private TimerViewBehaviour _timerView = null;
-        [SerializeField] private ForcedSetUsernameViewBehaviour _forcedUploadView = null;
         [SerializeField] private EntityCounterViewBehaviour _entityCounterView = null;
 
         [Title("Effects")] 
@@ -68,20 +60,8 @@ namespace BForBoss
             _checkpointManager.Initialize(_timeManagerViewModel);
             _timeManager.Initialize(_timeManagerViewModel);
 
-            _weaponAnimationController.Initialize(
-                () => _playerBehaviour.PlayerMovement.CharacterVelocity,
-                () => _playerBehaviour.PlayerMovement.CharacterMaxSpeed,
-                () => _playerBehaviour.PlayerMovement.IsWallRunning,
-                () => _playerBehaviour.PlayerMovement.IsGrounded,
-                () => _playerBehaviour.PlayerMovement.IsSliding,
-                () => _playerBehaviour.PlayerMovement.IsDashing);
-            _equipmentBehaviour.Initialize(_playerBehaviour.PlayerMovement.RootPivot);
-            _ammunitionCountView.Initialize(_equipmentBehaviour);
-            _reloadView.Initialize(_equipmentBehaviour);
-            
             _timerView.Initialize(_timeManagerViewModel);
             _entityCounterView.Initialize(_lifeCycleManager);
-            _forcedUploadView.Initialize(_freezeActionsUtility);
         }
         
         private void OnApplicationQuit()
@@ -95,7 +75,6 @@ namespace BForBoss
             var totalPenaltyTime = _lifeCycleManager.LivingEntities * RACE_COURSE_PENALTY_TIME * MAP_SECONDS_TO_MILLISECONDS;
             var gameTime = _timeManagerViewModel.CurrentGameTimeMilliSeconds + (int)totalPenaltyTime;
             _uploadPlayerScoreDataSource.UploadScoreIfPossible(gameTime);
-            _pauseMenu.ForceOpenLeaderboardWithScore(gameTime);
         }
 
         protected override void HandleOnDeath()
@@ -107,25 +86,6 @@ namespace BForBoss
         protected override void OnValidate()
         {
             base.OnValidate();
-            if (_weaponAnimationController == null)
-            {
-                PanicHelper.Panic(new Exception("Weapons animation controller missing from World Manager"));
-            }
-            
-            if (_equipmentBehaviour == null)
-            {
-                PanicHelper.Panic(new Exception("Equipment Behaviour missing from World Manager"));
-            }
-            
-            if (_ammunitionCountView == null)
-            {
-                PanicHelper.Panic(new Exception("Ammunition Count View missing from World Manager"));
-            }
-            
-            if (_reloadView == null)
-            {
-                PanicHelper.Panic(new Exception("Reload View missing from World Manager"));
-            }
 
             if (_lifeCycleManager == null)
             {
