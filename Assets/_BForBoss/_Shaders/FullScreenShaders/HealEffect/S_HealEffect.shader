@@ -5,7 +5,7 @@ Shader "FullScreen/S_HealEffect"
         [HDR] _Color("Color", Color) = (1,1,1,1)
 //        _EmissionStrength("EmissionStrength", float) = 1.0
 //        _Flash("Flash", float) = 1.0
-        _AnimTime("AnimTime", float) = 1.0
+        _EmissionStrength("Emission Strength", float) = 1.0
         }
 
     HLSLINCLUDE
@@ -21,9 +21,9 @@ Shader "FullScreen/S_HealEffect"
     float4 _MainTex_ST;
     float2 _Aspect;
     float _Falloff;
-    float _EmissionStrength;
+    float _TextureEmissionStrength;
     float _Flash;
-    float _AnimTime;
+    float _EmissionStrength;
     float4 _Color;
 
     half3 AdjustContrast(half3 color, half contrast) {
@@ -61,21 +61,21 @@ Shader "FullScreen/S_HealEffect"
         
         float3 src_color = src * _Color;
 
-        if (_AnimTime > 1)
+        if (_EmissionStrength > 1)
         {
-            _AnimTime = 1;
+            _EmissionStrength = 1;
         }
-        if (_AnimTime < 0)
+        if (_EmissionStrength < 0)
         {
-            _AnimTime = 0;
+            _EmissionStrength = 0;
         }
         
         //float x = cos(_AnimTime * (PI/2) );
-        float x = (1 / (9 * (_AnimTime + 0.1) )) - 0.1;
-        _EmissionStrength = x;
+        float x = (1 / (9 * (_EmissionStrength + 0.1) )) - 0.1;
+        _TextureEmissionStrength = x;
         _Flash = x;
         
-        return half4( src_color.rgb * _EmissionStrength + _Flash, src.r * _EmissionStrength + _Flash);
+        return half4( src_color.rgb * _TextureEmissionStrength + _Flash, src.r * _TextureEmissionStrength + _Flash);
     }
 
     ENDHLSL
