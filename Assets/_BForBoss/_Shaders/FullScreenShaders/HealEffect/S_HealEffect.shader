@@ -3,8 +3,8 @@ Shader "FullScreen/S_HealEffect"
     Properties{
         _MainTex ("-", 2D) = "" {}
         [HDR] _Color("Color", Color) = (1,1,1,1)
-        _EmissionStrength("EmissionStrength", float) = 1.0
-        _Flash("Flash", float) = 1.0
+//        _EmissionStrength("EmissionStrength", float) = 1.0
+//        _Flash("Flash", float) = 1.0
         _AnimTime("AnimTime", float) = 1.0
         }
 
