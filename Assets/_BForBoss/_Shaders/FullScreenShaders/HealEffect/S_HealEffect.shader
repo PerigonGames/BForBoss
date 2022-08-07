@@ -69,6 +69,8 @@ Shader "FullScreen/S_HealEffect"
         {
             _EmissionStrength = 0;
         }
+
+        _EmissionStrength = 1 - _EmissionStrength;
         
         //float x = cos(_AnimTime * (PI/2) );
         float x = (1 / (9 * (_EmissionStrength + 0.1) )) - 0.1;
