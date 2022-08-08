@@ -22,6 +22,11 @@ namespace Perigon.Entities
             VisualEffectsManager.Instance.DistortAndRevert(HUDVisualEffect.DamageTaken);
         }
 
+        protected override void LifeCycleOnHeal()
+        {
+            VisualEffectsManager.Instance.DistortAndRevert(HUDVisualEffect.Heal);
+        }
+
         protected override void LifeCycleFinished()
         {
             _onDeathCallBack.Invoke();

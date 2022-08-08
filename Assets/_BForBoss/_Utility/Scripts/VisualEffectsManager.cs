@@ -13,7 +13,7 @@ namespace Perigon.Utility
     }
     public class VisualEffectsManager : MonoBehaviour
     {
-        private const float HEALTH_VFX_DELAY_BEFORE_REVERT = 1f;
+        private const float DAMAGE_TAKEN_VFX_DELAY_BEFORE_REVERT = 1f;
         private const string EMISSION_STRENGTH_KEY = "_EmissionStrength";
 
         private static VisualEffectsManager _instance = null;
@@ -39,7 +39,18 @@ namespace Perigon.Utility
         public void DistortAndRevert(HUDVisualEffect effect)
         {
             var pass = GetCustomPass(effect);
-            pass?.InstantDistortAndRevert(delayBeforeRevert: HEALTH_VFX_DELAY_BEFORE_REVERT);
+
+            float DelayBeforeRevert()
+            {
+                switch (effect)
+                {
+                    case HUDVisualEffect.DamageTaken:
+                        return DAMAGE_TAKEN_VFX_DELAY_BEFORE_REVERT;
+                    default:
+                        return 0;
+                }
+            }
+            pass?.InstantDistortAndRevert(delayBeforeRevert: DelayBeforeRevert());
         }
 
         public Tweener Distort(HUDVisualEffect effect)
