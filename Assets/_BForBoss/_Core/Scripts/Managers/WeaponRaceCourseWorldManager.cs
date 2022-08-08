@@ -20,7 +20,6 @@ namespace BForBoss
 
         [Title("User Interface")]
         [SerializeField] private TimerViewBehaviour _timerView = null;
-        [SerializeField] private ForcedSetUsernameViewBehaviour _forcedUploadView = null;
         [SerializeField] private EntityCounterViewBehaviour _entityCounterView = null;
 
         private readonly BForBossAnalytics _analytics = BForBossAnalytics.Instance;
@@ -55,7 +54,6 @@ namespace BForBoss
 
             _timerView.Initialize(_timeManagerViewModel);
             _entityCounterView.Initialize(_lifeCycleManager);
-            _forcedUploadView.Initialize(_freezeActionsUtility);
         }
         
         private void OnApplicationQuit()
@@ -69,7 +67,6 @@ namespace BForBoss
             var totalPenaltyTime = _lifeCycleManager.LivingEntities * RACE_COURSE_PENALTY_TIME * MAP_SECONDS_TO_MILLISECONDS;
             var gameTime = _timeManagerViewModel.CurrentGameTimeMilliSeconds + (int)totalPenaltyTime;
             _uploadPlayerScoreDataSource.UploadScoreIfPossible(gameTime);
-            _pauseMenu.ForceOpenLeaderboardWithScore(gameTime);
         }
 
         protected override void OnValidate()

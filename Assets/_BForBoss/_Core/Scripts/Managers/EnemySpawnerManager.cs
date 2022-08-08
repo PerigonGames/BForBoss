@@ -1,34 +1,40 @@
-using Perigon.Entities;
 using UnityEngine;
 
 namespace BForBoss
 {
     public class EnemySpawnerManager : MonoBehaviour
     {
-        private EnemySpawner[] _enemySpawners = null;
-        public void Reset()
-        {
-            if (_enemySpawners == null)
-            {
-                return;
-            }
+        private EnemySpawner[] _enemySpawners = new EnemySpawner[]{};
 
+        public void Reset()
+        { 
             foreach (EnemySpawner spawner in _enemySpawners)
             {
                 spawner.Reset();
             }
         }
 
-        public void Initialize(LifeCycleManager lifeCycleManager)
+        public void PauseSpawning()
         {
-            if (_enemySpawners == null)
-            {
-                return;
-            }
-
             foreach (EnemySpawner spawner in _enemySpawners)
             {
-                spawner.Initialize(lifeCycleManager);
+                spawner.PauseSpawning();
+            }
+        }
+
+        public void ResumeSpawning()
+        {
+            foreach (EnemySpawner spawner in _enemySpawners)
+            {
+                spawner.ResumeSpawning();
+            }
+        }
+
+        public void Initialize(LifeCycleManager lifeCycleManager, WaveModel waveModel = null)
+        {
+            foreach (EnemySpawner spawner in _enemySpawners)
+            {
+                spawner.Initialize(lifeCycleManager, waveModel);
             }
         }
 

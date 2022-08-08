@@ -15,7 +15,6 @@ namespace BForBoss
 
         [Title("User Interface")]
         [SerializeField] private TimerViewBehaviour _timerView = null;
-        [SerializeField] private ForcedSetUsernameViewBehaviour _forcedUploadView = null;
 
         [Title("Effects")] 
         [SerializeField] private Volume _deathVolume = null;
@@ -49,7 +48,6 @@ namespace BForBoss
             _timeManager.Initialize(_timeManagerViewModel);
             
             _timerView.Initialize(_timeManagerViewModel);
-            _forcedUploadView.Initialize(_freezeActionsUtility);
         }
         
         private void OnApplicationQuit()
@@ -62,7 +60,6 @@ namespace BForBoss
             _timeManagerViewModel.StopTimer();
             var gameTime = _timeManagerViewModel.CurrentGameTimeMilliSeconds;
             _uploadPlayerScoreDataSource.UploadScoreIfPossible(gameTime);
-            _pauseMenu.ForceOpenLeaderboardWithScore(gameTime);
         }
     }
 }

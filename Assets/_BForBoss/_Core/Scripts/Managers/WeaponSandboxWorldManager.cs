@@ -6,9 +6,9 @@ namespace BForBoss
 {
     public class WeaponSandboxWorldManager : BaseWorldManager
     {
-        [SerializeField] 
+        [SerializeField]
         private Transform _spawnLocation = null;
-        
+
         [Title("Component")]
         [SerializeField] private LifeCycleManager _lifeCycleManager = null;
         [SerializeField] private EnemySpawnerManager _enemySpawnerManager = null;
@@ -26,12 +26,12 @@ namespace BForBoss
         {
             base.Reset();
             _lifeCycleManager.Reset();
-            
+
             if (_enemySpawnerManager != null)
             {
                 _enemySpawnerManager.Reset();
             }
-            
+
             FindObjectsOfType<PatrolBehaviour>().ForEach(pb => pb.Reset());
         }
 
@@ -48,13 +48,13 @@ namespace BForBoss
             }
             base.Start();
         }
-        
+
         protected override void HandleOnDeath()
         {
-            _lifeCycleManager.Reset();            
+            _lifeCycleManager.Reset();
             base.HandleOnDeath();
         }
-        
+
         protected override void OnValidate()
         {
             base.OnValidate();
