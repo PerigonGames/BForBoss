@@ -6,22 +6,15 @@ using UnityEngine;
 namespace BForBoss
 {
     [RequireComponent(typeof(AgentNavigationBehaviour))]
-    public class FloatingTargetBehaviour : EnemyBehaviour, IKnockback
+    public class FloatingTargetBehaviour : EnemyBehaviour
     {
         [SerializeField] private HealthbarViewBehaviour _healthbar;
 
-        [Header("Knockback Settings")]
-        [SerializeField] private float _knockbackRadiusModifier = 10f;
-        [SerializeField] private float _knockbackUpwardsForceModifier = 10f;
-        [SerializeField] private float _knockbackMaxDuration = 2f;
-        
+        private FloatingEnemyKnockbackBehaviour _knockbackBehaviour = null;
         private AgentNavigationBehaviour _navigationBehaviour = null;
         private EnemyShootingBehaviour _shootingBehaviour = null;
         private FloatingEnemyAnimationBehaviour _animationBehaviour = null;
         private FloatingTargetState _state = FloatingTargetState.MoveTowardsDestination;
-        
-        private Rigidbody _rb;
-        private float _knockbackCurrentTime;
 
         private enum FloatingTargetState
         {
@@ -37,7 +30,7 @@ namespace BForBoss
             _animationBehaviour = GetComponent<FloatingEnemyAnimationBehaviour>();
             _animationBehaviour.Initialize();
             _animationBehaviour.SetMovementAnimation();
-            
+
             _navigationBehaviour = GetComponent<AgentNavigationBehaviour>();
             _navigationBehaviour.Initialize(getPlayerPosition, () =>
             {
@@ -54,14 +47,17 @@ namespace BForBoss
             {
                 _state = FloatingTargetState.MoveTowardsDestination;
             });
-        }
-        
-        public void ApplyKnockback(float force, Vector3 originPosition)
-        {
-            if (_rb == null || !_lifeCycle.IsAlive)
-                return;
-            ToggleKnockbackState(true);
-            _rb.AddExplosionForce(force, originPosition, _knockbackRadiusModifier, _knockbackUpwardsForceModifier);
+
+            _knockbackBehaviour = GetComponent<FloatingEnemyKnockbackBehaviour>();
+            _knockbackBehaviour.Initialize(_lifeCycle, () =>
+            {
+                _navigationBehaviour.PauseNavigation();
+                _state = FloatingTargetState.KnockedBack;
+            }, () =>
+            {
+                _navigationBehaviour.ResumeNavigation();
+                _state = FloatingTargetState.MoveTowardsDestination;
+            });
         }
 
         public override void Reset()
@@ -69,6 +65,7 @@ namespace BForBoss
             base.Reset();
             gameObject.SetActive(true);
             _healthbar.Reset();
+            _knockbackBehaviour.Reset();
         }
         
         protected override void LifeCycleFinished()
@@ -81,50 +78,17 @@ namespace BForBoss
             {
                 gameObject.SetActive(false);
             }
-            ToggleKnockbackState(false);
+            _knockbackBehaviour.Reset();
         }
 
         private void Awake()
         {
-            _rb = GetComponent<Rigidbody>();
-            if (_rb != null)
-            {
-                _rb.isKinematic = true;
-                _rb.useGravity = false;
-            }
             if (_healthbar == null)
             {                
                 Debug.LogWarning("A FloatingTargetBehaviour is missing a health bar");
             }
         }
 
-        private void CheckKnockback(float time)
-        {
-            if (_rb == null) 
-                return;
-            _knockbackCurrentTime += time;
-            if (_knockbackCurrentTime > _knockbackMaxDuration || _rb.velocity.sqrMagnitude < float.Epsilon * float.Epsilon)
-            {
-                ToggleKnockbackState(false);
-            }
-        }
-
-        private void ToggleKnockbackState(bool active)
-        {
-            if (_rb == null)
-                return;
-            if (active)
-            {
-                _knockbackCurrentTime = 0f;
-                _navigationBehaviour.PauseNavigation();
-            }
-            else
-                _navigationBehaviour.ResumeNavigation();
-            _rb.isKinematic = !active;
-            _rb.useGravity = active;
-            _state = active ? FloatingTargetState.KnockedBack : FloatingTargetState.MoveTowardsDestination;
-        }
-        
         private void FixedUpdate()
         {
             switch (_state)
@@ -136,7 +100,7 @@ namespace BForBoss
                     _shootingBehaviour.ShootingUpdate();
                     break;
                 case FloatingTargetState.KnockedBack:
-                    CheckKnockback(Time.fixedDeltaTime);
+                    _knockbackBehaviour.UpdateKnockback(Time.fixedDeltaTime);
                     break;
             }
         }
