@@ -19,7 +19,7 @@ namespace Perigon.Entities
         protected override void LifeCycleDamageTaken()
         {
             base.LifeCycleDamageTaken();
-            VisualEffectsManager.Instance.DistortAndRevert(HUDVisualEffect.Health);
+            VisualEffectsManager.Instance.DistortAndRevert(HUDVisualEffect.DamageTaken);
         }
 
         protected override void LifeCycleFinished()
