@@ -10,6 +10,8 @@ namespace BForBoss
     [RequireComponent(typeof(Rigidbody))]
     public class FloatingEnemyKnockbackBehaviour : MonoBehaviour, IKnockback
     {
+        private const float EPSILON_SQUARED = float.Epsilon * float.Epsilon;
+        
         [SerializeField] private float _knockbackRadiusModifier = 10f;
         [SerializeField] private float _knockbackUpwardsForceModifier = 10f;
         [SerializeField] private float _knockbackMaxDuration = 2f;
@@ -44,7 +46,7 @@ namespace BForBoss
         public void UpdateKnockback(float deltaTime)
         {
             _knockbackCurrentTime += deltaTime;
-            if (_knockbackCurrentTime > _knockbackMaxDuration || _rb.velocity.sqrMagnitude < float.Epsilon * float.Epsilon)
+            if (_knockbackCurrentTime > _knockbackMaxDuration || _rb.velocity.sqrMagnitude < EPSILON_SQUARED)
             {
                 ToggleKnockbackState(false);
             }
