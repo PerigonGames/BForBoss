@@ -1,18 +1,14 @@
 using System;
-using UnityEngine;
-using UnityEngine.Rendering.HighDefinition;
 using Perigon.Utility;
+using UnityEngine;
 
 namespace Perigon.Entities
 {
     public class PlayerLifeCycleBehaviour : LifeCycleBehaviour
     {
-        private const string HEALTH_PASS_EMISSION_KEY = "_EmissionStrength";
-        [SerializeField] private CustomPassVolume _healthPassVolume = null;
         [SerializeField] private PlayerHealthViewBehaviour _healthBarView = null;
         private Action _onDeathCallBack = null;
-        private CustomPassVolumeWeightTool _customPassTool = null;
-        
+
         public override void Initialize(Action onDeathCallback)
         {
             base.Initialize(onDeathCallback);
@@ -23,25 +19,21 @@ namespace Perigon.Entities
         protected override void LifeCycleDamageTaken()
         {
             base.LifeCycleDamageTaken();
-            _customPassTool?.InstantDistortAndRevert(delayBeforeRevert: 1f);
+            VisualEffectsManager.Instance.DistortAndRevert(HUDVisualEffect.DamageTaken);
+        }
+
+        protected override void LifeCycleOnHeal()
+        {
+            VisualEffectsManager.Instance.DistortAndRevert(HUDVisualEffect.Heal);
         }
 
         protected override void LifeCycleFinished()
         {
-            _onDeathCallBack?.Invoke();
+            _onDeathCallBack.Invoke();
         }
 
         private void Awake()
         {
-            if (_healthPassVolume == null)
-            {
-                Debug.LogWarning("Missing Health Pass Volume VFX from PlayerLifeCycleBehaviour");
-            }
-            else
-            {
-                _customPassTool = new CustomPassVolumeWeightTool(_healthPassVolume, HEALTH_PASS_EMISSION_KEY);
-            }
-
             if (_healthBarView == null)
             {
                 Debug.LogWarning("Missing Health Bar View from PlayerLifeCycleBehaviour");

@@ -3,7 +3,14 @@ using UnityEngine.Rendering;
 
 namespace Perigon.Utility
 {
-    public class PostProcessingVolumeWeightTool
+    public interface IVolumeWeightTool
+    {
+        Tweener Distort();
+        Tweener Revert();
+        void InstantDistortAndRevert(float delayBeforeRevert = 0);
+        void Reset();
+    }
+    public class PostProcessingVolumeWeightTool: IVolumeWeightTool
     {
         private readonly Volume _postProcessingVolume = null;
         private readonly float _distortDuration = 0;
@@ -31,12 +38,16 @@ namespace Perigon.Utility
             return DOTween.To(intensity => _postProcessingVolume.weight = intensity, _endValue, _startValue, _revertDuration);
         }
 
-        public void InstantDistortAndRevert()
+        public void InstantDistortAndRevert(float delayBeforeRevert = 0)
         {
             var sequence = DOTween.Sequence();
             sequence.Append(Distort());
-            sequence.Append(Revert());
+            sequence.Append(Revert().SetDelay(delayBeforeRevert));
         }
-        
+
+        public void Reset()
+        {
+            _postProcessingVolume.weight = 0;
+        }
     }
 }
