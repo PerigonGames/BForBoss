@@ -1,5 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 
 namespace Perigon.Utility
@@ -20,8 +21,10 @@ namespace Perigon.Utility
 
         [Resolve][SerializeField] private CustomPassVolume _damageTakenPassVolume = null;
         [Resolve][SerializeField] private CustomPassVolume _healPassVolume = null;
-        private CustomPassVolumeWeightTool _damageTakenVFXTool;
-        private CustomPassVolumeWeightTool _healVFXTool;
+        [Resolve][SerializeField] private Volume _slowMotionVolume = null;
+        private IVolumeWeightTool _damageTakenVFXTool;
+        private IVolumeWeightTool _healVFXTool;
+        private IVolumeWeightTool _slowMotionVFXTool; 
         private Camera _mainCamera = null;
 
         public static VisualEffectsManager Instance => _instance;
@@ -34,6 +37,7 @@ namespace Perigon.Utility
             _healPassVolume.targetCamera = _mainCamera;
             _damageTakenVFXTool = new CustomPassVolumeWeightTool(_damageTakenPassVolume, EMISSION_STRENGTH_KEY);
             _healVFXTool = new CustomPassVolumeWeightTool(_healPassVolume, EMISSION_STRENGTH_KEY);
+            _slowMotionVFXTool = new PostProcessingVolumeWeightTool(_slowMotionVolume);
         }
         
         public void DistortAndRevert(HUDVisualEffect effect)
@@ -65,7 +69,7 @@ namespace Perigon.Utility
             return pass?.Revert();
         }
 
-        private CustomPassVolumeWeightTool GetCustomPass(HUDVisualEffect effect)
+        private IVolumeWeightTool GetCustomPass(HUDVisualEffect effect)
         {
             switch (effect)
             {
@@ -77,8 +81,7 @@ namespace Perigon.Utility
                 case HUDVisualEffect.Heal:
                     return _healVFXTool;
                 case HUDVisualEffect.SlowMotion:
-                    Debug.LogWarning("Missing SlowMotion VFX from VisualEffectsManager");
-                    return null;
+                    return _slowMotionVFXTool;
             }
 
             return null;
