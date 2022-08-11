@@ -53,7 +53,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MyTexture2:
-        m_Texture: {fileID: 2800000, guid: 0f89b6e1e73f6784ba172d345890168b, type: 3}
+        m_Texture: {fileID: 2800000, guid: 64d22048046b3414db29e5281a30b3e6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TexUVOffset:
@@ -86,7 +86,7 @@ Material:
     - _ConservativeDepthOffsetEnable: 0
     - _CullMode: 2
     - _CullModeForward: 2
-    - _DepthFadeDistance: 5
+    - _DepthFadeDistance: 1
     - _DepthOffsetEnable: 0
     - _DoubleSidedEnable: 0
     - _DoubleSidedGIMode: 0
@@ -94,7 +94,7 @@ Material:
     - _DstBlend: 10
     - _EnableBlendModePreserveSpecularLighting: 0
     - _EnableFogOnTransparent: 1
-    - _Fresnel_Exponent: 3
+    - _Fresnel_Exponent: 11.73
     - _MultiplyFresnelWithColor: 0
     - _OpaqueCullMode: 2
     - _Particle_Age: 0
@@ -102,7 +102,7 @@ Material:
     - _Particle_Random_Value: 0
     - _RandUVOffsetPerParticle: 0
     - _RenderQueueType: 4
-    - _Softness: 1
+    - _Softness: 0.1
     - _SrcBlend: 1
     - _StencilRef: 0
     - _StencilRefDepth: 0
@@ -120,9 +120,9 @@ Material:
     - _Texture1TilingX: 1
     - _Texture1TilingY: 1
     - _Texture2SpeedX: 0
-    - _Texture2SpeedY: 0
-    - _Texture2TilingX: 1
-    - _Texture2TilingY: 1
+    - _Texture2SpeedY: 0.03
+    - _Texture2TilingX: 10
+    - _Texture2TilingY: 10
     - _TransparentBackfaceEnable: 0
     - _TransparentCullMode: 2
     - _TransparentDepthPostpassEnable: 0
@@ -130,15 +130,15 @@ Material:
     - _TransparentSortPriority: 0
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 0
-    - _UVOffsetSpeedX: 0.05
+    - _UVOffsetSpeedX: 0.1
     - _UVOffsetSpeedY: 0
-    - _UVOffsetTilingX: 1
-    - _UVOffsetTilingY: 1
+    - _UVOffsetTilingX: 2
+    - _UVOffsetTilingY: 2
     - _UseDepthFade: 1
     - _UseEmissive: 1
-    - _UseFresnel: 0
+    - _UseFresnel: 1
     - _UseShadowThreshold: 0
-    - _UseSmoothStep: 0
+    - _UseSmoothStep: 1
     - _UseTexture2: 0
     - _UseUVDistortion: 1
     - _ZTestDepthEqualForOpaque: 4
@@ -150,7 +150,7 @@ Material:
     - _uxDistX: 0.05
     - _uxDistY: 0.05
     m_Colors:
-    - _Color: {r: 0.2, g: 3, b: 0.1, a: 1}
+    - _Color: {r: 48.000008, g: 17.842936, b: 2.0104716, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _ParticleColor: {r: 1, g: 1, b: 1, a: 0}
