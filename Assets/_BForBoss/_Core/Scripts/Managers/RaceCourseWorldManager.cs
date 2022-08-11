@@ -20,7 +20,6 @@ namespace BForBoss
         [SerializeField] private Volume _deathVolume = null;
 
         private readonly BForBossAnalytics _analytics = BForBossAnalytics.Instance;
-        private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
         private readonly TimeManagerViewModel _timeManagerViewModel = new TimeManagerViewModel();
         private UploadPlayerScoreDataSource _uploadPlayerScoreDataSource = null;
 
@@ -38,7 +37,6 @@ namespace BForBoss
         protected override void Awake()
         {
             base.Awake();
-            _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_deathVolume, 0.1f, 0f, 0.1f);
             _uploadPlayerScoreDataSource = new UploadPlayerScoreDataSource();
         }
 
@@ -62,12 +60,6 @@ namespace BForBoss
             _timeManagerViewModel.StopTimer();
             var gameTime = _timeManagerViewModel.CurrentGameTimeMilliSeconds;
             _uploadPlayerScoreDataSource.UploadScoreIfPossible(gameTime);
-        }
-
-        protected override void HandleOnDeath()
-        {
-            _postProcessingVolumeWeightTool.InstantDistortAndRevert();
-            base.HandleOnDeath();
         }
     }
 }
