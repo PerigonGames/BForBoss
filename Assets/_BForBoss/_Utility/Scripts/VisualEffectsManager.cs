@@ -22,9 +22,11 @@ namespace Perigon.Utility
         [Resolve][SerializeField] private CustomPassVolume _damageTakenPassVolume = null;
         [Resolve][SerializeField] private CustomPassVolume _healPassVolume = null;
         [Resolve][SerializeField] private Volume _slowMotionVolume = null;
+        [Resolve][SerializeField] private Volume _dashVolume = null;
         private IVolumeWeightTool _damageTakenVFXTool;
         private IVolumeWeightTool _healVFXTool;
-        private IVolumeWeightTool _slowMotionVFXTool; 
+        private IVolumeWeightTool _slowMotionVFXTool;
+        private IVolumeWeightTool _dashVFXTool;
         private Camera _mainCamera = null;
 
         public static VisualEffectsManager Instance => _instance;
@@ -38,6 +40,7 @@ namespace Perigon.Utility
             _damageTakenVFXTool = new CustomPassVolumeWeightTool(_damageTakenPassVolume, EMISSION_STRENGTH_KEY);
             _healVFXTool = new CustomPassVolumeWeightTool(_healPassVolume, EMISSION_STRENGTH_KEY);
             _slowMotionVFXTool = new PostProcessingVolumeWeightTool(_slowMotionVolume);
+            _dashVFXTool = new PostProcessingVolumeWeightTool(_dashVolume);
         }
         
         public void DistortAndRevert(HUDVisualEffect effect)
@@ -74,8 +77,7 @@ namespace Perigon.Utility
             switch (effect)
             {
                 case HUDVisualEffect.Dash:
-                    Debug.LogWarning("Missing Dash VFX from VisualEffectsManager");
-                    return null;
+                    return _dashVFXTool;
                 case HUDVisualEffect.DamageTaken:
                     return _damageTakenVFXTool;
                 case HUDVisualEffect.Heal:
