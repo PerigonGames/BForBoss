@@ -19,7 +19,7 @@ namespace Perigon.Character
         private PlayerWallRunBehaviour _wallRunBehaviour = null;
         private PlayerSlideBehaviour _slideBehaviour = null;
         private PlayerSlowMotionBehaviour _slowMotionBehaviour = null;
-        public event Action Dashed;
+        public event Action OnDashActivated;
         public event Action Slid;
         
         
@@ -65,7 +65,7 @@ namespace Perigon.Character
             base.OnStart();
             if (_dashBehaviour != null)
             {
-                _dashBehaviour.Initialize(this, base.GetMovementInput, Dashed);
+                _dashBehaviour.Initialize(this, base.GetMovementInput, OnDashActivated);
             }
             if (_slideBehaviour != null)
             {

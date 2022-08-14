@@ -4,7 +4,7 @@ using UnityEngine.Rendering.HighDefinition;
 
 namespace Perigon.Utility
 {
-    public class CustomPassVolumeWeightTool
+    public class CustomPassVolumeWeightTool: IVolumeWeightTool
     {
         private readonly Material _material;
         private readonly string _materialKey;
@@ -45,12 +45,16 @@ namespace Perigon.Utility
             return DOTween.To(intensity => _material.SetFloat(_materialKey, intensity), _endValue, _startValue, _revertDuration);
         }
 
+        public void Reset()
+        {
+            _material.SetFloat(_materialKey, _startValue);
+        }
+
         public void InstantDistortAndRevert(float delayBeforeRevert = 0)
         {
             var sequence = DOTween.Sequence();
             sequence.Append(Distort());
             sequence.Append(Revert().SetDelay(delayBeforeRevert));
         }
-        
     }
 }
