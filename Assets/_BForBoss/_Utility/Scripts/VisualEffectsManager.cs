@@ -93,6 +93,8 @@ namespace Perigon.Utility
         {
             _damageTakenVFXTool.Reset();
             _healVFXTool.Reset();
+            _dashVFXTool.Reset();
+            _slowMotionVFXTool.Reset();
         }
 
         private void OnDestroy()
