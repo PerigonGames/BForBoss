@@ -1,11 +1,9 @@
 using System;
 using ECM2.Components;
-using ECM2.Characters;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 
 namespace Perigon.Character
 {
@@ -13,13 +11,11 @@ namespace Perigon.Character
     {
         [Title("Visual Effects")]
         [SerializeField] private DashLinesEffectBehaviour _dashEffectBehaviour = null;
-        [SerializeField] private Volume _dashPostProcessingEffects = null;        
         
         [Title("Properties")]
         [SerializeField] private float _dashImpulse = 20.0f;
         [SerializeField] private float _dashDuration = 0.2f;
         [SerializeField] private float _dashCoolDown = 0.5f;
-        private PostProcessingVolumeWeightTool _postProcessingVolumeWeightTool = null;
         
         private float _dashElapsedTime = 0;
         private float _dashCoolDownElapsedTime = 0;
@@ -33,14 +29,12 @@ namespace Perigon.Character
 
         public bool IsDashing => _isDashing;
         private bool IsCoolDownOver => _dashCoolDownElapsedTime <= 0;
-
         
-        
-        public void Initialize(ECM2.Characters.Character baseCharacter, Func<Vector2> characterMovement, Action onDash)
+        public void Initialize(ECM2.Characters.Character baseCharacter, Func<Vector2> characterMovement, Action onDashing)
         {
             _baseCharacter = baseCharacter;
             _characterInputMovement = characterMovement;
-            _onDashing = onDash;
+            _onDashing = onDashing;
         }
         
         public void SetupPlayerInput(InputAction dashAction)
@@ -143,22 +137,18 @@ namespace Perigon.Character
                 return;
             }
 
-            _postProcessingVolumeWeightTool?.Revert();
             _dashCoolDownElapsedTime = _dashCoolDown;
             _dashElapsedTime = 0f;
+            VisualEffectsManager.Instance.Revert(HUDVisualEffect.Dash);
             _isDashing = false;
             _baseCharacter.useSeparateBrakingFriction = false;
         }
         
         private bool CanDash()
         {
-            // Do not allow to dash if crouched
-
             if (_baseCharacter.IsCrouching())
                 return false;
-
-            // Only allow to dash if IsWalking or IsFalling (Eg: in air)
-
+            
             return _baseCharacter.IsWalking() || _baseCharacter.IsFalling();
         }
 
@@ -169,7 +159,7 @@ namespace Perigon.Character
                 _dashEffectBehaviour.Play();
             }
 
-            _postProcessingVolumeWeightTool?.Distort();
+            VisualEffectsManager.Instance.Distort(HUDVisualEffect.Dash);
         }
         
         #region Mono
@@ -181,20 +171,10 @@ namespace Perigon.Character
 
         private void SetupVisualEffects()
         {
-            if (_dashPostProcessingEffects != null)
-            {
-                _postProcessingVolumeWeightTool = new PostProcessingVolumeWeightTool(_dashPostProcessingEffects, _dashDuration);
-            }
-            else
-            {
-                Debug.LogWarning("There was an issue finding PostProcessing LensDistortion");
-            }
-            
             if (_dashEffectBehaviour == null)
             {
                 Debug.LogWarning("Dash Effect Missing from PlayerDashBehaviour.cs");
             }
-            
         }
 
         private void Update()
