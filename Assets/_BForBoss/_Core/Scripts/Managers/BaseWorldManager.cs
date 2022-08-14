@@ -59,6 +59,7 @@ namespace BForBoss
         {
             _stateManager.SetState(State.Play);
             _playerBehaviour.SpawnAt(SpawnLocation, SpawnLookDirection);
+            VisualEffectsManager.Instance.Reset();
         }
 
         protected virtual void Awake()

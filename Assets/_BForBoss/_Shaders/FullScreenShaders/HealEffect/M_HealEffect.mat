@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_HitEffect
-  m_Shader: {fileID: 4800000, guid: ff058ccd2e1a59c47bed84df47364be7, type: 3}
+  m_Name: M_HealEffect
+  m_Shader: {fileID: 4800000, guid: bd092f679ce369d4c8d934b725518986, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -21,12 +21,14 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 62e1f427c3c1d994c9df9774217eead5, type: 3}
+        m_Texture: {fileID: 2800000, guid: f4d1228ab9039204eab95cf6927fa9b8, type: 3}
         m_Scale: {x: 3, y: 2}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _EmissionStrength: 1
+    - _AnimTime: 1.91
+    - _EmissionStrength: 0
+    - _Flash: 0
     m_Colors:
-    - _Color: {r: 1, g: 0.008262427, b: 0, a: 1}
+    - _Color: {r: 0, g: 1, b: 0.5730133, a: 1}
   m_BuildTextureStacks: []

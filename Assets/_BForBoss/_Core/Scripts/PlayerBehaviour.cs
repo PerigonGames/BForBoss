@@ -11,6 +11,7 @@ namespace BForBoss
     {
         private PlayerMovementBehaviour _playerMovement = null;
         private PlayerLifeCycleBehaviour _playerLifeCycle = null;
+        private PlayerSlowMotionBehaviour _playerSlowMotion = null;
 
         public PlayerMovementBehaviour PlayerMovement => _playerMovement;
 
@@ -22,6 +23,7 @@ namespace BForBoss
                 _playerLifeCycle.Initialize(onDeath);
             }
         }
+
 
         public void SpawnAt(Vector3 position, Quaternion facing)
         {
@@ -42,7 +44,13 @@ namespace BForBoss
             _playerLifeCycle = GetComponent<PlayerLifeCycleBehaviour>();
             if (_playerLifeCycle == null)
             {
-                Debug.LogWarning("Player Life Cycle is missing from Player Behaviour");
+                PanicHelper.Panic(new Exception("Player Life Cycle is missing from Player Behaviour"));
+            }
+
+            _playerSlowMotion = GetComponent<PlayerSlowMotionBehaviour>();
+            if (_playerSlowMotion == null)
+            {
+                PanicHelper.Panic(new Exception("Player Slow Motion is missing from Player Behaviour"));
             }
         }
     }
