@@ -196,7 +196,7 @@ namespace Perigon.Character
             
             _lastPlayerWallRunDirection = ProjectOntoWallNormalized(_lastPlayerWallRunDirection);
             
-            if (IsNextWallAngleTooObtuse())
+            if (IsNextWallAngleObtuse())
             {
                 PrintWallRunLogs("Stopped wall run since too obtuse from wall");
                 StopWallRunning(jumpedOutOfWallRun: false);
@@ -315,10 +315,10 @@ namespace Perigon.Character
             return true;
         }
 
-        private bool IsNextWallAngleTooObtuse()
+        private bool IsNextWallAngleObtuse()
         {
             var angleDifference = Vector3.SignedAngle(ChildTransform.forward, _lastPlayerWallRunDirection, Vector3.up);
-            return angleDifference == 0;
+            return Mathf.Approximately(angleDifference, 0);
         }
                 
         private void StabilizeCameraIfNeeded(Vector3 characterForward, Vector3 heading)
