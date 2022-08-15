@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: AutomaticRifle
   m_EditorClassIdentifier: 
   _nameOfWeapon: Assault Rifle
-  _rateOfFire: 0.1
-  _bulletSpread: 3
+  _rateOfFire: 0.04
+  _bulletSpread: 0
   _bulletSpreadRateCurve:
     serializedVersion: 2
     m_Curve:
@@ -48,9 +48,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _reloadDuration: 0.5
+  _reloadDuration: 0.25
   _bulletsPerShot: 1
-  _ammunitionAmount: 20
+  _ammunitionAmount: 60
   _isRaycastWeapon: 0
   _damagePerRayCast: 0
   _typeOfBullet: 1
