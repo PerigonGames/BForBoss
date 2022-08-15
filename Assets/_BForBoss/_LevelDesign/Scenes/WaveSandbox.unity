@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.00986883, g: 0.007189691, b: 0.007371336, a: 1}
+  m_IndirectSpecularColor: {r: 0.00989075, g: 0.0072032884, b: 0.0073728263, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -26574,7 +26574,7 @@ Camera:
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 50
+  m_FocalLength: 20.78461
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -26583,7 +26583,7 @@ Camera:
     height: 1
   near clip plane: 0.2
   far clip plane: 1000
-  field of view: 60
+  field of view: 90
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -46253,9 +46253,21 @@ PrefabInstance:
       propertyPath: _healthPassVolume
       value: 
       objectReference: {fileID: 1225895513}
+    - target: {fileID: 7120097269958552082, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
+      propertyPath: m_Lens.FieldOfView
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 7120097269958552082, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
+      propertyPath: m_Lens.m_SensorSize.x
+      value: 2.165725
+      objectReference: {fileID: 0}
     - target: {fileID: 7120097269958552083, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7120097270423081095, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
+      propertyPath: m_Lens.FieldOfView
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 7177967516030943659, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
       propertyPath: _camera
