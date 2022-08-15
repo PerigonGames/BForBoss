@@ -8,6 +8,8 @@ namespace Perigon.Weapons
         [SerializeField] private BulletBehaviour[] _bulletPrefabs;
         private ObjectPooler<BulletBehaviour>[] _pools = null;
 
+        [SerializeField, Layer] private int _layer = 8; //default is Bullet layer
+
         public IBullet SpawnBullet(BulletTypes typeOfBullet = BulletTypes.NoPhysics)
         {
             if(_pools == null) 
@@ -31,6 +33,7 @@ namespace Perigon.Weapons
         private BulletBehaviour GenerateBullet(BulletBehaviour prefab, int poolIndex)
         {
             var newBullet = Instantiate(prefab);
+            newBullet.gameObject.layer = _layer;
             newBullet.Pool = _pools[poolIndex];
             return newBullet;
         }
