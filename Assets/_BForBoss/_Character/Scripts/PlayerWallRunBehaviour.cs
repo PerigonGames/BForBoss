@@ -145,7 +145,7 @@ namespace Perigon.Character
             if (IsWallRunning)
             {
                 PrintWallRunLogs("Stopped wall run due to jump");
-                StopWallRunning(true);
+                StopWallRunning(jumpedOutOfWallRun: true);
             }
         }
 
@@ -156,7 +156,7 @@ namespace Perigon.Character
             if (IsWallRunning)
             {
                 PrintWallRunLogs("Stopped wall run due to landed on ground");
-                StopWallRunning(false);
+                StopWallRunning(jumpedOutOfWallRun: false);
             }
         }
 
@@ -176,25 +176,33 @@ namespace Perigon.Character
             if (DidForwardInputStop())
             {
                 PrintWallRunLogs("Stopped wall run due to no forward input");
-                StopWallRunning(false);
+                StopWallRunning(jumpedOutOfWallRun: false);
                 return;
             }
 
             if (DidPlayerStopMoving())
             {
                 PrintWallRunLogs("Stopped Wall run due to low velocity");
-                StopWallRunning(false);
-                return;
-            }
-            
-            if (IsTooFarFromWall())
-            {
-                PrintWallRunLogs("Stopped wall run since too far away from wall");
-                StopWallRunning(false);
+                StopWallRunning(jumpedOutOfWallRun: false);
                 return;
             }
 
+            if (IsTooFarFromWall())
+            {
+                PrintWallRunLogs("Stopped wall run since too far away from wall");
+                StopWallRunning(jumpedOutOfWallRun: false);
+                return;
+            }
+            
             _lastPlayerWallRunDirection = ProjectOntoWallNormalized(_lastPlayerWallRunDirection);
+            
+            if (IsNextWallAngleTooObtuse())
+            {
+                PrintWallRunLogs("Stopped wall run since too obtuse from wall");
+                StopWallRunning(jumpedOutOfWallRun: false);
+                return;
+            }
+            
             StabilizeCameraIfNeeded(ChildTransform.forward, _lastPlayerWallRunDirection);
 
             _timeSinceWallAttach += Time.fixedDeltaTime;
@@ -254,7 +262,6 @@ namespace Perigon.Character
             var shouldStartWallRun = isRaycastingLastWallFromCenterBodyPosition 
                                      && isRaycastingLastWallFromEyePosition
                                      && IsClearOfGround();
-                
             return shouldStartWallRun;
         }
 
@@ -306,6 +313,12 @@ namespace Perigon.Character
             }
             
             return true;
+        }
+
+        private bool IsNextWallAngleTooObtuse()
+        {
+            var angleDifference = Vector3.SignedAngle(ChildTransform.forward, _lastPlayerWallRunDirection, Vector3.up);
+            return angleDifference == 0;
         }
                 
         private void StabilizeCameraIfNeeded(Vector3 characterForward, Vector3 heading)
