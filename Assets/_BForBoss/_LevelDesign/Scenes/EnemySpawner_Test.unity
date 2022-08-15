@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.008269796, g: 0.0065247677, b: 0.0075460374, a: 1}
+  m_IndirectSpecularColor: {r: 0.008265892, g: 0.006521385, b: 0.0075433254, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -363,7 +363,6 @@ MonoBehaviour:
   _spawnLocation: {fileID: 1154405999}
   _lifeCycleManager: {fileID: 2063217957}
   _enemySpawnerManager: {fileID: 4752080946777334919}
-  _deathVolume: {fileID: 1225895512}
 --- !u!4 &249789884
 Transform:
   m_ObjectHideFlags: 0
@@ -593,7 +592,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 6647
+    m_Bits: 31223
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1283,28 +1282,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 519ea4098785b4940b6193423812dcf6, type: 3}
---- !u!114 &1225895511 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5284538882174476145, guid: 519ea4098785b4940b6193423812dcf6, type: 3}
-  m_PrefabInstance: {fileID: 1225895510}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1225895512 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 843536223, guid: 519ea4098785b4940b6193423812dcf6, type: 3}
-  m_PrefabInstance: {fileID: 1225895510}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1418917649
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1327,7 +1304,7 @@ PrefabInstance:
     - target: {fileID: 910638780, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
       propertyPath: _dashPostProcessingEffects
       value: 
-      objectReference: {fileID: 1225895511}
+      objectReference: {fileID: 0}
     - target: {fileID: 2217804275963747573, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
       propertyPath: m_RootOrder
       value: 9
@@ -1608,6 +1585,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2063217959, guid: 870704c768006e44f85f32b09a7a22ad, type: 3}
+      propertyPath: _layer
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 8100771641335522881, guid: 870704c768006e44f85f32b09a7a22ad, type: 3}
       propertyPath: m_Name
       value: EntityManager
