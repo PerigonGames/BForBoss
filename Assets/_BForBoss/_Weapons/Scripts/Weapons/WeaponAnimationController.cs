@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Perigon.Weapons
 {
-    [DefaultExecutionOrder(101)]
+    [DefaultExecutionOrder(101)] // Cinemachine uses a modified script execution of 100, this ensures we run after cinemachine updates the camera position
     public class WeaponAnimationController : MonoBehaviour
     {
         private const float ACCUMULATED_RECOIL_PERCENTAGE = 0.99F;
