@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Perigon.Weapons
 {
+    [DefaultExecutionOrder(101)]
     public class WeaponAnimationController : MonoBehaviour
     {
         private const float ACCUMULATED_RECOIL_PERCENTAGE = 0.99F;
