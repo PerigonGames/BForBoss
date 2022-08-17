@@ -14,7 +14,7 @@ namespace BForBoss
         [SerializeField] private WaveManager _waveManager;
         [SerializeField] private EnemySpawnerManager _enemySpawnerManager;
 
-        [Title("UI")] [SerializeField] private WaveViewBehaviour _waveView = null;
+        [Title("HUD")] [SerializeField] private WaveViewBehaviour _waveView = null;
         
         protected override Vector3 SpawnLocation => _spawnLocation.position;
         protected override Quaternion SpawnLookDirection => _spawnLocation.rotation;

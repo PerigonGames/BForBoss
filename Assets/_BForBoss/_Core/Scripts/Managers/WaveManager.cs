@@ -58,7 +58,7 @@ namespace BForBoss
         private void OnEnemyKilled(int numberOfRemainingEnemies)
         {
             //Added the second clause just in case no. spawned > max allowed
-            if (numberOfRemainingEnemies <= 0 && _waveModel.KillCount == _spawnCount)
+            if (numberOfRemainingEnemies <= 0)
             {
                 Debug.Log($"Please wait <b>{_timeBetweenWaves} seconds</b> before the next wave");
                 StartCoroutine(InitiateNextWave());
