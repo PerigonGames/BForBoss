@@ -55,11 +55,10 @@ namespace BForBoss
             }
         }
 
-        private void OnEnemyKilled(int killCount)
+        private void OnEnemyKilled(int numberOfRemainingEnemies)
         {
-            _waveModel.UpdateKillCountView();
             //Added the second clause just in case no. spawned > max allowed
-            if (killCount >= _waveModel.MaxEnemyCount && killCount == _spawnCount)
+            if (numberOfRemainingEnemies <= 0 && _waveModel.KillCount == _spawnCount)
             {
                 Debug.Log($"Please wait <b>{_timeBetweenWaves} seconds</b> before the next wave");
                 StartCoroutine(InitiateNextWave());
