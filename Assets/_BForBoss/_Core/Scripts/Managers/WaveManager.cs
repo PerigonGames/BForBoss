@@ -24,7 +24,7 @@ namespace BForBoss
 
             _waveModel = waveModel;
             _waveModel.OnEnemySpawned += OnEnemySpawned;
-            _waveModel.OnEnemyKillCountChanged += OnEnemyKilled;
+            _waveModel.OnEnemyKilled += OnEnemyKilled;
             _waveModel.SetupInitialWave(_initialNumberOfEnemies);
             
             _enemySpawnerManager.Initialize(lifeCycleManager, waveModel);
@@ -55,12 +55,12 @@ namespace BForBoss
             }
         }
 
-        private void OnEnemyKilled(int killCount)
+        private void OnEnemyKilled(int numberOfRemainingEnemies)
         {
             //Added the second clause just in case no. spawned > max allowed
-            if (killCount >= _waveModel.MaxEnemyCount && killCount == _spawnCount)
+            if (numberOfRemainingEnemies <= 0)
             {
-                Debug.Log($"<b>Wave {_waveModel.WaveNumber}</b> Ended. Please wait <b>{_timeBetweenWaves} seconds</b> before the next wave");
+                Debug.Log($"Please wait <b>{_timeBetweenWaves} seconds</b> before the next wave");
                 StartCoroutine(InitiateNextWave());
             }
         }
@@ -72,7 +72,6 @@ namespace BForBoss
             _spawnCount = 0;
             _waveModel.IncrementWave((int)Math.Ceiling(_waveModel.MaxEnemyCount * _enemyAmountMultiplier));
             
-            Debug.Log($"<b>Wave {_waveModel.WaveNumber}</b> has <b>{_waveModel.MaxEnemyCount}</b> Enemies to kill. good luck");
             ResumeSpawning();
         }
 
@@ -91,7 +90,7 @@ namespace BForBoss
             if (_waveModel != null)
             {
                 _waveModel.OnEnemySpawned -= OnEnemySpawned;
-                _waveModel.OnEnemyKillCountChanged -= OnEnemyKilled;
+                _waveModel.OnEnemyKilled -= OnEnemyKilled;
             }
         }
     }
