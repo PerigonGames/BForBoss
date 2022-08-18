@@ -99,9 +99,13 @@ namespace Perigon.Weapons
             OnMouseSwapWeaponAction();
         }
 
+        private const string MELEE_ANIMATOR_PARAM = "Melee";
+        [SerializeField] private Animator _weaponAnimator = null;
+        
         private void OnMeleeAttack()
         {
-            _weaponBehaviours[_currentWeaponIndex].OnMeleeAttack();
+            _weaponAnimator.SetTrigger(MELEE_ANIMATOR_PARAM);
+            //_weaponBehaviours[_currentWeaponIndex].OnMeleeAttack();
         }
 
         private void Awake()

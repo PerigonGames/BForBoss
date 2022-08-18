@@ -17,7 +17,6 @@ namespace BForBoss
         {
             weaponAnimationController.Initialize(
                 () => playerBehaviour.PlayerMovement.CharacterVelocity,
-                () => playerBehaviour.PlayerMovement.CharacterMaxSpeed,
                 () => playerBehaviour.PlayerMovement.IsWallRunning,
                 () => playerBehaviour.PlayerMovement.IsGrounded,
                 () => playerBehaviour.PlayerMovement.IsSliding,

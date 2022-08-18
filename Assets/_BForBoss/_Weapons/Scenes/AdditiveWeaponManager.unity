@@ -673,6 +673,10 @@ PrefabInstance:
       value: EquipmentManager
       objectReference: {fileID: 0}
     - target: {fileID: 5644926148023334689, guid: d1b6eae1f0bf4054badf84daebd18c5e, type: 3}
+      propertyPath: _weaponAnimator
+      value: 
+      objectReference: {fileID: 6931734448860381733}
+    - target: {fileID: 5644926148023334689, guid: d1b6eae1f0bf4054badf84daebd18c5e, type: 3}
       propertyPath: _weaponBehaviours.Array.data[0]
       value: 
       objectReference: {fileID: 7477593526119949847}
@@ -1003,8 +1007,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1572355635633735185}
-  - component: {fileID: 6023145178255694174}
-  - component: {fileID: 5344749710184676408}
   - component: {fileID: 1015501627496728226}
   m_Layer: 9
   m_Name: Shotgun
@@ -1012,7 +1014,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &2205059241510911842
 GameObject:
   m_ObjectHideFlags: 0
@@ -1022,8 +1024,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1572355636468082136}
-  - component: {fileID: 6023145179559672471}
-  - component: {fileID: 5344749711077597169}
   - component: {fileID: 1015501628726125979}
   m_Layer: 9
   m_Name: Scout Rifle
@@ -1031,49 +1031,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2596856333055556312
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8123454872238037579}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74129373fae7f264e8c7079575224761, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _animatorEventCallback:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2047271911}
-        m_TargetAssemblyTypeName: Perigon.Weapons.MeleeWeaponBehaviour, Weapons
-        m_MethodName: ApplyDamage
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  _animatorEventIntCallback:
-    m_PersistentCalls:
-      m_Calls: []
-  _animatorEventFloatCallback:
-    m_PersistentCalls:
-      m_Calls: []
-  _animatorEventStringCallback:
-    m_PersistentCalls:
-      m_Calls: []
-  _animatorEventObjectCallback:
-    m_PersistentCalls:
-      m_Calls: []
-  _animatorEventFullCallback:
-    m_PersistentCalls:
-      m_Calls: []
+  m_IsActive: 0
 --- !u!73398921 &2884968623651107703
 VFXRenderer:
   serializedVersion: 1
@@ -1082,7 +1040,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 729151614863013481}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -1200,26 +1158,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!95 &4445963468832219070
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8123454872238037579}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: bfb53654edff7c340ba1dedea536ee25, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!73398921 &4617977448412711099
 VFXRenderer:
   serializedVersion: 1
@@ -1228,7 +1166,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4841967783987504976}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -1414,130 +1352,6 @@ Transform:
   m_Father: {fileID: 1572355636468082136}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5344749710184676408
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2205059240055807147}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74129373fae7f264e8c7079575224761, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _animatorEventCallback:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2047271911}
-        m_TargetAssemblyTypeName: Perigon.Weapons.MeleeWeaponBehaviour, Weapons
-        m_MethodName: ApplyDamage
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  _animatorEventIntCallback:
-    m_PersistentCalls:
-      m_Calls: []
-  _animatorEventFloatCallback:
-    m_PersistentCalls:
-      m_Calls: []
-  _animatorEventStringCallback:
-    m_PersistentCalls:
-      m_Calls: []
-  _animatorEventObjectCallback:
-    m_PersistentCalls:
-      m_Calls: []
-  _animatorEventFullCallback:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &5344749711077597169
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2205059241510911842}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74129373fae7f264e8c7079575224761, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _animatorEventCallback:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2047271911}
-        m_TargetAssemblyTypeName: Perigon.Weapons.MeleeWeaponBehaviour, Weapons
-        m_MethodName: ApplyDamage
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  _animatorEventIntCallback:
-    m_PersistentCalls:
-      m_Calls: []
-  _animatorEventFloatCallback:
-    m_PersistentCalls:
-      m_Calls: []
-  _animatorEventStringCallback:
-    m_PersistentCalls:
-      m_Calls: []
-  _animatorEventObjectCallback:
-    m_PersistentCalls:
-      m_Calls: []
-  _animatorEventFullCallback:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!95 &6023145178255694174
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2205059240055807147}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: bfb53654edff7c340ba1dedea536ee25, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!95 &6023145179559672471
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2205059241510911842}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: bfb53654edff7c340ba1dedea536ee25, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6931734448860381730
 GameObject:
   m_ObjectHideFlags: 0
@@ -1547,6 +1361,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6931734448860381731}
+  - component: {fileID: 6931734448860381733}
+  - component: {fileID: 6931734448860381732}
   m_Layer: 0
   m_Name: WeaponHolder
   m_TagString: Untagged
@@ -1572,6 +1388,68 @@ Transform:
   m_Father: {fileID: 6931734448894651517}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6931734448860381732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6931734448860381730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74129373fae7f264e8c7079575224761, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animatorEventCallback:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2047271911}
+        m_TargetAssemblyTypeName: Perigon.Weapons.MeleeWeaponBehaviour, Weapons
+        m_MethodName: ApplyDamage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _animatorEventIntCallback:
+    m_PersistentCalls:
+      m_Calls: []
+  _animatorEventFloatCallback:
+    m_PersistentCalls:
+      m_Calls: []
+  _animatorEventStringCallback:
+    m_PersistentCalls:
+      m_Calls: []
+  _animatorEventObjectCallback:
+    m_PersistentCalls:
+      m_Calls: []
+  _animatorEventFullCallback:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!95 &6931734448860381733
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6931734448860381730}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bfb53654edff7c340ba1dedea536ee25, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6931734448894651516
 GameObject:
   m_ObjectHideFlags: 0
@@ -1619,13 +1497,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponHolder: {fileID: 6931734448860381730}
   _equipmentBehaviour: {fileID: 2047271910}
-  _hipFireBobAmount: 0.02
-  _wallRunningBobMultiplier: 0.5
-  _weaponBobFrequency: 8
-  _weaponBobSharpness: 7
-  _maxRecoilDistance: 0.5
-  _recoilSharpness: 50
-  _recoilRestitutionSharpness: 10
 --- !u!1 &7084369884553751335
 GameObject:
   m_ObjectHideFlags: 0
@@ -1719,8 +1590,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8932783783822377201}
-  - component: {fileID: 4445963468832219070}
-  - component: {fileID: 2596856333055556312}
   - component: {fileID: 7477593526119949847}
   m_Layer: 9
   m_Name: Automatic Laser Rifle

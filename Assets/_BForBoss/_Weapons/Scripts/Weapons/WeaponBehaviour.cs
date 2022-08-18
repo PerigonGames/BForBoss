@@ -12,8 +12,6 @@ namespace Perigon.Weapons
         private const float WALL_HIT_ZFIGHT_BUFFER = 0.01f;
         private const float WALL_HIT_VFX_HIT_FADE_DURATION = 2.0f;
         private const float RAYCAST_DISTANCE_LIMIT = 50f;
-        private const string MELEE_ANIMATOR_PARAM = "Melee";
-        private static readonly int MeleeAnimatorID = Animator.StringToHash(MELEE_ANIMATOR_PARAM);
         protected readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
 
         [SerializeField] protected Transform _firePoint = null;
@@ -33,9 +31,7 @@ namespace Perigon.Weapons
         private Camera _mainCamera = null;
         private BulletSpawner _bulletSpawner;
         private WallHitVFXSpawner _wallHitVFXSpawner;
-
-        private Animator _weaponAnimator = null;
-
+        
         public Weapon WeaponViewModel => _weapon;
 
         protected Camera MainCamera
@@ -144,12 +140,6 @@ namespace Perigon.Weapons
             {
                 Debug.LogWarning("Missing VFX Visual Effect from this weapon");
             }
-            _weaponAnimator = GetComponent<Animator>();
-        }
-        
-        public void OnMeleeAttack()
-        {
-            _weaponAnimator.SetTrigger(MeleeAnimatorID);
         }
 
         private void OnEnable()
