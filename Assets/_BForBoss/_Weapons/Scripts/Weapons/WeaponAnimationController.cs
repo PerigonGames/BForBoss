@@ -10,7 +10,7 @@ namespace Perigon.Weapons
     {
         [Resolve] [SerializeField] private GameObject _weaponHolder = null;
         [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
-
+        [SerializeField] private Animator _weaponAnimator = null;
         private Camera _mainCam;
         
         private Func<Vector3> _characterVelocity = null;
@@ -46,6 +46,7 @@ namespace Perigon.Weapons
 
         private void OnWeaponFired(int _)
         {
+            _weaponAnimator.SetTrigger("Shoot_Pistol");
             FMODUnity.RuntimeManager.PlayOneShot(_equipmentBehaviour.WeaponShotAudio, transform.position);
         }
 
