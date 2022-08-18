@@ -57,7 +57,7 @@ namespace Perigon.Weapons
             }
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             var camTransform = _mainCam.transform;
             _weaponHolder.transform.SetPositionAndRotation(
