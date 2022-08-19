@@ -62,6 +62,14 @@ namespace Perigon.Weapons
 
         private void LateUpdate()
         {
+            if (_characterVelocity().magnitude > 0 && CanBobWeapon())
+            {
+                _weaponAnimator.SetBool("Walking_Weapon", true);
+            }
+            else
+            {
+                _weaponAnimator.SetBool("Walking_Weapon", false);
+            }
             var camTransform = _mainCam.transform;
             _weaponHolder.transform.SetPositionAndRotation(
                 camTransform.position,
