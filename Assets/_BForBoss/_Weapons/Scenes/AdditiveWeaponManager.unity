@@ -341,7 +341,7 @@ GameObject:
   - component: {fileID: 537874363}
   - component: {fileID: 537874362}
   m_Layer: 0
-  m_Name: WeaponHolder
+  m_Name: WeaponAnimator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -418,7 +418,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: bfb53654edff7c340ba1dedea536ee25, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -771,7 +771,7 @@ PrefabInstance:
     - target: {fileID: 5644926148023334689, guid: d1b6eae1f0bf4054badf84daebd18c5e, type: 3}
       propertyPath: _weaponAnimator
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 537874363}
     - target: {fileID: 5644926148023334689, guid: d1b6eae1f0bf4054badf84daebd18c5e, type: 3}
       propertyPath: _weaponBehaviours.Array.data[0]
       value: 
@@ -1472,7 +1472,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6931734448860381730}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.25, y: -0.259, z: 0.503}
+  m_LocalPosition: {x: 0.25, y: -0.25, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1493,7 +1493,7 @@ GameObject:
   - component: {fileID: 6931734448894651517}
   - component: {fileID: 6931734448894651518}
   m_Layer: 0
-  m_Name: WeaponAnimator
+  m_Name: WeaponAnimationController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1529,7 +1529,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponHolder: {fileID: 537874360}
   _equipmentBehaviour: {fileID: 2047271910}
-  _weaponAnimator: {fileID: 0}
+  _weaponAnimator: {fileID: 537874363}
 --- !u!1 &7084369884553751335
 GameObject:
   m_ObjectHideFlags: 0

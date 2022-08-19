@@ -28,7 +28,7 @@ namespace Perigon.Weapons
         private MeleeWeapon _weapon;
         private InputAction _meleeActionInputAction;
         private Func<Transform> _getTransform;
-        private Action _onSuccessfulAttack;
+        private IWeaponAnimationProvider _weaponAnimationProvider;
         private ObjectPooler<TimedVFXEffect> _meleeVFXPool;
 
         public float CurrentCooldown => _weapon?.CurrentCooldown ?? 0f;
@@ -37,12 +37,12 @@ namespace Perigon.Weapons
 
         public void Initialize(InputAction meleeAttackAction,
             Func<Transform> getTransform,
-            IMeleeProperties properties = null,
-            Action onSuccessfulAttack = null)
+            IWeaponAnimationProvider weaponAnimationProvider,
+            IMeleeProperties properties = null)
         {
             _meleeActionInputAction = meleeAttackAction;
             _getTransform = getTransform;
-            _onSuccessfulAttack = onSuccessfulAttack;
+            _weaponAnimationProvider = weaponAnimationProvider;
             _weapon = new MeleeWeapon(properties ?? _meleeScriptable);
 
             if (_meleeVFXPrefab != null)
@@ -81,7 +81,7 @@ namespace Perigon.Weapons
 
                 if (isAttackSuccessful)
                 {
-                    _onSuccessfulAttack?.Invoke();
+                    _weaponAnimationProvider.MeleeAttack();
                 }
             }
         }

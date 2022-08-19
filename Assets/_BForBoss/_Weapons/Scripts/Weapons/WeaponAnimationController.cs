@@ -1,16 +1,23 @@
 using System;
 using Perigon.Utility;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Perigon.Weapons
 {
-    [DefaultExecutionOrder(101)] // Cinemachine uses a modified script execution of 100, this ensures we run after cinemachine updates the camera position
-    public class WeaponAnimationController : MonoBehaviour
+    public interface IWeaponAnimationProvider
     {
-        [Resolve] [SerializeField] private GameObject _weaponHolder = null;
-        [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
-        [SerializeField] private Animator _weaponAnimator = null;
+        void MeleeAttack();
+        void WeaponFire();
+    }
+    
+    [DefaultExecutionOrder(101)] // Cinemachine uses a modified script execution of 100, this ensures we run after cinemachine updates the camera position
+    public class WeaponAnimationController : MonoBehaviour, IWeaponAnimationProvider
+    {
+        private const string MELEE_PARAM = "Melee";
+        private const string SHOOT_PISTOL_PARAM = "Shoot_Pistol";
+        
+        [Resolve][SerializeField] private GameObject _weaponHolder = null;
+        [Resolve][SerializeField] private Animator _weaponAnimator = null;
         private Camera _mainCam;
         
         private Func<Vector3> _characterVelocity = null;
@@ -35,27 +42,7 @@ namespace Perigon.Weapons
 
         private void Start()
         {
-            _equipmentBehaviour.Weapons.ForEach(weapon => weapon.OnFireWeapon += OnWeaponFired);
             _mainCam = Camera.main;
-        }
-
-        private void OnDestroy()
-        {
-            _equipmentBehaviour.Weapons.ForEach(weapon => weapon.OnFireWeapon -= OnWeaponFired);
-        }
-
-        private void OnWeaponFired(int _)
-        {
-            _weaponAnimator.SetTrigger("Shoot_Pistol");
-            FMODUnity.RuntimeManager.PlayOneShot(_equipmentBehaviour.WeaponShotAudio, transform.position);
-        }
-
-        private void Awake()
-        {
-            if (_equipmentBehaviour == null)
-            {
-                PanicHelper.Panic(new Exception("Equipment Behaviour missing from WeaponAnimationController"));
-            }
         }
 
         private void LateUpdate()
@@ -71,6 +58,16 @@ namespace Perigon.Weapons
             return (_isWallRunning() || _isGrounded()) 
                    && !_isDashing()
                    && !_isSliding();
+        }
+
+        public void MeleeAttack()
+        {
+            _weaponAnimator.SetTrigger(MELEE_PARAM);
+        }
+
+        public void WeaponFire()
+        {
+            _weaponAnimator.SetTrigger(SHOOT_PISTOL_PARAM);
         }
     }
 }

@@ -31,6 +31,7 @@ namespace Perigon.Weapons
         private Camera _mainCamera = null;
         private BulletSpawner _bulletSpawner;
         private WallHitVFXSpawner _wallHitVFXSpawner;
+        private IWeaponAnimationProvider _weaponAnimationProvider;
         
         public Weapon WeaponViewModel => _weapon;
 
@@ -52,12 +53,14 @@ namespace Perigon.Weapons
             InputAction reloadInputAction,
             BulletSpawner bulletSpawner,
             WallHitVFXSpawner wallHitVFXSpawner,
+            IWeaponAnimationProvider weaponAnimationProvider,
             IWeaponProperties properties = null)
         {
             _fireInputAction = fireInputAction;
             _reloadInputAction = reloadInputAction;
             _bulletSpawner = bulletSpawner;
             _wallHitVFXSpawner = wallHitVFXSpawner;
+            _weaponAnimationProvider = weaponAnimationProvider;
             _weapon = new Weapon(properties ?? _weaponScriptableObject);
             BindWeapon();
             SetCrosshairImage();
@@ -101,6 +104,9 @@ namespace Perigon.Weapons
             {
                 _muzzleFlash.Play();
             }
+            
+            _weaponAnimationProvider.WeaponFire();
+            FMODUnity.RuntimeManager.PlayOneShot(_weapon.ShotAudio, transform.position);
         }
 
         private void FireBullets(int numberOfBullets)

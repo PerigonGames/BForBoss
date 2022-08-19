@@ -26,11 +26,12 @@ namespace Perigon.Weapons
 
         private Transform _playerPivotTransform;
         
-        public void Initialize(Transform playerPivotTransform)
+        public void Initialize(Transform playerPivotTransform, IWeaponAnimationProvider weaponAnimationProvider)
         {
             _playerPivotTransform = playerPivotTransform;
             EnableEquipmentPlayerInput();
-            _meleeBehaviour.Initialize(_meleeWeaponInputAction, () => _playerPivotTransform, onSuccessfulAttack: OnMeleeAttack);
+            _meleeBehaviour.Initialize(_meleeWeaponInputAction, () => _playerPivotTransform, weaponAnimationProvider);
+            SetupWeapons(weaponAnimationProvider);
         }
 
         private void EnableEquipmentPlayerInput()
@@ -51,12 +52,12 @@ namespace Perigon.Weapons
             _isMouseScrollEnabled = false;
         }
 
-        private void SetupWeapons()
+        private void SetupWeapons(IWeaponAnimationProvider weaponAnimationProvider)
         {
             _weapons = new Weapon[_weaponBehaviours.Length];
             for(int i = 0; i < _weaponBehaviours.Length; i++)
             {
-                _weaponBehaviours[i].Initialize(_fireInputAction, _reloadInputAction, _bulletSpawner, _wallHitVFXSpawner);
+                _weaponBehaviours[i].Initialize(_fireInputAction, _reloadInputAction, _bulletSpawner, _wallHitVFXSpawner, weaponAnimationProvider);
                 _weapons[i] = _weaponBehaviours[i].WeaponViewModel;
                 _weapons[i].ActivateWeapon = false;
             }
@@ -99,15 +100,6 @@ namespace Perigon.Weapons
             OnMouseSwapWeaponAction();
         }
 
-        private const string MELEE_ANIMATOR_PARAM = "Melee";
-        [SerializeField] private Animator _weaponAnimator = null;
-        
-        private void OnMeleeAttack()
-        {
-            _weaponAnimator.SetTrigger(MELEE_ANIMATOR_PARAM);
-            //_weaponBehaviours[_currentWeaponIndex].OnMeleeAttack();
-        }
-
         private void Awake()
         {
             SetupPlayerEquipmentInput();
@@ -119,7 +111,6 @@ namespace Perigon.Weapons
             {
                 PanicHelper.Panic(new Exception("There are currently no WeaponBehaviour within the child of EquipmentBehaviour"));
             }
-            SetupWeapons();
         }
 
         private void OnValidate()
