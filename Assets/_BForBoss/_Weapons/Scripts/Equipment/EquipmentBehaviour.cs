@@ -15,6 +15,7 @@ namespace Perigon.Weapons
         private BulletSpawner _bulletSpawner;
         private WallHitVFXSpawner _wallHitVFXSpawner;
         private MeleeWeaponBehaviour _meleeBehaviour = null;
+        private IWeaponAnimationProvider _weaponAnimationProvider;
         private Weapon[] _weapons = null;
         private int _currentWeaponIndex = 0;
 
@@ -29,6 +30,7 @@ namespace Perigon.Weapons
         public void Initialize(Transform playerPivotTransform, IWeaponAnimationProvider weaponAnimationProvider)
         {
             _playerPivotTransform = playerPivotTransform;
+            _weaponAnimationProvider = weaponAnimationProvider;
             EnableEquipmentPlayerInput();
             _meleeBehaviour.Initialize(_meleeWeaponInputAction, () => _playerPivotTransform, weaponAnimationProvider);
             SetupWeapons(weaponAnimationProvider);
@@ -73,8 +75,9 @@ namespace Perigon.Weapons
             _meleeWeaponInputAction = _inputActions.FindAction("Melee");
         }
 
-        private void ScrollSwapWeapons(bool isUpwards)
+        public void ScrollSwapWeapons(int direction)
         {
+            var isUpwards = direction > 1;
             _weapons[_currentWeaponIndex].ActivateWeapon = false;
             UpdateCurrentWeaponIndex(isUpwards);
             _weapons[_currentWeaponIndex].ActivateWeapon = true;
@@ -132,11 +135,11 @@ namespace Perigon.Weapons
             var scrollVector = _isMouseScrollEnabled ? Mouse.current.scroll.ReadValue().normalized : Vector2.zero;
             if (scrollVector.y > 0)
             {
-                ScrollSwapWeapons(true);
+                _weaponAnimationProvider.SwapWeapon(true);
             }
             else if (scrollVector.y < 0)
             {
-                ScrollSwapWeapons(false);
+                _weaponAnimationProvider.SwapWeapon(false);
             }
         }
         
@@ -144,7 +147,7 @@ namespace Perigon.Weapons
         {
             if (context.started)
             {
-                ScrollSwapWeapons(true);
+                _weaponAnimationProvider.SwapWeapon(true);
             }
         }
         #endregion

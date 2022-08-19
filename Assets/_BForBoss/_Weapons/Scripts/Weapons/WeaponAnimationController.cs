@@ -8,6 +8,7 @@ namespace Perigon.Weapons
     {
         void MeleeAttack();
         void WeaponFire();
+        void SwapWeapon(bool isUpwards);
     }
     
     [DefaultExecutionOrder(101)] // Cinemachine uses a modified script execution of 100, this ensures we run after cinemachine updates the camera position
@@ -15,6 +16,8 @@ namespace Perigon.Weapons
     {
         private const string MELEE_PARAM = "Melee";
         private const string SHOOT_PISTOL_PARAM = "Shoot_Pistol";
+        private const string SWAP_WEAPON_DOWN_PARAM = "Swap_Weapon_Down";
+        private const string SWAP_WEAPON_UP_PARAM = "Swap_Weapon_Up";
         
         [Resolve][SerializeField] private GameObject _weaponHolder = null;
         [Resolve][SerializeField] private Animator _weaponAnimator = null;
@@ -68,6 +71,12 @@ namespace Perigon.Weapons
         public void WeaponFire()
         {
             _weaponAnimator.SetTrigger(SHOOT_PISTOL_PARAM);
+        }
+
+        public void SwapWeapon(bool isUpwards)
+        {
+            var param = isUpwards ? SWAP_WEAPON_UP_PARAM : SWAP_WEAPON_DOWN_PARAM;
+            _weaponAnimator.SetTrigger(param);
         }
     }
 }
