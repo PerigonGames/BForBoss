@@ -32,7 +32,7 @@ namespace Perigon.Weapons
             _playerPivotTransform = playerPivotTransform;
             _weaponAnimationProvider = weaponAnimationProvider;
             EnableEquipmentPlayerInput();
-            _meleeBehaviour.Initialize(_meleeWeaponInputAction, () => _playerPivotTransform, weaponAnimationProvider);
+            _meleeBehaviour.Initialize(_meleeWeaponInputAction, () => _playerPivotTransform, onSuccessfulAttack: OnMeleeAttack);
             SetupWeapons(weaponAnimationProvider);
         }
 
@@ -96,6 +96,11 @@ namespace Perigon.Weapons
             {
                 _currentWeaponIndex = indexLength;
             }
+        }
+
+        private void OnMeleeAttack()
+        {
+            _weaponAnimationProvider.MeleeAttack(CurrentWeapon.AnimationType);
         }
         
         private void Update()

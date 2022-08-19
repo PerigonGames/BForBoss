@@ -4,18 +4,25 @@ using UnityEngine;
 
 namespace Perigon.Weapons
 {
+    public enum WeaponAnimationType
+    {
+        Pistol,
+        Rifle
+    }
     public interface IWeaponAnimationProvider
     {
-        void MeleeAttack();
-        void WeaponFire();
+        void MeleeAttack(WeaponAnimationType type);
+        void WeaponFire(WeaponAnimationType type);
         void SwapWeapon(bool isUpwards);
     }
     
     [DefaultExecutionOrder(101)] // Cinemachine uses a modified script execution of 100, this ensures we run after cinemachine updates the camera position
     public class WeaponAnimationController : MonoBehaviour, IWeaponAnimationProvider
     {
-        private const string MELEE_PARAM = "Melee";
+        private const string MELEE_PISTOL_PARAM = "Melee_Pistol";
+        private const string MELEE_RIFLE_PARAM = "Melee_Rifle";
         private const string SHOOT_PISTOL_PARAM = "Shoot_Pistol";
+        private const string SHOOT_RIFLE_PARAM = "Shoot_Rifle";
         private const string SWAP_WEAPON_DOWN_PARAM = "Swap_Weapon_Down";
         private const string SWAP_WEAPON_UP_PARAM = "Swap_Weapon_Up";
         
@@ -63,14 +70,30 @@ namespace Perigon.Weapons
                    && !_isSliding();
         }
 
-        public void MeleeAttack()
+        public void MeleeAttack(WeaponAnimationType type)
         {
-            _weaponAnimator.SetTrigger(MELEE_PARAM);
+            switch (type)
+            {
+                case WeaponAnimationType.Pistol:
+                    _weaponAnimator.SetTrigger(MELEE_PISTOL_PARAM);
+                    break;
+                case WeaponAnimationType.Rifle:
+                    _weaponAnimator.SetTrigger(MELEE_RIFLE_PARAM);
+                    break;
+            }
         }
 
-        public void WeaponFire()
+        public void WeaponFire(WeaponAnimationType type)
         {
-            _weaponAnimator.SetTrigger(SHOOT_PISTOL_PARAM);
+            switch (type)
+            {
+                case WeaponAnimationType.Pistol:
+                    _weaponAnimator.SetTrigger(SHOOT_PISTOL_PARAM);
+                    break;
+                case WeaponAnimationType.Rifle:
+                    _weaponAnimator.SetTrigger(SHOOT_RIFLE_PARAM);
+                    break;
+            }
         }
 
         public void SwapWeapon(bool isUpwards)

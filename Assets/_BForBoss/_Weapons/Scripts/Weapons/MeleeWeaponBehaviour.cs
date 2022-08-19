@@ -28,21 +28,22 @@ namespace Perigon.Weapons
         private MeleeWeapon _weapon;
         private InputAction _meleeActionInputAction;
         private Func<Transform> _getTransform;
-        private IWeaponAnimationProvider _weaponAnimationProvider;
+        private Action _onSuccessfulAttack;
         private ObjectPooler<TimedVFXEffect> _meleeVFXPool;
 
         public float CurrentCooldown => _weapon?.CurrentCooldown ?? 0f;
         public float MaxCooldown => _meleeScriptable != null ? _meleeScriptable.AttackCoolDown : 1f;
         public bool CanMelee => _weapon?.CanMelee ?? false;
 
-        public void Initialize(InputAction meleeAttackAction,
+        public void Initialize(
+            InputAction meleeAttackAction,
             Func<Transform> getTransform,
-            IWeaponAnimationProvider weaponAnimationProvider,
+            Action onSuccessfulAttack,
             IMeleeProperties properties = null)
         {
             _meleeActionInputAction = meleeAttackAction;
             _getTransform = getTransform;
-            _weaponAnimationProvider = weaponAnimationProvider;
+            _onSuccessfulAttack = onSuccessfulAttack;
             _weapon = new MeleeWeapon(properties ?? _meleeScriptable);
 
             if (_meleeVFXPrefab != null)
@@ -81,7 +82,7 @@ namespace Perigon.Weapons
 
                 if (isAttackSuccessful)
                 {
-                    _weaponAnimationProvider.MeleeAttack();
+                    _onSuccessfulAttack();
                 }
             }
         }

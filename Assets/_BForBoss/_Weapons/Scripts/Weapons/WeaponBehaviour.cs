@@ -105,7 +105,7 @@ namespace Perigon.Weapons
                 _muzzleFlash.Play();
             }
             
-            _weaponAnimationProvider.WeaponFire();
+            _weaponAnimationProvider.WeaponFire(_weapon.AnimationType);
             FMODUnity.RuntimeManager.PlayOneShot(_weapon.ShotAudio, transform.position);
         }
 
