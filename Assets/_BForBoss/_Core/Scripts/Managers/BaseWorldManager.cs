@@ -15,7 +15,7 @@ namespace BForBoss
         [Title("Include Components")]
         [InfoBox("Check this box if there are environmental objects such as Health Pick ups, dummies and moving platforms")]
         [SerializeField]
-        private bool _isEnvironmentIncluded = false;
+        private bool _isEnvironmentIncluded = true;
         
         [Title("Base Component")]
         [SerializeField] protected PlayerBehaviour _playerBehaviour = null;
