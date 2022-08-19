@@ -67,7 +67,7 @@ namespace Perigon.Entities
             }
         }
 
-        protected virtual void CleanUp()
+        public virtual void CleanUp()
         {
             if (_lifeCycle != null)
             {

@@ -59,7 +59,7 @@ namespace Perigon.Entities
             _healthbar.Reset();
         }
 
-        protected override void CleanUp()
+        public override void CleanUp()
         {
             base.CleanUp();
             _lifeCycle.OnDamageTaken -= TriggerHitAnimation;
