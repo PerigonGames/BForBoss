@@ -30,6 +30,7 @@ namespace Perigon.Weapons
         private const string SWAP_WEAPON_UP_PARAM = "Swap_Weapon_Up";
 
         private const string RELOADING_WEAPON_PARAM = "Reloading_Weapon";
+        private const string WALKING_WEAPON_PARAM = "Walking_Weapon";
         
         [Resolve][SerializeField] private GameObject _weaponHolder = null;
         [Resolve][SerializeField] private Animator _weaponAnimator = null;
@@ -62,14 +63,8 @@ namespace Perigon.Weapons
 
         private void LateUpdate()
         {
-            if (_characterVelocity().magnitude > 0 && CanBobWeapon())
-            {
-                _weaponAnimator.SetBool("Walking_Weapon", true);
-            }
-            else
-            {
-                _weaponAnimator.SetBool("Walking_Weapon", false);
-            }
+            _weaponAnimator.SetBool(WALKING_WEAPON_PARAM, CanBobWeapon());
+            
             var camTransform = _mainCam.transform;
             _weaponHolder.transform.SetPositionAndRotation(
                 camTransform.position,
@@ -80,7 +75,8 @@ namespace Perigon.Weapons
         {
             return (_isWallRunning() || _isGrounded()) 
                    && !_isDashing()
-                   && !_isSliding();
+                   && !_isSliding()
+                   && _characterVelocity().magnitude > 0;
         }
 
         public void MeleeAttack(WeaponAnimationType type)
