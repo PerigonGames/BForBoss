@@ -13,6 +13,8 @@ namespace BForBoss
         [SerializeField] private LifeCycleManager _lifeCycleManager = null;
         [SerializeField] private WaveManager _waveManager;
         [SerializeField] private EnemySpawnerManager _enemySpawnerManager;
+
+        [Title("HUD")] [SerializeField] private WaveViewBehaviour _waveView = null;
         
         protected override Vector3 SpawnLocation => _spawnLocation.position;
         protected override Quaternion SpawnLookDirection => _spawnLocation.rotation;
@@ -46,6 +48,12 @@ namespace BForBoss
             }
             
             WaveModel waveModel = new WaveModel();
+
+            if (_waveView != null)
+            {
+                _waveView.Initialize(waveModel);
+            }
+            
             if (_waveManager != null)
             {
                 _waveManager.Initialize(_lifeCycleManager, _enemySpawnerManager, waveModel);
@@ -75,6 +83,11 @@ namespace BForBoss
             if (_enemySpawnerManager == null)
             {
                 Debug.LogWarning("Enemy Spawner Manager missing from the world manager");
+            }
+
+            if (_waveView == null)
+            {
+                Debug.LogWarning("Wave View UI missing from the world Manager");
             }
         }
     }
