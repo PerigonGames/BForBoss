@@ -14,6 +14,7 @@ namespace Perigon.Weapons
         void MeleeAttack(WeaponAnimationType type);
         void WeaponFire(WeaponAnimationType type);
         void SwapWeapon(bool isUpwards);
+        void ReloadingWeapon(bool isReloading);
     }
     
     [DefaultExecutionOrder(101)] // Cinemachine uses a modified script execution of 100, this ensures we run after cinemachine updates the camera position
@@ -21,10 +22,14 @@ namespace Perigon.Weapons
     {
         private const string MELEE_PISTOL_PARAM = "Melee_Pistol";
         private const string MELEE_RIFLE_PARAM = "Melee_Rifle";
+        
         private const string SHOOT_PISTOL_PARAM = "Shoot_Pistol";
         private const string SHOOT_RIFLE_PARAM = "Shoot_Rifle";
+        
         private const string SWAP_WEAPON_DOWN_PARAM = "Swap_Weapon_Down";
         private const string SWAP_WEAPON_UP_PARAM = "Swap_Weapon_Up";
+
+        private const string RELOADING_WEAPON_PARAM = "Reloading_Weapon";
         
         [Resolve][SerializeField] private GameObject _weaponHolder = null;
         [Resolve][SerializeField] private Animator _weaponAnimator = null;
@@ -100,6 +105,11 @@ namespace Perigon.Weapons
         {
             var param = isUpwards ? SWAP_WEAPON_UP_PARAM : SWAP_WEAPON_DOWN_PARAM;
             _weaponAnimator.SetTrigger(param);
+        }
+
+        public void ReloadingWeapon(bool isReloading)
+        {
+            _weaponAnimator.SetBool(RELOADING_WEAPON_PARAM, isReloading);
         }
     }
 }

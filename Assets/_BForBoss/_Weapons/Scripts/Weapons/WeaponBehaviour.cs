@@ -72,10 +72,16 @@ namespace Perigon.Weapons
             gameObject.SetActive(activate);
         }
 
+        private void HandleOnStopReloading()
+        {
+            _weaponAnimationProvider.ReloadingWeapon(false);
+        }
+
         private void BindWeapon()
         {
             _weapon.OnFireWeapon += HandleOnFire;
             _weapon.OnSetWeaponActivate += HandleOnWeaponActivate;
+            _weapon.OnStopReloading += HandleOnStopReloading;
         }
 
         private void SetCrosshairImage()
@@ -124,6 +130,7 @@ namespace Perigon.Weapons
         private void OnReloadInputAction(InputAction.CallbackContext context)
         {
             _weapon.ReloadWeaponIfPossible();
+            _weaponAnimationProvider.ReloadingWeapon(_weapon.IsReloading);
         }
         
         private void SetupPlayerInput()
@@ -167,6 +174,7 @@ namespace Perigon.Weapons
             {
                 _weapon.OnFireWeapon -= HandleOnFire;
                 _weapon.OnSetWeaponActivate -= HandleOnWeaponActivate;
+                _weapon.OnStopReloading -= HandleOnStopReloading;
                 _weapon = null;
             }
         }

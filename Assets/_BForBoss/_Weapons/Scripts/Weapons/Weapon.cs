@@ -29,6 +29,7 @@ namespace Perigon.Weapons
 
          public event Action<int> OnFireWeapon;
          public event Action<bool> OnSetWeaponActivate;
+         public event Action OnStopReloading;
 
          public int AmmunitionAmount => _ammunitionAmount;
          public int MaxAmmunitionAmount => _weaponProperties.AmmunitionAmount;
@@ -128,6 +129,7 @@ namespace Perigon.Weapons
          {
              IsReloading = false;
              _elapsedReloadDuration = _weaponProperties.ReloadDuration;
+             OnStopReloading?.Invoke();
          }
 
          private void Fire()
