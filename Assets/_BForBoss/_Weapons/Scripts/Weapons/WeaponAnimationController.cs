@@ -55,6 +55,43 @@ namespace Perigon.Weapons
             _isDashing = isDashing;
             _isWallRunning = isWallRunning;
         }
+        
+        public void MeleeAttack(WeaponAnimationType type) 
+        {
+            switch (type)
+            {
+                case WeaponAnimationType.Pistol:
+                    _weaponAnimator.SetTrigger(MELEE_PISTOL_PARAM);
+                    break;
+                case WeaponAnimationType.Rifle:
+                    _weaponAnimator.SetTrigger(MELEE_RIFLE_PARAM);
+                    break;
+            }
+        }
+        
+        public void WeaponFire(WeaponAnimationType type)
+        {
+            switch (type)
+            {
+                case WeaponAnimationType.Pistol:
+                    _weaponAnimator.SetTrigger(SHOOT_PISTOL_PARAM);
+                    break;
+                case WeaponAnimationType.Rifle:
+                    _weaponAnimator.SetTrigger(SHOOT_RIFLE_PARAM);
+                    break;
+            }
+        }
+        
+        public void SwapWeapon(bool isUpwards)
+        {
+            var param = isUpwards ? SWAP_WEAPON_UP_PARAM : SWAP_WEAPON_DOWN_PARAM;
+            _weaponAnimator.SetTrigger(param);
+        }
+        
+        public void ReloadingWeapon(bool isReloading)
+        {
+            _weaponAnimator.SetBool(RELOADING_WEAPON_PARAM, isReloading);
+        }
 
         private void Start()
         {
@@ -77,43 +114,6 @@ namespace Perigon.Weapons
                    && !_isDashing()
                    && !_isSliding()
                    && _characterVelocity() > 0;
-        }
-
-        public void MeleeAttack(WeaponAnimationType type)
-        {
-            switch (type)
-            {
-                case WeaponAnimationType.Pistol:
-                    _weaponAnimator.SetTrigger(MELEE_PISTOL_PARAM);
-                    break;
-                case WeaponAnimationType.Rifle:
-                    _weaponAnimator.SetTrigger(MELEE_RIFLE_PARAM);
-                    break;
-            }
-        }
-
-        public void WeaponFire(WeaponAnimationType type)
-        {
-            switch (type)
-            {
-                case WeaponAnimationType.Pistol:
-                    _weaponAnimator.SetTrigger(SHOOT_PISTOL_PARAM);
-                    break;
-                case WeaponAnimationType.Rifle:
-                    _weaponAnimator.SetTrigger(SHOOT_RIFLE_PARAM);
-                    break;
-            }
-        }
-
-        public void SwapWeapon(bool isUpwards)
-        {
-            var param = isUpwards ? SWAP_WEAPON_UP_PARAM : SWAP_WEAPON_DOWN_PARAM;
-            _weaponAnimator.SetTrigger(param);
-        }
-
-        public void ReloadingWeapon(bool isReloading)
-        {
-            _weaponAnimator.SetBool(RELOADING_WEAPON_PARAM, isReloading);
         }
     }
 }
