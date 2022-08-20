@@ -16,7 +16,7 @@ namespace Perigon.Weapons
         bool IsRayCastingWeapon { get; }
         float DamagePerRayCast { get; }
         BulletTypes TypeOfBullet { get; }
-        float VisualRecoilForce { get; }
+        WeaponAnimationType AnimationType { get; }
         EventReference WeaponShotAudio { get; } 
         float GetBulletSpreadRate(float timeSinceFiring);
     }
@@ -40,11 +40,12 @@ namespace Perigon.Weapons
         [SerializeField] private float _damagePerRayCast = 1;
         [HideIf("_isRaycastWeapon")]
         [SerializeField] private BulletTypes _typeOfBullet = BulletTypes.NoPhysics;
+
         [Title("Effects")] 
+        [SerializeField] private WeaponAnimationType _animationType = WeaponAnimationType.Rifle;
         [SerializeField] private EventReference _weaponShotAudio = new EventReference();
         [PreviewField]
         [SerializeField] private Sprite _crosshair = null;
-        [SerializeField] private float _visualRecoil = 0.5f;
         
         public string NameOfWeapon => _nameOfWeapon;
         public float RateOfFire => _rateOfFire;
@@ -55,7 +56,7 @@ namespace Perigon.Weapons
         public bool IsRayCastingWeapon => _isRaycastWeapon;
         public float DamagePerRayCast => _damagePerRayCast;
         public BulletTypes TypeOfBullet => _typeOfBullet;
-        public float VisualRecoilForce => _visualRecoil;
+        public WeaponAnimationType AnimationType => _animationType;
         public EventReference WeaponShotAudio => _weaponShotAudio;
         public Sprite Crosshair => _crosshair;
         

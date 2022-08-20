@@ -12,8 +12,6 @@ namespace Perigon.Weapons
         private const float WALL_HIT_ZFIGHT_BUFFER = 0.01f;
         private const float WALL_HIT_VFX_HIT_FADE_DURATION = 2.0f;
         private const float RAYCAST_DISTANCE_LIMIT = 50f;
-        private const string MELEE_ANIMATOR_PARAM = "Melee";
-        private static readonly int MeleeAnimatorID = Animator.StringToHash(MELEE_ANIMATOR_PARAM);
         protected readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
 
         [SerializeField] protected Transform _firePoint = null;
@@ -33,9 +31,8 @@ namespace Perigon.Weapons
         private Camera _mainCamera = null;
         private BulletSpawner _bulletSpawner;
         private WallHitVFXSpawner _wallHitVFXSpawner;
-
-        private Animator _weaponAnimator = null;
-
+        private IWeaponAnimationProvider _weaponAnimationProvider;
+        
         public Weapon WeaponViewModel => _weapon;
 
         protected Camera MainCamera
@@ -56,12 +53,14 @@ namespace Perigon.Weapons
             InputAction reloadInputAction,
             BulletSpawner bulletSpawner,
             WallHitVFXSpawner wallHitVFXSpawner,
+            IWeaponAnimationProvider weaponAnimationProvider,
             IWeaponProperties properties = null)
         {
             _fireInputAction = fireInputAction;
             _reloadInputAction = reloadInputAction;
             _bulletSpawner = bulletSpawner;
             _wallHitVFXSpawner = wallHitVFXSpawner;
+            _weaponAnimationProvider = weaponAnimationProvider;
             _weapon = new Weapon(properties ?? _weaponScriptableObject);
             BindWeapon();
             SetCrosshairImage();
@@ -73,10 +72,16 @@ namespace Perigon.Weapons
             gameObject.SetActive(activate);
         }
 
+        private void HandleOnStopReloading()
+        {
+            _weaponAnimationProvider.ReloadingWeapon(false);
+        }
+
         private void BindWeapon()
         {
             _weapon.OnFireWeapon += HandleOnFire;
             _weapon.OnSetWeaponActivate += HandleOnWeaponActivate;
+            _weapon.OnStopReloading += HandleOnStopReloading;
         }
 
         private void SetCrosshairImage()
@@ -105,6 +110,9 @@ namespace Perigon.Weapons
             {
                 _muzzleFlash.Play();
             }
+            
+            _weaponAnimationProvider.WeaponFire(_weapon.AnimationType);
+            FMODUnity.RuntimeManager.PlayOneShot(_weapon.ShotAudio, transform.position);
         }
 
         private void FireBullets(int numberOfBullets)
@@ -122,6 +130,7 @@ namespace Perigon.Weapons
         private void OnReloadInputAction(InputAction.CallbackContext context)
         {
             _weapon.ReloadWeaponIfPossible();
+            _weaponAnimationProvider.ReloadingWeapon(_weapon.IsReloading);
         }
         
         private void SetupPlayerInput()
@@ -144,12 +153,6 @@ namespace Perigon.Weapons
             {
                 Debug.LogWarning("Missing VFX Visual Effect from this weapon");
             }
-            _weaponAnimator = GetComponent<Animator>();
-        }
-        
-        public void OnMeleeAttack()
-        {
-            _weaponAnimator.SetTrigger(MeleeAnimatorID);
         }
 
         private void OnEnable()
@@ -171,6 +174,7 @@ namespace Perigon.Weapons
             {
                 _weapon.OnFireWeapon -= HandleOnFire;
                 _weapon.OnSetWeaponActivate -= HandleOnWeaponActivate;
+                _weapon.OnStopReloading -= HandleOnStopReloading;
                 _weapon = null;
             }
         }
