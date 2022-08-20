@@ -77,9 +77,8 @@ namespace Perigon.Weapons
 
         public void ScrollSwapWeapons(int direction)
         {
-            var isUpwards = direction > 1;
             _weapons[_currentWeaponIndex].ActivateWeapon = false;
-            UpdateCurrentWeaponIndex(isUpwards);
+            UpdateCurrentWeaponIndex(isUpwards: direction > 1);
             _weapons[_currentWeaponIndex].ActivateWeapon = true;
         }
         
