@@ -16,7 +16,7 @@ namespace BForBoss
         public void Initialize(PlayerBehaviour playerBehaviour)
         {
             weaponAnimationController.Initialize(
-                () => playerBehaviour.PlayerMovement.CharacterVelocity,
+                () => playerBehaviour.PlayerMovement.SpeedMagnitude,
                 () => playerBehaviour.PlayerMovement.IsWallRunning,
                 () => playerBehaviour.PlayerMovement.IsGrounded,
                 () => playerBehaviour.PlayerMovement.IsSliding,

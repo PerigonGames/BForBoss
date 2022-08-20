@@ -30,20 +30,20 @@ namespace Perigon.Weapons
         private const string SWAP_WEAPON_UP_PARAM = "Swap_Weapon_Up";
 
         private const string RELOADING_WEAPON_PARAM = "Reloading_Weapon";
-        private const string WALKING_WEAPON_PARAM = "Walking_Weapon";
+        private const string WALKING_WEAPON_PARAM = "Walking_Velocity";
         
         [Resolve][SerializeField] private GameObject _weaponHolder = null;
         [Resolve][SerializeField] private Animator _weaponAnimator = null;
         private Camera _mainCam;
         
-        private Func<Vector3> _characterVelocity = null;
+        private Func<float> _characterVelocity = null;
         private Func<bool> _isWallRunning = null;
         private Func<bool> _isSliding = null;
         private Func<bool> _isDashing = null;
         private Func<bool> _isGrounded = null;
 
         public void Initialize(
-            Func<Vector3> characterVelocity, 
+            Func<float> characterVelocity, 
             Func<bool> isWallRunning,
             Func<bool> isGrounded,
             Func<bool> isSliding,
@@ -63,20 +63,20 @@ namespace Perigon.Weapons
 
         private void LateUpdate()
         {
-            _weaponAnimator.SetBool(WALKING_WEAPON_PARAM, CanBobWeapon());
+            _weaponAnimator.SetFloat(WALKING_WEAPON_PARAM, _characterVelocity() * (CanBobWeapon() ? 1 : 0));
             
             var camTransform = _mainCam.transform;
             _weaponHolder.transform.SetPositionAndRotation(
                 camTransform.position,
                 camTransform.rotation);
         }
-        
+
         private bool CanBobWeapon()
         {
             return (_isWallRunning() || _isGrounded()) 
                    && !_isDashing()
                    && !_isSliding()
-                   && _characterVelocity().magnitude > 0;
+                   && _characterVelocity() > 0;
         }
 
         public void MeleeAttack(WeaponAnimationType type)
