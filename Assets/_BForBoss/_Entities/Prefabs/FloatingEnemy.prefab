@@ -519,6 +519,7 @@ GameObject:
   - component: {fileID: -4639418093031204269}
   - component: {fileID: -3839847308755399113}
   - component: {fileID: -4459644585998689845}
+  - component: {fileID: 5623753646677034053}
   - component: {fileID: -4579011501620697046}
   m_Layer: 0
   m_Name: FloatingEnemy
@@ -715,6 +716,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &5623753646677034053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7036539539005687787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4335901eb83ee7441b23c985efe0d40a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _agent: {fileID: 0}
+  _multiplier: 1000
 --- !u!114 &-4579011501620697046
 MonoBehaviour:
   m_ObjectHideFlags: 0
