@@ -1,5 +1,3 @@
-
-using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -25,27 +23,27 @@ namespace Perigon.Utility
             _animatorEventCallback?.Invoke();
         }
         
-        public void AnimatorEventCallback(int value)
+        public void AnimatorEventIntCallback(int value)
         {
             _animatorEventIntCallback?.Invoke(value);
         }
-        
-        public void AnimatorEventCallback(float value)
+
+        public void AnimatorEventFloatCallback(float value)
         {
             _animatorEventFloatCallback?.Invoke(value);
         }
         
-        public void AnimatorEventCallback(string value)
+        public void AnimatorEventStringCallback(string value)
         {
             _animatorEventStringCallback?.Invoke(value);
         }
         
-        public void AnimatorEventCallback(object value)
+        public void AnimatorEventObjectCallback(object value)
         {
             _animatorEventObjectCallback?.Invoke(value);
         }
         
-        public void AnimatorEventCallback(AnimationEvent value)
+        public void AnimatorEventFullCallback(AnimationEvent value)
         {
             _animatorEventFullCallback?.Invoke(value);
         }

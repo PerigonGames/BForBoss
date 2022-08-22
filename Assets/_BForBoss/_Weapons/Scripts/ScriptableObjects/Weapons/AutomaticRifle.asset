@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: AutomaticRifle
   m_EditorClassIdentifier: 
   _nameOfWeapon: Assault Rifle
-  _rateOfFire: 0.07
-  _bulletSpread: 0.5
+  _rateOfFire: 0.1
+  _bulletSpread: 3
   _bulletSpreadRateCurve:
     serializedVersion: 2
     m_Curve:
@@ -48,12 +48,13 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _reloadDuration: 0.25
+  _reloadDuration: 0.5
   _bulletsPerShot: 1
-  _ammunitionAmount: 60
-  _isRaycastWeapon: 1
-  _damagePerRayCast: 1
+  _ammunitionAmount: 20
+  _isRaycastWeapon: 0
+  _damagePerRayCast: 0
   _typeOfBullet: 1
+  _animationType: 0
   _weaponShotAudio:
     Guid:
       Data1: -1465570418
@@ -61,5 +62,4 @@ MonoBehaviour:
       Data3: 2081653409
       Data4: 979595168
     Path: event:/AudioEvents/Weapons/Weapon_AssaultRifle
-  _crosshair: {fileID: 21300000, guid: e9e2ab3973f9ccf45998723a385807bf, type: 3}
-  _visualRecoil: 0.5
+  _crosshair: {fileID: 21300000, guid: 30381596fec2d5a4781da94a833fdf75, type: 3}
