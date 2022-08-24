@@ -32,18 +32,6 @@ namespace Perigon.Entities
             }
             _lifeCycle.OnDamageTaken += TriggerHitAnimation;
         }
-        
-        protected override void LifeCycleFinished()
-        {
-            _animator.SetBool(DEATH_ID, true); 
-            _deathTween = _renderer.material.DOFloat(MAX_DISSOLVE, DISSOLVE_ID, _dissolveVFXDuration)
-             .OnComplete(() => gameObject.SetActive(false));
-        }
-
-        private void TriggerHitAnimation()
-        {
-            _animator.SetTrigger(HIT_ID);
-        }
 
         public override void Reset()
         {
@@ -64,6 +52,19 @@ namespace Perigon.Entities
             base.CleanUp();
             _lifeCycle.OnDamageTaken -= TriggerHitAnimation;
         }
+        
+        protected override void LifeCycleFinished()
+        {
+            _animator.SetBool(DEATH_ID, true); 
+            _deathTween = _renderer.material.DOFloat(MAX_DISSOLVE, DISSOLVE_ID, _dissolveVFXDuration)
+             .OnComplete(() => gameObject.SetActive(false));
+        }
+
+        private void TriggerHitAnimation()
+        {
+            _animator.SetTrigger(HIT_ID);
+        }
+
         
         private void Awake()
         {

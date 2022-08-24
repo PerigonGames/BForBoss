@@ -18,13 +18,7 @@ namespace BForBoss
         
         protected override Vector3 SpawnLocation => _spawnLocation.position;
         protected override Quaternion SpawnLookDirection => _spawnLocation.rotation;
-
-        protected override void CleanUp()
-        {
-            base.CleanUp();
-            FindObjectsOfType<PatrolBehaviour>().ForEach(pb => pb.CleanUp());
-        }
-
+        
         protected override void Reset()
         {
             base.Reset();
@@ -34,8 +28,6 @@ namespace BForBoss
             {
                 _waveManager.Reset();
             }
-            
-            FindObjectsOfType<PatrolBehaviour>().ForEach(pb => pb.Reset());
         }
 
         protected override void Start()
