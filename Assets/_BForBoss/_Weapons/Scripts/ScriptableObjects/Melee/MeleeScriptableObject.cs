@@ -7,7 +7,7 @@ namespace Perigon.Weapons
         float Damage { get; }
         float AttackCoolDown { get; }
 
-        int OverlapCapsule(Vector3 position, Vector3 forwardDirection, ref Collider[] buffer);
+        int OverlapCapsule(Vector3 position, Vector3 forwardDirection, int layerMask, ref Collider[] buffer);
         
         float MeleeKnockbackForce { get; }
     }
@@ -29,13 +29,13 @@ namespace Perigon.Weapons
 
         public float HalfRange => Range * 0.5f;
 
-        public int OverlapCapsule(Vector3 position, Vector3 forwardDirection, ref Collider[] buffer)
+        public int OverlapCapsule(Vector3 position, Vector3 forwardDirection, int layerMask, ref Collider[] buffer)
         {
             var point1 = position;
             point1 += forwardDirection * HalfRange;
             var point2 = point1;
             point1.y += Height;
-            return Physics.OverlapCapsuleNonAlloc(point1, point2, HalfRange, buffer);
+            return Physics.OverlapCapsuleNonAlloc(point1, point2, HalfRange, buffer, layerMask);
         }
     }
 }

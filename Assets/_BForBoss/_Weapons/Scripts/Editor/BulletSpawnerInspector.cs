@@ -8,6 +8,7 @@ namespace Perigon.Weapons.Editor
     public class BulletSpawnerInspector : UnityEditor.Editor
     {
         private SerializedProperty _prefabListProp;
+        private SerializedProperty _layerProperty;
         private string[] _bulletTypeNames;
 
         private static bool _showPrefabs = false;
@@ -15,6 +16,7 @@ namespace Perigon.Weapons.Editor
         private void OnEnable()
         {
             _prefabListProp = serializedObject.FindProperty("_bulletPrefabs");
+            _layerProperty = serializedObject.FindProperty("_layer");
             _bulletTypeNames = Enum.GetNames(typeof(BulletTypes));
         }
 
@@ -45,6 +47,8 @@ namespace Perigon.Weapons.Editor
                         new GUIContent($"{_bulletTypeNames[i]} Bullet Prefab"));
                 }
             }
+
+            EditorGUILayout.PropertyField(_layerProperty);
 
             serializedObject.ApplyModifiedProperties();
         }
