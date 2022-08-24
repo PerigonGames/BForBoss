@@ -274,7 +274,7 @@ Transform:
   - {fileID: 6218996008619469783}
   - {fileID: 8425588550141063746}
   m_Father: {fileID: 7036539539005687782}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!95 &8097480762677603574
 Animator:
@@ -331,7 +331,7 @@ RectTransform:
   m_Children:
   - {fileID: 548165371962725881}
   m_Father: {fileID: 7036539539005687782}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -539,7 +539,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6051243630878755722}
   - {fileID: 3098083714781821769}
   - {fileID: 3781034148497989749}
   m_Father: {fileID: 0}
@@ -685,6 +684,7 @@ MonoBehaviour:
   _aimCountDownInSeconds: 1
   _rotationSpeed: 5
   _shootCountDownInSeconds: 0.5
+  _vfxShootDelay: 0.1
   _shootingFromPosition: {fileID: 6051243630878755722}
   _muzzleFlashVFX: {fileID: 3777358975253556835}
 --- !u!114 &-3839847308755399113
@@ -762,6 +762,7 @@ Transform:
   m_Children:
   - {fileID: 2910001872009248752}
   - {fileID: 6266620517064012250}
+  - {fileID: 6051243630878755722}
   m_Father: {fileID: 6218996008619469783}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -788,14 +789,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7301354433534708810}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0.621}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: 1, z: -0.00036239624, w: 0}
+  m_LocalPosition: {x: 0, y: 0.0016886825, z: -0.008475366}
+  m_LocalScale: {x: 0.016948272, y: 0.016948277, z: 0.016948272}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7752258123005525466}
-  m_Father: {fileID: 7036539539005687782}
-  m_RootOrder: 0
+  m_Father: {fileID: 7119001304348549761}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7415791591235112540
 GameObject:
@@ -841,15 +842,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1980719091315626198, guid: ffcdb5af7dcbca14faf4bb432224e341, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 1980719091315626198, guid: ffcdb5af7dcbca14faf4bb432224e341, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 1980719091315626198, guid: ffcdb5af7dcbca14faf4bb432224e341, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 1980719091315626198, guid: ffcdb5af7dcbca14faf4bb432224e341, type: 3}
       propertyPath: m_LocalPosition.x
