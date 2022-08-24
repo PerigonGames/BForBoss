@@ -8,13 +8,10 @@ namespace Perigon.Entities
         
         private void OnTriggerEnter(Collider other)
         {
-            var playerLifeCycle = other.transform.GetComponent<PlayerLifeCycleBehaviour>();
-            if (playerLifeCycle != null)
+            if (other.TryGetComponent(out PlayerLifeCycleBehaviour lifeCycle))
             {
-                playerLifeCycle.Heal(_healAmount);
+                lifeCycle.Heal(_healAmount);
             }
-            
-            gameObject.SetActive(false);
         }
     }
 }

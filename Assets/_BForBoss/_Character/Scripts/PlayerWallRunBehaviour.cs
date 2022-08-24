@@ -32,6 +32,9 @@ namespace Perigon.Character
         [FoldoutGroup("Wall Run Conditions")]
         [SerializeField, Range(0f, 3f), Tooltip("Only allow for a wall run if jump is longer than this")]
         private float _minJumpDuration = 0.3f;
+        [FoldoutGroup("Wall Run Conditions")]
+        [SerializeField, Tooltip("Stop wall running next angled wall is obtuse to this angle")]
+        private float _obtuseWallAngle = 70f;
 
         [FoldoutGroup("Timers")]
         [SerializeField, Tooltip("Gravity won't apply until after this many seconds")]
@@ -113,6 +116,7 @@ namespace Perigon.Character
         #region PROPERTIES
         private Transform ChildTransform => _fpsCharacter != null ? _fpsCharacter.rootPivot : transform;
 
+        private Vector3 LastLookTowardsWall => (_lastPlayerWallRunDirection - _lastWallRunNormal).normalized;
         public bool IsWallRunning { get; private set; }
 
         #endregion
@@ -145,7 +149,7 @@ namespace Perigon.Character
             if (IsWallRunning)
             {
                 PrintWallRunLogs("Stopped wall run due to jump");
-                StopWallRunning(true);
+                StopWallRunning(jumpedOutOfWallRun: true);
             }
         }
 
@@ -156,7 +160,7 @@ namespace Perigon.Character
             if (IsWallRunning)
             {
                 PrintWallRunLogs("Stopped wall run due to landed on ground");
-                StopWallRunning(false);
+                StopWallRunning(jumpedOutOfWallRun: false);
             }
         }
 
@@ -167,39 +171,46 @@ namespace Perigon.Character
 
         public void OnWallRunning()
         {
+            var lastLookTowardsWall = LastLookTowardsWall;
             if (!IsWallRunning)
             {
                 ResetLastWallIfNeeded();
                 return;
             }
-            
+
             if (DidForwardInputStop())
             {
                 PrintWallRunLogs("Stopped wall run due to no forward input");
-                StopWallRunning(false);
+                StopWallRunning(jumpedOutOfWallRun: false);
                 return;
             }
 
             if (DidPlayerStopMoving())
             {
                 PrintWallRunLogs("Stopped Wall run due to low velocity");
-                StopWallRunning(false);
+                StopWallRunning(jumpedOutOfWallRun: false);
                 return;
             }
-            
+
             if (IsTooFarFromWall())
             {
                 PrintWallRunLogs("Stopped wall run since too far away from wall");
-                StopWallRunning(false);
+                StopWallRunning(jumpedOutOfWallRun: false);
                 return;
             }
 
-            _lastPlayerWallRunDirection = ProjectOntoWallNormalized(_lastPlayerWallRunDirection);
-            StabilizeCameraIfNeeded(ChildTransform.forward, _lastPlayerWallRunDirection);
-
             _timeSinceWallAttach += Time.fixedDeltaTime;
-            var lookTowardsWall = (_lastPlayerWallRunDirection - _lastWallRunNormal).normalized;
+            _lastPlayerWallRunDirection = ProjectOntoWallNormalized(_lastPlayerWallRunDirection);
+            var lookTowardsWall = LastLookTowardsWall;
             var constantVelocity = (_lastPlayerWallRunDirection + lookTowardsWall).normalized * _baseCharacter.maxWalkSpeed;
+            if (IsNextWallAngleObtuse(currentLookTowardsWall: lookTowardsWall, lastLookTowardsWall))
+            {
+                PrintWallRunLogs("Stopped wall run since too obtuse from wall");
+                StopWallRunning(jumpedOutOfWallRun: false);
+                return;
+            }
+
+            StabilizeCameraIfNeeded(ChildTransform.forward, _lastPlayerWallRunDirection);
             _baseCharacter.SetVelocity(constantVelocity + DownwardForceIfNeeded());
         }
 
@@ -254,7 +265,6 @@ namespace Perigon.Character
             var shouldStartWallRun = isRaycastingLastWallFromCenterBodyPosition 
                                      && isRaycastingLastWallFromEyePosition
                                      && IsClearOfGround();
-                
             return shouldStartWallRun;
         }
 
@@ -306,6 +316,11 @@ namespace Perigon.Character
             }
             
             return true;
+        }
+
+        private bool IsNextWallAngleObtuse(Vector3 currentLookTowardsWall, Vector3 lastLookTowardsWall)
+        {
+            return Vector3.Angle(currentLookTowardsWall, lastLookTowardsWall) > _obtuseWallAngle;
         }
                 
         private void StabilizeCameraIfNeeded(Vector3 characterForward, Vector3 heading)
