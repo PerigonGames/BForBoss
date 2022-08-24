@@ -1,8 +1,9 @@
+using System;
 using UnityEngine;
 
 namespace BForBoss
 {
-    public class EnemySpawnerManager : MonoBehaviour
+    public class EnemySpawnerManager : MonoBehaviour, ISpawnerControl
     {
         private EnemySpawner[] _enemySpawners = new EnemySpawner[]{};
 
@@ -13,7 +14,7 @@ namespace BForBoss
                 spawner.Reset();
             }
         }
-
+        
         public void PauseSpawning()
         {
             foreach (EnemySpawner spawner in _enemySpawners)

@@ -34,6 +34,11 @@ namespace BForBoss
             {
                 _waveManager.Reset();
             }
+
+            if (_enemySpawnerManager != null)
+            {
+                _enemySpawnerManager.Reset();
+            }
             
             FindObjectsOfType<PatrolBehaviour>().ForEach(pb => pb.Reset());
         }
@@ -56,7 +61,12 @@ namespace BForBoss
             
             if (_waveManager != null)
             {
-                _waveManager.Initialize(_lifeCycleManager, _enemySpawnerManager, waveModel);
+                _waveManager.Initialize(waveModel, _enemySpawnerManager);
+            }
+
+            if (_enemySpawnerManager != null)
+            {
+                _enemySpawnerManager.Initialize(_lifeCycleManager, waveModel);
             }
         }
         

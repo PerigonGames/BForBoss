@@ -13,21 +13,20 @@ namespace BForBoss
         [SerializeField, Tooltip("Number of enemies per wave is the number of enemies from the previous wave multiplied by this multiplier")] private float _enemyAmountMultiplier = 1.2f;
 
 
-        private EnemySpawnerManager _enemySpawnerManager;
+        //private EnemySpawnerManager _enemySpawnerManager;
+        private ISpawnerControl _spawnerControl;
         private WaveModel _waveModel;
         
         private int _spawnCount = 0;
 
-        public void Initialize(LifeCycleManager lifeCycleManager, EnemySpawnerManager enemySpawnerManager, WaveModel waveModel)
+        public void Initialize(WaveModel waveModel, ISpawnerControl spawnerControl)
         {
-            _enemySpawnerManager = enemySpawnerManager;
+            _spawnerControl = spawnerControl;
 
             _waveModel = waveModel;
             _waveModel.OnEnemySpawned += OnEnemySpawned;
             _waveModel.OnEnemyKilled += OnEnemyKilled;
             _waveModel.SetupInitialWave(_initialNumberOfEnemies);
-            
-            _enemySpawnerManager.Initialize(lifeCycleManager, waveModel);
         }
 
         public void Reset()
@@ -37,11 +36,6 @@ namespace BForBoss
             if (_waveModel != null)
             {
                 _waveModel.ResetData();
-            }
-
-            if (_enemySpawnerManager != null)
-            {
-                _enemySpawnerManager.Reset();
             }
         }
 
@@ -77,12 +71,12 @@ namespace BForBoss
 
         private void PauseSpawning()
         {
-            _enemySpawnerManager.PauseSpawning();
+            _spawnerControl.PauseSpawning();
         }
 
         private void ResumeSpawning()
         {
-            _enemySpawnerManager.ResumeSpawning();
+            _spawnerControl.ResumeSpawning();
         }
 
         private void OnDestroy()
