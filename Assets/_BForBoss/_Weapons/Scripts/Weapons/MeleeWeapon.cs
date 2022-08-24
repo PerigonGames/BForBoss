@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Perigon.Utility;
 using PerigonGames;
 using UnityEngine;
 
@@ -17,8 +18,6 @@ namespace Perigon.Weapons
         public bool CanMelee => _currentCooldown <= 0f;
         private int _hits;
 
-        private int layerMask = ~LayerMask.GetMask("Player");
-        
         public float CurrentCooldown => _currentCooldown;
 
         public MeleeWeapon(IMeleeProperties meleeProperties, Action<bool> onHitEntity = null)
@@ -37,7 +36,7 @@ namespace Perigon.Weapons
                 return false;
             _currentCooldown += _meleeProperties.AttackCoolDown;
             
-            _hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, layerMask, ref _enemyBuffer);
+            _hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, TagsAndLayers.Layers.PlayerMask, ref _enemyBuffer);
             return true;
         }
         
@@ -47,7 +46,7 @@ namespace Perigon.Weapons
                 return false;
             _currentCooldown += _meleeProperties.AttackCoolDown;
             
-            _hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, layerMask, ref _enemyBuffer);
+            _hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, TagsAndLayers.Layers.PlayerMask, ref _enemyBuffer);
             if (_hits > 1)
                 _hits = 1; //ensure we only damage first enemy
             return true;
