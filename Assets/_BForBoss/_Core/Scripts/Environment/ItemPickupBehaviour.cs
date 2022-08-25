@@ -15,6 +15,17 @@ namespace BForBoss
         private float _elapsedRespawnTime = 0;
         private BoxCollider _boxCollider = null;
 
+        public void Reset()
+        {
+            IsShown(_isSpawned);
+        }
+
+        public void CleanUp()
+        {
+            _isSpawned = true;
+            _elapsedRespawnTime = 0;
+        }
+        
         private void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent(out PlayerLifeCycleBehaviour _))
