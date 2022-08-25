@@ -66,7 +66,7 @@ namespace Perigon.Weapons
             }
         }
 
-        private void Melee()
+        public void Melee()
         {
             var t = _getTransform();
             var isAttackSuccessful = _canAttackMany ?
