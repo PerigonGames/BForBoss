@@ -73,7 +73,7 @@ namespace Perigon.Utility
 
         private void OnWeaponScrolledInputAction(InputAction.CallbackContext context)
         {
-            var direction = context.ReadValue<Vector2>().y;
+            var direction = context.ReadValue<float>();
             OnScrollWeaponChangeAction?.Invoke(direction > 0);
         }
         
