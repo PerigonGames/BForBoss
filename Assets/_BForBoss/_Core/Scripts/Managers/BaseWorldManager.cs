@@ -16,12 +16,14 @@ namespace BForBoss
         [SerializeField] protected PlayerBehaviour _playerBehaviour = null;
 
         private IInputSettings _inputSettings = null;
-        protected FreezeActionsUtility _freezeActionsUtility = null;
+        private FreezeActionsUtility _freezeActionsUtility = null;
+
+        private EnvironmentManager _environmentManager = null;
 
         private WeaponSceneManager _weaponSceneManager = null;
         private UserInterfaceManager _userInterfaceManager = null;
 
-        protected UserInterfaceManager UserInterfaceManager
+        private UserInterfaceManager UserInterfaceManager
         {
             get
             {
@@ -52,13 +54,20 @@ namespace BForBoss
 
         protected virtual void CleanUp()
         {
-            Debug.Log("Cleaning Up");
+            if (_environmentManager != null)
+            {
+                _environmentManager.CleanUp();
+            }
         }
 
         protected virtual void Reset()
         {
             _stateManager.SetState(State.Play);
             _playerBehaviour.SpawnAt(SpawnLocation, SpawnLookDirection);
+            if (_environmentManager != null)
+            {
+                _environmentManager.Reset();
+            }
             VisualEffectsManager.Instance.Reset();
         }
 
@@ -66,6 +75,8 @@ namespace BForBoss
         {
             _stateManager.OnStateChanged += HandleStateChange;
             _inputSettings = new InputSettings();
+            _environmentManager = gameObject.AddComponent<EnvironmentManager>();
+            _environmentManager.Initialize();
             SceneManager.LoadScene("AdditiveWeaponManager", LoadSceneMode.Additive);
             SceneManager.LoadScene("AdditiveUserInterfaceScene", LoadSceneMode.Additive);
 #if (UNITY_EDITOR || DEVELOPMENT_BUILD)
