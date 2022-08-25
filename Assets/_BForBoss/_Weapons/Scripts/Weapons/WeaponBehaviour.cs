@@ -24,14 +24,12 @@ namespace Perigon.Weapons
         protected Weapon _weapon = null;
         protected bool _isFiring = false;
         protected float _timeSinceFire = 0f;
-
-        private InputAction _fireInputAction = null;
-        private InputAction _reloadInputAction = null;
-
+        
         private Camera _mainCamera = null;
         private BulletSpawner _bulletSpawner;
         private WallHitVFXSpawner _wallHitVFXSpawner;
         private IWeaponAnimationProvider _weaponAnimationProvider;
+        private PGInputSystem _inputSystem;
         
         public Weapon WeaponViewModel => _weapon;
 
@@ -49,21 +47,20 @@ namespace Perigon.Weapons
         }
 
         public void Initialize(
-            InputAction fireInputAction,
-            InputAction reloadInputAction,
+            PGInputSystem inputSystem,
             BulletSpawner bulletSpawner,
             WallHitVFXSpawner wallHitVFXSpawner,
             IWeaponAnimationProvider weaponAnimationProvider,
             IWeaponProperties properties = null)
         {
-            _fireInputAction = fireInputAction;
-            _reloadInputAction = reloadInputAction;
+            _inputSystem = inputSystem;
             _bulletSpawner = bulletSpawner;
             _wallHitVFXSpawner = wallHitVFXSpawner;
             _weaponAnimationProvider = weaponAnimationProvider;
             _weapon = new Weapon(properties ?? _weaponScriptableObject);
             BindWeapon();
             SetCrosshairImage();
+            SetupPlayerInput();
         }
 
         private void HandleOnWeaponActivate(bool activate)
@@ -92,8 +89,9 @@ namespace Perigon.Weapons
             }
         }
 
-        protected abstract void OnFireInputAction(InputAction.CallbackContext context);
+        protected abstract void OnFireInputAction(bool isFiring);
         protected abstract void Update();
+        
         private void OnBulletHitWall(Vector3 point, Vector3 pointNormal)
         {
             var wallHitVFX = _wallHitVFXSpawner.SpawnWallHitVFX();
@@ -127,7 +125,7 @@ namespace Perigon.Weapons
             }
         }
 
-        private void OnReloadInputAction(InputAction.CallbackContext context)
+        private void OnReloadInputAction()
         {
             _weapon.ReloadWeaponIfPossible();
             _weaponAnimationProvider.ReloadingWeapon(_weapon.IsReloading);
@@ -135,16 +133,8 @@ namespace Perigon.Weapons
         
         private void SetupPlayerInput()
         {
-            if (_fireInputAction != null)
-            {
-                _fireInputAction.started += OnFireInputAction;
-                _fireInputAction.canceled += OnFireInputAction;
-            }
-
-            if (_reloadInputAction != null)
-            {
-                _reloadInputAction.started += OnReloadInputAction;
-            }
+            _inputSystem.OnFireAction += OnFireInputAction;
+            _inputSystem.OnReloadAction += OnReloadInputAction;
         }
 
         private void Awake()
@@ -157,15 +147,7 @@ namespace Perigon.Weapons
 
         private void OnEnable()
         {
-            SetupPlayerInput();
             SetCrosshairImage();
-        }
-
-        private void OnDisable()
-        {
-            _fireInputAction.started -= OnFireInputAction;
-            _fireInputAction.canceled -= OnFireInputAction;
-            _reloadInputAction.started -= OnReloadInputAction;
         }
 
         private void OnDestroy()
