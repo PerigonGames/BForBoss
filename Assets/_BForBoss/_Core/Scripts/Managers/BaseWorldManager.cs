@@ -98,7 +98,7 @@ namespace BForBoss
         protected virtual void Start()
         {
             SetupSubManagers();
-            WeaponSceneManager.Initialize(_playerBehaviour);
+            WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
             UserInterfaceManager.Initialize(_inputSettings);
             _stateManager.SetState(State.PreGame);
         }

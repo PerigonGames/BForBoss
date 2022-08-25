@@ -17,6 +17,8 @@ namespace Perigon.Weapons
         private IWeaponAnimationProvider _weaponAnimationProvider;
         private PGInputSystem _inputSystem;
         private Weapon[] _weapons = null;
+
+        private int _previousWeaponIndex = 0;
         private int _currentWeaponIndex = 0;
 
         private Transform _playerPivotTransform;
@@ -33,8 +35,7 @@ namespace Perigon.Weapons
 
         public void ScrollSwapWeapons(int direction)
         {
-            _weapons[_currentWeaponIndex].ActivateWeapon = false;
-            UpdateCurrentWeaponIndex(isUpwards: direction > 1);
+            _weapons[_previousWeaponIndex].ActivateWeapon = false;
             _weapons[_currentWeaponIndex].ActivateWeapon = true;
         }
         
@@ -54,6 +55,7 @@ namespace Perigon.Weapons
         private void SetupInputBinding()
         {
             _inputSystem.OnScrollWeaponChangeAction += OnScrollWeaponSwapAction;
+            _inputSystem.OnDirectWeaponChangeAction += OnDirectWeaponSwapAction;
             _inputSystem.OnMeleeAction += OnMeleeAction;
         }
         
@@ -91,7 +93,16 @@ namespace Perigon.Weapons
 
         private void OnScrollWeaponSwapAction(bool direction)
         {
-            _weaponAnimationProvider.SwapWeapon(direction);
+            _previousWeaponIndex = _currentWeaponIndex;
+            UpdateCurrentWeaponIndex(direction);
+            _weaponAnimationProvider.SwapWeapon();
+        }
+
+        private void OnDirectWeaponSwapAction(int number)
+        {
+            _previousWeaponIndex = _currentWeaponIndex;
+            _currentWeaponIndex = number - 1;
+            _weaponAnimationProvider.SwapWeapon();
         }
 
         #endregion
