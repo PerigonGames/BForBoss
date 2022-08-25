@@ -23,9 +23,14 @@ namespace Perigon.Entities
         {
             _lifeCycle = new LifeCycle(_health);
             _lifeCycle.OnDeath += LifeCycleFinished;
+            
+            if (onDeathCallback != null)
+            {
+                _lifeCycle.OnDeath += onDeathCallback.Invoke;
+            }
+            
             _lifeCycle.OnDamageTaken += LifeCycleDamageTaken;
             _lifeCycle.OnHeal += LifeCycleOnHeal;
-            _lifeCycle.NotifyOnDeath(onDeathCallback);
         }
 
         protected virtual void LifeCycleOnHeal()
