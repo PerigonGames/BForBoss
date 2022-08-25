@@ -15,9 +15,11 @@ namespace BForBoss
         [Title("Base Component")]
         [SerializeField] protected PlayerBehaviour _playerBehaviour = null;
 
+        [SerializeField] private InputActionAsset _actionAsset;
+        
         private IInputSettings _inputSettings = null;
         private FreezeActionsUtility _freezeActionsUtility = null;
-
+        private PGInputSystem _inputSystem;
         private EnvironmentManager _environmentManager = null;
 
         private WeaponSceneManager _weaponSceneManager = null;
@@ -73,6 +75,7 @@ namespace BForBoss
 
         protected virtual void Awake()
         {
+            _inputSystem = new PGInputSystem(_actionAsset);
             _stateManager.OnStateChanged += HandleStateChange;
             _inputSettings = new InputSettings();
             _environmentManager = gameObject.AddComponent<EnvironmentManager>();
