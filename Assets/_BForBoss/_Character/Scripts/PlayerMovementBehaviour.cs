@@ -226,9 +226,16 @@ namespace Perigon.Character
             {
                 _dashBehaviour.OnOnDestroy();
             }
-            
-            cursorLockInputAction.started -= OnCursorLock;
-            cursorUnlockInputAction.started -= OnCursorUnlock;
+
+            if (cursorLockInputAction != null)
+            {
+                cursorLockInputAction.started -= OnCursorLock;
+            }
+
+            if (cursorUnlockInputAction != null)
+            {
+                cursorUnlockInputAction.started -= OnCursorUnlock;
+            }
         }
 
         private void SetJumpCount(int count)
