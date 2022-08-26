@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.009866841, g: 0.007190872, b: 0.007381022, a: 1}
+  m_IndirectSpecularColor: {r: 0.0098647475, g: 0.007192455, b: 0.007389918, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6977,7 +6977,7 @@ Mesh:
   m_SubMeshes:
   - serializedVersion: 2
     firstByte: 0
-    indexCount: 36
+    indexCount: 30
     topology: 0
     baseVertex: 0
     firstVertex: 0
@@ -6985,6 +6985,16 @@ Mesh:
     localAABB:
       m_Center: {x: -7.171604, y: 0.2589569, z: 3.8038406}
       m_Extent: {x: 4, y: 9, z: 3.1961594}
+  - serializedVersion: 2
+    firstByte: 60
+    indexCount: 6
+    topology: 0
+    baseVertex: 0
+    firstVertex: 4
+    vertexCount: 4
+    localAABB:
+      m_Center: {x: -3.1716042, y: 0.2589569, z: 3.8038406}
+      m_Extent: {x: 0, y: 9, z: 3.1961594}
   m_Shapes:
     vertices: []
     shapes: []
@@ -7001,7 +7011,7 @@ Mesh:
   m_KeepVertices: 1
   m_KeepIndices: 1
   m_IndexFormat: 0
-  m_IndexBuffer: 000001000200010003000200040005000600050007000600080009000a0009000b000a000c000d000e000d000f000e00100011001200110013001200140015001600150017001600
+  m_IndexBuffer: 000001000200010003000200080009000a0009000b000a000c000d000e000d000f000e00100011001200110013001200140015001600150017001600040005000600050007000600
   m_VertexData:
     serializedVersion: 3
     m_VertexCount: 24
@@ -7144,12 +7154,12 @@ GameObject:
   - component: {fileID: 358013729}
   - component: {fileID: 358013728}
   - component: {fileID: 358013727}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube_44
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!64 &358013727
 MeshCollider:
@@ -7652,12 +7662,12 @@ GameObject:
   - component: {fileID: 369169671}
   - component: {fileID: 369169670}
   - component: {fileID: 369169669}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube_47
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!64 &369169669
 MeshCollider:
@@ -27587,7 +27597,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 55b7395b0b5cf5243a70fcfec93c39bb, type: 2}
+  - {fileID: 2100000, guid: 1d49c0dd2ea639443af9166e8498b882, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -27848,7 +27858,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 838803264}
-  m_VersionIndex: 1298
+  m_VersionIndex: 1302
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -31277,6 +31287,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 55b7395b0b5cf5243a70fcfec93c39bb, type: 2}
+  - {fileID: 2100000, guid: 1d49c0dd2ea639443af9166e8498b882, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -31369,7 +31380,7 @@ MonoBehaviour:
       m_Rotation: 0
       m_Anchor: 9
     m_Material: {fileID: 0}
-    m_SubmeshIndex: 0
+    m_SubmeshIndex: 1
     m_ManualUV: 0
     elementGroup: -1
     m_TextureGroup: -1
@@ -31537,7 +31548,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 352739540}
-  m_VersionIndex: 1575
+  m_VersionIndex: 1579
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -34101,12 +34112,12 @@ GameObject:
   - component: {fileID: 913980854}
   - component: {fileID: 913980853}
   - component: {fileID: 913980852}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube_39
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!64 &913980852
 MeshCollider:
@@ -45474,12 +45485,12 @@ GameObject:
   - component: {fileID: 1232661344}
   - component: {fileID: 1232661343}
   - component: {fileID: 1232661342}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube_41
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!64 &1232661342
 MeshCollider:
@@ -47738,12 +47749,12 @@ GameObject:
   - component: {fileID: 1367974501}
   - component: {fileID: 1367974500}
   - component: {fileID: 1367974499}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube_45
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!64 &1367974499
 MeshCollider:
@@ -48093,12 +48104,12 @@ GameObject:
   - component: {fileID: 1369428602}
   - component: {fileID: 1369428601}
   - component: {fileID: 1369428600}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!64 &1369428600
 MeshCollider:
@@ -57770,12 +57781,12 @@ GameObject:
   - component: {fileID: 1804645988}
   - component: {fileID: 1804645987}
   - component: {fileID: 1804645986}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube_42
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!64 &1804645986
 MeshCollider:
@@ -65178,12 +65189,12 @@ GameObject:
   - component: {fileID: 1868272866}
   - component: {fileID: 1868272865}
   - component: {fileID: 1868272864}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube_40
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!64 &1868272864
 MeshCollider:
@@ -66279,12 +66290,12 @@ GameObject:
   - component: {fileID: 2032505107}
   - component: {fileID: 2032505106}
   - component: {fileID: 2032505105}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube_46
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!64 &2032505105
 MeshCollider:
@@ -67374,12 +67385,12 @@ GameObject:
   - component: {fileID: 2067984941}
   - component: {fileID: 2067984940}
   - component: {fileID: 2067984939}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube_48
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!64 &2067984939
 MeshCollider:
@@ -67899,12 +67910,12 @@ GameObject:
   - component: {fileID: 2077785104}
   - component: {fileID: 2077785103}
   - component: {fileID: 2077785102}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube_43
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!64 &2077785102
 MeshCollider:
