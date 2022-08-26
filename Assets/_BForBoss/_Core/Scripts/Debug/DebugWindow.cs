@@ -25,13 +25,10 @@ namespace BForBoss
         
         private bool _isPanelShowing = false;
         
-        private List<Type> _debugOptions = new List<Type>();
+        private List<DebugView> _debugViews = new List<DebugView>();
         private DebugView _currentDebugView;
 
         private Rect _windowRect;
-        private static DebugWindow _instance = null;
-
-        public static DebugWindow Instance => _instance;
         
         private void Awake()
         {
@@ -42,13 +39,16 @@ namespace BForBoss
             {
                 if (viewType.IsClass && !viewType.IsAbstract && viewType.IsSubclassOf(typeof(DebugView)))
                 {
-                    _debugOptions.Add(viewType);
+                    ConstructorInfo constructorInfo = viewType.GetConstructors()[0];
+                    DebugView debugView = constructorInfo.Invoke(GetDebugViewConstructorParameters(viewType)) as DebugView;
+                    _debugViews.Add(debugView);
                 }
             }
-
+            
             var movement = FindObjectOfType<PlayerMovementBehaviour>();
             var input = new Perigon.Character.InputSettings(movement.GetCharacterLook(), movement.actions);
             _freezeActionsUtility = new FreezeActionsUtility(input);
+            _freeRoamCamera.Initialize(Camera.main.transform, onExit: OnFreeCameraDebugViewExited);
         }
 
         private void Update()
@@ -95,14 +95,12 @@ namespace BForBoss
                     {
                         GUILayout.Space(0.15f * _windowRect.height);
 
-                        foreach (Type debugType in _debugOptions)
+                        foreach (var view in _debugViews)
                         {
-                            ConstructorInfo constructorInfo = debugType.GetConstructors()[0];
-                            DebugView debugView = constructorInfo.Invoke(GetDebugViewConstructorParameters(debugType)) as DebugView;
-                            string debugViewPrettyName = debugType.GetProperty(nameof(DebugView.PrettyName)).GetValue(debugView) as string;
-                            if (GUILayout.Button(debugViewPrettyName))
+                            if (GUILayout.Button(view.PrettyName))
                             {
-                                _currentDebugView = debugView;
+                                _currentDebugView = view;
+                                OnViewOpened(view);
                             }
                         }
                     }
@@ -111,6 +109,14 @@ namespace BForBoss
                 }
                 
                 GUILayout.FlexibleSpace();
+            }
+        }
+
+        private void OnViewOpened(DebugView view)
+        {
+            if (view is FreeRoamCameraDebugView)
+            {
+                _freeRoamCamera.gameObject.SetActive(true);
             }
         }
 
@@ -141,14 +147,7 @@ namespace BForBoss
             _stateManager.SetState(_currentState);
             _isPanelShowing = !_isPanelShowing;
         }
-
         
-        private void OnFreeCameraDebugViewOpened()
-        {
-            _freeRoamCamera.gameObject.SetActive(true);
-            _freeRoamCamera.Initialize(Camera.main.transform, OnFreeCameraDebugViewExited);
-        }
-
         private void OnFreeCameraOptionsChanged(bool isMouseRotationYInverted)
         {
             _freeRoamCamera.ShouldInvertMouseYAxis = isMouseRotationYInverted;
@@ -163,18 +162,13 @@ namespace BForBoss
         {
             List<object> parameters = new List<object> {_windowRect};
 
-            if (debugType == typeof(SceneSwitcherDebugView))
-            {
-                parameters.Add((Action) ClosePanel);
-            }
-            else if (debugType == typeof(FreeRoamCameraDebugView))
+            if (debugType == typeof(FreeRoamCameraDebugView))
             {
                 Rect freeCameraRect = new Rect(_windowRect)
                 {
                     width = _windowRect.width + 20f
                 };
                 parameters = new List<object>{freeCameraRect,
-                    (Action) OnFreeCameraDebugViewOpened,
                     (Action<bool>) OnFreeCameraOptionsChanged,
                     (Action) OnFreeCameraDebugViewExited};
             }
