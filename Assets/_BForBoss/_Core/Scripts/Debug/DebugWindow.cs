@@ -38,18 +38,6 @@ namespace BForBoss
 #if (!UNITY_EDITOR && !DEVELOPMENT_BUILD)
             Destroy(gameObject);
 #endif
-            
-            if (_instance != null && _instance != this)
-            {
-                Destroy(gameObject);
-            }
-            else
-            {
-                _instance = this;
-            }
-            
-            DontDestroyOnLoad(this);
-            
             foreach (Type viewType in Assembly.GetAssembly(typeof(DebugView)).GetTypes())
             {
                 if (viewType.IsClass && !viewType.IsAbstract && viewType.IsSubclassOf(typeof(DebugView)))
@@ -65,7 +53,7 @@ namespace BForBoss
 
         private void Update()
         {
-            if (Keyboard.current[KEYCODE_CHARACTER].wasPressedThisFrame)
+            if (Keyboard.current[KEYCODE_CHARACTER].wasReleasedThisFrame)
             {
                 if (_isPanelShowing)
                 {
