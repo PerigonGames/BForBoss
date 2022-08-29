@@ -1,43 +1,47 @@
 using System.Collections;
 using Perigon.Entities;
 using UnityEngine;
-using UnityEngine.Pool;
-
 namespace BForBoss
 {
+    
+    //Let EnemySpawnerManager have getPlayerPosition and bulletSpawner
+    //And EnemyManager does not have such need
+    
+    //Better Yet Initialize The enemy Manager with getPlayerPosition and bulletSpawner
     public class EnemySpawner : MonoBehaviour
     {
-        [SerializeField] private EnemyBehaviour _enemyAgent;
+        [SerializeField] private EnemyBehaviour _enemyAgent; //Todo: This should probably be an Enum instead of a direct reference to class
         [SerializeField] [Min(1)] private int _enemiesToSpawn = 3;
         [SerializeField] [Min(0.0f)] private float _timeBetweenSpawns = 2.5f; //In seconds
-
-        [SerializeField, Tooltip("Should max amount of enemies spawn on initialization")]
+        [SerializeField, Tooltip("Should max amount of enemies spawn upon initialization")]
         private bool _burstInitialSpawn = true;
-
-        private ObjectPool<EnemyBehaviour> _pool;
-        private LifeCycleManager _lifeCycleManager = null;
+        
         private bool _canSpawn = true;
-
         private WaveModel _waveModel;
+        private EnemyContainer _container;
 
-        public void Initialize(LifeCycleManager lifeCycleManager, WaveModel waveModel)
+        //private EnemyBehaviourManager _enemyBehaviourManager;
+
+        public void Initialize(EnemyBehaviourManager enemyBehaviourBehaviourManager, WaveModel waveModel)
         {
-            _lifeCycleManager = lifeCycleManager;
             _waveModel = waveModel;
-            
-            if (_pool == null)
-            {
-                SetupPool();
-            }
+            _container = new EnemyContainer(_enemyAgent, enemyBehaviourBehaviourManager, Release);
+
+
+            //_enemyBehaviourManager = enemyBehaviourBehaviourManager;
+            // if (_pool == null)
+            // {
+            //     SetupPool();
+            // }
             
             SpawnInitialEnemies();
         }
 
         public void Reset()
         {
-            if (_pool != null)
+            if (_container != null)
             {
-                _pool.Clear();
+                _container.Reset();
             }
         }
 
@@ -53,25 +57,25 @@ namespace BForBoss
             SpawnInitialEnemies();
         }
         
-        private void SetupPool()
-       {
-           _pool = new ObjectPool<EnemyBehaviour>(() => GenerateEnemy(_enemyAgent),
-                (enemy) =>
-                {
-                    Transform spawnTransform = transform;
-                    enemy.transform.SetParent(spawnTransform);
-                    enemy.transform.SetPositionAndRotation(spawnTransform.position, spawnTransform.rotation);
-                    enemy.gameObject.SetActive(true);
-                },
-                (enemy) =>
-                {
-                    enemy.gameObject.SetActive(false);
-                });
-        }
+       //  private void SetupPool()
+       // {
+       //     _pool = new ObjectPool<EnemyBehaviour>(() => GenerateEnemy(_enemyAgent),
+       //          (enemy) =>
+       //          {
+       //              Transform spawnTransform = transform;
+       //              enemy.transform.SetParent(spawnTransform);
+       //              enemy.transform.SetPositionAndRotation(spawnTransform.position, spawnTransform.rotation);
+       //              enemy.gameObject.SetActive(true);
+       //          },
+       //          (enemy) =>
+       //          {
+       //              enemy.gameObject.SetActive(false);
+       //          });
+       //  }
 
-        private void Release(EnemyBehaviour behaviour)
+        private void Release()
         {
-            _pool.Release(behaviour);
+            //_pool.Release(behaviour);
             _waveModel?.IncrementKillCount();
             StartCoroutine(SpawnEnemies(1));
         }
@@ -113,13 +117,39 @@ namespace BForBoss
 
         private void SpawnEnemy()
         {
-            _lifeCycleManager.AddEnemyBehaviourFromSpawner(_pool.Get(), Release);
+            //_lifeCycleManager.AddEnemyBehaviourFromSpawner(_pool.Get(), Release);
+            EnemyBehaviour enemy = GetEnemy();
             _waveModel?.IncrementSpawnCount();
         }
 
         private EnemyBehaviour GenerateEnemy(EnemyBehaviour enemyAgent)
         {
             return Instantiate(enemyAgent);
+        }
+
+        private EnemyBehaviour GetEnemy()
+        {
+            Transform spawnTransform = transform;
+            EnemyBehaviour enemy = Instantiate(_container.Get(), spawnTransform.position, spawnTransform.rotation,
+                spawnTransform);
+            
+            // FloatingTargetBehaviour floatingEnemy = enemy as FloatingTargetBehaviour;
+            //
+            // if (floatingEnemy != null)
+            // {
+            //     floatingEnemy.Initialize(_enemyBehaviourManager.GetPlayerPosition, _enemyBehaviourManager.BulletSpawner, null,
+            //         (enemy) =>
+            //         {
+            //             _container.EnemyPool.Release(enemy);
+            //             enemy.gameObject.SetActive(false);
+            //             Release();
+            //         });
+            //
+            //     return floatingEnemy;
+            // }
+            
+            enemy.gameObject.SetActive(true);
+            return enemy;
         }
     }
 }

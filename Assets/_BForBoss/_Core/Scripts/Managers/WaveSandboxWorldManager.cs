@@ -10,7 +10,7 @@ namespace BForBoss
         private Transform _spawnLocation = null;
         
         [Title("Component")]
-        [SerializeField] private LifeCycleManager _lifeCycleManager = null;
+        [SerializeField] private EnemyBehaviourManager _enemyBehaviourManager = null;
         [SerializeField] private WaveManager _waveManager;
         [SerializeField] private EnemySpawnerManager _enemySpawnerManager;
 
@@ -28,7 +28,7 @@ namespace BForBoss
         protected override void Reset()
         {
             base.Reset();
-            _lifeCycleManager.Reset();
+            _enemyBehaviourManager.Reset();
             
             if (_waveManager != null)
             {
@@ -39,6 +39,11 @@ namespace BForBoss
             {
                 _enemySpawnerManager.Reset();
             }
+
+            if (_enemyBehaviourManager != null)
+            {
+                _enemyBehaviourManager.Reset();
+            }
             
             FindObjectsOfType<PatrolBehaviour>().ForEach(pb => pb.Reset());
         }
@@ -47,9 +52,9 @@ namespace BForBoss
         {
             base.Start();
 
-            if (_lifeCycleManager != null)
+            if (_enemyBehaviourManager != null)
             {
-                _lifeCycleManager.Initialize(() => _playerBehaviour.transform.position);
+                _enemyBehaviourManager.Initialize(() => _playerBehaviour.transform.position);
             }
             
             WaveModel waveModel = new WaveModel();
@@ -66,24 +71,19 @@ namespace BForBoss
 
             if (_enemySpawnerManager != null)
             {
-                _enemySpawnerManager.Initialize(_lifeCycleManager, waveModel);
+                _enemySpawnerManager.Initialize(_enemyBehaviourManager, waveModel);
             }
         }
         
         protected override void HandleOnDeath()
         {
-            _lifeCycleManager.Reset();            
+            _enemyBehaviourManager.Reset();            
             base.HandleOnDeath();
         }
         
         protected override void OnValidate()
         {
             base.OnValidate();
-
-            if (_lifeCycleManager == null)
-            {
-                Debug.LogWarning("Life Cycle Manager missing from World Manager");
-            }
 
             if (_waveManager == null)
             {
@@ -98,6 +98,11 @@ namespace BForBoss
             if (_waveView == null)
             {
                 Debug.LogWarning("Wave View UI missing from the world Manager");
+            }
+
+            if (_enemyBehaviourManager == null)
+            {
+                Debug.LogWarning("Enemy Behaviour Manager missing from the world Manager");
             }
         }
     }

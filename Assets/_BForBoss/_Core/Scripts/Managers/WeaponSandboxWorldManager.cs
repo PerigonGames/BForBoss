@@ -27,10 +27,10 @@ namespace BForBoss
             base.Reset();
             _lifeCycleManager.Reset();
 
-            if (_enemySpawnerManager != null)
-            {
-                _enemySpawnerManager.Reset();
-            }
+            // if (_enemySpawnerManager != null)
+            // {
+            //     _enemySpawnerManager.Reset();
+            // }
 
             FindObjectsOfType<PatrolBehaviour>().ForEach(pb => pb.Reset());
         }
@@ -42,10 +42,10 @@ namespace BForBoss
                 _lifeCycleManager.Initialize(() => _playerBehaviour.transform.position);
             }
 
-            if (_enemySpawnerManager != null)
-            {
-                _enemySpawnerManager.Initialize(_lifeCycleManager);
-            }
+            // if (_enemySpawnerManager != null)
+            // {
+            //     _enemySpawnerManager.Initialize(_lifeCycleManager);
+            // }
             base.Start();
         }
 
@@ -59,15 +59,10 @@ namespace BForBoss
         {
             base.OnValidate();
 
-            if (_lifeCycleManager == null)
-            {
-                Debug.LogWarning("Life Cycle Manager missing from World Manager");
-            }
-
-            if (_enemySpawnerManager == null)
-            {
-                Debug.LogWarning("Enemy Spawner Manager missing from the world manager");
-            }
+            // if (_enemySpawnerManager == null)
+            // {
+            //     Debug.LogWarning("Enemy Spawner Manager missing from the world manager");
+            // }
         }
     }
 }
