@@ -39,11 +39,10 @@ Material:
     MotionVector: User
     RenderType: Transparent
   disabledShaderPasses:
-  - TransparentDepthPrepass
+  - MOTIONVECTORS
   - TransparentDepthPostpass
   - TransparentBackface
   - RayTracingPrepass
-  - MOTIONVECTORS
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -181,7 +180,7 @@ Material:
     - _Caustic_Distortion_Speed: 0.1
     - _Caustic_Distortion_Strength: 0.05
     - _Caustic_Speed: 0.065
-    - _Caustic_Strength: 0.2
+    - _Caustic_Strength: 0.1
     - _CoatMask: 0
     - _ConservativeDepthOffsetEnable: 0
     - _CullMode: 2
@@ -225,7 +224,7 @@ Material:
     - _IridescenceMask: 1
     - _IridescenceThickness: 1
     - _LinkDetailsWithBase: 1
-    - _Main_Normal_Scale: 0.14
+    - _Main_Normal_Scale: 0.59
     - _MaterialID: 1
     - _Metallic: 0
     - _MetallicRemapMax: 1
@@ -234,7 +233,7 @@ Material:
     - _Normal2_Scale: 1
     - _NormalMapSpace: 0
     - _NormalScale: 1
-    - _Normal_Strength: 0.89
+    - _Normal_Strength: 1
     - _OpaqueCullMode: 2
     - _PPDLodThreshold: 5
     - _PPDMaxSamples: 15
@@ -247,8 +246,8 @@ Material:
     - _RefractionModel: 0
     - _RenderQueueType: 4
     - _RequireSplitLighting: 0
-    - _Secondary_Normal_Scale: 0.07
-    - _Smoothness: 0.738
+    - _Secondary_Normal_Scale: 0.38
+    - _Smoothness: 0.628
     - _SmoothnessRemapMax: 1
     - _SmoothnessRemapMin: 0
     - _SpecularAAScreenSpaceVariance: 0.1
@@ -280,7 +279,7 @@ Material:
     - _TransparentBackfaceEnable: 0
     - _TransparentCullMode: 2
     - _TransparentDepthPostpassEnable: 0
-    - _TransparentDepthPrepassEnable: 0
+    - _TransparentDepthPrepassEnable: 1
     - _TransparentSortPriority: 0
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 0
