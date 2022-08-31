@@ -36,7 +36,7 @@ namespace BForBoss
 
             if (_lifeCycleManager != null)
             {
-                _lifeCycleManager.Initialize(() => _playerBehaviour.transform.position);
+                _lifeCycleManager.Initialize(() => _playerBehaviour.transform.position + (new Vector3(0f, 0f, 0f)));
             }
             
             WaveModel waveModel = new WaveModel();

@@ -630,7 +630,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 1
-  m_Speed: 15
+  m_Speed: 5
   m_Acceleration: 300
   avoidancePriority: 50
   m_AngularSpeed: 300
@@ -654,7 +654,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20ee622af0c9b1d42bfa4d9dab0c9ffd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stopDistanceBeforeReachingDestination: 4
+  _stopDistanceBeforeReachingDestination: 10
 --- !u!65 &7367245697506017707
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -680,9 +680,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f53e5dac418cd84e96ff2423931af80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _distanceToShootAt: 4
-  _aimCountDownInSeconds: 1
-  _rotationSpeed: 5
+  _distanceToShootAt: 25
+  _aimCountDownInSeconds: 0.1
+  _rotationSpeed: 100
   _shootCountDownInSeconds: 0.5
   _vfxShootDelay: 0.1
   _shootingFromPosition: {fileID: 6051243630878755722}
