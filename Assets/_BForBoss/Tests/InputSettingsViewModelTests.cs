@@ -19,7 +19,7 @@ namespace Tests.Input
             };
 
             //When
-            var viewModel = new MouseKeyboardInputSettingsViewModel(inputSettings, new MockAnalytics());
+            var viewModel = new MouseKeyboardInputSettingsViewModel();
             
             //Then
             Assert.AreEqual(viewModel.GetHorizontal, 10f, "Mouse Horizontal value should be the same as input settings");
@@ -41,7 +41,7 @@ namespace Tests.Input
             };
 
             //When
-            var viewModel = new ControllerInputSettingsViewModel(inputSettings, new MockAnalytics());
+            var viewModel = new ControllerInputSettingsViewModel();
             
             //Then
             Assert.IsTrue(TestUtilities.WithinBounds(viewModel.GetHorizontal, 30f), "Controller Horizontal value should be the same as input settings");
@@ -54,7 +54,7 @@ namespace Tests.Input
         {
             //Given
             var inputSettings = new MockInputConfiguration();
-            var viewModel = new MouseKeyboardInputSettingsViewModel(inputSettings, new MockAnalytics());
+            var viewModel = new MouseKeyboardInputSettingsViewModel();
 
             //When
             viewModel.RevertSettings();
@@ -75,7 +75,7 @@ namespace Tests.Input
                 ControllerVerticalSensitivity = 0.4f,
                 IsInverted = true
             };
-            var viewModel = new MouseKeyboardInputSettingsViewModel(inputSettings, new MockAnalytics());
+            var viewModel = new MouseKeyboardInputSettingsViewModel();
 
             //When
             viewModel.ApplySettings(9, 9, false);
@@ -98,7 +98,7 @@ namespace Tests.Input
                 ControllerVerticalSensitivity = 0.4f,
                 IsInverted = true
             };
-            var viewModel = new ControllerInputSettingsViewModel(inputSettings, new MockAnalytics());
+            var viewModel = new ControllerInputSettingsViewModel();
 
             //When
             viewModel.ApplySettings(9, 9, false);
