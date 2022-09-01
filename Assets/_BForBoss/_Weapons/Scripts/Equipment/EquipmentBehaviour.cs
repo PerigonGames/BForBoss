@@ -1,7 +1,6 @@
 using System;
 using Perigon.Utility;
 using PerigonGames;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Perigon.Weapons
@@ -34,7 +33,11 @@ namespace Perigon.Weapons
 
         public void ScrollSwapWeapons(int direction)
         {
-            _weapons.ForEach(x => x.ActivateWeapon = false);
+            foreach (var weapon in _weapons)
+            {
+                weapon.ActivateWeapon = false;
+            }
+
             _weapons[_currentWeaponIndex].ActivateWeapon = true;
         }
         
@@ -78,7 +81,7 @@ namespace Perigon.Weapons
             _bulletSpawner = GetComponent<BulletSpawner>();
             _wallHitVFXSpawner = GetComponent<WallHitVFXSpawner>();
             _meleeBehaviour = GetComponent<MeleeWeaponBehaviour>();
-            if (IListExtensions.IsNullOrEmpty(_weaponBehaviours))
+            if (_weaponBehaviours.IsNullOrEmpty())
             {
                 PanicHelper.Panic(new Exception("There are currently no WeaponBehaviour within the child of EquipmentBehaviour"));
             }
