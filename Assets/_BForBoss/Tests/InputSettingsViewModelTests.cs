@@ -54,7 +54,7 @@ namespace Tests.Input
         {
             //Given
             var inputSettings = new MockInputConfiguration();
-            var viewModel = new MouseKeyboardInputSettingsViewModel();
+            var viewModel = new MouseKeyboardInputSettingsViewModel(inputSettings);
 
             //When
             viewModel.RevertSettings();
