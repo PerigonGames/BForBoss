@@ -129,7 +129,6 @@ namespace BForBoss
         {
             _currentState = _stateManager.GetState();
             _stateManager.SetState(State.Debug);
-            //_freezeActionsUtility.LockInput();
             GetCanvasRect();
             transform.localScale = Vector3.one;
             _isPanelShowing = !_isPanelShowing;
@@ -137,7 +136,6 @@ namespace BForBoss
 
         private void ClosePanel()
         {
-            //_freezeActionsUtility.UnlockInput();
             ResetView();
             transform.localScale = Vector3.zero;
             _stateManager.SetState(_currentState);
