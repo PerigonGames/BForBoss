@@ -238,7 +238,7 @@ namespace BForBoss
 
         private bool IsBackQuotePressed()
         {
-            return Keyboard.current != null && Keyboard.current[Key.Backquote].isPressed;
+            return Keyboard.current != null && Keyboard.current[Key.Backquote].wasReleasedThisFrame;
         }
 
         private bool IsCameraRotationAllowed()
