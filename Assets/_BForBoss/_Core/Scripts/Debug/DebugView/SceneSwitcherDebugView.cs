@@ -12,13 +12,11 @@ namespace BForBoss
         
         private List<string> _buildSceneNames = new List<string>();
         private Vector2 _scrollPosition = Vector2.zero;
-        private Action _onSceneSwitched;
 
         public override string PrettyName => "Scene Switcher";
 
-        public SceneSwitcherDebugView(Rect masterRect, Action onSceneSwitched) : base(masterRect)
+        public SceneSwitcherDebugView(Rect masterRect) : base(masterRect)
         {
-            _onSceneSwitched = onSceneSwitched;
             GetBuildSceneNames();
             
 #if UNITY_EDITOR
@@ -70,7 +68,6 @@ namespace BForBoss
         private void ChangeScene(int buildIndex)
         {
             SceneManager.LoadScene(buildIndex, LoadSceneMode.Single);
-            _onSceneSwitched?.Invoke();
         }
 
         private void GetBuildSceneNames()
