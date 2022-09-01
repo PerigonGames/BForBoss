@@ -2,7 +2,6 @@ using System;
 using Perigon.Utility;
 using PerigonGames;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Perigon.Weapons
 {

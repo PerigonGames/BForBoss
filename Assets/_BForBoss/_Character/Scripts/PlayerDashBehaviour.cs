@@ -3,7 +3,6 @@ using ECM2.Components;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Perigon.Character
 {

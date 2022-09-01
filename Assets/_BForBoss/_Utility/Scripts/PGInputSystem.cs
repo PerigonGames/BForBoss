@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Perigon.Utility
@@ -14,6 +15,7 @@ namespace Perigon.Utility
         private InputAction _fireInputAction;
         private InputAction _meleeWeaponInputAction;
         private InputAction _dashInputAction;
+        private InputAction _slowTimeAction;
         private InputAction _weaponScrollSwapInputAction;
         private InputAction _weaponDirectSwapInputAction;
         private InputAction _pauseInputAction;
@@ -22,6 +24,7 @@ namespace Perigon.Utility
         public event Action OnReloadAction;
         public event Action OnMeleeAction;
         public event Action<bool> OnDashAction;
+        public event Action<bool> OnSlowTimeAction;
         public event Action<bool> OnScrollWeaponChangeAction;
         public event Action<int> OnDirectWeaponChangeAction;
         public event Action OnPausePressed;
@@ -59,6 +62,7 @@ namespace Perigon.Utility
             _reloadInputAction = _playerControlsActionMap.FindAction("Reload");
             _meleeWeaponInputAction = _playerControlsActionMap.FindAction("Melee");
             _dashInputAction = _playerControlsActionMap.FindAction("Dash");
+            _slowTimeAction = _playerControlsActionMap.FindAction("SlowTime");
             _weaponScrollSwapInputAction = _playerControlsActionMap.FindAction("WeaponScrollSwap");
             _weaponDirectSwapInputAction = _playerControlsActionMap.FindAction("WeaponDirectSwap");
             _pauseInputAction = _playerControlsActionMap.FindAction("Pause");
@@ -72,6 +76,9 @@ namespace Perigon.Utility
 
             _dashInputAction.started += OnDashInputAction;
             _dashInputAction.canceled += OnDashInputAction;
+
+            _slowTimeAction.started += OnSlowTimeInputAction;
+            _slowTimeAction.canceled += OnSlowTimeInputAction;
 
             _weaponScrollSwapInputAction.performed += OnWeaponScrolledInputAction;
             _weaponDirectSwapInputAction.performed += OnDirectWeaponChangeInputAction;
@@ -99,6 +106,12 @@ namespace Perigon.Utility
         {
             var isDashing = context.ReadValue<float>();
             OnDashAction?.Invoke(isDashing >= 1);
+        }
+
+        private void OnSlowTimeInputAction(InputAction.CallbackContext context)
+        {
+            var isSlowingTime = context.ReadValue<float>();
+            OnSlowTimeAction?.Invoke(isSlowingTime >= 1);
         }
 
         private void OnWeaponScrolledInputAction(InputAction.CallbackContext context)

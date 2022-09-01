@@ -40,8 +40,7 @@ namespace Perigon.Character
 
             if (_slowMotionBehaviour != null)
             {
-                var slowMoInput = actions.FindAction("SlowTime");
-                _slowMotionBehaviour.SetupPlayerInput(slowMoInput);
+                _inputSystem.OnSlowTimeAction += _slowMotionBehaviour.OnSlowMotion;
             }
         }
 
@@ -190,24 +189,6 @@ namespace Perigon.Character
             if (_dashBehaviour != null)
             {
                 _dashBehaviour.HandleInput();
-            }
-        }
-
-        protected override void OnOnDisable()
-        {
-            base.OnOnDisable();
-            if (_slowMotionBehaviour != null)
-            {
-                _slowMotionBehaviour.OnOnDisable();
-            }
-        }
-        
-        protected override void OnOnEnable()
-        {
-            base.OnOnEnable();
-            if (_slowMotionBehaviour != null)
-            {
-                _slowMotionBehaviour.OnOnEnable();
             }
         }
 

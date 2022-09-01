@@ -1,8 +1,6 @@
-using System;
 using DG.Tweening;
 using Perigon.Utility;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Perigon.Character
 {
@@ -15,7 +13,6 @@ namespace Perigon.Character
 
         [SerializeField] private float _tweenDuration = 1.0f;
         
-        private InputAction _slowMotionInputAction;
         private bool _isSlowMotionActive = false;
         private float _fixedDeltaTime;
         private Sequence _timeScaleTween;
@@ -26,21 +23,14 @@ namespace Perigon.Character
         {
             _fixedDeltaTime = Time.fixedDeltaTime;
         }
-
-        public void SetupPlayerInput(InputAction slowMoInput)
+        
+        public void OnSlowMotion(bool isSlowingTime)
         {
-            _slowMotionInputAction = slowMoInput;
-            _slowMotionInputAction.started += OnSlowMotion;
-            _slowMotionInputAction.canceled += OnSlowMotion;
-        }
-
-        private void OnSlowMotion(InputAction.CallbackContext callbackContext)
-        {
-            if (!_isSlowMotionActive && callbackContext.started)
+            if (!_isSlowMotionActive && isSlowingTime)
             {
                 StartSlowMotion();
             }
-            else if (_isSlowMotionActive && callbackContext.canceled)
+            else if (_isSlowMotionActive && !isSlowingTime)
             {
                 StopSlowMotion();
             }
@@ -81,16 +71,6 @@ namespace Perigon.Character
         {
             Time.timeScale = targetTimeScale;
             Time.fixedDeltaTime = _fixedDeltaTime * targetTimeScale;
-        }
-        
-        public void OnOnEnable()
-        {
-            _slowMotionInputAction?.Enable();
-        }
-        
-        public void OnOnDisable()
-        {
-            _slowMotionInputAction?.Disable();
         }
     }
 }
