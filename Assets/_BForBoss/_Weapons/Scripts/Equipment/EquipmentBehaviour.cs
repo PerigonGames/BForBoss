@@ -1,6 +1,7 @@
 using System;
 using Perigon.Utility;
 using PerigonGames;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Perigon.Weapons
@@ -17,7 +18,6 @@ namespace Perigon.Weapons
         private PGInputSystem _inputSystem;
         private Weapon[] _weapons = null;
 
-        private int _previousWeaponIndex = 0;
         private int _currentWeaponIndex = 0;
 
         private Transform _playerPivotTransform;
@@ -34,7 +34,7 @@ namespace Perigon.Weapons
 
         public void ScrollSwapWeapons(int direction)
         {
-            _weapons[_previousWeaponIndex].ActivateWeapon = false;
+            _weapons.ForEach(x => x.ActivateWeapon = false);
             _weapons[_currentWeaponIndex].ActivateWeapon = true;
         }
         
@@ -78,7 +78,7 @@ namespace Perigon.Weapons
             _bulletSpawner = GetComponent<BulletSpawner>();
             _wallHitVFXSpawner = GetComponent<WallHitVFXSpawner>();
             _meleeBehaviour = GetComponent<MeleeWeaponBehaviour>();
-            if (_weaponBehaviours.IsNullOrEmpty())
+            if (IListExtensions.IsNullOrEmpty(_weaponBehaviours))
             {
                 PanicHelper.Panic(new Exception("There are currently no WeaponBehaviour within the child of EquipmentBehaviour"));
             }
@@ -92,14 +92,12 @@ namespace Perigon.Weapons
 
         private void OnScrollWeaponSwapAction(bool direction)
         {
-            _previousWeaponIndex = _currentWeaponIndex;
             UpdateCurrentWeaponIndex(direction);
             _weaponAnimationProvider.SwapWeapon();
         }
 
         private void OnDirectWeaponSwapAction(int number)
         {
-            _previousWeaponIndex = _currentWeaponIndex;
             _currentWeaponIndex = number - 1;
             _weaponAnimationProvider.SwapWeapon();
         }
