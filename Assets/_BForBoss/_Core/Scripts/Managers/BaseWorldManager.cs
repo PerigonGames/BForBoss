@@ -1,10 +1,10 @@
 using System;
+using Perigon.Character;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using InputSettings = Perigon.Character.InputSettings;
 
 namespace BForBoss
 {
@@ -17,8 +17,7 @@ namespace BForBoss
 
         [SerializeField] private InputActionAsset _actionAsset;
         
-        private IInputSettings _inputSettings = null;
-        private FreezeActionsUtility _freezeActionsUtility = null;
+        private IInputConfiguration _inputConfiguration = null;
         private PGInputSystem _inputSystem;
         private EnvironmentManager _environmentManager = null;
 
@@ -77,7 +76,7 @@ namespace BForBoss
         {
             _inputSystem = new PGInputSystem(_actionAsset);
             _stateManager.OnStateChanged += HandleStateChange;
-            _inputSettings = new InputSettings();
+            _inputConfiguration = new InputConfiguration();
             _environmentManager = gameObject.AddComponent<EnvironmentManager>();
             _environmentManager.Initialize();
             SceneManager.LoadScene("AdditiveWeaponManager", LoadSceneMode.Additive);
@@ -99,17 +98,16 @@ namespace BForBoss
         {
             SetupSubManagers();
             WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
-            UserInterfaceManager.Initialize(_inputSettings);
+            UserInterfaceManager.Initialize(_inputConfiguration);
             _stateManager.SetState(State.PreGame);
         }
 
         private void SetupSubManagers()
         {
-            _playerBehaviour.Initialize(_inputSettings as InputSettings, onDeath: () =>
+            _playerBehaviour.Initialize(_inputConfiguration as InputConfiguration, onDeath: () =>
             {
                 StateManager.Instance.SetState(State.Death);
             });
-            _freezeActionsUtility = new FreezeActionsUtility(_inputSettings);
         }
 
         protected virtual void OnDestroy()
@@ -145,11 +143,6 @@ namespace BForBoss
                     HandleStatePause();
                     break;
                 }
-                case State.EndRace:
-                {
-                    HandleOnEndOfRace();
-                    break;
-                }
                 case State.Death:
                 {
                     HandleOnDeath();
@@ -167,18 +160,13 @@ namespace BForBoss
         protected virtual void HandleStatePlay()
         {
             Time.timeScale = 1.0f;
-            _freezeActionsUtility.UnlockInput();
+            _inputSystem.SetToPlayerControls();
         }
 
         protected virtual void HandleStatePause()
         {
             Time.timeScale = 0.0f;
-            _freezeActionsUtility.LockInput();
-        }
-
-        protected virtual void HandleOnEndOfRace()
-        {
-
+            _inputSystem.SetToUIControls();
         }
 
         protected virtual void HandleOnDeath()

@@ -9,7 +9,7 @@ namespace Tests.Input
         public void Test_InputSettings_MouseKeyboardConstructorSetup()
         {
             //Given
-            var inputSettings = new MockInputSettings
+            var inputSettings = new MockInputConfiguration
             {
                 MouseHorizontalSensitivity = 0.1f,
                 MouseVerticalSensitivity = 0.2f,
@@ -31,7 +31,7 @@ namespace Tests.Input
         public void Test_InputSettings_ControllerConstructorSetup()
         {
             //Given
-            var inputSettings = new MockInputSettings
+            var inputSettings = new MockInputConfiguration
             {
                 MouseHorizontalSensitivity = 0.1f,
                 MouseVerticalSensitivity = 0.2f,
@@ -53,7 +53,7 @@ namespace Tests.Input
         public void Test_RevertSettings_InputSettingsRevertSettingCalled()
         {
             //Given
-            var inputSettings = new MockInputSettings();
+            var inputSettings = new MockInputConfiguration();
             var viewModel = new MouseKeyboardInputSettingsViewModel(inputSettings, new MockAnalytics());
 
             //When
@@ -67,7 +67,7 @@ namespace Tests.Input
         public void Test_MouseKeyboardApplySettings()
         {
             //Given
-            var inputSettings = new MockInputSettings
+            var inputSettings = new MockInputConfiguration
             {
                 MouseHorizontalSensitivity = 0.1f,
                 MouseVerticalSensitivity = 0.2f,
@@ -90,7 +90,7 @@ namespace Tests.Input
         public void Test_ControllerApplySettings()
         {
             //Given
-            var inputSettings = new MockInputSettings
+            var inputSettings = new MockInputConfiguration
             {
                 MouseHorizontalSensitivity = 0.1f,
                 MouseVerticalSensitivity = 0.2f,

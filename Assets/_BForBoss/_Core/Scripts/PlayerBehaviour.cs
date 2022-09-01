@@ -15,9 +15,9 @@ namespace BForBoss
 
         public PlayerMovementBehaviour PlayerMovement => _playerMovement;
 
-        public void Initialize(InputSettings inputSettings, Action onDeath)
+        public void Initialize(InputConfiguration inputConfiguration, Action onDeath)
         {
-            _playerMovement.Initialize(inputSettings);
+            _playerMovement.Initialize(inputConfiguration);
             if (_playerLifeCycle != null)
             {
                 _playerLifeCycle.Initialize(onDeath);

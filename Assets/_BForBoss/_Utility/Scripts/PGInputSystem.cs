@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Perigon.Utility
@@ -30,6 +29,20 @@ namespace Perigon.Utility
             SetupPlayerActions();
         }
 
+        public void SetToUIControls()
+        {
+            _UIControlsActionMap.Enable();
+            _playerControlsActionMap.Disable();
+            LockMouseUtility.Instance.UnlockMouse();
+        }
+        
+        public void SetToPlayerControls()
+        {
+            _UIControlsActionMap.Disable();
+            _playerControlsActionMap.Enable();
+            LockMouseUtility.Instance.LockMouse();
+        }
+        
         private void SetupActionMapInput()
         {
             _playerControlsActionMap = _actionAsset.FindActionMap("Player Controls");

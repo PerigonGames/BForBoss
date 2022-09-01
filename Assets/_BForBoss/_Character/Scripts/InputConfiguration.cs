@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 namespace Perigon.Character
 {
-    public class InputSettings : IInputSettings
+    public class InputConfiguration : IInputConfiguration
     {
         private const string PlayerControlActionMapName = "Player Controls";
         private const string UIActionMapName = "UI";
@@ -21,7 +21,7 @@ namespace Perigon.Character
         private InputActionMap PlayerControllerActionMap => _inputActionAsset.FindActionMap(PlayerControlActionMapName);
 
 
-        public InputSettings(CharacterLook characterLook = null, InputActionAsset inputActionAsset = null)
+        public InputConfiguration(CharacterLook characterLook = null, InputActionAsset inputActionAsset = null)
         {
             _characterLook = characterLook;
             _inputActionAsset = inputActionAsset;

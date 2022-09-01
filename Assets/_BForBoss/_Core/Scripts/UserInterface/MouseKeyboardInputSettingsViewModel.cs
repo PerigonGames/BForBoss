@@ -5,18 +5,18 @@ namespace BForBoss
 {
     public class MouseKeyboardInputSettingsViewModel: BaseInputSettingsViewModel
     {
-        public override float GetHorizontal => _settings.MouseHorizontalSensitivity * MAPPED_SENSITIVITY_MULTIPLIER;
-        public override float GetVertical => _settings.MouseVerticalSensitivity * MAPPED_SENSITIVITY_MULTIPLIER;
+        public override float GetHorizontal => Configuration.MouseHorizontalSensitivity * MAPPED_SENSITIVITY_MULTIPLIER;
+        public override float GetVertical => Configuration.MouseVerticalSensitivity * MAPPED_SENSITIVITY_MULTIPLIER;
         
-        public MouseKeyboardInputSettingsViewModel(IInputSettings settings, IBForBossAnalytics analytics = null) : base(settings, analytics)
+        public MouseKeyboardInputSettingsViewModel(IInputConfiguration configuration, IBForBossAnalytics analytics = null) : base(configuration, analytics)
         {
         }
 
         public override void ApplySettings(float horizontal, float vertical, bool isInverted)
         {
-            _settings.MouseHorizontalSensitivity = horizontal / MAPPED_SENSITIVITY_MULTIPLIER;
-            _settings.MouseVerticalSensitivity = vertical / MAPPED_SENSITIVITY_MULTIPLIER;
-            _settings.IsInverted = isInverted;
+            Configuration.MouseHorizontalSensitivity = horizontal / MAPPED_SENSITIVITY_MULTIPLIER;
+            Configuration.MouseVerticalSensitivity = vertical / MAPPED_SENSITIVITY_MULTIPLIER;
+            Configuration.IsInverted = isInverted;
             SetInputSettingsAnalytics();
         }
     }

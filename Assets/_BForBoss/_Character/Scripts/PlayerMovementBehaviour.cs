@@ -23,9 +23,9 @@ namespace Perigon.Character
         public event Action Slid;
         
         
-        public void Initialize(InputSettings inputSettings)
+        public void Initialize(InputConfiguration inputConfiguration)
         {
-            inputSettings.SetPlayerControls(characterLook, actions);
+            inputConfiguration.SetPlayerControls(characterLook, actions);
             SetCameraCullingMask();
         }
 
