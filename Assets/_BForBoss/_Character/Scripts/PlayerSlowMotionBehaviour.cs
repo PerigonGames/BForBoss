@@ -85,12 +85,12 @@ namespace Perigon.Character
         
         public void OnOnEnable()
         {
-            _slowMotionInputAction.Enable();
+            _slowMotionInputAction?.Enable();
         }
         
         public void OnOnDisable()
         {
-            _slowMotionInputAction.Disable();
+            _slowMotionInputAction?.Disable();
         }
     }
 }

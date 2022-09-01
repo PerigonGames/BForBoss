@@ -13,6 +13,7 @@ namespace Perigon.Utility
         private InputAction _reloadInputAction;
         private InputAction _fireInputAction;
         private InputAction _meleeWeaponInputAction;
+        private InputAction _dashInputAction;
         private InputAction _weaponScrollSwapInputAction;
         private InputAction _weaponDirectSwapInputAction;
         private InputAction _pauseInputAction;
@@ -20,6 +21,7 @@ namespace Perigon.Utility
         public event Action<bool> OnFireAction;
         public event Action OnReloadAction;
         public event Action OnMeleeAction;
+        public event Action<bool> OnDashAction;
         public event Action<bool> OnScrollWeaponChangeAction;
         public event Action<int> OnDirectWeaponChangeAction;
         public event Action OnPausePressed;
@@ -56,6 +58,7 @@ namespace Perigon.Utility
             _fireInputAction = _playerControlsActionMap.FindAction("Fire");
             _reloadInputAction = _playerControlsActionMap.FindAction("Reload");
             _meleeWeaponInputAction = _playerControlsActionMap.FindAction("Melee");
+            _dashInputAction = _playerControlsActionMap.FindAction("Dash");
             _weaponScrollSwapInputAction = _playerControlsActionMap.FindAction("WeaponScrollSwap");
             _weaponDirectSwapInputAction = _playerControlsActionMap.FindAction("WeaponDirectSwap");
             _pauseInputAction = _playerControlsActionMap.FindAction("Pause");
@@ -66,6 +69,9 @@ namespace Perigon.Utility
             _reloadInputAction.performed += OnReloadInputAction;
             
             _meleeWeaponInputAction.performed += OnMeleeInputAction;
+
+            _dashInputAction.started += OnDashInputAction;
+            _dashInputAction.canceled += OnDashInputAction;
 
             _weaponScrollSwapInputAction.performed += OnWeaponScrolledInputAction;
             _weaponDirectSwapInputAction.performed += OnDirectWeaponChangeInputAction;
@@ -87,6 +93,12 @@ namespace Perigon.Utility
         private void OnMeleeInputAction(InputAction.CallbackContext context)
         {
             OnMeleeAction?.Invoke();
+        }
+
+        private void OnDashInputAction(InputAction.CallbackContext context)
+        {
+            var isDashing = context.ReadValue<float>();
+            OnDashAction?.Invoke(isDashing >= 1);
         }
 
         private void OnWeaponScrolledInputAction(InputAction.CallbackContext context)

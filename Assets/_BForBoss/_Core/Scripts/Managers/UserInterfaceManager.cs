@@ -27,10 +27,10 @@ namespace BForBoss
 
         private UserInterfaceState _state = UserInterfaceState.None;
         
-        public void Initialize(IInputConfiguration inputConfiguration)
+        public void Initialize()
         {
             StateManager.Instance.OnStateChanged += HandleOnStateChanged;
-            _settingsViewBehaviour.Initialize(inputConfiguration, onBackPressed: () =>
+            _settingsViewBehaviour.Initialize(onBackPressed: () =>
             {
                 UIState = UserInterfaceState.PauseView;
             });

@@ -1,5 +1,4 @@
 using System;
-using Perigon.Character;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -17,12 +16,11 @@ namespace BForBoss
 
         [SerializeField] private InputActionAsset _actionAsset;
         
-        private IInputConfiguration _inputConfiguration = null;
         private PGInputSystem _inputSystem;
-        private EnvironmentManager _environmentManager = null;
+        private EnvironmentManager _environmentManager;
 
-        private WeaponSceneManager _weaponSceneManager = null;
-        private UserInterfaceManager _userInterfaceManager = null;
+        private WeaponSceneManager _weaponSceneManager;
+        private UserInterfaceManager _userInterfaceManager;
 
         private UserInterfaceManager UserInterfaceManager
         {
@@ -77,7 +75,6 @@ namespace BForBoss
             _inputSystem = new PGInputSystem(_actionAsset);
             _inputSystem.OnPausePressed += HandlePausePressed;
             _stateManager.OnStateChanged += HandleStateChange;
-            _inputConfiguration = new InputConfiguration();
             _environmentManager = gameObject.AddComponent<EnvironmentManager>();
             _environmentManager.Initialize();
             SceneManager.LoadScene("AdditiveWeaponManager", LoadSceneMode.Additive);
@@ -96,13 +93,13 @@ namespace BForBoss
         {
             SetupSubManagers();
             WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
-            UserInterfaceManager.Initialize(_inputConfiguration);
+            UserInterfaceManager.Initialize();
             _stateManager.SetState(State.PreGame);
         }
 
         private void SetupSubManagers()
         {
-            _playerBehaviour.Initialize(_inputConfiguration as InputConfiguration, onDeath: () =>
+            _playerBehaviour.Initialize(_inputSystem, onDeath: () =>
             {
                 StateManager.Instance.SetState(State.Death);
             });
