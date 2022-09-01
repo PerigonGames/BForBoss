@@ -75,6 +75,7 @@ namespace BForBoss
         protected virtual void Awake()
         {
             _inputSystem = new PGInputSystem(_actionAsset);
+            _inputSystem.OnPausePressed += HandlePausePressed;
             _stateManager.OnStateChanged += HandleStateChange;
             _inputConfiguration = new InputConfiguration();
             _environmentManager = gameObject.AddComponent<EnvironmentManager>();
@@ -85,13 +86,10 @@ namespace BForBoss
             SceneManager.LoadScene("AdditiveDebugScene", LoadSceneMode.Additive);
 #endif
         }
-        
-        protected virtual void Update()
+
+        private void HandlePausePressed()
         {
-            if (Keyboard.current.escapeKey.isPressed)
-            {
-                _stateManager.SetState(State.Pause);
-            }
+            _stateManager.SetState(State.Pause);
         }
 
         protected virtual void Start()

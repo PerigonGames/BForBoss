@@ -15,12 +15,14 @@ namespace Perigon.Utility
         private InputAction _meleeWeaponInputAction;
         private InputAction _weaponScrollSwapInputAction;
         private InputAction _weaponDirectSwapInputAction;
+        private InputAction _pauseInputAction;
         
         public event Action<bool> OnFireAction;
         public event Action OnReloadAction;
         public event Action OnMeleeAction;
         public event Action<bool> OnScrollWeaponChangeAction;
         public event Action<int> OnDirectWeaponChangeAction;
+        public event Action OnPausePressed;
 
         public PGInputSystem(InputActionAsset asset)
         {
@@ -56,6 +58,7 @@ namespace Perigon.Utility
             _meleeWeaponInputAction = _playerControlsActionMap.FindAction("Melee");
             _weaponScrollSwapInputAction = _playerControlsActionMap.FindAction("WeaponScrollSwap");
             _weaponDirectSwapInputAction = _playerControlsActionMap.FindAction("WeaponDirectSwap");
+            _pauseInputAction = _playerControlsActionMap.FindAction("Pause");
 
             _fireInputAction.started += OnFireInputAction;
             _fireInputAction.canceled += OnFireInputAction;
@@ -66,6 +69,8 @@ namespace Perigon.Utility
 
             _weaponScrollSwapInputAction.performed += OnWeaponScrolledInputAction;
             _weaponDirectSwapInputAction.performed += OnDirectWeaponChangeInputAction;
+
+            _pauseInputAction.performed += OnPauseInputAction;
         }
 
         private void OnFireInputAction(InputAction.CallbackContext context)
@@ -94,6 +99,11 @@ namespace Perigon.Utility
         {
             var key = (int)context.ReadValue<Single>();
             OnDirectWeaponChangeAction?.Invoke(key);
+        }
+
+        private void OnPauseInputAction(InputAction.CallbackContext context)
+        {
+            OnPausePressed?.Invoke();
         }
     }
 }
