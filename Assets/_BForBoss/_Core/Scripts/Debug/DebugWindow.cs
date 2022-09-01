@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Perigon.Character;
-using Perigon.Utility;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
