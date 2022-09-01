@@ -3,11 +3,13 @@ using Perigon.Utility;
 using Perigon.Weapons;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.VFX;
 
 namespace BForBoss
 {
     public class EnemyShootingBehaviour : MonoBehaviour
     {
+
         [InfoBox("Player must be within this distance for AI to shoot, when outside, AI will move closer")]
         [SerializeField] private float _distanceToShootAt = 4;
         [InfoBox("Time taken in seconds for AI to aim at players direction before shooting")]
@@ -17,7 +19,13 @@ namespace BForBoss
         [InfoBox("Time taken in seconds for AI to shoot after taking aim")]
         [SerializeField] private float _shootCountDownInSeconds = 1f;
 
+        [InfoBox("Delay between shot readying effect and shot firing effect")]
+        [SerializeField] private float _vfxShootDelay = 0.1f;
+
         [SerializeField] private Transform _shootingFromPosition = null;
+
+        [SerializeField] private VisualEffect _muzzleFlashVFX = null;
+        
         private enum ShootState
         {
             Aim,
@@ -35,6 +43,9 @@ namespace BForBoss
         private ShootState _state = ShootState.Aim;
         
         private Vector3 _shootDirection = Vector3.zero;
+        
+        private readonly int _vfxFireEvent = Shader.PropertyToID("OnFire");
+        private readonly int _vfxChargeTime = Shader.PropertyToID("Charge Time");
 
         public void Initialize(Func<Vector3> getPlayerPosition, 
             BulletSpawner bulletSpawner,
@@ -50,6 +61,7 @@ namespace BForBoss
 
         private void Reset()
         {
+            _muzzleFlashVFX.Stop();
             _elapsedAimCountDown = _aimCountDownInSeconds;
             _elapsedShootCountDown = _shootCountDownInSeconds;
         }
@@ -85,6 +97,7 @@ namespace BForBoss
             if (_elapsedAimCountDown <= 0)
             {
                 _state = ShootState.Shoot;
+                _muzzleFlashVFX.Play();
                 _elapsedAimCountDown = _aimCountDownInSeconds;
             }
         }
@@ -117,6 +130,7 @@ namespace BForBoss
 
         private void Shoot()
         {
+            _muzzleFlashVFX.SendEvent(_vfxFireEvent);
             var bullet = _bulletSpawner.SpawnBullet();
             bullet.SetSpawnAndDirection(_shootingFromPosition.position, _shootDirection.normalized);
         }
@@ -127,6 +141,9 @@ namespace BForBoss
             {
                 PanicHelper.Panic(new Exception("Shooting from transform missing from EnemyShootingBehaviour"));
             }
+
+            var vfxDuration = Mathf.Max(_shootCountDownInSeconds - _vfxShootDelay, 0);
+            _muzzleFlashVFX.SetFloat(_vfxChargeTime, vfxDuration);
         }
         
         private void OnDrawGizmos()
