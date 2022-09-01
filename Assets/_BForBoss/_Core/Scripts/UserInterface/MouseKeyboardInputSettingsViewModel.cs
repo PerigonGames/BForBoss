@@ -1,3 +1,6 @@
+using Perigon.Analytics;
+using Perigon.Utility;
+
 namespace BForBoss
 {
     public class MouseKeyboardInputSettingsViewModel: BaseInputSettingsViewModel
@@ -5,6 +8,9 @@ namespace BForBoss
         public override float GetHorizontal => _configuration.MouseHorizontalSensitivity * MAPPED_SENSITIVITY_MULTIPLIER;
         public override float GetVertical => _configuration.MouseVerticalSensitivity * MAPPED_SENSITIVITY_MULTIPLIER;
         
+        public MouseKeyboardInputSettingsViewModel(IInputConfiguration configuration = null, IBForBossAnalytics analytics = null) : base(configuration, analytics)
+        {
+        }
 
         public override void ApplySettings(float horizontal, float vertical, bool isInverted)
         {

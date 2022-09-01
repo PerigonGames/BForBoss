@@ -22,6 +22,8 @@ namespace BForBoss
             {
                 _playerLifeCycle.Initialize(onDeath);
             }
+
+            StateManager.Instance.OnStateChanged += HandleOnStateChanged;
         }
 
 
@@ -52,6 +54,19 @@ namespace BForBoss
             {
                 PanicHelper.Panic(new Exception("Player Slow Motion is missing from Player Behaviour"));
             }
+        }
+
+        private void HandleOnStateChanged(State state)
+        {
+            if (state == State.Play)
+            {
+                _playerMovement.SetControlConfiguration();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            StateManager.Instance.OnStateChanged -= HandleOnStateChanged;
         }
     }
 }

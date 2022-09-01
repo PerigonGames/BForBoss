@@ -66,6 +66,15 @@ namespace Perigon.Character
             return IsWallRunning ? _wallRunBehaviour.GetMaxAcceleration() : base.GetMaxAcceleration();
         }
         
+        public void SetControlConfiguration()
+        {
+            characterLook.invertLook = !_inputConfiguration.IsInverted;
+            characterLook.mouseHorizontalSensitivity = _inputConfiguration.MouseHorizontalSensitivity;
+            characterLook.mouseVerticalSensitivity = _inputConfiguration.MouseVerticalSensitivity;
+            characterLook.controllerHorizontalSensitivity = _inputConfiguration.ControllerHorizontalSensitivity;
+            characterLook.controllerVerticalSensitivity = _inputConfiguration.ControllerVerticalSensitivity;
+        }
+        
         protected override void OnAwake()
         {            
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();
@@ -209,15 +218,6 @@ namespace Perigon.Character
         private void SetJumpCount(int count)
         {
             _jumpCount = count;
-        }
-
-        private void SetControlConfiguration()
-        {
-            characterLook.invertLook = !_inputConfiguration.IsInverted;
-            characterLook.mouseHorizontalSensitivity = _inputConfiguration.MouseHorizontalSensitivity;
-            characterLook.mouseVerticalSensitivity = _inputConfiguration.MouseVerticalSensitivity;
-            characterLook.controllerHorizontalSensitivity = _inputConfiguration.ControllerHorizontalSensitivity;
-            characterLook.controllerVerticalSensitivity = _inputConfiguration.ControllerVerticalSensitivity;
         }
     }
 }

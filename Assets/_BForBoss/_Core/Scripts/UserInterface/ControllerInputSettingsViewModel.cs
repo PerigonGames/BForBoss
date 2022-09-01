@@ -1,3 +1,6 @@
+using Perigon.Analytics;
+using Perigon.Utility;
+
 namespace BForBoss
 {
     public class ControllerInputSettingsViewModel: BaseInputSettingsViewModel
@@ -5,6 +8,10 @@ namespace BForBoss
         public override float GetHorizontal => _configuration.ControllerHorizontalSensitivity * MAPPED_SENSITIVITY_MULTIPLIER;
         public override float GetVertical => _configuration.ControllerVerticalSensitivity * MAPPED_SENSITIVITY_MULTIPLIER;
         
+        public ControllerInputSettingsViewModel(IInputConfiguration configuration = null, IBForBossAnalytics analytics = null) : base(configuration, analytics)
+        {
+        }
+
         public override void ApplySettings(float horizontal, float vertical, bool isInverted)
         {
             _configuration.ControllerHorizontalSensitivity = horizontal / MAPPED_SENSITIVITY_MULTIPLIER;

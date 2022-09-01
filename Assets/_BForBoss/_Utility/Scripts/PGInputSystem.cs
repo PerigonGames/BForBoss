@@ -117,7 +117,20 @@ namespace Perigon.Utility
         private void OnWeaponScrolledInputAction(InputAction.CallbackContext context)
         {
             var direction = context.ReadValue<float>();
-            OnScrollWeaponChangeAction?.Invoke(direction > 0);
+            if (direction != 0)
+            {   
+                OnScrollWeaponChangeAction?.Invoke(direction > 0);
+            }
+
+            if (context.started)
+            {
+                Debug.Log("Started");
+            }
+
+            if (context.canceled)
+            {
+                Debug.Log("cancelled");
+            }
         }
         
         private void OnDirectWeaponChangeInputAction(InputAction.CallbackContext context)
