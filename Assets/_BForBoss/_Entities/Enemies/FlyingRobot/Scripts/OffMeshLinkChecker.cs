@@ -33,7 +33,7 @@ namespace BForBoss
             
             _link = _agent.currentOffMeshLinkData.offMeshLink;
             _oldCost = _link.costOverride;
-            _link.costOverride = _oldCost <= 0.0f ? (_multiplier * 1) : _oldCost * _multiplier;
+            _link.costOverride = _oldCost <= 0.0f ? _multiplier : _oldCost * _multiplier;
         }
 
         private void ReleaseOffMeshLink()
