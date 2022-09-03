@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1814735609005185495}
   - component: {fileID: 1892035446757454776}
-  m_Layer: 8
+  m_Layer: 13
   m_Name: EnemyBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a6b2b4972436784485effe49691a062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _properties: {fileID: 11400000, guid: e7fbb371b19cb9b44bea2e06ceea081f, type: 2}
+  _properties: {fileID: 11400000, guid: d5fd536275d84c94e838f3bc4568d91d, type: 2}
 --- !u!1 &4742851970076861496
 GameObject:
   m_ObjectHideFlags: 0
@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 7868630615863646799}
   - component: {fileID: 2618367390288299749}
   - component: {fileID: 1103091858715316732}
-  m_Layer: 8
+  m_Layer: 13
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -263,9 +263,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5060456104968621508, guid: 7940b5de42ad155479377373511fc45c, type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 5597336311242224948, guid: 7940b5de42ad155479377373511fc45c, type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 7204108985908599097, guid: 7940b5de42ad155479377373511fc45c, type: 3}
       propertyPath: m_Name
       value: P_EnemyProjectile
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204108985908599097, guid: 7940b5de42ad155479377373511fc45c, type: 3}
+      propertyPath: m_Layer
+      value: 13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7940b5de42ad155479377373511fc45c, type: 3}
