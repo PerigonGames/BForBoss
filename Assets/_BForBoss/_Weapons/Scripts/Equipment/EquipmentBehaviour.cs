@@ -15,6 +15,7 @@ namespace Perigon.Weapons
         private BulletSpawner _bulletSpawner;
         private WallHitVFXSpawner _wallHitVFXSpawner;
         private MeleeWeaponBehaviour _meleeBehaviour = null;
+        private IWeaponAnimationProvider _weaponAnimationProvider;
         private Weapon[] _weapons = null;
         private int _currentWeaponIndex = 0;
 
@@ -26,11 +27,13 @@ namespace Perigon.Weapons
 
         private Transform _playerPivotTransform;
         
-        public void Initialize(Transform playerPivotTransform)
+        public void Initialize(Transform playerPivotTransform, IWeaponAnimationProvider weaponAnimationProvider)
         {
             _playerPivotTransform = playerPivotTransform;
+            _weaponAnimationProvider = weaponAnimationProvider;
             EnableEquipmentPlayerInput();
             _meleeBehaviour.Initialize(_meleeWeaponInputAction, () => _playerPivotTransform, onSuccessfulAttack: OnMeleeAttack);
+            SetupWeapons(weaponAnimationProvider);
         }
 
         private void EnableEquipmentPlayerInput()
@@ -51,12 +54,12 @@ namespace Perigon.Weapons
             _isMouseScrollEnabled = false;
         }
 
-        private void SetupWeapons()
+        private void SetupWeapons(IWeaponAnimationProvider weaponAnimationProvider)
         {
             _weapons = new Weapon[_weaponBehaviours.Length];
             for(int i = 0; i < _weaponBehaviours.Length; i++)
             {
-                _weaponBehaviours[i].Initialize(_fireInputAction, _reloadInputAction, _bulletSpawner, _wallHitVFXSpawner);
+                _weaponBehaviours[i].Initialize(_fireInputAction, _reloadInputAction, _bulletSpawner, _wallHitVFXSpawner, weaponAnimationProvider);
                 _weapons[i] = _weaponBehaviours[i].WeaponViewModel;
                 _weapons[i].ActivateWeapon = false;
             }
@@ -72,10 +75,10 @@ namespace Perigon.Weapons
             _meleeWeaponInputAction = _inputActions.FindAction("Melee");
         }
 
-        private void ScrollSwapWeapons(bool isUpwards)
+        public void ScrollSwapWeapons(int direction)
         {
             _weapons[_currentWeaponIndex].ActivateWeapon = false;
-            UpdateCurrentWeaponIndex(isUpwards);
+            UpdateCurrentWeaponIndex(isUpwards: direction > 1);
             _weapons[_currentWeaponIndex].ActivateWeapon = true;
         }
         
@@ -93,15 +96,15 @@ namespace Perigon.Weapons
                 _currentWeaponIndex = indexLength;
             }
         }
+
+        private void OnMeleeAttack()
+        {
+            _weaponAnimationProvider.MeleeAttack(CurrentWeapon.AnimationType);
+        }
         
         private void Update()
         {
             OnMouseSwapWeaponAction();
-        }
-
-        private void OnMeleeAttack()
-        {
-            _weaponBehaviours[_currentWeaponIndex].OnMeleeAttack();
         }
 
         private void Awake()
@@ -115,7 +118,6 @@ namespace Perigon.Weapons
             {
                 PanicHelper.Panic(new Exception("There are currently no WeaponBehaviour within the child of EquipmentBehaviour"));
             }
-            SetupWeapons();
         }
 
         private void OnValidate()
@@ -137,11 +139,11 @@ namespace Perigon.Weapons
             var scrollVector = _isMouseScrollEnabled ? Mouse.current.scroll.ReadValue().normalized : Vector2.zero;
             if (scrollVector.y > 0)
             {
-                ScrollSwapWeapons(true);
+                _weaponAnimationProvider.SwapWeapon(true);
             }
             else if (scrollVector.y < 0)
             {
-                ScrollSwapWeapons(false);
+                _weaponAnimationProvider.SwapWeapon(false);
             }
         }
         
@@ -149,7 +151,7 @@ namespace Perigon.Weapons
         {
             if (context.started)
             {
-                ScrollSwapWeapons(true);
+                _weaponAnimationProvider.SwapWeapon(true);
             }
         }
         #endregion

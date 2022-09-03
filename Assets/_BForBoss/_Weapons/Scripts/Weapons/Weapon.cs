@@ -9,8 +9,8 @@ namespace Perigon.Weapons
     {
         private const float MIN_TO_MAX_RANGE_OF_SPREAD = 2;
         private const float MAP_TO_RAYCAST_RANGE_SPREAD = 0.1F;
-         private readonly IRandomUtility _randomUtility;
-         private readonly IWeaponProperties _weaponProperties;
+        private readonly IRandomUtility _randomUtility;
+        private readonly IWeaponProperties _weaponProperties;
 
          private float _elapsedRateOfFire;
          private float _elapsedReloadDuration;
@@ -29,6 +29,7 @@ namespace Perigon.Weapons
 
          public event Action<int> OnFireWeapon;
          public event Action<bool> OnSetWeaponActivate;
+         public event Action OnStopReloading;
 
          public int AmmunitionAmount => _ammunitionAmount;
          public int MaxAmmunitionAmount => _weaponProperties.AmmunitionAmount;
@@ -39,7 +40,7 @@ namespace Perigon.Weapons
          public float DamagePerRayCast => IsRayCastingWeapon ? _weaponProperties.DamagePerRayCast : 0;
          public BulletTypes TypeOfBullet => _weaponProperties.TypeOfBullet;
          public Sprite Crosshair => _weaponProperties.Crosshair;
-         public float VisualRecoilForce => _weaponProperties.VisualRecoilForce;
+         public WeaponAnimationType AnimationType => _weaponProperties.AnimationType;
          public EventReference ShotAudio => _weaponProperties.WeaponShotAudio;
          private bool CanShoot => _elapsedRateOfFire <= 0 && _ammunitionAmount > 0;
 
@@ -128,6 +129,7 @@ namespace Perigon.Weapons
          {
              IsReloading = false;
              _elapsedReloadDuration = _weaponProperties.ReloadDuration;
+             OnStopReloading?.Invoke();
          }
 
          private void Fire()

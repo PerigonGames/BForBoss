@@ -57,6 +57,15 @@ namespace Perigon.Entities
                 _lifeCycle.OnDamageTaken += LifeCycleDamageTaken;
             }
         }
+        
+        public virtual void CleanUp()
+        {
+            if (_lifeCycle != null)
+            {
+                _lifeCycle.OnDeath -= LifeCycleFinished;
+                _lifeCycle.OnDamageTaken -= LifeCycleDamageTaken;
+            }
+        }
 
         protected abstract void LifeCycleFinished();
 
@@ -69,15 +78,6 @@ namespace Perigon.Entities
             else
             {
                 _onDeathAudio?.Play();
-            }
-        }
-
-        protected virtual void CleanUp()
-        {
-            if (_lifeCycle != null)
-            {
-                _lifeCycle.OnDeath -= LifeCycleFinished;
-                _lifeCycle.OnDamageTaken -= LifeCycleDamageTaken;
             }
         }
 

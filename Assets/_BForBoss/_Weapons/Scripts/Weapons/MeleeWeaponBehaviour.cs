@@ -35,10 +35,11 @@ namespace Perigon.Weapons
         public float MaxCooldown => _meleeScriptable != null ? _meleeScriptable.AttackCoolDown : 1f;
         public bool CanMelee => _weapon?.CanMelee ?? false;
 
-        public void Initialize(InputAction meleeAttackAction,
+        public void Initialize(
+            InputAction meleeAttackAction,
             Func<Transform> getTransform,
-            IMeleeProperties properties = null,
-            Action onSuccessfulAttack = null)
+            Action onSuccessfulAttack,
+            IMeleeProperties properties = null)
         {
             _meleeActionInputAction = meleeAttackAction;
             _getTransform = getTransform;
@@ -81,7 +82,7 @@ namespace Perigon.Weapons
 
                 if (isAttackSuccessful)
                 {
-                    _onSuccessfulAttack?.Invoke();
+                    _onSuccessfulAttack();
                 }
             }
         }

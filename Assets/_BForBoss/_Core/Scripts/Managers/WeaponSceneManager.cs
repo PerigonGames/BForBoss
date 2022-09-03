@@ -16,13 +16,12 @@ namespace BForBoss
         public void Initialize(PlayerBehaviour playerBehaviour)
         {
             weaponAnimationController.Initialize(
-                () => playerBehaviour.PlayerMovement.CharacterVelocity,
-                () => playerBehaviour.PlayerMovement.CharacterMaxSpeed,
+                () => playerBehaviour.PlayerMovement.SpeedMagnitude,
                 () => playerBehaviour.PlayerMovement.IsWallRunning,
                 () => playerBehaviour.PlayerMovement.IsGrounded,
                 () => playerBehaviour.PlayerMovement.IsSliding,
                 () => playerBehaviour.PlayerMovement.IsDashing);
-            _equipmentBehaviour.Initialize(playerBehaviour.PlayerMovement.RootPivot);
+            _equipmentBehaviour.Initialize(playerBehaviour.PlayerMovement.RootPivot, weaponAnimationController);
             _ammunitionCountView.Initialize(_equipmentBehaviour);
             _reloadView.Initialize(_equipmentBehaviour);
         }

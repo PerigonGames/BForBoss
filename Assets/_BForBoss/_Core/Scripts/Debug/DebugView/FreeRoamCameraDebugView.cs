@@ -13,11 +13,10 @@ namespace BForBoss
 
         public override string PrettyName => "Free Roam Camera";
 
-        public FreeRoamCameraDebugView(Rect masterRect, Action onWindowOpened, Action<bool> onOptionsChanged, Action onBackButtonPressed) : base(masterRect)
+        public FreeRoamCameraDebugView(Rect masterRect, Action<bool> onOptionsChanged, Action onBackButtonPressed) : base(masterRect)
         {
             _onOptionsChanged = onOptionsChanged;
             _onBackButtonPressed = onBackButtonPressed;
-            onWindowOpened?.Invoke();
         }
 
         public override void ResetData()

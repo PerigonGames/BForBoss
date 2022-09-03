@@ -10,7 +10,7 @@ namespace BForBoss
         private Transform _spawnLocation = null;
         
         [Title("Component")]
-        [SerializeField] private EnemyBehaviourManager _enemyBehaviourManager = null;
+        [SerializeField] private LifeCycleManager _lifeCycleManager = null;
         [SerializeField] private WaveManager _waveManager;
         [SerializeField] private EnemySpawnerManager _enemySpawnerManager;
 
@@ -18,43 +18,25 @@ namespace BForBoss
         
         protected override Vector3 SpawnLocation => _spawnLocation.position;
         protected override Quaternion SpawnLookDirection => _spawnLocation.rotation;
-
-        protected override void CleanUp()
-        {
-            base.CleanUp();
-            FindObjectsOfType<PatrolBehaviour>().ForEach(pb => pb.CleanUp());
-        }
-
+        
         protected override void Reset()
         {
             base.Reset();
-            _enemyBehaviourManager.Reset();
+            _lifeCycleManager.Reset();
             
             if (_waveManager != null)
             {
                 _waveManager.Reset();
             }
-
-            if (_enemySpawnerManager != null)
-            {
-                _enemySpawnerManager.Reset();
-            }
-
-            if (_enemyBehaviourManager != null)
-            {
-                _enemyBehaviourManager.Reset();
-            }
-            
-            FindObjectsOfType<PatrolBehaviour>().ForEach(pb => pb.Reset());
         }
 
         protected override void Start()
         {
             base.Start();
 
-            if (_enemyBehaviourManager != null)
+            if (_lifeCycleManager != null)
             {
-                _enemyBehaviourManager.Initialize(() => _playerBehaviour.transform.position);
+                _lifeCycleManager.Initialize(() => _playerBehaviour.transform.position);
             }
             
             WaveModel waveModel = new WaveModel();
@@ -66,24 +48,24 @@ namespace BForBoss
             
             if (_waveManager != null)
             {
-                _waveManager.Initialize(waveModel, _enemySpawnerManager);
-            }
-
-            if (_enemySpawnerManager != null)
-            {
-                _enemySpawnerManager.Initialize(_enemyBehaviourManager, waveModel);
+                _waveManager.Initialize(_lifeCycleManager, _enemySpawnerManager, waveModel);
             }
         }
         
         protected override void HandleOnDeath()
         {
-            _enemyBehaviourManager.Reset();            
+            _lifeCycleManager.Reset();            
             base.HandleOnDeath();
         }
         
         protected override void OnValidate()
         {
             base.OnValidate();
+
+            if (_lifeCycleManager == null)
+            {
+                Debug.LogWarning("Life Cycle Manager missing from World Manager");
+            }
 
             if (_waveManager == null)
             {
@@ -98,11 +80,6 @@ namespace BForBoss
             if (_waveView == null)
             {
                 Debug.LogWarning("Wave View UI missing from the world Manager");
-            }
-
-            if (_enemyBehaviourManager == null)
-            {
-                Debug.LogWarning("Enemy Behaviour Manager missing from the world Manager");
             }
         }
     }
