@@ -13,6 +13,7 @@ namespace Perigon.Utility
         {
             public static int TriggerArea => 1 << LayerMask.NameToLayer("TriggerArea");
             public static int PlayerMask => ~LayerMask.GetMask("Player");
+            public static int  PlayerModel => 1 << LayerMask.NameToLayer("PlayerModel");
         }
     }
     
