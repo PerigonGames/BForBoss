@@ -1,30 +1,25 @@
 using System;
 using Perigon.Entities;
+using Perigon.Utility;
+using Perigon.Weapons;
+using UnityEngine;
 using UnityEngine.Pool;
 
 namespace BForBoss
 {
-    public class EnemyContainer
+    [RequireComponent(typeof(BulletSpawner))]
+    public class EnemyContainer: MonoBehaviour
     {
-        private ObjectPool<EnemyBehaviour> _enemyPool;
+        [SerializeField] private EnemyBehaviour _enemyBehaviour;
 
-        private EnemyBehaviourManager _enemyBehaviourManager;
-        private Action _onRelease;
-
-        public EnemyContainer(EnemyBehaviour enemyAgent, EnemyBehaviourManager enemyBehaviourManager, Action onRelease)
+        private IObjectPool<EnemyBehaviour> _enemyPool;
+        private Func<Vector3> _targetDestination;
+        private BulletSpawner _bulletSpawner;
+        public EnemyBehaviour GetEnemy() => _enemyPool.Get();
+        
+        public void Initialize(Func<Vector3> targetDestination)
         {
-            _enemyBehaviourManager = enemyBehaviourManager;
-            _onRelease = onRelease;
-            
-            if (_enemyPool == null)
-            {
-                SetupPool(enemyAgent);
-            }
-        }
-
-        public EnemyBehaviour Get()
-        {
-            return _enemyPool.Get();
+            _targetDestination = targetDestination;
         }
 
         public void Reset()
@@ -35,40 +30,36 @@ namespace BForBoss
             }
         }
 
-        private void SetupPool(EnemyBehaviour enemyAgentToPool)
+        private void Awake()
         {
-            _enemyPool = new ObjectPool<EnemyBehaviour>(() => GenerateEnemy(enemyAgentToPool),
-                (enemy) =>
-                {
-                    enemy.gameObject.SetActive(true);
-                },
-                (enemy) =>
-                {
-                    enemy.gameObject.SetActive(false);
-                    _onRelease?.Invoke();
-                });
-        }
-
-        //public ObjectPool<EnemyBehaviour> EnemyPool => _enemyPool;
-
-        private void Release(EnemyBehaviour behaviour)
-        {
-            _enemyPool.Release(behaviour);
-        }
-
-        private EnemyBehaviour GenerateEnemy(EnemyBehaviour enemyAgent)
-        {
-            FloatingTargetBehaviour floatingEnemy = enemyAgent as FloatingTargetBehaviour;
-            
-            if (floatingEnemy != null)
+            _bulletSpawner = GetComponent<BulletSpawner>();
+            if (_enemyBehaviour == null)
             {
-                floatingEnemy.Initialize(_enemyBehaviourManager.GetPlayerPosition, _enemyBehaviourManager.BulletSpawner, null, Release);
-            
-                return floatingEnemy;
+                PanicHelper.Panic(new Exception("Missing EnemyBehaviour prefab from EnemyContainer"));
             }
-            
-            return null;
-            //return enemyAgent;
+            _enemyPool = new ObjectPool<EnemyBehaviour>(CreateEnemy, OnTakenFromPool, OnReturnedToPool);
+        }
+
+        private EnemyBehaviour CreateEnemy()
+        {
+            var enemy = Instantiate(_enemyBehaviour);
+            if (enemy.TryGetComponent(out FloatingTargetBehaviour floatingEnemy))
+            {
+                floatingEnemy.Initialize(_targetDestination, _bulletSpawner);
+            }
+
+            return enemy;
+        }
+        
+        private void OnTakenFromPool(EnemyBehaviour enemyBehaviour)
+        {
+            enemyBehaviour.Reset();
+            enemyBehaviour.gameObject.SetActive(true);
+        }
+
+        private void OnReturnedToPool(EnemyBehaviour enemyBehaviour)
+        {
+            enemyBehaviour.gameObject.SetActive(false);
         }
     }
 }

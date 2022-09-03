@@ -1,5 +1,4 @@
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace BForBoss
@@ -10,7 +9,6 @@ namespace BForBoss
         private Transform _spawnLocation = null;
 
         [Title("Component")]
-        [SerializeField] private LifeCycleManager _lifeCycleManager = null;
         [SerializeField] private EnemySpawnerManager _enemySpawnerManager = null;
 
         protected override Vector3 SpawnLocation => _spawnLocation.position;
@@ -19,7 +17,6 @@ namespace BForBoss
         protected override void Reset()
         {
             base.Reset();
-            _lifeCycleManager.Reset();
 
             if (_enemySpawnerManager != null)
             {
@@ -29,21 +26,16 @@ namespace BForBoss
 
         protected override void Start()
         {
-            if (_lifeCycleManager != null)
-            {
-                _lifeCycleManager.Initialize(() => _playerBehaviour.transform.position);
-            }
 
-            // if (_enemySpawnerManager != null)
-            // {
-            //     _enemySpawnerManager.Initialize(_lifeCycleManager);
-            // }
+             if (_enemySpawnerManager != null) 
+             { 
+                 //_enemySpawnerManager.Initialize();
+            }
             base.Start();
         }
 
         protected override void HandleOnDeath()
         {
-            _lifeCycleManager.Reset();
             base.HandleOnDeath();
         }
 

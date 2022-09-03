@@ -1,5 +1,6 @@
+using System;
+using Perigon.Utility;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace BForBoss
@@ -8,9 +9,9 @@ namespace BForBoss
     {
         [SerializeField] 
         private Transform _spawnLocation = null;
-        
-        [Title("Component")]
-        [SerializeField] private LifeCycleManager _lifeCycleManager = null;
+
+        [Title("Component")] 
+        [SerializeField] private EnemyContainer _enemyContainer;
         [SerializeField] private WaveManager _waveManager;
         [SerializeField] private EnemySpawnerManager _enemySpawnerManager;
 
@@ -22,7 +23,6 @@ namespace BForBoss
         protected override void Reset()
         {
             base.Reset();
-            _lifeCycleManager.Reset();
             
             if (_waveManager != null)
             {
@@ -34,11 +34,6 @@ namespace BForBoss
         {
             base.Start();
 
-            if (_lifeCycleManager != null)
-            {
-                _lifeCycleManager.Initialize(() => _playerBehaviour.transform.position);
-            }
-            
             WaveModel waveModel = new WaveModel();
 
             if (_waveView != null)
@@ -48,38 +43,32 @@ namespace BForBoss
             
             if (_waveManager != null)
             {
-                _waveManager.Initialize(_lifeCycleManager, _enemySpawnerManager, waveModel);
+               // _waveManager.Initialize(_lifeCycleManager, _enemySpawnerManager, waveModel);
             }
-        }
-        
-        protected override void HandleOnDeath()
-        {
-            _lifeCycleManager.Reset();            
-            base.HandleOnDeath();
         }
         
         protected override void OnValidate()
         {
             base.OnValidate();
 
-            if (_lifeCycleManager == null)
-            {
-                Debug.LogWarning("Life Cycle Manager missing from World Manager");
-            }
-
             if (_waveManager == null)
             {
-                Debug.LogWarning("Wave Manager missing from the world manager");
+                PanicHelper.Panic(new Exception("Wave Manager missing from the world manager"));
             }
 
             if (_enemySpawnerManager == null)
             {
-                Debug.LogWarning("Enemy Spawner Manager missing from the world manager");
+                PanicHelper.Panic(new Exception("Enemy Spawner Manager missing from the world manager"));
             }
 
             if (_waveView == null)
             {
-                Debug.LogWarning("Wave View UI missing from the world Manager");
+                PanicHelper.Panic(new Exception("Wave View UI missing from the world Manager"));
+            }
+
+            if (_enemyContainer == null)
+            {
+                PanicHelper.Panic(new Exception("Enemy Container missing from WaveSandboxWorldManager"));
             }
         }
     }
