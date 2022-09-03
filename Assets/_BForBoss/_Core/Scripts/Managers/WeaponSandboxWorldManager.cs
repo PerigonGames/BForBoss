@@ -1,5 +1,4 @@
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace BForBoss
@@ -19,7 +18,10 @@ namespace BForBoss
         protected override void Reset()
         {
             base.Reset();
-            _lifeCycleManager.Reset();
+            if (_lifeCycleManager != null)
+            {
+                _lifeCycleManager.Reset();
+            }
 
             if (_enemySpawnerManager != null)
             {
@@ -43,7 +45,10 @@ namespace BForBoss
 
         protected override void HandleOnDeath()
         {
-            _lifeCycleManager.Reset();
+            if (_lifeCycleManager != null)            
+            {
+                _lifeCycleManager.Reset();
+            }
             base.HandleOnDeath();
         }
 
