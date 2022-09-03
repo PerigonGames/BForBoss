@@ -10,10 +10,9 @@ namespace BForBoss
         [Title("Settings")] 
         [SerializeField, Tooltip("Number of enemies for the first wave")] private int _initialNumberOfEnemies = 10;
         [SerializeField, Tooltip("Cooldown time between waves")] private float _timeBetweenWaves = 2.5f;
-        [SerializeField, Tooltip("Number of enemies per wave is the number of enemies from the previous wave multiplied by this multiplier")] private float _enemyAmountMultiplier = 1.2f;
-
-
-        //private EnemySpawnerManager _enemySpawnerManager;
+        [SerializeField, Tooltip("Number of enemies per wave is the number of enemies from the previous wave multiplied by this multiplier")]
+        private float _enemyAmountMultiplier = 1.2f;
+        
         private ISpawnerControl _spawnerControl;
         private WaveModel _waveModel;
         
@@ -45,13 +44,12 @@ namespace BForBoss
 
             if (_spawnCount >= _waveModel.MaxEnemyCount)
             {
-                PauseSpawning();
+                _spawnerControl.PauseSpawning();
             }
         }
 
         private void OnEnemyKilled(int numberOfRemainingEnemies)
         {
-            //Added the second clause just in case no. spawned > max allowed
             if (numberOfRemainingEnemies <= 0)
             {
                 Debug.Log($"Please wait <b>{_timeBetweenWaves} seconds</b> before the next wave");
@@ -61,21 +59,11 @@ namespace BForBoss
 
         private IEnumerator InitiateNextWave()
         {
+            _spawnerControl.PauseSpawning();
             yield return new WaitForSeconds(_timeBetweenWaves);
             
             _spawnCount = 0;
             _waveModel.IncrementWave((int)Math.Ceiling(_waveModel.MaxEnemyCount * _enemyAmountMultiplier));
-            
-            ResumeSpawning();
-        }
-
-        private void PauseSpawning()
-        {
-            _spawnerControl.PauseSpawning();
-        }
-
-        private void ResumeSpawning()
-        {
             _spawnerControl.ResumeSpawning();
         }
 

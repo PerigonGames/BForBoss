@@ -15,6 +15,8 @@ namespace BForBoss
         private IObjectPool<EnemyBehaviour> _enemyPool;
         private Func<Vector3> _targetDestination;
         private BulletSpawner _bulletSpawner;
+        public event Action OnRelease;
+        
         public EnemyBehaviour GetEnemy() => _enemyPool.Get();
         
         public void Initialize(Func<Vector3> targetDestination)
@@ -59,6 +61,7 @@ namespace BForBoss
 
         private void OnReturnedToPool(EnemyBehaviour enemyBehaviour)
         {
+            OnRelease?.Invoke();
             enemyBehaviour.gameObject.SetActive(false);
         }
     }

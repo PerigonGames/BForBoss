@@ -55,17 +55,17 @@ namespace BForBoss
         public void IncrementWave(int newMaxEnemyCount)
         {
             WaveNumber++;
-            MaxEnemyCount = newMaxEnemyCount;
-            OnWaveCountUpdated?.Invoke(_waveNumber, _maxEnemyCount);
+            MaxEnemyCount = newMaxEnemyCount;            
             _killCount = 0;
+            OnWaveCountUpdated?.Invoke(_waveNumber, _maxEnemyCount);
         }
 
         public void ResetData()
         {
             WaveNumber = 1;
             MaxEnemyCount = _initialMaxEnemyCount;
-            OnWaveCountUpdated?.Invoke(_waveNumber, _maxEnemyCount);
             _killCount = 0;
+            OnWaveCountUpdated?.Invoke(_waveNumber, _maxEnemyCount);
         }
     }
 }
