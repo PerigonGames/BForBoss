@@ -25,6 +25,8 @@ namespace Perigon.Weapons
                 }
             }
         }
+        
+        public LayerMask Mask { protected get; set; }
 
         
         public Action<Vector3, Vector3> OnBulletHitWall { get; set; }
