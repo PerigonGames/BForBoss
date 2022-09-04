@@ -9,8 +9,9 @@ namespace Perigon.Entities
         //TODO - don't do this.knockback should rely on something else
         public ILifeCycle LifeCycle => _lifeCycle;
         
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
             _healthbar.Initialize(_lifeCycle);
         }
 

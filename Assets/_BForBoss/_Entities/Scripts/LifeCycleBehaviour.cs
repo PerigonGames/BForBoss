@@ -19,16 +19,10 @@ namespace Perigon.Entities
 
         public bool IsAlive => _lifeCycle.IsAlive;
 
-        public virtual void Initialize(Action onDeathCallback)
+        public virtual void Initialize()
         {
             _lifeCycle = new LifeCycle(_health);
             _lifeCycle.OnDeath += LifeCycleFinished;
-            
-            if (onDeathCallback != null)
-            {
-                _lifeCycle.OnDeath += onDeathCallback.Invoke;
-            }
-            
             _lifeCycle.OnDamageTaken += LifeCycleDamageTaken;
             _lifeCycle.OnHeal += LifeCycleOnHeal;
         }

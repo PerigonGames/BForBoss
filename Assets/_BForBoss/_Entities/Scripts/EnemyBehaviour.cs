@@ -6,8 +6,9 @@ namespace Perigon.Entities
     public abstract class EnemyBehaviour: MonoBehaviour
     {
         public IObjectPool<EnemyBehaviour> Pool { get; set; }
+        
 
-        public void Reset()
+        public virtual void Reset()
         {
             ReleaseToPool();
         }
