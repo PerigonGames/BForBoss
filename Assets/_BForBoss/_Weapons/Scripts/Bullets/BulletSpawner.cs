@@ -10,6 +10,8 @@ namespace Perigon.Weapons
 
         [SerializeField, Layer] private int _layer = 8; //default is Bullet layer
 
+        [SerializeField] private LayerMask _layerMask = -1;
+
         public IBullet SpawnBullet(BulletTypes typeOfBullet = BulletTypes.NoPhysics)
         {
             if(_pools == null) 
@@ -35,6 +37,7 @@ namespace Perigon.Weapons
             var newBullet = Instantiate(prefab);
             newBullet.gameObject.layer = _layer;
             newBullet.Pool = _pools[poolIndex];
+            newBullet.Mask = _layerMask;
             return newBullet;
         }
     }
