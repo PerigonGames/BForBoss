@@ -47,18 +47,11 @@ namespace Perigon.Entities
             if (_lifeCycle != null)
             {
                 _lifeCycle.Reset();
-                _lifeCycle.OnDeath += LifeCycleFinished;
-                _lifeCycle.OnDamageTaken += LifeCycleDamageTaken;
             }
         }
         
         public virtual void CleanUp()
         {
-            if (_lifeCycle != null)
-            {
-                _lifeCycle.OnDeath -= LifeCycleFinished;
-                _lifeCycle.OnDamageTaken -= LifeCycleDamageTaken;
-            }
         }
 
         protected abstract void LifeCycleFinished();

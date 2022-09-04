@@ -45,13 +45,13 @@ namespace BForBoss
 
         private void OnEnemyKilled()
         {
-            if (_waveModel.IsEnemiesAllDead)
+            if (_waveModel.IsRoundConcluded)
             {
                 Debug.Log("<color=green>Round Over</color>");
-                Debug.Log($"Please wait <b>{_timeBetweenWaves} seconds</b> before the next wave");
+                Debug.Log($"Please wait <color=green><b>{_timeBetweenWaves} seconds</b></color> before the next wave");
                 StartCoroutine(InitiateNextWave());
             }
-            else
+            else if (!_waveModel.IsMaxEnemySpawnedReached)
             {
                 _spawnerControl.ResumeSpawning();
             }

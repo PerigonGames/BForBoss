@@ -5,12 +5,13 @@ namespace BForBoss
 {
     public class WaveModel
     {
+        private int DEBUG_ACTIVE_SPAWN_COUNT;
+
         private int _waveNumber;
         private int _initialMaxEnemyCount;
         private int _maxEnemyCount;
         private int _killCount;
-        
-        private int _spawnCount;
+        private int _totalRoundTotalSpawnCount;
 
         public Action OnEnemySpawned;
         public Action OnEnemyKilled;
@@ -37,18 +38,18 @@ namespace BForBoss
             }
         }
 
-        private int SpawnCount
+        private int RoundTotalSpawnCount
         {
-            get => _spawnCount;
+            get => _totalRoundTotalSpawnCount;
             set
             {
-                _spawnCount = value;
+                _totalRoundTotalSpawnCount = value;
                 OnEnemySpawned?.Invoke();
             }
         }
 
-        public bool IsMaxEnemySpawnedReached => _spawnCount >= _maxEnemyCount;
-        public bool IsEnemiesAllDead => _maxEnemyCount == KillCount; 
+        public bool IsMaxEnemySpawnedReached => _totalRoundTotalSpawnCount >= _maxEnemyCount;
+        public bool IsRoundConcluded => _maxEnemyCount == KillCount; 
 
         public void SetupInitialWave(int maxEnemyCount)
         {
@@ -59,28 +60,33 @@ namespace BForBoss
 
         public void IncrementSpawnCount()
         {
-            SpawnCount++;
-            Debug.Log($"Spawn Count: {_spawnCount}");
+            DEBUG_ACTIVE_SPAWN_COUNT++;
+            RoundTotalSpawnCount++;
+            Debug.Log($"Enemy Spawned: <color=red>Active Spawn Count: {DEBUG_ACTIVE_SPAWN_COUNT}</color>");
+            Debug.Log($"Enemy Spawned: <color=red>Round Spawn Count {_totalRoundTotalSpawnCount}</color>");
+            Debug.Log($"===========================================");
         }
 
         public void IncrementKillCount()
         {
+            DEBUG_ACTIVE_SPAWN_COUNT--;
             KillCount++;
-            SpawnCount--;
-            Debug.Log($"Spawn Count: {_spawnCount}");
+            Debug.Log($"Enemy Killed:  <color=red>Active Spawn Count: {DEBUG_ACTIVE_SPAWN_COUNT}</color>");
+            Debug.Log($"Enemy Killed:  <color=red>Round Spawn Count {_totalRoundTotalSpawnCount}</color>");
+            Debug.Log($"===========================================");
         }
 
         public void IncrementWave(float maxAmountMultiplier)
         {
-            _spawnCount = 0;            
+            _totalRoundTotalSpawnCount = 0;            
             _killCount = 0;
+            _maxEnemyCount = (int)Mathf.Ceil(_maxEnemyCount * maxAmountMultiplier);
             WaveNumber++;
-            _maxEnemyCount = (int)(_maxEnemyCount * maxAmountMultiplier);            
         }
 
         public void Reset()
         {
-            _spawnCount = 0;
+            _totalRoundTotalSpawnCount = 0;
             _waveNumber = 1;
             _maxEnemyCount = _initialMaxEnemyCount;
             _killCount = 0;

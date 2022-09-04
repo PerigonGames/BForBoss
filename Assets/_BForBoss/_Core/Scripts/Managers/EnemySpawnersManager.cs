@@ -26,19 +26,13 @@ namespace BForBoss
 
         public void ResumeSpawning()
         {
+            Debug.Log("<color=green>Spawn Resumed</color>");
             foreach (EnemySpawnAreaBehaviour spawner in _enemySpawnerAreas)
             {
                 spawner.ResumeSpawning();
             }
         }
 
-        public void SingleSpawn()
-        {
-            var randomUtility = new RandomUtility();
-            randomUtility.NextTryGetElement(_enemySpawnerAreas, out var area);
-            area.SpawnSingleEnemy(); 
-        }
-        
         private void Awake()
         {
             _enemySpawnerAreas = FindObjectsOfType<EnemySpawnAreaBehaviour>();

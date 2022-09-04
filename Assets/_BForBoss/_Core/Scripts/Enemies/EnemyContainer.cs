@@ -62,7 +62,6 @@ namespace BForBoss
 
         private void OnReturnedToPool(EnemyBehaviour enemyBehaviour)
         {
-            enemyBehaviour.CleanUp();
             enemyBehaviour.gameObject.SetActive(false);
         }
     }

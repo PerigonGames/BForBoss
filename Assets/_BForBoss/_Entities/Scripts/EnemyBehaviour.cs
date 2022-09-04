@@ -11,7 +11,6 @@ namespace Perigon.Entities
         public event Action<EnemyBehaviour> OnRelease;
 
         public abstract void Reset();
-        public abstract void CleanUp();
         
         protected void ReleaseToPool()
         {

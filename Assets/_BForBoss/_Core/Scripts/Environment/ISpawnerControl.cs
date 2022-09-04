@@ -4,6 +4,5 @@ namespace BForBoss
     {
         void PauseSpawning();
         void ResumeSpawning();
-        void SingleSpawn();
     }
 }
