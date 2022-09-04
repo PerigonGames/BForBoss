@@ -33,6 +33,17 @@ namespace BForBoss
             _canSpawn = true;
             SpawnInitialEnemies();
         }
+
+        public void Reset()
+        {
+            _canSpawn = true;
+        }
+
+        public void CleanUp()
+        {
+            _canSpawn = false;
+            StopCoroutine(nameof(SpawnEnemies));
+        }
         
         private void SpawnInitialEnemies()
         {

@@ -88,9 +88,9 @@ namespace BForBoss
         public void Reset()
         {
             RoundTotalSpawnCount = 0;
-            WaveNumber = 0;
             _maxEnemyCount = _initialMaxEnemyCount;
             KillCount = 0;
+            WaveNumber = 1;
         }
     }
 }

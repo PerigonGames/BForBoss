@@ -24,15 +24,17 @@ namespace BForBoss
         protected override void Reset()
         {
             base.Reset();
+            _waveView.Reset();
             _waveManager.Reset();
             _enemyContainer.Reset();
-            _waveView.Reset();
+            _enemySpawnersManager.Reset();
         }
 
         protected override void CleanUp()
         {
             base.CleanUp();
             _enemyContainer.CleanUp();
+            _enemySpawnersManager.CleanUp();
         }
 
         protected override void Start()

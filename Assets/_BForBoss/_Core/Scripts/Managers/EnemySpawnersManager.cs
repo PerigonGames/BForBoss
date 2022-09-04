@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace BForBoss
@@ -31,7 +32,23 @@ namespace BForBoss
                 spawner.ResumeSpawning();
             }
         }
+
+        public void Reset()
+        {
+            foreach (EnemySpawnAreaBehaviour spawner in _enemySpawnerAreas)
+            {
+                spawner.Reset();
+            }
+        }
         
+        public void CleanUp()
+        {
+            foreach (EnemySpawnAreaBehaviour spawner in _enemySpawnerAreas)
+            {
+                spawner.CleanUp();
+            }
+        }
+
         private void Awake()
         {
             _enemySpawnerAreas = FindObjectsOfType<EnemySpawnAreaBehaviour>();
