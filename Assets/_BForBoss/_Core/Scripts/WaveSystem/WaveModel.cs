@@ -16,11 +16,11 @@ namespace BForBoss
         public Action OnEnemySpawned;
         public Action OnEnemyKilled;
         public Action<int, int> OnDataUpdated;
-        
-        public int WaveNumber
+
+        private int WaveNumber
         {
             get => _waveNumber;
-            private set
+            set
             {
                 _waveNumber = value;
                 OnDataUpdated?.Invoke(_waveNumber, _maxEnemyCount - _killCount);
@@ -34,7 +34,6 @@ namespace BForBoss
             {
                 _killCount = value;
                 OnDataUpdated?.Invoke(_waveNumber, _maxEnemyCount - _killCount);
-                OnEnemyKilled?.Invoke();
             }
         }
 
@@ -70,7 +69,9 @@ namespace BForBoss
         public void IncrementKillCount()
         {
             DEBUG_ACTIVE_SPAWN_COUNT--;
-             KillCount++;
+            KillCount++;
+            OnEnemyKilled?.Invoke();
+
             Debug.Log($"Enemy Killed:  <color=red>Active Spawn Count: {DEBUG_ACTIVE_SPAWN_COUNT}</color>");
             Debug.Log($"Enemy Killed:  <color=red>Round Spawn Count {_totalRoundTotalSpawnCount}</color>");
             Debug.Log($"===========================================");
@@ -86,10 +87,10 @@ namespace BForBoss
 
         public void Reset()
         {
-            _totalRoundTotalSpawnCount = 0;
-            _waveNumber = 1;
+            RoundTotalSpawnCount = 0;
+            WaveNumber = 0;
             _maxEnemyCount = _initialMaxEnemyCount;
-            _killCount = 0;
+            KillCount = 0;
         }
     }
 }
