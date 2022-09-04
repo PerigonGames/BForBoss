@@ -29,6 +29,12 @@ namespace BForBoss
             _waveView.Reset();
         }
 
+        protected override void CleanUp()
+        {
+            base.CleanUp();
+            _enemyContainer.CleanUp();
+        }
+
         protected override void Start()
         {
             base.Start();

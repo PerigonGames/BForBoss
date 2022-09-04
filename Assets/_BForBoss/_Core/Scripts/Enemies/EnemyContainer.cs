@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Perigon.Entities;
 using Perigon.Utility;
 using Perigon.Weapons;
@@ -15,7 +16,9 @@ namespace BForBoss
         private IObjectPool<EnemyBehaviour> _enemyPool;
         private Func<Vector3> _targetDestination;
         private BulletSpawner _bulletSpawner;
-        
+        private List<EnemyBehaviour> _activeEnemies = new List<EnemyBehaviour>();
+
+
         public EnemyBehaviour GetEnemy() => _enemyPool.Get();
         
         public void Initialize(Func<Vector3> targetDestination)
@@ -25,10 +28,17 @@ namespace BForBoss
 
         public void Reset()
         {
-            if (_enemyPool != null)
+            _enemyPool.Clear();
+            _activeEnemies.Clear();
+        }
+
+        public void CleanUp()
+        {
+            foreach (var enemy in _activeEnemies)
             {
-                _enemyPool.Clear();
+                Destroy(enemy.gameObject);
             }
+            _activeEnemies.Clear();
         }
 
         private void Awake()
@@ -38,7 +48,11 @@ namespace BForBoss
             {
                 PanicHelper.Panic(new Exception("Missing EnemyBehaviour prefab from EnemyContainer"));
             }
-            _enemyPool = new ObjectPool<EnemyBehaviour>(CreateEnemy, OnTakenFromPool, OnReturnedToPool);
+            _enemyPool = new ObjectPool<EnemyBehaviour>(
+                CreateEnemy, 
+                OnTakenFromPool, 
+                OnReturnedToPool, 
+                OnDestroyEnemy);
         }
 
         private EnemyBehaviour CreateEnemy()
@@ -49,20 +63,26 @@ namespace BForBoss
             {
                 floatingEnemy.Initialize(_targetDestination, _bulletSpawner);
             }
-
+            
             return enemy;
         }
         
         private void OnTakenFromPool(EnemyBehaviour enemyBehaviour)
         {
-            Debug.Log("Taken from pool and reset");
+            _activeEnemies.Add(enemyBehaviour);
             enemyBehaviour.Reset();
             enemyBehaviour.gameObject.SetActive(true);
         }
 
         private void OnReturnedToPool(EnemyBehaviour enemyBehaviour)
         {
+            _activeEnemies.Remove(enemyBehaviour);
             enemyBehaviour.gameObject.SetActive(false);
+        }
+
+        private void OnDestroyEnemy(EnemyBehaviour enemyBehaviour)
+        {
+            Destroy(enemyBehaviour.gameObject);
         }
     }
 }

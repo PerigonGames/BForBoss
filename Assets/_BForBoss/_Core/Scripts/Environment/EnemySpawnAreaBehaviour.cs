@@ -33,11 +33,6 @@ namespace BForBoss
             _canSpawn = true;
             SpawnInitialEnemies();
         }
-
-        public void SpawnSingleEnemy()
-        {
-            StartCoroutine(SpawnEnemies(1));
-        }
         
         private void SpawnInitialEnemies()
         {

@@ -70,7 +70,7 @@ namespace BForBoss
         public void IncrementKillCount()
         {
             DEBUG_ACTIVE_SPAWN_COUNT--;
-            KillCount++;
+             KillCount++;
             Debug.Log($"Enemy Killed:  <color=red>Active Spawn Count: {DEBUG_ACTIVE_SPAWN_COUNT}</color>");
             Debug.Log($"Enemy Killed:  <color=red>Round Spawn Count {_totalRoundTotalSpawnCount}</color>");
             Debug.Log($"===========================================");

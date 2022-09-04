@@ -17,5 +17,10 @@ namespace Perigon.Entities
             OnRelease?.Invoke(this);
             Pool.Release(this);
         }
+
+        private void OnDestroy()
+        {
+            OnRelease?.Invoke(this);
+        }
     }
 }
