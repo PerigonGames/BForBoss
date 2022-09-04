@@ -17,6 +17,9 @@ namespace BForBoss
 
         [Title("HUD")] 
         [SerializeField] private WaveViewBehaviour _waveView = null;
+
+        [Title("DEBUG")] 
+        [SerializeField] private bool DEBUG_PRINT = false;
         
         protected override Vector3 SpawnLocation => _spawnLocation.position;
         protected override Quaternion SpawnLookDirection => _spawnLocation.rotation;
@@ -41,7 +44,7 @@ namespace BForBoss
         {
             base.Start();
 
-            WaveModel waveModel = new WaveModel();
+            WaveModel waveModel = new WaveModel(shouldPrintDebug: DEBUG_PRINT);
             _waveView.Initialize(waveModel);
             _enemyContainer.Initialize(() => _playerBehaviour.transform.position);
             _enemySpawnersManager.Initialize(_enemyContainer, waveModel);
