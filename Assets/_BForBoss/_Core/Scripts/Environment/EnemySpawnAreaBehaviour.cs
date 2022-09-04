@@ -1,4 +1,5 @@
 using System.Collections;
+using Perigon.Entities;
 using UnityEngine;
 namespace BForBoss
 {
@@ -16,7 +17,6 @@ namespace BForBoss
         public void Initialize(EnemyContainer enemyContainer, WaveModel waveModel)
         {
             _enemyContainer = enemyContainer;
-            _enemyContainer.OnRelease += HandleOnEnemyRelease;
             _waveModel = waveModel;
 
             SpawnInitialEnemies();
@@ -34,9 +34,8 @@ namespace BForBoss
             SpawnInitialEnemies();
         }
 
-        private void HandleOnEnemyRelease()
+        public void SpawnSingleEnemy()
         {
-            _waveModel?.IncrementKillCount();
             StartCoroutine(SpawnEnemies(1));
         }
         
@@ -79,8 +78,15 @@ namespace BForBoss
         {
             Debug.Log("<color=red>Spawn Enemy</color>");
             var enemy = _enemyContainer.GetEnemy();
+            enemy.OnRelease += HandleOnEnemyReleased;
             enemy.transform.SetPositionAndRotation(transform.position, transform.rotation);
             _waveModel?.IncrementSpawnCount();
+        }
+
+        private void HandleOnEnemyReleased(EnemyBehaviour enemy)
+        {
+            enemy.OnRelease -= HandleOnEnemyReleased;
+            _waveModel.IncrementKillCount();
         }
     }
 }

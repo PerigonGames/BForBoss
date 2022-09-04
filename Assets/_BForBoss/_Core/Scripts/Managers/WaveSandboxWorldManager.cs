@@ -26,7 +26,6 @@ namespace BForBoss
             base.Reset();
             _waveManager.Reset();
             _enemyContainer.Reset();
-            _enemySpawnersManager.Reset();
             _waveView.Reset();
         }
 

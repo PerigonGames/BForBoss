@@ -15,7 +15,6 @@ namespace BForBoss
         private IObjectPool<EnemyBehaviour> _enemyPool;
         private Func<Vector3> _targetDestination;
         private BulletSpawner _bulletSpawner;
-        public event Action OnRelease;
         
         public EnemyBehaviour GetEnemy() => _enemyPool.Get();
         
@@ -56,13 +55,14 @@ namespace BForBoss
         
         private void OnTakenFromPool(EnemyBehaviour enemyBehaviour)
         {
+            Debug.Log("Taken from pool and reset");
             enemyBehaviour.Reset();
             enemyBehaviour.gameObject.SetActive(true);
         }
 
         private void OnReturnedToPool(EnemyBehaviour enemyBehaviour)
         {
-            OnRelease?.Invoke();
+            enemyBehaviour.CleanUp();
             enemyBehaviour.gameObject.SetActive(false);
         }
     }

@@ -62,6 +62,11 @@ namespace BForBoss
             _knockbackBehaviour.Reset();
         }
 
+        public override void CleanUp()
+        {
+            _lifeCycleBehaviour.CleanUp();
+        }
+
         private void FixedUpdate()
         {
             switch (_state)

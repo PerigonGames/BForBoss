@@ -1,3 +1,4 @@
+using PerigonGames;
 using UnityEngine;
 
 namespace BForBoss
@@ -13,15 +14,7 @@ namespace BForBoss
                 spawner.Initialize(enemyContainer, waveModel);
             }
         }
-        
-        public void Reset()
-        { 
-            foreach (EnemySpawnAreaBehaviour spawner in _enemySpawnerAreas)
-            {
-                spawner.Reset();
-            }
-        }
-        
+
         public void PauseSpawning()
         {
             Debug.Log("<color=green>Spawn Paused</color>");
@@ -37,6 +30,13 @@ namespace BForBoss
             {
                 spawner.ResumeSpawning();
             }
+        }
+
+        public void SingleSpawn()
+        {
+            var randomUtility = new RandomUtility();
+            randomUtility.NextTryGetElement(_enemySpawnerAreas, out var area);
+            area.SpawnSingleEnemy(); 
         }
         
         private void Awake()

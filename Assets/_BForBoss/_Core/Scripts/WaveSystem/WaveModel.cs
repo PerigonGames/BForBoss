@@ -13,19 +13,17 @@ namespace BForBoss
         private int _spawnCount;
 
         public Action OnEnemySpawned;
-        public Action<int> OnEnemyKilled;
-        public Action<int, int> OnWaveCountUpdated;
+        public Action OnEnemyKilled;
+        public Action<int, int> OnDataUpdated;
         
         public int WaveNumber
         {
             get => _waveNumber;
-            private set => _waveNumber = value;
-        }
-
-        public int MaxEnemyCount
-        {
-            get => _maxEnemyCount;
-            private set => _maxEnemyCount = value;
+            private set
+            {
+                _waveNumber = value;
+                OnDataUpdated?.Invoke(_waveNumber, _maxEnemyCount - _killCount);
+            }
         }
 
         private int KillCount
@@ -34,7 +32,8 @@ namespace BForBoss
             set
             {
                 _killCount = value;
-                OnEnemyKilled?.Invoke(_maxEnemyCount - _killCount);
+                OnDataUpdated?.Invoke(_waveNumber, _maxEnemyCount - _killCount);
+                OnEnemyKilled?.Invoke();
             }
         }
 
@@ -48,7 +47,8 @@ namespace BForBoss
             }
         }
 
-        public bool IsMaxEnemySpawnedReached => _spawnCount >= MaxEnemyCount;
+        public bool IsMaxEnemySpawnedReached => _spawnCount >= _maxEnemyCount;
+        public bool IsEnemiesAllDead => _maxEnemyCount == KillCount; 
 
         public void SetupInitialWave(int maxEnemyCount)
         {
@@ -66,6 +66,8 @@ namespace BForBoss
         public void IncrementKillCount()
         {
             KillCount++;
+            SpawnCount--;
+            Debug.Log($"Spawn Count: {_spawnCount}");
         }
 
         public void IncrementWave(float maxAmountMultiplier)
@@ -73,8 +75,7 @@ namespace BForBoss
             _spawnCount = 0;            
             _killCount = 0;
             WaveNumber++;
-            MaxEnemyCount = (int)(_maxEnemyCount * maxAmountMultiplier);            
-            OnWaveCountUpdated?.Invoke(_waveNumber, _maxEnemyCount);
+            _maxEnemyCount = (int)(_maxEnemyCount * maxAmountMultiplier);            
         }
 
         public void Reset()

@@ -14,6 +14,7 @@ namespace BForBoss
         
         private ISpawnerControl _spawnerControl;
         private WaveModel _waveModel;
+        private EnemyContainer _enemyContainer;
         
         public void Initialize(WaveModel waveModel, ISpawnerControl spawnerControl)
         {
@@ -42,13 +43,17 @@ namespace BForBoss
             }
         }
 
-        private void OnEnemyKilled(int numberOfRemainingEnemies)
+        private void OnEnemyKilled()
         {
-            if (numberOfRemainingEnemies <= 0)
+            if (_waveModel.IsEnemiesAllDead)
             {
                 Debug.Log("<color=green>Round Over</color>");
                 Debug.Log($"Please wait <b>{_timeBetweenWaves} seconds</b> before the next wave");
                 StartCoroutine(InitiateNextWave());
+            }
+            else
+            {
+                _spawnerControl.ResumeSpawning();
             }
         }
 

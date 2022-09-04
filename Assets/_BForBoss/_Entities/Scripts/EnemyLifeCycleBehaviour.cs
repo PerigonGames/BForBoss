@@ -18,8 +18,9 @@ namespace Perigon.Entities
             _healthbar.Initialize(_lifeCycle);
         }
 
-        public void Reset()
+        public override void Reset()
         {
+            base.Reset();
             _healthbar.Reset();
         }
         
