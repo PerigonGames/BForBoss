@@ -22,14 +22,6 @@ namespace BForBoss
             SpawnInitialEnemies();
         }
 
-        public void Reset()
-        {
-            if (_enemyContainer != null)
-            {
-                _enemyContainer.Reset();
-            }
-        }
-
         public void PauseSpawning()
         {
             _canSpawn = false;
@@ -85,6 +77,7 @@ namespace BForBoss
 
         private void SpawnEnemy()
         {
+            Debug.Log("<color=red>Spawn Enemy</color>");
             var enemy = _enemyContainer.GetEnemy();
             enemy.transform.SetPositionAndRotation(transform.position, transform.rotation);
             _waveModel?.IncrementSpawnCount();

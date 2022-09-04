@@ -24,6 +24,7 @@ namespace BForBoss
         
         public void PauseSpawning()
         {
+            Debug.Log("<color=green>Spawn Paused</color>");
             foreach (EnemySpawnAreaBehaviour spawner in _enemySpawnerAreas)
             {
                 spawner.PauseSpawning();

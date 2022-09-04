@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace BForBoss
 {
@@ -8,6 +9,8 @@ namespace BForBoss
         private int _initialMaxEnemyCount;
         private int _maxEnemyCount;
         private int _killCount;
+        
+        private int _spawnCount;
 
         public Action OnEnemySpawned;
         public Action<int> OnEnemyKilled;
@@ -33,18 +36,31 @@ namespace BForBoss
                 _killCount = value;
                 OnEnemyKilled?.Invoke(_maxEnemyCount - _killCount);
             }
-            
         }
+
+        private int SpawnCount
+        {
+            get => _spawnCount;
+            set
+            {
+                _spawnCount = value;
+                OnEnemySpawned?.Invoke();
+            }
+        }
+
+        public bool IsMaxEnemySpawnedReached => _spawnCount >= MaxEnemyCount;
 
         public void SetupInitialWave(int maxEnemyCount)
         {
             _initialMaxEnemyCount = maxEnemyCount;
-            IncrementWave(maxEnemyCount);
+            _maxEnemyCount = maxEnemyCount;
+            IncrementWave(1);
         }
 
         public void IncrementSpawnCount()
         {
-            OnEnemySpawned?.Invoke();
+            SpawnCount++;
+            Debug.Log($"Spawn Count: {_spawnCount}");
         }
 
         public void IncrementKillCount()
@@ -52,20 +68,21 @@ namespace BForBoss
             KillCount++;
         }
 
-        public void IncrementWave(int newMaxEnemyCount)
+        public void IncrementWave(float maxAmountMultiplier)
         {
-            WaveNumber++;
-            MaxEnemyCount = newMaxEnemyCount;            
+            _spawnCount = 0;            
             _killCount = 0;
+            WaveNumber++;
+            MaxEnemyCount = (int)(_maxEnemyCount * maxAmountMultiplier);            
             OnWaveCountUpdated?.Invoke(_waveNumber, _maxEnemyCount);
         }
 
-        public void ResetData()
+        public void Reset()
         {
-            WaveNumber = 1;
-            MaxEnemyCount = _initialMaxEnemyCount;
+            _spawnCount = 0;
+            _waveNumber = 1;
+            _maxEnemyCount = _initialMaxEnemyCount;
             _killCount = 0;
-            OnWaveCountUpdated?.Invoke(_waveNumber, _maxEnemyCount);
         }
     }
 }

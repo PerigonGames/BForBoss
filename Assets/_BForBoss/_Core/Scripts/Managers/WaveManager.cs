@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -16,8 +15,6 @@ namespace BForBoss
         private ISpawnerControl _spawnerControl;
         private WaveModel _waveModel;
         
-        private int _spawnCount = 0;
-
         public void Initialize(WaveModel waveModel, ISpawnerControl spawnerControl)
         {
             _spawnerControl = spawnerControl;
@@ -30,20 +27,17 @@ namespace BForBoss
 
         public void Reset()
         {
-            _spawnCount = 0;
-
             if (_waveModel != null)
             {
-                _waveModel.ResetData();
+                _waveModel.Reset();
             }
         }
 
         private void OnEnemySpawned()
         {
-            _spawnCount++;
-
-            if (_spawnCount >= _waveModel.MaxEnemyCount)
+            if (_waveModel.IsMaxEnemySpawnedReached)
             {
+                Debug.Log("<color=Blue>Max Enemy Reached</color>");
                 _spawnerControl.PauseSpawning();
             }
         }
@@ -52,6 +46,7 @@ namespace BForBoss
         {
             if (numberOfRemainingEnemies <= 0)
             {
+                Debug.Log("<color=green>Round Over</color>");
                 Debug.Log($"Please wait <b>{_timeBetweenWaves} seconds</b> before the next wave");
                 StartCoroutine(InitiateNextWave());
             }
@@ -62,8 +57,7 @@ namespace BForBoss
             _spawnerControl.PauseSpawning();
             yield return new WaitForSeconds(_timeBetweenWaves);
             
-            _spawnCount = 0;
-            _waveModel.IncrementWave((int)Math.Ceiling(_waveModel.MaxEnemyCount * _enemyAmountMultiplier));
+            _waveModel.IncrementWave(_enemyAmountMultiplier);
             _spawnerControl.ResumeSpawning();
         }
 

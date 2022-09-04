@@ -18,6 +18,11 @@ namespace BForBoss
             _model = model;
         }
 
+        public void Reset()
+        {
+            UpdateWaveCounter(0, 0);
+        }
+
         private void UpdateEnemiesRemainingCounter(int numberOfRemainingEnemies)
         {
             _enemiesRemainingLabel.text = numberOfRemainingEnemies.ToString();

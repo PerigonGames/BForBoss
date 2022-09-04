@@ -27,6 +27,7 @@ namespace BForBoss
             _waveManager.Reset();
             _enemyContainer.Reset();
             _enemySpawnersManager.Reset();
+            _waveView.Reset();
         }
 
         protected override void Start()
@@ -34,10 +35,10 @@ namespace BForBoss
             base.Start();
 
             WaveModel waveModel = new WaveModel();
+            _waveView.Initialize(waveModel);
             _enemyContainer.Initialize(() => _playerBehaviour.transform.position);
             _enemySpawnersManager.Initialize(_enemyContainer, waveModel);
             _waveManager.Initialize(waveModel, _enemySpawnersManager);
-            _waveView.Initialize(waveModel);
         }
         
         protected override void OnValidate()

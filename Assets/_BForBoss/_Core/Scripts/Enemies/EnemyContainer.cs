@@ -56,6 +56,7 @@ namespace BForBoss
         
         private void OnTakenFromPool(EnemyBehaviour enemyBehaviour)
         {
+            enemyBehaviour.Reset();
             enemyBehaviour.gameObject.SetActive(true);
         }
 
