@@ -25,7 +25,6 @@ namespace BForBoss
         
         public void Initialize(Func<Vector3> getPlayerPosition, BulletSpawner bulletSpawner)
         {
-
             _animationBehaviour = GetComponent<FloatingEnemyAnimationBehaviour>();
             _animationBehaviour.Initialize();
             _animationBehaviour.SetMovementAnimation();
@@ -37,7 +36,7 @@ namespace BForBoss
             });
             
             _lifeCycleBehaviour = GetComponent<EnemyLifeCycleBehaviour>();
-            _lifeCycleBehaviour.Initialize();
+            _lifeCycleBehaviour.Initialize(releaseToPool: ReleaseToPool);
             
             _shootingBehaviour = GetComponent<EnemyShootingBehaviour>();
             _shootingBehaviour.Initialize(getPlayerPosition, bulletSpawner, _animationBehaviour,() =>
@@ -59,7 +58,6 @@ namespace BForBoss
 
         public override void Reset()
         {
-            base.Reset();
             _lifeCycleBehaviour.Reset();
             _knockbackBehaviour.Reset();
         }

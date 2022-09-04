@@ -45,6 +45,7 @@ namespace BForBoss
         private EnemyBehaviour CreateEnemy()
         {
             var enemy = Instantiate(_enemyBehaviour);
+            enemy.Pool = _enemyPool;
             if (enemy.TryGetComponent(out FloatingTargetBehaviour floatingEnemy))
             {
                 floatingEnemy.Initialize(_targetDestination, _bulletSpawner);
@@ -55,7 +56,6 @@ namespace BForBoss
         
         private void OnTakenFromPool(EnemyBehaviour enemyBehaviour)
         {
-            enemyBehaviour.Reset();
             enemyBehaviour.gameObject.SetActive(true);
         }
 

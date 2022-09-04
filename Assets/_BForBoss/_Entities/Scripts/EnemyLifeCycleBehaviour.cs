@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Perigon.Entities
@@ -8,10 +9,12 @@ namespace Perigon.Entities
 
         //TODO - don't do this.knockback should rely on something else
         public ILifeCycle LifeCycle => _lifeCycle;
+        private Action _releaseToPool;
         
-        public override void Initialize()
+        public void Initialize(Action releaseToPool)
         {
             base.Initialize();
+            _releaseToPool = releaseToPool;
             _healthbar.Initialize(_lifeCycle);
         }
 
@@ -22,7 +25,7 @@ namespace Perigon.Entities
         
         protected override void LifeCycleFinished()
         {
-            throw new System.NotImplementedException();
+            _releaseToPool?.Invoke();
         }
         
         private void Awake()

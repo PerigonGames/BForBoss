@@ -25,10 +25,10 @@ namespace BForBoss
             private set => _maxEnemyCount = value;
         }
 
-        public int KillCount
+        private int KillCount
         {
-            get => _killCount;
-            private set
+            get => _killCount; 
+            set
             {
                 _killCount = value;
                 OnEnemyKilled?.Invoke(_maxEnemyCount - _killCount);
