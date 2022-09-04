@@ -5,8 +5,6 @@ namespace BForBoss
 {
     public class WaveModel
     {
-        private readonly bool _shouldPrintDebug = false;
-        
         private int DEBUG_ACTIVE_SPAWN_COUNT;
 
         private int _waveNumber;
@@ -52,11 +50,6 @@ namespace BForBoss
         public bool IsMaxEnemySpawnedReached => _totalRoundTotalSpawnCount >= _maxEnemyCount;
         public bool IsRoundConcluded => _maxEnemyCount == KillCount;
 
-        public WaveModel(bool shouldPrintDebug)
-        {
-            _shouldPrintDebug = shouldPrintDebug;
-        }
-
         public void SetupInitialWave(int maxEnemyCount)
         {
             _initialMaxEnemyCount = maxEnemyCount;
@@ -68,9 +61,9 @@ namespace BForBoss
         {
             DEBUG_ACTIVE_SPAWN_COUNT++;
             RoundTotalSpawnCount++;
-            PrintDebug($"Enemy Spawned: <color=red>Active Spawn Count: {DEBUG_ACTIVE_SPAWN_COUNT}</color>");
-            PrintDebug($"Enemy Spawned: <color=red>Round Spawn Count {_totalRoundTotalSpawnCount}</color>");
-            PrintDebug($"===========================================");
+            Debug.Log($"Enemy Spawned: <color=red>Active Spawn Count: {DEBUG_ACTIVE_SPAWN_COUNT}</color>");
+            Debug.Log($"Enemy Spawned: <color=red>Round Spawn Count {_totalRoundTotalSpawnCount}</color>");
+            Debug.Log($"===========================================");
         }
 
         public void IncrementKillCount()
@@ -79,9 +72,9 @@ namespace BForBoss
             KillCount++;
             OnEnemyKilled?.Invoke();
 
-            PrintDebug($"Enemy Killed:  <color=red>Active Spawn Count: {DEBUG_ACTIVE_SPAWN_COUNT}</color>");
-            PrintDebug($"Enemy Killed:  <color=red>Round Spawn Count {_totalRoundTotalSpawnCount}</color>");
-            PrintDebug($"===========================================");
+            Debug.Log($"Enemy Killed:  <color=red>Active Spawn Count: {DEBUG_ACTIVE_SPAWN_COUNT}</color>");
+            Debug.Log($"Enemy Killed:  <color=red>Round Spawn Count {_totalRoundTotalSpawnCount}</color>");
+            Debug.Log($"===========================================");
         }
 
         public void IncrementWave(float maxAmountMultiplier)
@@ -98,14 +91,6 @@ namespace BForBoss
             _maxEnemyCount = _initialMaxEnemyCount;
             KillCount = 0;
             WaveNumber = 1;
-        }
-
-        private void PrintDebug(string log)
-        {
-            if (_shouldPrintDebug)
-            {
-                Debug.Log(log);
-            }
         }
     }
 }
