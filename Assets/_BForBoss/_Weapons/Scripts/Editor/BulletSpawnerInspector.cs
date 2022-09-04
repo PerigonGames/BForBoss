@@ -9,6 +9,7 @@ namespace Perigon.Weapons.Editor
     {
         private SerializedProperty _prefabListProp;
         private SerializedProperty _layerProperty;
+        private SerializedProperty _layerMaskProperty;
         private string[] _bulletTypeNames;
 
         private static bool _showPrefabs = false;
@@ -17,6 +18,7 @@ namespace Perigon.Weapons.Editor
         {
             _prefabListProp = serializedObject.FindProperty("_bulletPrefabs");
             _layerProperty = serializedObject.FindProperty("_layer");
+            _layerMaskProperty = serializedObject.FindProperty("_layerMask");
             _bulletTypeNames = Enum.GetNames(typeof(BulletTypes));
         }
 
@@ -49,6 +51,7 @@ namespace Perigon.Weapons.Editor
             }
 
             EditorGUILayout.PropertyField(_layerProperty);
+            EditorGUILayout.PropertyField(_layerMaskProperty);
 
             serializedObject.ApplyModifiedProperties();
         }
