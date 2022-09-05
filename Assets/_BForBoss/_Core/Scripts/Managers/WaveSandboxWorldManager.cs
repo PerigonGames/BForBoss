@@ -10,13 +10,23 @@ namespace BForBoss
         [SerializeField] 
         private Transform _spawnLocation = null;
 
-        [Title("Component")] 
-        [SerializeField] private WaveManager _waveManager;
+        [Title("Waves Configuration")] 
+        [SerializeField, Tooltip("Cooldown time between waves")] 
+        private float _secondsBetweenWaves = 2.5f;
+        [SerializeField, Tooltip("Number of enemies per wave is the number of enemies from the previous wave multiplied by this multiplier")]
+        private float _enemyAmountMultiplier = 1.2f;
+        [SerializeField, Tooltip("Number of enemies for the first wave")] 
+        private int _initialNumberOfEnemies = 10;
+
+        [Title("Component")]
         [SerializeField] private EnemyContainer _enemyContainer;
         [SerializeField] private EnemySpawnersManager _enemySpawnersManager;
 
         [Title("HUD")] 
         [SerializeField] private WaveViewBehaviour _waveView = null;
+
+        private WaveModel _waveModel;
+        private WaveManager _waveManager;
 
         protected override Vector3 SpawnLocation => _spawnLocation.position;
         protected override Quaternion SpawnLookDirection => _spawnLocation.rotation;
@@ -25,7 +35,7 @@ namespace BForBoss
         {
             base.Reset();
             _waveView.Reset();
-            _waveManager.Reset();
+            _waveModel.Reset();
             _enemyContainer.Reset();
             _enemySpawnersManager.Reset();
         }
@@ -37,15 +47,20 @@ namespace BForBoss
             _enemySpawnersManager.CleanUp();
         }
 
-        protected override void Start()
+        protected override void Awake()
         {
-            base.Start();
+            base.Awake();
+            _waveManager = gameObject.AddComponent<WaveManager>();
+            _waveModel = new WaveModel(_initialNumberOfEnemies);
+        }
 
-            WaveModel waveModel = new WaveModel();
-            _waveView.Initialize(waveModel);
+        protected override void Start()
+        {            
+            base.Start();
+            _waveView.Initialize(_waveModel);
             _enemyContainer.Initialize(() => _playerBehaviour.transform.position);
-            _enemySpawnersManager.Initialize(_enemyContainer, waveModel);
-            _waveManager.Initialize(waveModel, _enemySpawnersManager);
+            _enemySpawnersManager.Initialize(_enemyContainer, _waveModel);
+            _waveManager.Initialize(_waveModel, _enemySpawnersManager, _secondsBetweenWaves, _enemyAmountMultiplier);
         }
         
         protected override void OnValidate()
@@ -55,11 +70,6 @@ namespace BForBoss
             if (_enemyContainer == null)
             {
                 PanicHelper.Panic(new Exception("Enemy Container missing from WaveSandboxWorldManager"));
-            }
-
-            if (_waveManager == null)
-            {
-                PanicHelper.Panic(new Exception("Wave Manager missing from the world manager"));
             }
 
             if (_enemySpawnersManager == null)

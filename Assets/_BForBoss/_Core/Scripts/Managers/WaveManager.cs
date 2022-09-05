@@ -1,37 +1,30 @@
 using System.Collections;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BForBoss
 {
     public class WaveManager : MonoBehaviour
     {
-        [Title("Settings")] 
-        [SerializeField, Tooltip("Number of enemies for the first wave")] private int _initialNumberOfEnemies = 10;
-        [SerializeField, Tooltip("Cooldown time between waves")] private float _timeBetweenWaves = 2.5f;
-        [SerializeField, Tooltip("Number of enemies per wave is the number of enemies from the previous wave multiplied by this multiplier")]
+        private float _secondsBetweenWaves = 2.5f;
         private float _enemyAmountMultiplier = 1.2f;
         
         private ISpawnerControl _spawnerControl;
         private WaveModel _waveModel;
         private EnemyContainer _enemyContainer;
         
-        public void Initialize(WaveModel waveModel, ISpawnerControl spawnerControl)
+        public void Initialize(WaveModel waveModel, 
+            ISpawnerControl spawnerControl,
+            float secondsBetweenWaves,
+            float enemyAmountMultiplier)
         {
             _spawnerControl = spawnerControl;
+            _secondsBetweenWaves = secondsBetweenWaves;
+            _enemyAmountMultiplier = enemyAmountMultiplier;
 
             _waveModel = waveModel;
             _waveModel.OnEnemySpawned += OnEnemySpawned;
             _waveModel.OnEnemyKilled += OnEnemyKilled;
-            _waveModel.SetupInitialWave(_initialNumberOfEnemies);
-        }
-
-        public void Reset()
-        {
-            if (_waveModel != null)
-            {
-                _waveModel.Reset();
-            }
+            StartCoroutine(InitiateNextWave());
         }
 
         private void OnEnemySpawned()
@@ -48,7 +41,7 @@ namespace BForBoss
             if (_waveModel.IsRoundConcluded)
             {
                 Debug.Log("<color=green>Round Over</color>");
-                Debug.Log($"Please wait <color=green><b>{_timeBetweenWaves} seconds</b></color> before the next wave");
+                Debug.Log($"Please wait <color=green><b>{_secondsBetweenWaves} seconds</b></color> before the next wave");
                 StartCoroutine(InitiateNextWave());
             }
             else if (!_waveModel.IsMaxEnemySpawnedReached)
@@ -60,7 +53,7 @@ namespace BForBoss
         private IEnumerator InitiateNextWave()
         {
             _spawnerControl.PauseSpawning();
-            yield return new WaitForSeconds(_timeBetweenWaves);
+            yield return new WaitForSeconds(_secondsBetweenWaves);
             
             _waveModel.IncrementWave(_enemyAmountMultiplier);
             _spawnerControl.ResumeSpawning();

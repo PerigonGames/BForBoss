@@ -50,11 +50,10 @@ namespace BForBoss
         public bool IsMaxEnemySpawnedReached => _totalRoundTotalSpawnCount >= _maxEnemyCount;
         public bool IsRoundConcluded => _maxEnemyCount == KillCount;
 
-        public void SetupInitialWave(int maxEnemyCount)
+        public WaveModel(int maxEnemyCount)
         {
             _initialMaxEnemyCount = maxEnemyCount;
             _maxEnemyCount = maxEnemyCount;
-            IncrementWave(1);
         }
 
         public void IncrementSpawnCount()
@@ -81,7 +80,8 @@ namespace BForBoss
         {
             _totalRoundTotalSpawnCount = 0;            
             _killCount = 0;
-            _maxEnemyCount = (int)Mathf.Ceil(_maxEnemyCount * maxAmountMultiplier);
+            var multiplier = WaveNumber > 0 ? maxAmountMultiplier : 1;
+            _maxEnemyCount = (int)Mathf.Ceil(_maxEnemyCount *  multiplier);
             WaveNumber++;
         }
 
@@ -90,7 +90,7 @@ namespace BForBoss
             RoundTotalSpawnCount = 0;
             _maxEnemyCount = _initialMaxEnemyCount;
             KillCount = 0;
-            WaveNumber = 1;
+            WaveNumber = 0;
         }
     }
 }
