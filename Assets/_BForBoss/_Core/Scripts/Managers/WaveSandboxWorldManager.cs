@@ -1,5 +1,6 @@
+using System;
+using Perigon.Utility;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace BForBoss
@@ -8,78 +9,77 @@ namespace BForBoss
     {
         [SerializeField] 
         private Transform _spawnLocation = null;
-        
-        [Title("Component")]
-        [SerializeField] private LifeCycleManager _lifeCycleManager = null;
-        [SerializeField] private WaveManager _waveManager;
-        [SerializeField] private EnemySpawnerManager _enemySpawnerManager;
 
-        [Title("HUD")] [SerializeField] private WaveViewBehaviour _waveView = null;
-        
+        [Title("Waves Configuration")] 
+        [SerializeField, Tooltip("Cooldown time between waves")] 
+        private float _secondsBetweenWaves = 2.5f;
+        [SerializeField, Tooltip("Number of enemies per wave is the number of enemies from the previous wave multiplied by this multiplier")]
+        private float _enemyAmountMultiplier = 1.2f;
+        [SerializeField, Tooltip("Number of enemies for the first wave")] 
+        private int _initialNumberOfEnemies = 10;
+
+        [Title("Component")]
+        [SerializeField] private EnemyContainer _enemyContainer;
+        [SerializeField] private EnemySpawnersManager _enemySpawnersManager;
+
+        [Title("HUD")] 
+        [SerializeField] private WaveViewBehaviour _waveView = null;
+
+        private WaveModel _waveModel;
+        private WaveManager _waveManager;
+
         protected override Vector3 SpawnLocation => _spawnLocation.position;
         protected override Quaternion SpawnLookDirection => _spawnLocation.rotation;
         
         protected override void Reset()
         {
             base.Reset();
-            _lifeCycleManager.Reset();
-            
-            if (_waveManager != null)
-            {
-                _waveManager.Reset();
-            }
+            _waveView.Reset();
+            _waveModel.Reset();
+            _enemyContainer.Reset();
+            _enemySpawnersManager.Reset();
+        }
+
+        protected override void CleanUp()
+        {
+            base.CleanUp();
+            _enemyContainer.CleanUp();
+            _enemySpawnersManager.CleanUp();
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _waveManager = gameObject.AddComponent<WaveManager>();
+            _waveModel = new WaveModel(_initialNumberOfEnemies);
         }
 
         protected override void Start()
-        {
+        {            
             base.Start();
-
-            if (_lifeCycleManager != null)
-            {
-                _lifeCycleManager.Initialize(() => _playerBehaviour.transform.position);
-            }
-            
-            WaveModel waveModel = new WaveModel();
-
-            if (_waveView != null)
-            {
-                _waveView.Initialize(waveModel);
-            }
-            
-            if (_waveManager != null)
-            {
-                _waveManager.Initialize(_lifeCycleManager, _enemySpawnerManager, waveModel);
-            }
-        }
-        
-        protected override void HandleOnDeath()
-        {
-            _lifeCycleManager.Reset();            
-            base.HandleOnDeath();
+            _waveView.Initialize(_waveModel);
+            _enemyContainer.Initialize(() => _playerBehaviour.transform.position);
+            _enemySpawnersManager.Initialize(_enemyContainer, _waveModel);
+            _waveManager.Initialize(_waveModel, _enemySpawnersManager, _secondsBetweenWaves, _enemyAmountMultiplier);
         }
         
         protected override void OnValidate()
         {
             base.OnValidate();
 
-            if (_lifeCycleManager == null)
+            if (_enemyContainer == null)
             {
-                Debug.LogWarning("Life Cycle Manager missing from World Manager");
+                PanicHelper.Panic(new Exception("Enemy Container missing from WaveSandboxWorldManager"));
             }
 
-            if (_waveManager == null)
+            if (_enemySpawnersManager == null)
             {
-                Debug.LogWarning("Wave Manager missing from the world manager");
-            }
-
-            if (_enemySpawnerManager == null)
-            {
-                Debug.LogWarning("Enemy Spawner Manager missing from the world manager");
+                PanicHelper.Panic(new Exception("Enemy Spawner Manager missing from the world manager"));
             }
 
             if (_waveView == null)
             {
-                Debug.LogWarning("Wave View UI missing from the world Manager");
+                PanicHelper.Panic(new Exception("Wave View UI missing from the world Manager"));
             }
         }
     }

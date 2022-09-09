@@ -15,7 +15,7 @@ namespace BForBoss
         [SerializeField] protected PlayerBehaviour _playerBehaviour = null;
 
         [SerializeField] private InputActionAsset _actionAsset;
-        
+
         private PGInputSystem _inputSystem;
         private EnvironmentManager _environmentManager;
 
@@ -76,7 +76,6 @@ namespace BForBoss
             _inputSystem.OnPausePressed += HandlePausePressed;
             _stateManager.OnStateChanged += HandleStateChange;
             _environmentManager = gameObject.AddComponent<EnvironmentManager>();
-            _environmentManager.Initialize();
             SceneManager.LoadScene("AdditiveWeaponManager", LoadSceneMode.Additive);
             SceneManager.LoadScene("AdditiveUserInterfaceScene", LoadSceneMode.Additive);
 #if (UNITY_EDITOR || DEVELOPMENT_BUILD)
@@ -92,8 +91,9 @@ namespace BForBoss
         protected virtual void Start()
         {
             SetupSubManagers();
-            WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
-            UserInterfaceManager.Initialize();
+            _environmentManager.Initialize();
+            WeaponSceneManager.Initialize(_playerBehaviour);
+            UserInterfaceManager.Initialize(_inputSettings);
             _stateManager.SetState(State.PreGame);
         }
 
