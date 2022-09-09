@@ -79,12 +79,10 @@ namespace BForBoss
             {
                 string buildSceneName = GetAppropriateSceneName(SceneUtility.GetScenePathByBuildIndex(i));
 
-                if (buildSceneName.StartsWith(ADDITIVE_SCENE_PREFIX))
+                if (!buildSceneName.StartsWith(ADDITIVE_SCENE_PREFIX))
                 {
-                    continue;
+                    _buildSceneNames.Add(buildSceneName);
                 }
-                
-                _buildSceneNames.Add(buildSceneName);
             }
         }
 
