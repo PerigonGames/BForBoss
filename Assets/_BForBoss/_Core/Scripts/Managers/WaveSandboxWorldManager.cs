@@ -7,22 +7,22 @@ namespace BForBoss
 {
     public class WaveSandboxWorldManager : BaseWorldManager
     {
-        [SerializeField] 
+        [SerializeField]
         private Transform _spawnLocation = null;
 
-        [Title("Waves Configuration")] 
-        [SerializeField, Tooltip("Cooldown time between waves")] 
+        [Title("Waves Configuration")]
+        [SerializeField, Tooltip("Cooldown time between waves")]
         private float _secondsBetweenWaves = 2.5f;
         [SerializeField, Tooltip("Number of enemies per wave is the number of enemies from the previous wave multiplied by this multiplier")]
         private float _enemyAmountMultiplier = 1.2f;
-        [SerializeField, Tooltip("Number of enemies for the first wave")] 
+        [SerializeField, Tooltip("Number of enemies for the first wave")]
         private int _initialNumberOfEnemies = 10;
 
         [Title("Component")]
         [SerializeField] private EnemyContainer _enemyContainer;
         [SerializeField] private EnemySpawnersManager _enemySpawnersManager;
 
-        [Title("HUD")] 
+        [Title("HUD")]
         [SerializeField] private WaveViewBehaviour _waveView = null;
 
         private WaveModel _waveModel;
@@ -30,7 +30,7 @@ namespace BForBoss
 
         protected override Vector3 SpawnLocation => _spawnLocation.position;
         protected override Quaternion SpawnLookDirection => _spawnLocation.rotation;
-        
+
         protected override void Reset()
         {
             base.Reset();
@@ -55,14 +55,14 @@ namespace BForBoss
         }
 
         protected override void Start()
-        {            
+        {
             base.Start();
             _waveView.Initialize(_waveModel);
-            _enemyContainer.Initialize(() => _playerBehaviour.transform.position);
+            _enemyContainer.Initialize(() => _playerBehaviour.PlayerMovement.camera.transform.position);
             _enemySpawnersManager.Initialize(_enemyContainer, _waveModel);
             _waveManager.Initialize(_waveModel, _enemySpawnersManager, _secondsBetweenWaves, _enemyAmountMultiplier);
         }
-        
+
         protected override void OnValidate()
         {
             base.OnValidate();
