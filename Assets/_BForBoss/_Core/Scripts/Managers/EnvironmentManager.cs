@@ -12,7 +12,7 @@ namespace BForBoss
         
         public void Initialize()
         {
-            _dummyTargetBehaviours.ForEach(dummy => dummy.Initialize(onDeathCallback: () => { }));
+            _dummyTargetBehaviours.ForEach(dummy => dummy.Initialize());
         }
 
         public void Reset()

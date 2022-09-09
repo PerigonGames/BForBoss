@@ -8,8 +8,7 @@ namespace BForBoss
     [RequireComponent(typeof(AgentNavigationBehaviour))]
     public class FloatingTargetBehaviour : EnemyBehaviour
     {
-        [SerializeField] private HealthbarViewBehaviour _healthbar;
-
+        private EnemyLifeCycleBehaviour _lifeCycleBehaviour;
         private FloatingEnemyKnockbackBehaviour _knockbackBehaviour = null;
         private AgentNavigationBehaviour _navigationBehaviour = null;
         private EnemyShootingBehaviour _shootingBehaviour = null;
@@ -23,10 +22,8 @@ namespace BForBoss
             KnockedBack
         }
         
-        public void Initialize(Func<Vector3> getPlayerPosition, BulletSpawner bulletSpawner, Action onDeathCallback, Action<EnemyBehaviour> onReleaseToSpawner = null)
+        public void Initialize(Func<Vector3> getPlayerPosition, BulletSpawner bulletSpawner)
         {
-            base.Initialize(getPlayerPosition, onDeathCallback, onReleaseToSpawner);
-
             _animationBehaviour = GetComponent<FloatingEnemyAnimationBehaviour>();
             _animationBehaviour.Initialize();
             _animationBehaviour.SetMovementAnimation();
@@ -37,11 +34,9 @@ namespace BForBoss
                 _state = FloatingTargetState.ShootTarget;
             });
             
-            if (_healthbar != null)
-            {
-                _healthbar.Initialize(_lifeCycle);
-            }
-
+            _lifeCycleBehaviour = GetComponent<EnemyLifeCycleBehaviour>();
+            _lifeCycleBehaviour.Initialize(releaseToPool: ReleaseToPool);
+            
             _shootingBehaviour = GetComponent<EnemyShootingBehaviour>();
             _shootingBehaviour.Initialize(getPlayerPosition, bulletSpawner, _animationBehaviour,() =>
             {
@@ -49,7 +44,7 @@ namespace BForBoss
             });
 
             _knockbackBehaviour = GetComponent<FloatingEnemyKnockbackBehaviour>();
-            _knockbackBehaviour.Initialize(_lifeCycle, () =>
+            _knockbackBehaviour.Initialize(_lifeCycleBehaviour.LifeCycle, () =>
             {
                 _navigationBehaviour.PauseNavigation();
                 _state = FloatingTargetState.KnockedBack;
@@ -62,31 +57,8 @@ namespace BForBoss
 
         public override void Reset()
         {
-            base.Reset();
-            gameObject.SetActive(true);
-            _healthbar.Reset();
+            _lifeCycleBehaviour.Reset();
             _knockbackBehaviour.Reset();
-        }
-        
-        protected override void LifeCycleFinished()
-        {
-            if (_onReleaseToSpawner != null)
-            {
-                _onReleaseToSpawner.Invoke(this);
-            }
-            else
-            {
-                gameObject.SetActive(false);
-            }
-            _knockbackBehaviour.Reset();
-        }
-
-        private void Awake()
-        {
-            if (_healthbar == null)
-            {                
-                Debug.LogWarning("A FloatingTargetBehaviour is missing a health bar");
-            }
         }
 
         private void FixedUpdate()

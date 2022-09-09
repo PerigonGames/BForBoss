@@ -9,9 +9,9 @@ namespace Perigon.Entities
         [SerializeField] private PlayerHealthViewBehaviour _healthBarView = null;
         private Action _onDeathCallBack = null;
 
-        public override void Initialize(Action onDeathCallback)
+        public void Initialize(Action onDeathCallback)
         {
-            base.Initialize(onDeathCallback);
+            base.Initialize();
             _healthBarView?.Initialize(_lifeCycle);
             _onDeathCallBack = onDeathCallback;
         }
