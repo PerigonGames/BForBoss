@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Perigon.Weapons
@@ -15,10 +13,9 @@ namespace Perigon.Weapons
         [SerializeField] private float _radiusMultiplier = 2f;
         private Rigidbody _rb;
         
-        void Awake()
+        private void Awake()
         {
             _rb = GetComponent<Rigidbody>();
-            
         }
 
         public void ApplyKnockback(float force, Vector3 originPosition)

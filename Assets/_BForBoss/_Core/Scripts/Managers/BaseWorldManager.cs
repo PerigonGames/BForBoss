@@ -76,7 +76,6 @@ namespace BForBoss
             _stateManager.OnStateChanged += HandleStateChange;
             _inputSettings = new InputSettings();
             _environmentManager = gameObject.AddComponent<EnvironmentManager>();
-            _environmentManager.Initialize();
             SceneManager.LoadScene("AdditiveWeaponManager", LoadSceneMode.Additive);
             SceneManager.LoadScene("AdditiveUserInterfaceScene", LoadSceneMode.Additive);
 #if (UNITY_EDITOR || DEVELOPMENT_BUILD)
@@ -95,6 +94,7 @@ namespace BForBoss
         protected virtual void Start()
         {
             SetupSubManagers();
+            _environmentManager.Initialize();
             WeaponSceneManager.Initialize(_playerBehaviour);
             UserInterfaceManager.Initialize(_inputSettings);
             _stateManager.SetState(State.PreGame);

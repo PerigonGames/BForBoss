@@ -1,71 +1,97 @@
 using System;
+using UnityEngine;
 
 namespace BForBoss
 {
     public class WaveModel
     {
+        private int DEBUG_ACTIVE_SPAWN_COUNT;
+
         private int _waveNumber;
         private int _initialMaxEnemyCount;
         private int _maxEnemyCount;
         private int _killCount;
+        private int _totalRoundTotalSpawnCount;
 
         public Action OnEnemySpawned;
-        public Action<int> OnEnemyKilled;
-        public Action<int, int> OnWaveCountUpdated;
-        
-        public int WaveNumber
+        public Action OnEnemyKilled;
+        public Action<int, int> OnDataUpdated;
+
+        private int WaveNumber
         {
             get => _waveNumber;
-            private set => _waveNumber = value;
+            set
+            {
+                _waveNumber = value;
+                OnDataUpdated?.Invoke(_waveNumber, _maxEnemyCount - _killCount);
+            }
         }
 
-        public int MaxEnemyCount
+        private int KillCount
         {
-            get => _maxEnemyCount;
-            private set => _maxEnemyCount = value;
-        }
-
-        public int KillCount
-        {
-            get => _killCount;
-            private set
+            get => _killCount; 
+            set
             {
                 _killCount = value;
-                OnEnemyKilled?.Invoke(_maxEnemyCount - _killCount);
+                OnDataUpdated?.Invoke(_waveNumber, _maxEnemyCount - _killCount);
             }
-            
         }
 
-        public void SetupInitialWave(int maxEnemyCount)
+        private int RoundTotalSpawnCount
+        {
+            get => _totalRoundTotalSpawnCount;
+            set
+            {
+                _totalRoundTotalSpawnCount = value;
+                OnEnemySpawned?.Invoke();
+            }
+        }
+
+        public bool IsMaxEnemySpawnedReached => _totalRoundTotalSpawnCount >= _maxEnemyCount;
+        public bool IsRoundConcluded => _maxEnemyCount == KillCount;
+
+        public WaveModel(int maxEnemyCount)
         {
             _initialMaxEnemyCount = maxEnemyCount;
-            IncrementWave(maxEnemyCount);
+            _maxEnemyCount = maxEnemyCount;
         }
 
         public void IncrementSpawnCount()
         {
-            OnEnemySpawned?.Invoke();
+            DEBUG_ACTIVE_SPAWN_COUNT++;
+            RoundTotalSpawnCount++;
+            Debug.Log($"Enemy Spawned: <color=red>Active Spawn Count: {DEBUG_ACTIVE_SPAWN_COUNT}</color>");
+            Debug.Log($"Enemy Spawned: <color=red>Round Spawn Count {_totalRoundTotalSpawnCount}</color>");
+            Debug.Log($"===========================================");
         }
 
         public void IncrementKillCount()
         {
+            DEBUG_ACTIVE_SPAWN_COUNT--;
             KillCount++;
+            OnEnemyKilled?.Invoke();
+
+            Debug.Log($"Enemy Killed:  <color=red>Active Spawn Count: {DEBUG_ACTIVE_SPAWN_COUNT}</color>");
+            Debug.Log($"Enemy Killed:  <color=red>Round Spawn Count {_totalRoundTotalSpawnCount}</color>");
+            Debug.Log($"===========================================");
         }
 
-        public void IncrementWave(int newMaxEnemyCount)
+        public void IncrementWave(float maxAmountMultiplier)
         {
+            _totalRoundTotalSpawnCount = 0;            
+            _killCount = 0;
+            var multiplier = WaveNumber > 0 ? maxAmountMultiplier : 1;
+            _maxEnemyCount = (int)Mathf.Ceil(_maxEnemyCount *  multiplier);
             WaveNumber++;
-            MaxEnemyCount = newMaxEnemyCount;
-            OnWaveCountUpdated?.Invoke(_waveNumber, _maxEnemyCount);
-            _killCount = 0;
         }
 
-        public void ResetData()
+        public void Reset()
         {
-            WaveNumber = 1;
-            MaxEnemyCount = _initialMaxEnemyCount;
-            OnWaveCountUpdated?.Invoke(_waveNumber, _maxEnemyCount);
-            _killCount = 0;
+            DEBUG_ACTIVE_SPAWN_COUNT = 0;
+            RoundTotalSpawnCount = 0;
+            _maxEnemyCount = _initialMaxEnemyCount;
+            KillCount = 0;
+            WaveNumber = 0;
         }
     }
 }

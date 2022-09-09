@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2386766442369871438}
   - component: {fileID: 2499029584952915672}
+  - component: {fileID: 4198383668750045300}
+  - component: {fileID: 1276379816415047844}
   m_Layer: 0
   m_Name: EnemySpawnerManager
   m_TagString: Untagged
@@ -44,3 +46,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f199057a472ebae418125627083b9346, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4198383668750045300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6660600066799636870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e430da3c7bc087b42962d14f91f45b47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyBehaviour: {fileID: 7287096135450198932, guid: e7116000fdb3d8b47be25ea1cfc57568, type: 3}
+--- !u!114 &1276379816415047844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6660600066799636870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e4392a5aea01e34ba83cc3645de52b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _bulletPrefabs:
+  - {fileID: 1892035446757454776, guid: 1d64db686d8cde04bb2f756c8abe2e12, type: 3}
+  - {fileID: 0}
+  _layer: 13

@@ -89,7 +89,11 @@ public class MaterialGenerationAssetPostProcessor : AssetPostprocessor
                 break;
             }
         }
-        _materialGenerationAssets.Add(materialName, newMaterialGenerationAsset);
+
+        if (!_materialGenerationAssets.ContainsKey(materialName))
+        {        
+            _materialGenerationAssets.Add(materialName, newMaterialGenerationAsset);
+        }
     }
 
     private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets,

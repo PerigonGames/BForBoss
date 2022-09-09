@@ -46,16 +46,6 @@ namespace Perigon.Entities
             _currentHealth = Mathf.Min(_maxHealth, _currentHealth + amount);
             OnHeal?.Invoke();
         }
-        
-        public void NotifyOnDeath(Action onDeathCallback)
-        {
-            if (onDeathCallback == null)
-            {
-                return;
-            }
-            
-            OnDeath += onDeathCallback.Invoke;
-        }
 
         public void DamageBy(float amount)
         {
