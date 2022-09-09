@@ -33,7 +33,7 @@ namespace BForBoss
         {
             if (_lifeCycleManager != null)
             {
-                _lifeCycleManager.Initialize(() => _playerBehaviour.transform.position);
+                _lifeCycleManager.Initialize(() => _playerBehaviour.PlayerMovement.camera.transform.position);
             }
 
             if (_enemySpawnerManager != null)

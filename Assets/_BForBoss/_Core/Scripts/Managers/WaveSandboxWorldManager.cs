@@ -1,5 +1,4 @@
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace BForBoss
@@ -36,7 +35,7 @@ namespace BForBoss
 
             if (_lifeCycleManager != null)
             {
-                _lifeCycleManager.Initialize(() => _playerBehaviour.transform.position);
+                _lifeCycleManager.Initialize(() => _playerBehaviour.PlayerMovement.camera.transform.position);
             }
             
             WaveModel waveModel = new WaveModel();
