@@ -16,7 +16,7 @@ namespace BForBoss
 
         public void PauseSpawning()
         {
-            Debug.Log("<color=green>Spawn Paused</color>");
+            Debug.Log("<color=green>Spawning Paused</color>");
             foreach (EnemySpawnAreaBehaviour spawner in _enemySpawnerAreas)
             {
                 spawner.PauseSpawning();
@@ -25,7 +25,7 @@ namespace BForBoss
 
         public void ResumeSpawning()
         {
-            Debug.Log("<color=green>Spawn Resumed</color>");
+            Debug.Log("<color=green>Spawning Resumed</color>");
             foreach (EnemySpawnAreaBehaviour spawner in _enemySpawnerAreas)
             {
                 spawner.ResumeSpawning();

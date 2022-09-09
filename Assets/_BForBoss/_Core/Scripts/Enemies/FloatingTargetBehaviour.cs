@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace BForBoss
 {
-    [RequireComponent(typeof(EnemyLifeCycleBehaviour))]
     [RequireComponent(typeof(AgentNavigationBehaviour))]
     public class FloatingTargetBehaviour : EnemyBehaviour
     {

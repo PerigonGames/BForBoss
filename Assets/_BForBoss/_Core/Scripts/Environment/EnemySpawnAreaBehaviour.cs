@@ -92,7 +92,7 @@ namespace BForBoss
         private void HandleOnEnemyReleased(EnemyBehaviour enemy)
         {
             enemy.OnRelease -= HandleOnEnemyReleased;
-            _waveModel.IncrementKillCount();
+            _waveModel?.IncrementKillCount();
         }
     }
 }

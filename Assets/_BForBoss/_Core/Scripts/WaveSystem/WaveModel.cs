@@ -87,6 +87,7 @@ namespace BForBoss
 
         public void Reset()
         {
+            DEBUG_ACTIVE_SPAWN_COUNT = 0;
             RoundTotalSpawnCount = 0;
             _maxEnemyCount = _initialMaxEnemyCount;
             KillCount = 0;

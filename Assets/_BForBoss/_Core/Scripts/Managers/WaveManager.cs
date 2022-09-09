@@ -40,7 +40,7 @@ namespace BForBoss
         {
             if (_waveModel.IsRoundConcluded)
             {
-                Debug.Log("<color=green>Round Over</color>");
+                Debug.Log("<color=green>Wave Over</color>");
                 Debug.Log($"Please wait <color=green><b>{_secondsBetweenWaves} seconds</b></color> before the next wave");
                 StartCoroutine(InitiateNextWave());
             }

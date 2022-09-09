@@ -4,6 +4,7 @@ using UnityEngine.Pool;
 
 namespace Perigon.Entities
 {
+    [RequireComponent(typeof(EnemyLifeCycleBehaviour))]
     public abstract class EnemyBehaviour: MonoBehaviour
     {
         public IObjectPool<EnemyBehaviour> Pool { get; set; }
