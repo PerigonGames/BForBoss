@@ -11,21 +11,21 @@ namespace Perigon.Entities
     {
         [SerializeField] 
         private float _stopDistanceBeforeReachingDestination = 5;
-        private Func<Vector3> Destination = null;
+        private Func<Vector3> _destination = null;
         private NavMeshAgent _agent = null;
-        private Action OnDestinationReached;
+        private Action _onDestinationReached;
 
         public void Initialize(Func<Vector3> navigationDestination, Action onDestinationReached)
         {
-            Destination = navigationDestination;
-            OnDestinationReached = onDestinationReached;
+            _destination = navigationDestination;
+            _onDestinationReached = onDestinationReached;
         }
         
         public void MovementUpdate()
         {
-            if (Destination != null)
+            if (_destination != null)
             {
-                var destination = Destination();
+                var destination = _destination();
                 
                 if (Vector3.Distance(transform.position, destination) > _stopDistanceBeforeReachingDestination)
                 {
@@ -35,7 +35,7 @@ namespace Perigon.Entities
                 else
                 {
                     _agent.isStopped = true;
-                    OnDestinationReached?.Invoke();
+                    _onDestinationReached?.Invoke();
                 }
             }
         }
