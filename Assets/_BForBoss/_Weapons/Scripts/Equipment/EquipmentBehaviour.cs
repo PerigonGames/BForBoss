@@ -99,9 +99,9 @@ namespace Perigon.Weapons
             _weaponAnimationProvider.SwapWeapon();
         }
 
-        private void OnDirectWeaponSwapAction(int number)
+        private void OnDirectWeaponSwapAction(int numberKey)
         {
-            _currentWeaponIndex = number - 1;
+            _currentWeaponIndex = numberKey - 1;
             _weaponAnimationProvider.SwapWeapon();
         }
 

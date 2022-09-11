@@ -19,11 +19,6 @@ namespace Perigon.Character
 
         private float CurrentTimeScale => Time.timeScale;
         
-        private void Start()
-        {
-            _fixedDeltaTime = Time.fixedDeltaTime;
-        }
-        
         public void OnSlowMotion(bool isSlowingTime)
         {
             if (!_isSlowMotionActive && isSlowingTime)
@@ -36,6 +31,11 @@ namespace Perigon.Character
             }
         }
 
+        private void Start()
+        {
+            _fixedDeltaTime = Time.fixedDeltaTime;
+        }
+        
         private void StartSlowMotion()
         {
             _isSlowMotionActive = true;

@@ -83,11 +83,6 @@ namespace BForBoss
 #endif
         }
 
-        private void HandlePausePressed()
-        {
-            _stateManager.SetState(State.Pause);
-        }
-
         protected virtual void Start()
         {
             SetupSubManagers();
@@ -96,18 +91,11 @@ namespace BForBoss
             UserInterfaceManager.Initialize();
             _stateManager.SetState(State.PreGame);
         }
-
-        private void SetupSubManagers()
-        {
-            _playerBehaviour.Initialize(_inputSystem, onDeath: () =>
-            {
-                StateManager.Instance.SetState(State.Death);
-            });
-        }
-
+        
         protected virtual void OnDestroy()
         {
             _stateManager.OnStateChanged -= HandleStateChange;
+            _inputSystem.OnPausePressed -= HandlePausePressed;
         }
 
         protected virtual void OnValidate()
@@ -116,6 +104,19 @@ namespace BForBoss
             {
                 PanicHelper.Panic(new Exception("_playerBehaviour is missing from World Manager"));
             }
+        }
+        
+        private void SetupSubManagers()
+        {
+            _playerBehaviour.Initialize(_inputSystem, onDeath: () =>
+            {
+                StateManager.Instance.SetState(State.Death);
+            });
+        }
+        
+        private void HandlePausePressed()
+        {
+            _stateManager.SetState(State.Pause);
         }
 
         private void HandleStateChange(State newState)

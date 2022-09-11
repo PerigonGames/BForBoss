@@ -73,13 +73,6 @@ namespace Perigon.Character
                 StopDashing();
             }
         }
-
-        private Vector3 GetDashVelocity()
-        {
-            var characterVelocity = _baseCharacter.GetVelocity();
-            var characterUpVector = _baseCharacter.GetUpVector();
-            return Vector3.ProjectOnPlane(characterVelocity, characterUpVector);
-        }
         
         public void OnDash(bool isDashing)
         {
@@ -91,6 +84,13 @@ namespace Perigon.Character
             {
                 StopDashing();
             }
+        }
+
+        private Vector3 GetDashVelocity()
+        {
+            var characterVelocity = _baseCharacter.GetVelocity();
+            var characterUpVector = _baseCharacter.GetUpVector();
+            return Vector3.ProjectOnPlane(characterVelocity, characterUpVector);
         }
 
         private void Dash()
