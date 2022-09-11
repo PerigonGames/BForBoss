@@ -1,8 +1,6 @@
 using System;
-using Perigon.Utility;
 using UnityEngine;
 using UnityEngine.AI;
-using Perigon.Weapons;
 
 namespace Perigon.Entities
 {
@@ -23,20 +21,22 @@ namespace Perigon.Entities
         
         public void MovementUpdate()
         {
-            if (_destination != null)
+            if (_destination == null || !_agent.enabled)
             {
-                var destination = _destination();
+                return;
+            }
+            
+            var destination = _destination();
                 
-                if (Vector3.Distance(transform.position, destination) > _stopDistanceBeforeReachingDestination)
-                {
-                    _agent.isStopped = false;
-                    _agent.destination = destination;
-                }
-                else
-                {
-                    _agent.isStopped = true;
-                    _onDestinationReached?.Invoke();
-                }
+            if (Vector3.Distance(transform.position, destination) > _stopDistanceBeforeReachingDestination)
+            {
+                _agent.isStopped = false;
+                _agent.destination = destination;
+            }
+            else
+            {
+                _agent.isStopped = true;
+                _onDestinationReached?.Invoke();
             }
         }
 
