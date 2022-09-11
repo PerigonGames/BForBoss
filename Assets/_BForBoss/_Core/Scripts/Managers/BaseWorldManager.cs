@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -53,6 +54,7 @@ namespace BForBoss
 
         protected virtual void CleanUp()
         {
+            DOTween.KillAll();
             if (_environmentManager != null)
             {
                 _environmentManager.CleanUp();
@@ -61,7 +63,6 @@ namespace BForBoss
 
         protected virtual void Reset()
         {
-            _stateManager.SetState(State.Play);
             _playerBehaviour.Reset();
             _playerBehaviour.SpawnAt(SpawnLocation, SpawnLookDirection);
             if (_environmentManager != null)
@@ -69,6 +70,7 @@ namespace BForBoss
                 _environmentManager.Reset();
             }
             VisualEffectsManager.Instance.Reset();
+            _stateManager.SetState(State.Play);
         }
 
         protected virtual void Awake()
@@ -86,7 +88,7 @@ namespace BForBoss
 
         protected virtual void Start()
         {
-            SetupSubManagers();
+            _playerBehaviour.Initialize(_inputSystem);            
             _environmentManager.Initialize();
             WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
             UserInterfaceManager.Initialize();
@@ -105,11 +107,6 @@ namespace BForBoss
             {
                 PanicHelper.Panic(new Exception("_playerBehaviour is missing from World Manager"));
             }
-        }
-        
-        private void SetupSubManagers()
-        {
-            _playerBehaviour.Initialize(_inputSystem);
         }
         
         private void HandlePausePressed()
@@ -180,7 +177,6 @@ namespace BForBoss
 
         protected virtual void HandleOnEndGame()
         {
-            Time.timeScale = 0.0f;
         }
     }
 }

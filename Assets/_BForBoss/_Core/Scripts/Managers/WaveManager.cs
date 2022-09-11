@@ -24,6 +24,7 @@ namespace BForBoss
             _waveModel = waveModel;
             _waveModel.OnEnemySpawned += OnEnemySpawned;
             _waveModel.OnEnemyKilled += OnEnemyKilled;
+            StartCoroutine(InitiateNextWave());
         }
 
         public void Reset()
@@ -56,11 +57,14 @@ namespace BForBoss
 
         private IEnumerator InitiateNextWave()
         {
-            _spawnerControl.PauseSpawning();
-            yield return new WaitForSeconds(_secondsBetweenWaves);
+            if (_spawnerControl != null)
+            {
+                _spawnerControl.PauseSpawning();
+                yield return new WaitForSeconds(_secondsBetweenWaves);
             
-            _waveModel.IncrementWave(_enemyAmountMultiplier);
-            _spawnerControl.ResumeSpawning();
+                _waveModel.IncrementWave(_enemyAmountMultiplier);
+                _spawnerControl.ResumeSpawning();
+            }
         }
 
         private void OnDestroy()
