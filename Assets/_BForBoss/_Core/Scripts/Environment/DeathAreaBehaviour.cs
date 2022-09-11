@@ -1,4 +1,3 @@
-using Perigon.Analytics;
 using UnityEngine;
 
 namespace BForBoss
@@ -9,17 +8,7 @@ namespace BForBoss
         
         private void OnCollisionEnter(Collision other)
         {
-            var state = StateManager.Instance;
-            switch (state.GetState())
-            {
-                case State.EndRace:
-                    state.SetState(State.PreGame);
-                    break;
-                default:
-                    state.SetState(State.Death);
-                    BForBossAnalytics.Instance.LogDeathEvent(gameObject.scene.name, _deathAreaName);
-                    break;
-            }
+            StateManager.Instance.SetState(State.Death);
         }
     }
 }

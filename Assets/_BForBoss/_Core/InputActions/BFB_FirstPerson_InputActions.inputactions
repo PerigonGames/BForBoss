@@ -96,16 +96,16 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "WeaponScroll",
+                    "name": "WeaponScrollSwap",
                     "type": "PassThrough",
                     "id": "17c174c8-a672-4893-ba2f-3a7093943059",
-                    "expectedControlType": "",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "WeaponSwap",
+                    "name": "WeaponDirectSwap",
                     "type": "Button",
                     "id": "f56a3b70-5e01-41bd-bc65-6db2dee3dbb4",
                     "expectedControlType": "Button",
@@ -126,6 +126,15 @@
                     "name": "SlowTime",
                     "type": "Button",
                     "id": "b7a812d6-5a4b-496a-af7c-be8e1e5f953d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "ca338d3f-e5c8-4c7e-abd2-aa2ec85e5855",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -366,12 +375,34 @@
                 },
                 {
                     "name": "",
-                    "id": "dabf16fa-39d6-4079-934f-dc7333a5b0bc",
-                    "path": "<Gamepad>/buttonNorth",
+                    "id": "fd962f7d-26f0-45d8-a8d1-1fca3fcf149e",
+                    "path": "<Keyboard>/1",
                     "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "WeaponSwap",
+                    "processors": "Scale",
+                    "groups": "Keyboard And Mouse",
+                    "action": "WeaponDirectSwap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "94c88f50-d2ab-4db0-876a-cd45d269845c",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "Scale(factor=2)",
+                    "groups": "Keyboard And Mouse",
+                    "action": "WeaponDirectSwap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a26dc1e6-20a2-42bd-9601-fb27c152b264",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "Scale(factor=3)",
+                    "groups": "Keyboard And Mouse",
+                    "action": "WeaponDirectSwap",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -382,7 +413,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard And Mouse",
-                    "action": "WeaponScroll",
+                    "action": "WeaponScrollSwap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e3308072-0269-44ae-8b5c-00fb76a01ac0",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "WeaponScrollSwap",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -438,6 +480,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Melee",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "21f9a1d2-42e6-4c19-b1d5-9df25fcac897",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard And Mouse",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "14455261-38ff-4f4a-85df-dfee250cae65",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

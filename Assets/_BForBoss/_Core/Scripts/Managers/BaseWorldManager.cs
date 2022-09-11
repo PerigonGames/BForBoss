@@ -4,7 +4,6 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using InputSettings = Perigon.Character.InputSettings;
 
 namespace BForBoss
 {
@@ -15,13 +14,13 @@ namespace BForBoss
         [Title("Base Component")]
         [SerializeField] protected PlayerBehaviour _playerBehaviour = null;
 
-        private IInputSettings _inputSettings = null;
-        private FreezeActionsUtility _freezeActionsUtility = null;
+        [SerializeField] private InputActionAsset _actionAsset;
 
-        private EnvironmentManager _environmentManager = null;
+        private PGInputSystem _inputSystem;
+        private EnvironmentManager _environmentManager;
 
-        private WeaponSceneManager _weaponSceneManager = null;
-        private UserInterfaceManager _userInterfaceManager = null;
+        private WeaponSceneManager _weaponSceneManager;
+        private UserInterfaceManager _userInterfaceManager;
 
         private UserInterfaceManager UserInterfaceManager
         {
@@ -73,8 +72,9 @@ namespace BForBoss
 
         protected virtual void Awake()
         {
+            _inputSystem = new PGInputSystem(_actionAsset);
+            _inputSystem.OnPausePressed += HandlePausePressed;
             _stateManager.OnStateChanged += HandleStateChange;
-            _inputSettings = new InputSettings();
             _environmentManager = gameObject.AddComponent<EnvironmentManager>();
             SceneManager.LoadScene("AdditiveWeaponManager", LoadSceneMode.Additive);
             SceneManager.LoadScene("AdditiveUserInterfaceScene", LoadSceneMode.Additive);
@@ -82,36 +82,20 @@ namespace BForBoss
             SceneManager.LoadScene("AdditiveDebugScene", LoadSceneMode.Additive);
 #endif
         }
-        
-        protected virtual void Update()
-        {
-            if (Keyboard.current.escapeKey.isPressed)
-            {
-                _stateManager.SetState(State.Pause);
-            }
-        }
 
         protected virtual void Start()
         {
             SetupSubManagers();
             _environmentManager.Initialize();
-            WeaponSceneManager.Initialize(_playerBehaviour);
-            UserInterfaceManager.Initialize(_inputSettings);
+            WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
+            UserInterfaceManager.Initialize();
             _stateManager.SetState(State.PreGame);
         }
-
-        private void SetupSubManagers()
-        {
-            _playerBehaviour.Initialize(_inputSettings as InputSettings, onDeath: () =>
-            {
-                StateManager.Instance.SetState(State.Death);
-            });
-            _freezeActionsUtility = new FreezeActionsUtility(_inputSettings);
-        }
-
+        
         protected virtual void OnDestroy()
         {
             _stateManager.OnStateChanged -= HandleStateChange;
+            _inputSystem.OnPausePressed -= HandlePausePressed;
         }
 
         protected virtual void OnValidate()
@@ -120,6 +104,19 @@ namespace BForBoss
             {
                 PanicHelper.Panic(new Exception("_playerBehaviour is missing from World Manager"));
             }
+        }
+        
+        private void SetupSubManagers()
+        {
+            _playerBehaviour.Initialize(_inputSystem, onDeath: () =>
+            {
+                StateManager.Instance.SetState(State.Death);
+            });
+        }
+        
+        private void HandlePausePressed()
+        {
+            _stateManager.SetState(State.Pause);
         }
 
         private void HandleStateChange(State newState)
@@ -142,11 +139,6 @@ namespace BForBoss
                     HandleStatePause();
                     break;
                 }
-                case State.EndRace:
-                {
-                    HandleOnEndOfRace();
-                    break;
-                }
                 case State.Death:
                 {
                     HandleOnDeath();
@@ -164,18 +156,13 @@ namespace BForBoss
         protected virtual void HandleStatePlay()
         {
             Time.timeScale = 1.0f;
-            _freezeActionsUtility.UnlockInput();
+            _inputSystem.SetToPlayerControls();
         }
 
         protected virtual void HandleStatePause()
         {
             Time.timeScale = 0.0f;
-            _freezeActionsUtility.LockInput();
-        }
-
-        protected virtual void HandleOnEndOfRace()
-        {
-
+            _inputSystem.SetToUIControls();
         }
 
         protected virtual void HandleOnDeath()

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Perigon.Character;
-using Perigon.Utility;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,7 +19,6 @@ namespace BForBoss
         //State Handling
         private StateManager _stateManager = StateManager.Instance;
         private State _currentState;
-        private FreezeActionsUtility _freezeActionsUtility;
         
         private bool _isPanelShowing = false;
         
@@ -45,9 +42,6 @@ namespace BForBoss
                 }
             }
             
-            var movement = FindObjectOfType<PlayerMovementBehaviour>();
-            var input = new Perigon.Character.InputSettings(movement.GetCharacterLook(), movement.actions);
-            _freezeActionsUtility = new FreezeActionsUtility(input);
             _freeRoamCamera.Initialize(Camera.main.transform, onExit: OnFreeCameraDebugViewExited);
         }
 
@@ -133,7 +127,6 @@ namespace BForBoss
         {
             _currentState = _stateManager.GetState();
             _stateManager.SetState(State.Debug);
-            _freezeActionsUtility.LockInput();
             GetCanvasRect();
             transform.localScale = Vector3.one;
             _isPanelShowing = !_isPanelShowing;
@@ -141,7 +134,6 @@ namespace BForBoss
 
         private void ClosePanel()
         {
-            _freezeActionsUtility.UnlockInput();
             ResetView();
             transform.localScale = Vector3.zero;
             _stateManager.SetState(_currentState);

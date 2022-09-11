@@ -3,7 +3,6 @@ using ECM2.Components;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Perigon.Character
 {
@@ -24,7 +23,6 @@ namespace Perigon.Character
         private Func<Vector2> _characterInputMovement = null;
 
         private ECM2.Characters.Character _baseCharacter = null;
-        private InputAction _dashInputAction = null;
         private Action _onDashing = null;
 
         public bool IsDashing => _isDashing;
@@ -35,13 +33,6 @@ namespace Perigon.Character
             _baseCharacter = baseCharacter;
             _characterInputMovement = characterMovement;
             _onDashing = onDashing;
-        }
-        
-        public void SetupPlayerInput(InputAction dashAction)
-        {
-            _dashInputAction = dashAction;
-            _dashInputAction.started += OnDash;
-            _dashInputAction.canceled += OnDash;
         }
 
         public void OnMovementHit(MovementHit movementHitResult)
@@ -82,15 +73,17 @@ namespace Perigon.Character
                 StopDashing();
             }
         }
-
-        public void DisableAction()
+        
+        public void OnDash(bool isDashing)
         {
-            _dashInputAction.Disable();
-        }
-
-        public void EnableAction()
-        {
-            _dashInputAction.Enable();
+            if (isDashing)
+            {
+                Dash();
+            }
+            else
+            {
+                StopDashing();
+            }
         }
 
         private Vector3 GetDashVelocity()
@@ -99,35 +92,21 @@ namespace Perigon.Character
             var characterUpVector = _baseCharacter.GetUpVector();
             return Vector3.ProjectOnPlane(characterVelocity, characterUpVector);
         }
-        
-        private void OnDash(InputAction.CallbackContext context)
-        {
-            if (context.started && IsCoolDownOver)
-            {
-                Dash();
-            }
-            else if (context.canceled)
-            {
-                StopDashing();
-            }
-        }
 
         private void Dash()
         {
-            if (!CanDash())
+            if (CanDash())
             {
-                return;
-            }
-
-            PlayerDashVisuals();
-            _onDashing?.Invoke();
-            _isDashing = true;
+                PlayerDashVisuals();
+                _onDashing?.Invoke();
+                _isDashing = true;
             
-            _baseCharacter.brakingFriction = 0.0f;
-            _baseCharacter.useSeparateBrakingFriction = true;
+                _baseCharacter.brakingFriction = 0.0f;
+                _baseCharacter.useSeparateBrakingFriction = true;
 
-            _dashingDirection = _characterInputMovement().sqrMagnitude > 0 ? _baseCharacter.GetMovementDirection() : _baseCharacter.GetForwardVector();
-            _baseCharacter.LaunchCharacter(_dashingDirection * _dashImpulse, true, true);
+                _dashingDirection = _characterInputMovement().sqrMagnitude > 0 ? _baseCharacter.GetMovementDirection() : _baseCharacter.GetForwardVector();
+                _baseCharacter.LaunchCharacter(_dashingDirection * _dashImpulse, true, true);
+            }
         }
 
         private void StopDashing()
@@ -146,8 +125,15 @@ namespace Perigon.Character
         
         private bool CanDash()
         {
-            if (_baseCharacter.IsCrouching())
+            if (!IsCoolDownOver)
+            {
                 return false;
+            }
+
+            if (_baseCharacter.IsCrouching())
+            {
+                return false;
+            }
             
             return _baseCharacter.IsWalking() || _baseCharacter.IsFalling();
         }
@@ -183,23 +169,6 @@ namespace Perigon.Character
             {
                 _dashCoolDownElapsedTime -= Time.deltaTime;
             }
-        }
-
-        public void OnOnEnable()
-        {
-            _dashInputAction.Enable();
-        }
-        
-        public void OnOnDisable()
-        {
-            _dashInputAction.Disable();
-        }
-
-        public void OnOnDestroy()
-        {
-            _dashInputAction.started -= OnDash;
-            _dashInputAction.canceled -= OnDash;
-            _dashInputAction = null;
         }
 
         #endregion
