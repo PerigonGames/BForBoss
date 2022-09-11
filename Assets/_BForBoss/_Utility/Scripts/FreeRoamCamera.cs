@@ -159,6 +159,19 @@ namespace BForBoss
                 _onExitCamera?.Invoke();
             }
 
+            // Hide and lock cursor when right mouse button pressed
+            if (IsRightMouseButtonDown())
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+
+            // Unlock and show cursor when right mouse button released
+            if (IsRightMouseButtonUp())
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+            
             // Return to starting position when Reset button is Pressed
             if (IsResetButtonPressed())
             {
@@ -233,6 +246,16 @@ namespace BForBoss
             bool canRotate = Mouse.current != null && Mouse.current.rightButton.isPressed;
             canRotate |= Gamepad.current != null && Gamepad.current.rightStick.ReadValue().magnitude > 0;
             return canRotate;
+        }
+
+        private bool IsRightMouseButtonDown()
+        {
+            return Mouse.current != null && Mouse.current.rightButton.isPressed;
+        }
+
+        private bool IsRightMouseButtonUp()
+        {
+            return Mouse.current != null && !Mouse.current.rightButton.isPressed;
         }
 
         private bool IsResetButtonPressed()
