@@ -38,6 +38,7 @@ namespace BForBoss
             _waveModel.Reset();
             _enemyContainer.Reset();
             _enemySpawnersManager.Reset();
+            _waveManager.Reset();
         }
 
         protected override void CleanUp()
