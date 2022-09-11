@@ -86,6 +86,27 @@ namespace Perigon.Utility
             _pauseInputAction.performed += OnPauseInputAction;
         }
 
+        ~PGInputSystem()
+        {
+            _fireInputAction.started -= OnFireInputAction;
+            _fireInputAction.canceled -= OnFireInputAction;
+
+            _reloadInputAction.performed -= OnReloadInputAction;
+            
+            _meleeWeaponInputAction.performed -= OnMeleeInputAction;
+
+            _dashInputAction.started -= OnDashInputAction;
+            _dashInputAction.canceled -= OnDashInputAction;
+
+            _slowTimeAction.started -= OnSlowTimeInputAction;
+            _slowTimeAction.canceled -= OnSlowTimeInputAction;
+
+            _weaponScrollSwapInputAction.performed -= OnWeaponScrolledInputAction;
+            _weaponDirectSwapInputAction.performed -= OnDirectWeaponChangeInputAction;
+
+            _pauseInputAction.performed -= OnPauseInputAction;
+        }
+
         private void OnFireInputAction(InputAction.CallbackContext context)
         {
             var isFiring = context.ReadValue<float>();
