@@ -62,6 +62,7 @@ namespace BForBoss
         protected virtual void Reset()
         {
             _stateManager.SetState(State.Play);
+            _playerBehaviour.Reset();
             _playerBehaviour.SpawnAt(SpawnLocation, SpawnLookDirection);
             if (_environmentManager != null)
             {
@@ -108,10 +109,7 @@ namespace BForBoss
         
         private void SetupSubManagers()
         {
-            _playerBehaviour.Initialize(_inputSystem, onDeath: () =>
-            {
-                StateManager.Instance.SetState(State.Death);
-            });
+            _playerBehaviour.Initialize(_inputSystem);
         }
         
         private void HandlePausePressed()
@@ -144,6 +142,9 @@ namespace BForBoss
                     HandleOnDeath();
                     break;
                 }
+                case State.EndGame:
+                    HandleOnEndGame();
+                    break;
             }
         }
 
@@ -167,8 +168,12 @@ namespace BForBoss
 
         protected virtual void HandleOnDeath()
         {
-            _playerBehaviour.SpawnAt(SpawnLocation, SpawnLookDirection);
-            _stateManager.SetState(State.Play);
+            _inputSystem.SetToUIControls();
+        }
+
+        protected virtual void HandleOnEndGame()
+        {
+            Time.timeScale = 0.0f;
         }
     }
 }
