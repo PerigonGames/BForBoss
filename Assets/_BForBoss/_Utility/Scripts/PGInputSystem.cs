@@ -19,6 +19,7 @@ namespace Perigon.Utility
         private InputAction _weaponScrollSwapInputAction;
         private InputAction _weaponDirectSwapInputAction;
         private InputAction _pauseInputAction;
+        private InputAction _unpauseInputAction;
         
         public event Action<bool> OnFireAction;
         public event Action OnReloadAction;
@@ -28,12 +29,14 @@ namespace Perigon.Utility
         public event Action<bool> OnScrollWeaponChangeAction;
         public event Action<int> OnDirectWeaponChangeAction;
         public event Action OnPausePressed;
+        public event Action OnUnpausePressed;
 
         public PGInputSystem(InputActionAsset asset)
         {
             _actionAsset = asset;
             SetupActionMapInput();
             SetupPlayerActions();
+            SetupUIActions();
         }
 
         public void SetToUIControls()
@@ -84,6 +87,12 @@ namespace Perigon.Utility
             _weaponDirectSwapInputAction.performed += OnDirectWeaponChangeInputAction;
 
             _pauseInputAction.performed += OnPauseInputAction;
+        }
+
+        private void SetupUIActions()
+        {
+            _unpauseInputAction = _UIControlsActionMap.FindAction("Unpause");
+            _unpauseInputAction.performed += OnPauseInputAction;
         }
 
         ~PGInputSystem()
