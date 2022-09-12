@@ -1,4 +1,3 @@
-using System;
 using FMODUnity;
 using Perigon.Utility;
 using Perigon.Weapons;

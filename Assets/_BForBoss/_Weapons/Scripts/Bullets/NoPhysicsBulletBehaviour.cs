@@ -1,4 +1,3 @@
-using Perigon.Utility;
 using UnityEngine;
 
 namespace Perigon.Weapons

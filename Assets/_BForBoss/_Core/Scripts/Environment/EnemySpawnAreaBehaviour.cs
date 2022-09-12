@@ -1,6 +1,8 @@
 using System.Collections;
 using Perigon.Entities;
 using UnityEngine;
+using UnityEngine.AI;
+
 namespace BForBoss
 {
     public class EnemySpawnAreaBehaviour : MonoBehaviour
@@ -84,8 +86,16 @@ namespace BForBoss
         {
             Debug.Log("<color=red>Spawn Enemy</color>");
             var enemy = _enemyContainer.GetEnemy();
+            
             enemy.OnRelease += HandleOnEnemyReleased;
             enemy.transform.SetPositionAndRotation(transform.position, transform.rotation);
+            enemy.transform.SetParent(transform, true);
+            
+            //https://answers.unity.com/questions/771908/navmesh-issue-with-spawning-players.html
+            NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
+            agent.enabled = false;
+            agent.enabled = true;
+            
             _waveModel?.IncrementSpawnCount();
         }
 
