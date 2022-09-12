@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace BForBoss
 {
     public class QuitGameUseCase
