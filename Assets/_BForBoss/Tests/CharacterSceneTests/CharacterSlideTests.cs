@@ -33,7 +33,7 @@ namespace Tests.Character
             var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             character.transform.position = originalPosition;
             
-            Press(_keyboard.cKey);
+            Press(_keyboard.leftCtrlKey);
             yield return new WaitForSeconds(2.0f);
 
             var withinBoundsXPosition = TestUtilities.WithinBounds(character.transform.position.x, originalPosition.x, 1);
@@ -57,7 +57,7 @@ namespace Tests.Character
             
             Press(_keyboard.spaceKey);
             yield return new WaitForSeconds(0.25f);
-            Press(_keyboard.cKey);
+            Press(_keyboard.leftCtrlKey);
             yield return new WaitForSeconds(1.0f);
 
             var withinBoundsXPosition = TestUtilities.WithinBounds(character.transform.position.x, originalPosition.x, 1);
@@ -80,7 +80,7 @@ namespace Tests.Character
             var blockadeLeft = GameObject.Find("Blockade_Left");
             character.transform.position = originalPosition;
             
-            Press(_keyboard.cKey);
+            Press(_keyboard.leftCtrlKey);
             yield return  new WaitForSeconds(0.5f);
             Press(_keyboard.aKey);
             yield return  new WaitForSeconds(2f);
@@ -102,7 +102,7 @@ namespace Tests.Character
             var blockadeLeft = GameObject.Find("Blockade_Right");
             character.transform.position = originalPosition;
             
-            Press(_keyboard.cKey);
+            Press(_keyboard.leftCtrlKey);
             yield return new WaitForSeconds(0.5f);
             Press(_keyboard.dKey);
             yield return  new WaitForSeconds(2f);
@@ -124,7 +124,7 @@ namespace Tests.Character
             var blockadeForward = GameObject.Find("Blockade_Forward");
             character.transform.position = originalPosition;
             
-            Press(_keyboard.cKey);
+            Press(_keyboard.leftCtrlKey);
             yield return new WaitForSeconds(0.5f);
             Press(_keyboard.wKey);
             yield return  new WaitForSeconds(2);
@@ -146,7 +146,7 @@ namespace Tests.Character
             var blockadeForward = GameObject.Find("Blockade_Backward");
             character.transform.position = originalPosition;
             
-            Press(_keyboard.cKey);
+            Press(_keyboard.leftCtrlKey);
             yield return new WaitForSeconds(0.5f);
             Press(_keyboard.sKey);
             yield return  new WaitForSeconds(2);
@@ -170,7 +170,7 @@ namespace Tests.Character
             
             Press(_keyboard.aKey);
             yield return  new WaitForSeconds(0);
-            Press(_keyboard.cKey);
+            Press(_keyboard.leftCtrlKey);
             yield return new WaitForSeconds(1.0f);
 
 
@@ -192,7 +192,7 @@ namespace Tests.Character
             
             Press(_keyboard.dKey);
             yield return  new WaitForSeconds(0);
-            Press(_keyboard.cKey);
+            Press(_keyboard.leftCtrlKey);
             yield return new WaitForSeconds(1.0f);
 
 
@@ -214,7 +214,7 @@ namespace Tests.Character
             
             Press(_keyboard.wKey);
             yield return  new WaitForSeconds(0);
-            Press(_keyboard.cKey);
+            Press(_keyboard.leftCtrlKey);
             yield return new WaitForSeconds(1.0f);
 
 
@@ -236,7 +236,7 @@ namespace Tests.Character
             
             Press(_keyboard.sKey);
             yield return  new WaitForSeconds(0);
-            Press(_keyboard.cKey);
+            Press(_keyboard.leftCtrlKey);
             yield return new WaitForSeconds(1.0f);
 
 
@@ -260,7 +260,7 @@ namespace Tests.Character
             Press(_keyboard.wKey);
             Press(_keyboard.dKey);
             yield return  new WaitForSeconds(0);
-            Press(_keyboard.cKey);
+            Press(_keyboard.leftCtrlKey);
             yield return new WaitForSeconds(1.0f);
 
 
@@ -285,7 +285,7 @@ namespace Tests.Character
             Press(_keyboard.wKey);
             Press(_keyboard.aKey);
             yield return  new WaitForSeconds(0);
-            Press(_keyboard.cKey);
+            Press(_keyboard.leftCtrlKey);
             yield return new WaitForSeconds(1.0f);
 
 
@@ -310,7 +310,7 @@ namespace Tests.Character
             Press(_keyboard.sKey);
             Press(_keyboard.aKey);
             yield return  new WaitForSeconds(0);
-            Press(_keyboard.cKey);
+            Press(_keyboard.leftCtrlKey);
             yield return new WaitForSeconds(1.0f);
 
 
