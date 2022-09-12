@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Perigon.Utility
@@ -29,27 +28,27 @@ namespace Perigon.Utility
         public event Action<bool> OnScrollWeaponChangeAction;
         public event Action<int> OnDirectWeaponChangeAction;
         public event Action OnPausePressed;
-        public event Action OnUnpausePressed;
 
         public PGInputSystem(InputActionAsset asset)
         {
             _actionAsset = asset;
             SetupActionMapInput();
+            SetupFindActions();
             SetupPlayerActions();
             SetupUIActions();
         }
 
         public void SetToUIControls()
         {
-            _UIControlsActionMap.Enable();
-            _playerControlsActionMap.Disable();
+            _UIControlsActionMap?.Enable();
+            _playerControlsActionMap?.Disable();
             LockMouseUtility.Instance.UnlockMouse();
         }
         
         public void SetToPlayerControls()
         {
-            _UIControlsActionMap.Disable();
-            _playerControlsActionMap.Enable();
+            _UIControlsActionMap?.Disable();
+            _playerControlsActionMap?.Enable();
             LockMouseUtility.Instance.LockMouse();
         }
         
@@ -58,44 +57,73 @@ namespace Perigon.Utility
             _playerControlsActionMap = _actionAsset.FindActionMap("Player Controls");
             _UIControlsActionMap = _actionAsset.FindActionMap("UI");
         }
+        
+        private void SetupFindActions()
+        {
+            _fireInputAction = _playerControlsActionMap?.FindAction("Fire");
+            _reloadInputAction = _playerControlsActionMap?.FindAction("Reload");
+            _meleeWeaponInputAction = _playerControlsActionMap?.FindAction("Melee");
+            _dashInputAction = _playerControlsActionMap?.FindAction("Dash");
+            _slowTimeAction = _playerControlsActionMap?.FindAction("SlowTime");
+            _weaponScrollSwapInputAction = _playerControlsActionMap?.FindAction("WeaponScrollSwap");
+            _weaponDirectSwapInputAction = _playerControlsActionMap?.FindAction("WeaponDirectSwap");
+            _pauseInputAction = _playerControlsActionMap?.FindAction("Pause");
+        }
 
         private void SetupPlayerActions()
         {
-            _fireInputAction = _playerControlsActionMap.FindAction("Fire");
-            _reloadInputAction = _playerControlsActionMap.FindAction("Reload");
-            _meleeWeaponInputAction = _playerControlsActionMap.FindAction("Melee");
-            _dashInputAction = _playerControlsActionMap.FindAction("Dash");
-            _slowTimeAction = _playerControlsActionMap.FindAction("SlowTime");
-            _weaponScrollSwapInputAction = _playerControlsActionMap.FindAction("WeaponScrollSwap");
-            _weaponDirectSwapInputAction = _playerControlsActionMap.FindAction("WeaponDirectSwap");
-            _pauseInputAction = _playerControlsActionMap.FindAction("Pause");
+            if (_fireInputAction != null)
+            {
+                _fireInputAction.started += OnFireInputAction;
+                _fireInputAction.canceled += OnFireInputAction;
+            }
 
-            _fireInputAction.started += OnFireInputAction;
-            _fireInputAction.canceled += OnFireInputAction;
+            if (_reloadInputAction != null)
+            {
+                _reloadInputAction.performed += OnReloadInputAction;
+            }
 
-            _reloadInputAction.performed += OnReloadInputAction;
-            
-            _meleeWeaponInputAction.performed += OnMeleeInputAction;
+            if (_meleeWeaponInputAction != null)
+            {
+                _meleeWeaponInputAction.performed += OnMeleeInputAction;
+            }
 
-            _dashInputAction.started += OnDashInputAction;
-            _dashInputAction.canceled += OnDashInputAction;
+            if (_dashInputAction != null)
+            {
+                _dashInputAction.started += OnDashInputAction;
+                _dashInputAction.canceled += OnDashInputAction;
+            }
 
-            _slowTimeAction.started += OnSlowTimeInputAction;
-            _slowTimeAction.canceled += OnSlowTimeInputAction;
+            if (_slowTimeAction != null)
+            {
+                _slowTimeAction.started += OnSlowTimeInputAction;
+                _slowTimeAction.canceled += OnSlowTimeInputAction;
+            }
 
-            _weaponScrollSwapInputAction.performed += OnWeaponScrolledInputAction;
-            _weaponDirectSwapInputAction.performed += OnDirectWeaponChangeInputAction;
 
-            _pauseInputAction.performed += OnPauseInputAction;
+            if (_weaponScrollSwapInputAction != null)
+            {
+                _weaponScrollSwapInputAction.performed += OnWeaponScrolledInputAction;
+                _weaponDirectSwapInputAction.performed += OnDirectWeaponChangeInputAction;
+            }
+
+            if (_pauseInputAction != null)
+            {
+                _pauseInputAction.performed += OnPauseInputAction;
+            }
         }
 
         private void SetupUIActions()
         {
-            _unpauseInputAction = _UIControlsActionMap.FindAction("Unpause");
-            _unpauseInputAction.performed += OnPauseInputAction;
+            _unpauseInputAction = _UIControlsActionMap?.FindAction("Unpause");
+
+            if (_unpauseInputAction != null)
+            {
+                _unpauseInputAction.performed += OnPauseInputAction;
+            }
         }
 
-        ~PGInputSystem()
+        public void ForceUnbind()
         {
             _fireInputAction.started -= OnFireInputAction;
             _fireInputAction.canceled -= OnFireInputAction;
@@ -114,6 +142,11 @@ namespace Perigon.Utility
             _weaponDirectSwapInputAction.performed -= OnDirectWeaponChangeInputAction;
 
             _pauseInputAction.performed -= OnPauseInputAction;
+        }
+
+        ~PGInputSystem()
+        {
+            ForceUnbind();
         }
 
         private void OnFireInputAction(InputAction.CallbackContext context)
@@ -150,16 +183,6 @@ namespace Perigon.Utility
             if (direction != 0)
             {   
                 OnScrollWeaponChangeAction?.Invoke(direction > 0);
-            }
-
-            if (context.started)
-            {
-                Debug.Log("Started");
-            }
-
-            if (context.canceled)
-            {
-                Debug.Log("cancelled");
             }
         }
         

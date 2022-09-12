@@ -118,7 +118,10 @@ namespace Perigon.Character
 
             _dashCoolDownElapsedTime = _dashCoolDown;
             _dashElapsedTime = 0f;
-            VisualEffectsManager.Instance.Revert(HUDVisualEffect.Dash);
+            if (VisualEffectsManager.Instance != null)
+            {
+                VisualEffectsManager.Instance.Revert(HUDVisualEffect.Dash);
+            }
             _isDashing = false;
             _baseCharacter.useSeparateBrakingFriction = false;
         }
@@ -145,7 +148,10 @@ namespace Perigon.Character
                 _dashEffectBehaviour.Play();
             }
 
-            VisualEffectsManager.Instance.Distort(HUDVisualEffect.Dash);
+            if (VisualEffectsManager.Instance != null)
+            {
+                VisualEffectsManager.Instance.Distort(HUDVisualEffect.Dash);
+            }
         }
         
         #region Mono
