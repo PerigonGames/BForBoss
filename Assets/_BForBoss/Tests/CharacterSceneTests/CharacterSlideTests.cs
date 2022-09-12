@@ -24,7 +24,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_Slide_StayingStill()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -46,7 +46,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_JumpCrouch_StayingStill()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -70,7 +70,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_CrouchLeft_BeyondLeftBlockade()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -92,7 +92,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_CrouchRight_BeyondRightBlockade()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -114,7 +114,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_CrouchForward_BeyondForwardBlockade()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -136,7 +136,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_CrouchBackward_BeyondBackwardBlockade()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -158,7 +158,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_SlideLeft_BeyondLeftBlockade()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -180,7 +180,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_SlideRight_BeyondRightBlockade()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -202,7 +202,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_SlideForward_BeyondForwardBlockade()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -246,7 +246,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_SlideForwardRight_BeyondDiagonalForwardRightBlockade()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -271,7 +271,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_SlideForwardLeft_BeyondDiagonalForwardLeftBlockade()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -296,7 +296,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_SlideBackwardLeft_BeyondDiagonalBackwardLeftBlockade()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -321,7 +321,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_SlideBackwardRight_BeyondDiagonalBackwardRightBlockade()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
