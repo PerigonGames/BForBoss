@@ -15,17 +15,29 @@ namespace BForBoss
 
         public PlayerMovementBehaviour PlayerMovement => _playerMovement;
 
-        public void Initialize(PGInputSystem inputSystem, Action onDeath)
+        public void Initialize(PGInputSystem inputSystem)
         {
             _playerMovement.Initialize(inputSystem);
             if (_playerLifeCycle != null)
             {
-                _playerLifeCycle.Initialize(onDeath);
+                _playerLifeCycle.Initialize(
+                    onEndGameCallback: () =>
+                {
+                    StateManager.Instance.SetState(State.EndGame);
+                }, 
+                    onDeathCallback: () =>
+                {
+                    StateManager.Instance.SetState(State.Death);
+                });
             }
 
             StateManager.Instance.OnStateChanged += HandleOnStateChanged;
         }
 
+        public void Reset()
+        {
+            _playerLifeCycle.Reset();
+        }
 
         public void SpawnAt(Vector3 position, Quaternion facing)
         {
