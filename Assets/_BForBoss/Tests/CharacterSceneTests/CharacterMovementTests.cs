@@ -13,6 +13,7 @@ namespace Tests.Character
     public class CharacterMovementTests: InputTestFixture
     {
         private Keyboard _keyboard = null;
+        private PGInputSystem _pgInputSystem;
 
         [SetUp]
         public override void Setup()
@@ -20,6 +21,13 @@ namespace Tests.Character
             base.Setup();
             EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/_BForBoss/Tests/Scenes/GenericCharacterTests.unity", new LoadSceneParameters(LoadSceneMode.Single));
             _keyboard = InputSystem.AddDevice<Keyboard>();
+        }
+
+        [TearDown]
+        public override void TearDown()
+        {
+            base.TearDown();
+            _pgInputSystem.ForceUnbind();
         }
 
         [UnityTest]
@@ -33,16 +41,16 @@ namespace Tests.Character
             var startingPosition = GameObject.Find("MovementSpawn").transform.position;
             var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>(); 
             var mockWorld = GameObject.FindObjectOfType<MockGenericCharacterWorldManager>(); 
-            var pgInputSystem = new PGInputSystem(mockWorld.ActionAsset);
-            character.Initialize(pgInputSystem);
-            pgInputSystem.SetToPlayerControls();
+            _pgInputSystem = new PGInputSystem(mockWorld.ActionAsset);
+            character.Initialize(_pgInputSystem);
+            _pgInputSystem.SetToPlayerControls();
             character.transform.position = startingPosition;
+            
             Press(_keyboard.wKey);
             
             yield return new WaitForSeconds(1.5f);
             
             Assert.Greater(character.transform.position.z, startingPosition.z, "Character walked forward, should be higher z value");
-            pgInputSystem.ForceUnbind();
         }
         
         [UnityTest]
@@ -55,6 +63,10 @@ namespace Tests.Character
 
             var originalPosition = GameObject.Find("MovementSpawn").transform.position;
             var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
+            var mockWorld = GameObject.FindObjectOfType<MockGenericCharacterWorldManager>(); 
+            _pgInputSystem = new PGInputSystem(mockWorld.ActionAsset);
+            character.Initialize(_pgInputSystem);
+            _pgInputSystem.SetToPlayerControls();
             character.transform.position = originalPosition;
             Press(_keyboard.sKey);
             
@@ -73,6 +85,10 @@ namespace Tests.Character
 
             var originalPosition = GameObject.Find("MovementSpawn").transform.position;
             var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
+            var mockWorld = GameObject.FindObjectOfType<MockGenericCharacterWorldManager>(); 
+            _pgInputSystem = new PGInputSystem(mockWorld.ActionAsset);
+            character.Initialize(_pgInputSystem);
+            _pgInputSystem.SetToPlayerControls();
             character.transform.position = originalPosition;
             Press(_keyboard.aKey);
             
@@ -91,6 +107,10 @@ namespace Tests.Character
 
             var originalPosition = GameObject.Find("MovementSpawn").transform.position;
             var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
+            var mockWorld = GameObject.FindObjectOfType<MockGenericCharacterWorldManager>(); 
+            _pgInputSystem = new PGInputSystem(mockWorld.ActionAsset);
+            character.Initialize(_pgInputSystem);
+            _pgInputSystem.SetToPlayerControls();
             character.transform.position = originalPosition;
             Press(_keyboard.dKey);
             
