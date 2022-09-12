@@ -25,7 +25,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_MoveForward_GreaterZPosition()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -49,7 +49,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_MoveBackwards_LesserZPosition()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -72,7 +72,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_MoveLeft_LesserXPosition()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
@@ -95,7 +95,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Character_MoveRight_GreaterXPosition()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 50; i++)
             {
                 yield return new WaitForFixedUpdate();
             }
