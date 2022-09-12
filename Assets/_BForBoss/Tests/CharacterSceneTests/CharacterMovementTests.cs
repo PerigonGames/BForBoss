@@ -1,6 +1,7 @@
 using System.Collections;
 using NUnit.Framework;
 using Perigon.Character;
+using Perigon.Utility;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -30,13 +31,18 @@ namespace Tests.Character
             }
 
             var startingPosition = GameObject.Find("MovementSpawn").transform.position;
-            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
+            var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>(); 
+            var mockWorld = GameObject.FindObjectOfType<MockGenericCharacterWorldManager>(); 
+            var pgInputSystem = new PGInputSystem(mockWorld.ActionAsset);
+            character.Initialize(pgInputSystem);
+            pgInputSystem.SetToPlayerControls();
             character.transform.position = startingPosition;
             Press(_keyboard.wKey);
             
             yield return new WaitForSeconds(1.5f);
-
+            
             Assert.Greater(character.transform.position.z, startingPosition.z, "Character walked forward, should be higher z value");
+            pgInputSystem.ForceUnbind();
         }
         
         [UnityTest]

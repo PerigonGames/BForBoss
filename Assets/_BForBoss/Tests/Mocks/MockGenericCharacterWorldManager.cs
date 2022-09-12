@@ -7,13 +7,13 @@ namespace Tests
 {
     public class MockGenericCharacterWorldManager : MonoBehaviour
     {
-        public InputActionAsset _actionAsset;
+        public InputActionAsset ActionAsset;
         private PGInputSystem _pgInputSystem;
         
-        private void Start()
+        private void Awake()
         {
             var character = FindObjectOfType<PlayerMovementBehaviour>();
-            _pgInputSystem = new PGInputSystem(_actionAsset);
+            _pgInputSystem = new PGInputSystem(ActionAsset);
             character.Initialize(_pgInputSystem);
             _pgInputSystem.SetToPlayerControls();
         }
