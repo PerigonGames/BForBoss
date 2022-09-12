@@ -39,6 +39,7 @@ namespace Perigon.Entities
         {
             _currentHealth = MaxHealth;
             IsAlive = true;
+            OnHeal?.Invoke();
         }
         
         public void HealBy(float amount)

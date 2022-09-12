@@ -5,8 +5,8 @@ namespace BForBoss
 {
     public class WaveManager : MonoBehaviour
     {
-        private float _secondsBetweenWaves = 2.5f;
-        private float _enemyAmountMultiplier = 1.2f;
+        private float _secondsBetweenWaves;
+        private float _enemyAmountMultiplier;
         
         private ISpawnerControl _spawnerControl;
         private WaveModel _waveModel;
@@ -24,6 +24,11 @@ namespace BForBoss
             _waveModel = waveModel;
             _waveModel.OnEnemySpawned += OnEnemySpawned;
             _waveModel.OnEnemyKilled += OnEnemyKilled;
+            StartCoroutine(InitiateNextWave());
+        }
+
+        public void Reset()
+        {
             StartCoroutine(InitiateNextWave());
         }
 
@@ -52,11 +57,14 @@ namespace BForBoss
 
         private IEnumerator InitiateNextWave()
         {
-            _spawnerControl.PauseSpawning();
-            yield return new WaitForSeconds(_secondsBetweenWaves);
+            if (_spawnerControl != null)
+            {
+                _spawnerControl.PauseSpawning();
+                yield return new WaitForSeconds(_secondsBetweenWaves);
             
-            _waveModel.IncrementWave(_enemyAmountMultiplier);
-            _spawnerControl.ResumeSpawning();
+                _waveModel.IncrementWave(_enemyAmountMultiplier);
+                _spawnerControl.ResumeSpawning();
+            }
         }
 
         private void OnDestroy()

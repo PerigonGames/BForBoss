@@ -39,5 +39,10 @@ namespace Perigon.Utility
 		{
 			objectPool.Release(toRecycle);
 		}
+
+		public void Clear()
+		{
+			objectPool.Clear();
+		}
     }
 }

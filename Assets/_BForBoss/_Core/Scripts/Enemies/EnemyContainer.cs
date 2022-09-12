@@ -30,6 +30,7 @@ namespace BForBoss
         {
             _enemyPool.Clear();
             _activeEnemies.Clear();
+            _bulletSpawner.Reset();
         }
 
         public void CleanUp()
