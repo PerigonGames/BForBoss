@@ -31,7 +31,7 @@ namespace BForBoss
         {
             Aim,
             Shoot,
-            DistanceCheck
+            Reevaluate
         }
         
         private float _elapsedShootCountDown = 0;
@@ -78,8 +78,8 @@ namespace BForBoss
                 case ShootState.Shoot:
                     CountDownUntilShoot();
                     break;
-                case  ShootState.DistanceCheck:
-                    DistanceCheck();
+                case ShootState.Reevaluate:
+                    Reevaluate();
                     break;
             }
         }
@@ -109,12 +109,12 @@ namespace BForBoss
             if (_elapsedShootCountDown <= 0)
             {
                 Shoot();
-                _state = ShootState.DistanceCheck;
+                _state = ShootState.Reevaluate;
                 _elapsedShootCountDown = _shootCountDownInSeconds;
             }
         }
 
-        private void DistanceCheck()
+        private void Reevaluate()
         {
             if (IsTooFar() || IsObjectBlocking())
             {
