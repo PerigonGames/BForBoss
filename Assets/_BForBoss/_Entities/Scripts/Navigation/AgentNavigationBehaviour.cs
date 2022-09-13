@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.AI;
+using Vector3 = UnityEngine.Vector3;
 
 namespace Perigon.Entities
 {
@@ -25,18 +26,22 @@ namespace Perigon.Entities
             {
                 return;
             }
-            
-            var destination = _destination();
-                
-            if (Vector3.Distance(transform.position, destination) > _stopDistanceBeforeReachingDestination)
+            _agent.destination = _destination();
+            if (ReachedDestination())
             {
-                _agent.isStopped = false;
-                _agent.destination = destination;
+                if (IsObjectBlocking())
+                {
+                    _agent.isStopped = false;
+                }
+                else
+                {
+                    _agent.isStopped = true;
+                    _onDestinationReached?.Invoke();
+                }
             }
             else
             {
-                _agent.isStopped = true;
-                _onDestinationReached?.Invoke();
+                _agent.isStopped = false;
             }
         }
 
@@ -61,16 +66,43 @@ namespace Perigon.Entities
             }
         }
 
+        private bool ReachedDestination()
+        {
+            if (_agent.remainingDistance > 0)
+            {
+                Debug.Log($"Within Distance: {_agent.remainingDistance}");
+                Debug.Log($"Stop Distance: {_stopDistanceBeforeReachingDestination}");
+                Debug.Log("========================================");
+                return _agent.remainingDistance < _stopDistanceBeforeReachingDestination;
+            }
+
+            return false;
+        }
+        
+        private bool IsObjectBlocking()
+        {
+            var direction = _destination() - (transform.position + Vector3.up); 
+            if (Physics.Raycast(transform.position, direction.normalized, out var hitInfo))
+            {
+                Debug.DrawRay(transform.position, direction.normalized, Color.red);
+                if (hitInfo.collider.GetComponent<PlayerLifeCycleBehaviour>() != null)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         private void Awake()
         {
             _agent = GetComponent<NavMeshAgent>();
-            _agent.stoppingDistance = _stopDistanceBeforeReachingDestination;
         }
         
         private void OnDrawGizmos()
         {
             Gizmos.color = new Color(1, 0, 0, 0.5f);
-            Gizmos.DrawWireSphere(transform.position, _stopDistanceBeforeReachingDestination);
+            Gizmos.DrawSphere(transform.position, _stopDistanceBeforeReachingDestination);
         }
     }
 }

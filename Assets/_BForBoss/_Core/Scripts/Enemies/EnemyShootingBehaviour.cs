@@ -1,4 +1,5 @@
 using System;
+using Perigon.Entities;
 using Perigon.Utility;
 using Perigon.Weapons;
 using Sirenix.OdinInspector;
@@ -116,7 +117,7 @@ namespace BForBoss
 
         private void DistanceCheck()
         {
-            if (Vector3.Distance(transform.position, _destination()) > _distanceToShootAt)
+            if (IsTooFar() || IsObjectBlocking())
             {
                 _enemyAnimation.SetMovementAnimation();
                 Reset();
@@ -126,6 +127,26 @@ namespace BForBoss
             {
                 _state = ShootState.Aim;
             }
+        }
+
+        private bool IsTooFar()
+        {
+            return Vector3.Distance(transform.position, _destination()) > _distanceToShootAt;
+        }
+
+        private bool IsObjectBlocking()
+        {
+            var direction = _destination() - _shootingFromPosition.position;
+            if (Physics.Raycast(_shootingFromPosition.position, direction.normalized, out var hitInfo))
+            {
+                Debug.DrawRay(_shootingFromPosition.position, direction.normalized, Color.red);
+                if (hitInfo.collider.GetComponent<PlayerLifeCycleBehaviour>() != null)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private void Shoot()
