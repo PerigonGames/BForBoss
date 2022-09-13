@@ -116,7 +116,7 @@ namespace BForBoss
 
         private void Reevaluate()
         {
-            if (IsTooFar() || IsObjectBlocking())
+            if (IsDestinationTooFar() || IsLineOfSightBlocked())
             {
                 _enemyAnimation.SetMovementAnimation();
                 Reset();
@@ -128,12 +128,12 @@ namespace BForBoss
             }
         }
 
-        private bool IsTooFar()
+        private bool IsDestinationTooFar()
         {
             return Vector3.Distance(transform.position, _destination()) > _distanceToShootAt;
         }
 
-        private bool IsObjectBlocking()
+        private bool IsLineOfSightBlocked()
         {
             var direction = _destination() - _shootingFromPosition.position;
             if (Physics.Raycast(_shootingFromPosition.position, direction.normalized, out var hitInfo))

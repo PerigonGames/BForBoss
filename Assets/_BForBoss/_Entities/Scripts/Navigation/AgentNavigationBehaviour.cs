@@ -28,7 +28,7 @@ namespace Perigon.Entities
             _agent.destination = _destination();
             if (ReachedDestination())
             {
-                if (IsObjectBlocking())
+                if (IsLineOfSightBlocked())
                 {
                     _agent.isStopped = false;
                 }
@@ -75,7 +75,7 @@ namespace Perigon.Entities
             return false;
         }
         
-        private bool IsObjectBlocking()
+        private bool IsLineOfSightBlocked()
         {
             var direction = _destination() - (transform.position + Vector3.up); 
             if (Physics.Raycast((transform.position + Vector3.up), direction.normalized, out var hitInfo))
