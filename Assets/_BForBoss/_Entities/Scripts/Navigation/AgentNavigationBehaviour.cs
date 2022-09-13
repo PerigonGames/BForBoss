@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.AI;
-using Vector3 = UnityEngine.Vector3;
 
 namespace Perigon.Entities
 {
@@ -70,9 +69,6 @@ namespace Perigon.Entities
         {
             if (_agent.remainingDistance > 0)
             {
-                Debug.Log($"Within Distance: {_agent.remainingDistance}");
-                Debug.Log($"Stop Distance: {_stopDistanceBeforeReachingDestination}");
-                Debug.Log("========================================");
                 return _agent.remainingDistance < _stopDistanceBeforeReachingDestination;
             }
 
@@ -82,9 +78,9 @@ namespace Perigon.Entities
         private bool IsObjectBlocking()
         {
             var direction = _destination() - (transform.position + Vector3.up); 
-            if (Physics.Raycast(transform.position, direction.normalized, out var hitInfo))
+            if (Physics.Raycast((transform.position + Vector3.up), direction.normalized, out var hitInfo))
             {
-                Debug.DrawRay(transform.position, direction.normalized, Color.red);
+                Debug.DrawRay((transform.position + Vector3.up), direction.normalized, Color.red);
                 if (hitInfo.collider.GetComponent<PlayerLifeCycleBehaviour>() != null)
                 {
                     return false;
