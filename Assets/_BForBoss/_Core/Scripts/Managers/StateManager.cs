@@ -8,7 +8,8 @@ namespace BForBoss
         PreGame,
         Play,
         Pause,
-        Death
+        Death,
+        EndGame
     }
 
     public interface IStateManager

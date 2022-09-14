@@ -14,6 +14,7 @@ namespace Tests.Weapons
             // Given
             var mockProperties = new MockWeaponProperties();
             var weapon = new Weapon(mockProperties);
+            weapon.ActivateWeapon = true;
             var shootTimes = 0;
             weapon.OnFireWeapon += bullets =>
             {
@@ -33,6 +34,7 @@ namespace Tests.Weapons
             // Given
             var mockProperties = new MockWeaponProperties();
             var weapon = new Weapon(mockProperties);
+            weapon.ActivateWeapon = true;
             var shootTimes = 0;
             weapon.OnFireWeapon += bullets =>
             {
@@ -53,6 +55,7 @@ namespace Tests.Weapons
             // Given
             var mockProperties = new MockWeaponProperties();
             var weapon = new Weapon(mockProperties);
+            weapon.ActivateWeapon = true;
             var shootTimes = 0;
             weapon.OnFireWeapon += bullets =>
             {
@@ -74,6 +77,7 @@ namespace Tests.Weapons
             // Given
             var mockProperties = new MockWeaponProperties(rateOfFire: 10f);
             var weapon = new Weapon(mockProperties);
+            weapon.ActivateWeapon = true;
             var shootTimes = 0;
             weapon.OnFireWeapon += bullets =>
             {
@@ -95,6 +99,7 @@ namespace Tests.Weapons
             // Given
             var mockProperties = new MockWeaponProperties(rateOfFire: 10f);
             var weapon = new Weapon(mockProperties);
+            weapon.ActivateWeapon = true;
             var shootTimes = 0;
             weapon.OnFireWeapon += bullets =>
             {
@@ -107,7 +112,7 @@ namespace Tests.Weapons
             weapon.FireIfPossible();
             
             //Then
-            Assert.AreEqual(shootTimes, 1);
+            Assert.AreEqual(1, shootTimes);
         }
         
         [Test]
@@ -156,6 +161,7 @@ namespace Tests.Weapons
             var mockProperties = new MockWeaponProperties(bulletsPerShot: expectedNumberOfBullets);
             var mockRandom = new MockRandom {RandomDouble = 1};
             var weapon = new Weapon(mockProperties, mockRandom);
+            weapon.ActivateWeapon = true;
             var actualNumberOfBullets = 0;
             weapon.OnFireWeapon += bullets =>
             {
@@ -175,6 +181,7 @@ namespace Tests.Weapons
             //Given 
             var mockProperties = new MockWeaponProperties(ammoAmount: 1);
             var weapon = new Weapon(mockProperties);
+            weapon.ActivateWeapon = true;
             weapon.FireIfPossible();
             
             //When
