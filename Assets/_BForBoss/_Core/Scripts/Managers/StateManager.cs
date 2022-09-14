@@ -4,12 +4,12 @@ namespace BForBoss
 {
     public enum State
     {
-        Debug,
         PreGame,
         Play,
         Pause,
+        EndRace,
         Death,
-        EndGame
+        Debug
     }
 
     public interface IStateManager

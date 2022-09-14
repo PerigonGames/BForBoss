@@ -7,8 +7,6 @@ namespace BForBoss
 {
     public class PauseViewBehaviour : MonoBehaviour
     {
-        private readonly QuitGameUseCase _quitGameUseCase = new QuitGameUseCase();
-
         [Title("Buttons")]
         [SerializeField] private Button _resumeButton = null;
         [SerializeField] private Button _resetButton = null;
@@ -16,24 +14,36 @@ namespace BForBoss
         [SerializeField] private Button _settingsButton = null;
 
         private Action _onSettingsPressed;
-        private ResetGameUseCase _resetGameUseCase;
 
-        public void Initialize(ResetGameUseCase resetGameUseCase, Action onSettingsPressed)
+        public void Initialize(Action onSettingsPressed)
         {
-            _resetGameUseCase = resetGameUseCase;
             _onSettingsPressed = onSettingsPressed;
+        }
+
+        private void ResetGame()
+        {
+            StateManager.Instance.SetState(State.PreGame);
         }
 
         private void ResumeGame()
         {
             StateManager.Instance.SetState(State.Play);
         }
+
+        private void QuitGame()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.ExitPlaymode();
+#else
+            Application.Quit();
+#endif
+        }
         
         private void Awake()
         {
             _resumeButton.onClick.AddListener(ResumeGame);
-            _resetButton.onClick.AddListener(_resetGameUseCase.Execute);
-            _quitButton.onClick.AddListener(_quitGameUseCase.Execute);
+            _resetButton.onClick.AddListener(ResetGame);
+            _quitButton.onClick.AddListener(QuitGame);
             _settingsButton.onClick.AddListener(() =>
             {
                 _onSettingsPressed?.Invoke();

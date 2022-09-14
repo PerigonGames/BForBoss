@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
 
@@ -6,9 +7,11 @@ namespace Perigon.Entities
     public class DummyTargetBehaviour : LifeCycleBehaviour
     {
         [SerializeField] private HealthbarViewBehaviour _healthbar;
+        private const string IS_DEAD = "IsDead";
+        private const string HIT = "Hit";
         private const float MAX_DISSOLVE = 1f;
-        private readonly int DEATH_ID = Animator.StringToHash("IsDead");
-        private readonly int HIT_ID = Animator.StringToHash("Hit");
+        private readonly int DEATH_ID = Animator.StringToHash(IS_DEAD);
+        private readonly int HIT_ID = Animator.StringToHash(HIT);
         private readonly int DISSOLVE_ID = Shader.PropertyToID("_Dissolve");
         
         [SerializeField]
@@ -18,9 +21,9 @@ namespace Perigon.Entities
         private Renderer _renderer;
         private Tween _deathTween;
 
-        public override void Initialize()
+        public override void Initialize(Action onDeathCallback)
         {
-            base.Initialize();
+            base.Initialize(onDeathCallback);
             _animator = GetComponentInChildren<Animator>();
             _renderer = GetComponentInChildren<Renderer>();
             if (_healthbar != null)

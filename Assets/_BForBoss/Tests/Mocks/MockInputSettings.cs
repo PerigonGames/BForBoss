@@ -2,7 +2,7 @@ using Perigon.Utility;
 
 namespace Tests
 {
-    public class MockInputConfiguration : IInputConfiguration
+    public class MockInputSettings : IInputSettings
     {
         public int CalledRevertAllSettings = 0;
         

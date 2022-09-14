@@ -99,7 +99,7 @@ namespace Tests.Character
         [UnityTest]
         public IEnumerator Test_CharacterWallRun_IntoWall_FallsOntoFloor()
         {
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 5; i++)
             {
                 yield return new WaitForFixedUpdate();
             }

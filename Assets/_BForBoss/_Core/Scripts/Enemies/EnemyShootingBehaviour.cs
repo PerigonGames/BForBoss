@@ -104,6 +104,7 @@ namespace BForBoss
 
         private void CountDownUntilShoot()
         {
+            _enemyAnimation.SetShootingAnimation();
             _elapsedShootCountDown -= Time.deltaTime;
             if (_elapsedShootCountDown <= 0)
             {
@@ -130,7 +131,6 @@ namespace BForBoss
         private void Shoot()
         {
             _muzzleFlashVFX.SendEvent(_vfxFireEvent);
-            _enemyAnimation.SetShootingAnimation();
             var bullet = _bulletSpawner.SpawnBullet();
             bullet.SetSpawnAndDirection(_shootingFromPosition.position, _shootDirection.normalized);
         }

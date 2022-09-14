@@ -1,6 +1,8 @@
 using System;
+using Perigon.Utility;
 using UnityEngine;
 using UnityEngine.AI;
+using Perigon.Weapons;
 
 namespace Perigon.Entities
 {
@@ -9,34 +11,32 @@ namespace Perigon.Entities
     {
         [SerializeField] 
         private float _stopDistanceBeforeReachingDestination = 5;
-        private Func<Vector3> _destination = null;
+        private Func<Vector3> Destination = null;
         private NavMeshAgent _agent = null;
-        private Action _onDestinationReached;
+        private Action OnDestinationReached;
 
         public void Initialize(Func<Vector3> navigationDestination, Action onDestinationReached)
         {
-            _destination = navigationDestination;
-            _onDestinationReached = onDestinationReached;
+            Destination = navigationDestination;
+            OnDestinationReached = onDestinationReached;
         }
         
         public void MovementUpdate()
         {
-            if (_destination == null || !_agent.enabled)
+            if (Destination != null)
             {
-                return;
-            }
-            
-            var destination = _destination();
+                var destination = Destination();
                 
-            if (Vector3.Distance(transform.position, destination) > _stopDistanceBeforeReachingDestination)
-            {
-                _agent.isStopped = false;
-                _agent.destination = destination;
-            }
-            else
-            {
-                _agent.isStopped = true;
-                _onDestinationReached?.Invoke();
+                if (Vector3.Distance(transform.position, destination) > _stopDistanceBeforeReachingDestination)
+                {
+                    _agent.isStopped = false;
+                    _agent.destination = destination;
+                }
+                else
+                {
+                    _agent.isStopped = true;
+                    OnDestinationReached?.Invoke();
+                }
             }
         }
 

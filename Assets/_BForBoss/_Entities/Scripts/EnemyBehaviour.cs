@@ -1,22 +1,19 @@
 using System;
 using UnityEngine;
-using UnityEngine.Pool;
 
 namespace Perigon.Entities
 {
-    [RequireComponent(typeof(EnemyLifeCycleBehaviour))]
-    public abstract class EnemyBehaviour: MonoBehaviour
+    public abstract class EnemyBehaviour : LifeCycleBehaviour
     {
-        public IObjectPool<EnemyBehaviour> Pool { get; set; }
+        protected Action<EnemyBehaviour> _onReleaseToSpawner = null;
+            
+        protected abstract override void LifeCycleFinished();
 
-        public event Action<EnemyBehaviour> OnRelease;
-
-        public abstract void Reset();
-        
-        protected void ReleaseToPool()
+        public virtual void Initialize(Func<Vector3> getPlayerPosition, Action onDeathCallback,
+            Action<EnemyBehaviour> onReleaseToSpawner = null)
         {
-            OnRelease?.Invoke(this);
-            Pool.Release(this);
+            Initialize(onDeathCallback);
+            _onReleaseToSpawner = onReleaseToSpawner;
         }
     }
 }

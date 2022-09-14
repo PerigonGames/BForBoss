@@ -21,8 +21,7 @@ namespace Perigon.Entities
         
         private void OnHealthChanged()
         {
-            var amount = Mathf.Clamp((int)GetHealthAmount(), 0, Int32.MaxValue);
-            _healthPercentageLabel.text = amount + "%";
+            _healthPercentageLabel.text = Math.Floor(GetHealthAmount()) + "%";
         }
         
         private float GetHealthAmount()

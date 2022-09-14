@@ -1,5 +1,4 @@
 using Perigon.Analytics;
-using Perigon.Character;
 using Perigon.Utility;
 
 namespace BForBoss
@@ -12,17 +11,17 @@ namespace BForBoss
         /// </summary>
         protected const float MAPPED_SENSITIVITY_MULTIPLIER = 100f;
         private readonly IBForBossAnalytics _analytics = null;
-        protected readonly IInputConfiguration _configuration = null;
+        protected readonly IInputSettings _settings = null;
         
         public abstract float GetHorizontal { get; }
         public abstract float GetVertical { get; }
         
-        public bool GetIsInverted => _configuration.IsInverted;
+        public bool GetIsInverted => _settings.IsInverted;
 
-        protected BaseInputSettingsViewModel(IInputConfiguration configuration = null, IBForBossAnalytics analytics = null)
+        protected BaseInputSettingsViewModel(IInputSettings settings, IBForBossAnalytics analytics = null)
         {
             _analytics = analytics ?? BForBossAnalytics.Instance;
-            _configuration = configuration ?? new InputConfiguration();
+            _settings = settings;
             SetInputSettingsAnalytics();
         }
 
@@ -30,7 +29,7 @@ namespace BForBoss
 
         public void RevertSettings()
         {
-            _configuration.RevertAllSettings();
+            _settings.RevertAllSettings();
             SetInputSettingsAnalytics();
         }
         

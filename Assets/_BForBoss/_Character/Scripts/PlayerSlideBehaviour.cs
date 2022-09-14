@@ -11,6 +11,7 @@ namespace Perigon.Character
         [SerializeField] private float _brakingDecelerationSliding = 10;
         [SerializeField] private float _slideImpulse = 10;
         
+        private bool _canSlide = true;
         private bool _isSliding = false;
 
         private ECM2.Characters.Character _baseCharacter = null;

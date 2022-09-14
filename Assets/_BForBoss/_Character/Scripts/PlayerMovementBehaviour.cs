@@ -2,9 +2,9 @@ using System;
 using Cinemachine;
 using ECM2.Characters;
 using ECM2.Components;
-using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Perigon.Character
 {
@@ -19,29 +19,14 @@ namespace Perigon.Character
         private PlayerWallRunBehaviour _wallRunBehaviour = null;
         private PlayerSlideBehaviour _slideBehaviour = null;
         private PlayerSlowMotionBehaviour _slowMotionBehaviour = null;
-
-        private IInputConfiguration _inputConfiguration;
-        private PGInputSystem _inputSystem;
         public event Action OnDashActivated;
         public event Action Slid;
         
         
-        public void Initialize(PGInputSystem inputSystem, IInputConfiguration inputConfiguration = null)
+        public void Initialize(InputSettings inputSettings)
         {
-            _inputSystem = inputSystem;
-            _inputConfiguration = inputConfiguration ?? new InputConfiguration();
-            SetControlConfiguration();
+            inputSettings.SetPlayerControls(characterLook, actions);
             SetCameraCullingMask();
-            
-            if (_dashBehaviour != null)
-            {
-                _inputSystem.OnDashAction += _dashBehaviour.OnDash;
-            }
-
-            if (_slowMotionBehaviour != null)
-            {
-                _inputSystem.OnSlowTimeAction += _slowMotionBehaviour.OnSlowMotion;
-            }
         }
 
         public override bool CanJump()
@@ -64,15 +49,6 @@ namespace Perigon.Character
         public override float GetMaxAcceleration()
         {
             return IsWallRunning ? _wallRunBehaviour.GetMaxAcceleration() : base.GetMaxAcceleration();
-        }
-        
-        public void SetControlConfiguration()
-        {
-            characterLook.invertLook = !_inputConfiguration.IsInverted;
-            characterLook.mouseHorizontalSensitivity = _inputConfiguration.MouseHorizontalSensitivity;
-            characterLook.mouseVerticalSensitivity = _inputConfiguration.MouseVerticalSensitivity;
-            characterLook.controllerHorizontalSensitivity = _inputConfiguration.ControllerHorizontalSensitivity;
-            characterLook.controllerVerticalSensitivity = _inputConfiguration.ControllerVerticalSensitivity;
         }
         
         protected override void OnAwake()
@@ -98,6 +74,22 @@ namespace Perigon.Character
             if (_wallRunBehaviour != null)
             {
                 _wallRunBehaviour.Initialize(this, base.GetMovementInput, SetJumpCount);
+            }
+        }
+        
+        protected override void SetupPlayerInput()
+        {
+            base.SetupPlayerInput();
+            if (_dashBehaviour != null)
+            {
+                InputAction dashInputAction = actions.FindAction("Dash");
+                _dashBehaviour.SetupPlayerInput(dashInputAction);
+            }
+
+            if (_slowMotionBehaviour != null)
+            {
+                var slowMoInput = actions.FindAction("SlowTime");
+                _slowMotionBehaviour.SetupPlayerInput(slowMoInput);
             }
         }
 
@@ -201,9 +193,40 @@ namespace Perigon.Character
             }
         }
 
+        protected override void OnOnDisable()
+        {
+            base.OnOnDisable();
+            if (_dashBehaviour != null)
+            {
+                _dashBehaviour.OnOnDisable();
+            }
+            if (_slowMotionBehaviour != null)
+            {
+                _slowMotionBehaviour.OnOnDisable();
+            }
+        }
+        
+        protected override void OnOnEnable()
+        {
+            base.OnOnEnable();
+            if (_dashBehaviour != null)
+            {
+                _dashBehaviour.OnOnEnable();
+            }
+            if (_slowMotionBehaviour != null)
+            {
+                _slowMotionBehaviour.OnOnEnable();
+            }
+        }
+
         protected override void OnOnDestroy()
         {
             base.OnOnDestroy();
+            if (_dashBehaviour != null)
+            {
+                _dashBehaviour.OnOnDestroy();
+            }
+
             if (cursorLockInputAction != null)
             {
                 cursorLockInputAction.started -= OnCursorLock;

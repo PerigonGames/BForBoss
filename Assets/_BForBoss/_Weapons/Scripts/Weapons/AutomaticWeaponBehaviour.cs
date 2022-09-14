@@ -5,12 +5,16 @@ namespace Perigon.Weapons
 {
     public class AutomaticWeaponBehaviour : WeaponBehaviour
     {
-        protected override void OnFireInputAction(bool isFiring)
+        protected override void OnFireInputAction(InputAction.CallbackContext context)
         {
-            _isFiring = isFiring;
-            
-            if (!_isFiring)
+            if (context.started)
             {
+                _isFiring = true;
+            }
+            
+            if (context.canceled)
+            {
+                _isFiring = false;
                 _timeSinceFire = 0;
             }
         }

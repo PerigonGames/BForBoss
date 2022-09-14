@@ -10,8 +10,7 @@ namespace Perigon.Utility
         DamageTaken,
         Heal,
         SlowMotion,
-        Dash,
-        Death
+        Dash
     }
     public class VisualEffectsManager : MonoBehaviour
     {
@@ -20,16 +19,14 @@ namespace Perigon.Utility
 
         private static VisualEffectsManager _instance = null;
 
-        [Resolve][SerializeField] private CustomPassVolume _damageTakenPassVolume;
-        [Resolve][SerializeField] private CustomPassVolume _healPassVolume;
-        [Resolve][SerializeField] private Volume _slowMotionVolume;
-        [Resolve][SerializeField] private Volume _dashVolume;
-        [Resolve][SerializeField] private Volume _deathVolume;
+        [Resolve][SerializeField] private CustomPassVolume _damageTakenPassVolume = null;
+        [Resolve][SerializeField] private CustomPassVolume _healPassVolume = null;
+        [Resolve][SerializeField] private Volume _slowMotionVolume = null;
+        [Resolve][SerializeField] private Volume _dashVolume = null;
         private IVolumeWeightTool _damageTakenVFXTool;
         private IVolumeWeightTool _healVFXTool;
         private IVolumeWeightTool _slowMotionVFXTool;
         private IVolumeWeightTool _dashVFXTool;
-        private IVolumeWeightTool _deathVFXTool;
         private Camera _mainCamera = null;
 
         public static VisualEffectsManager Instance => _instance;
@@ -44,7 +41,6 @@ namespace Perigon.Utility
             _healVFXTool = new CustomPassVolumeWeightTool(_healPassVolume, EMISSION_STRENGTH_KEY);
             _slowMotionVFXTool = new PostProcessingVolumeWeightTool(_slowMotionVolume);
             _dashVFXTool = new PostProcessingVolumeWeightTool(_dashVolume);
-            _deathVFXTool = new PostProcessingVolumeWeightTool(_deathVolume);
         }
         
         public void DistortAndRevert(HUDVisualEffect effect)
@@ -88,8 +84,6 @@ namespace Perigon.Utility
                     return _healVFXTool;
                 case HUDVisualEffect.SlowMotion:
                     return _slowMotionVFXTool;
-                case HUDVisualEffect.Death:
-                    return _deathVFXTool;
             }
 
             return null;
@@ -101,7 +95,6 @@ namespace Perigon.Utility
             _healVFXTool.Reset();
             _dashVFXTool.Reset();
             _slowMotionVFXTool.Reset();
-            _deathVFXTool.Reset();
         }
 
         private void OnDestroy()

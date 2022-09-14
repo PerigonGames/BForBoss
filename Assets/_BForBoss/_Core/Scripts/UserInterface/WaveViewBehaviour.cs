@@ -13,17 +13,17 @@ namespace BForBoss
 
         public void Initialize(WaveModel model)
         {
-            model.OnDataUpdated += SetData;
+            model.OnEnemyKilled += UpdateEnemiesRemainingCounter;
+            model.OnWaveCountUpdated += UpdateWaveCounter;
             _model = model;
         }
 
-        public void Reset()
+        private void UpdateEnemiesRemainingCounter(int numberOfRemainingEnemies)
         {
-            SetData(0, 0);
+            _enemiesRemainingLabel.text = numberOfRemainingEnemies.ToString();
         }
-        
 
-        private void SetData(int waveNumber, int maxEnemyCount)
+        private void UpdateWaveCounter(int waveNumber, int maxEnemyCount)
         {
             _waveCounterLabel.text = waveNumber.ToString();
             _enemiesRemainingLabel.text = maxEnemyCount.ToString();
@@ -33,7 +33,8 @@ namespace BForBoss
         {
             if (_model != null)
             {
-                _model.OnDataUpdated -= SetData;
+                _model.OnEnemyKilled -= UpdateEnemiesRemainingCounter;
+                _model.OnWaveCountUpdated -= UpdateWaveCounter;
             }
         }
 

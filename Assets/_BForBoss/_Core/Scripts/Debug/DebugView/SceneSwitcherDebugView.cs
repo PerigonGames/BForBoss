@@ -9,7 +9,6 @@ namespace BForBoss
     {
         private const string SCENE_NAME_DELIMITER = "/";
         private const string SCENE_NAME_EXTENSION = ".unity";
-        private const string ADDITIVE_SCENE_PREFIX = "Additive";
         
         private List<string> _buildSceneNames = new List<string>();
         private Vector2 _scrollPosition = Vector2.zero;
@@ -77,12 +76,7 @@ namespace BForBoss
 
             for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
             {
-                string buildSceneName = GetAppropriateSceneName(SceneUtility.GetScenePathByBuildIndex(i));
-
-                if (!buildSceneName.StartsWith(ADDITIVE_SCENE_PREFIX))
-                {
-                    _buildSceneNames.Add(buildSceneName);
-                }
+                _buildSceneNames.Add(GetAppropriateSceneName(SceneUtility.GetScenePathByBuildIndex(i)));
             }
         }
 

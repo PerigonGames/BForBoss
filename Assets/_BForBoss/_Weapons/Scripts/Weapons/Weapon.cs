@@ -15,7 +15,6 @@ namespace Perigon.Weapons
          private float _elapsedRateOfFire;
          private float _elapsedReloadDuration;
          private int _ammunitionAmount;
-         private bool _isActive = false;
 
          public bool IsReloading { get; set; }
 
@@ -23,7 +22,6 @@ namespace Perigon.Weapons
          {
              set
              {
-                 _isActive = value;
                  StopReloading();
                  OnSetWeaponActivate?.Invoke(value);
              }
@@ -44,7 +42,7 @@ namespace Perigon.Weapons
          public Sprite Crosshair => _weaponProperties.Crosshair;
          public WeaponAnimationType AnimationType => _weaponProperties.AnimationType;
          public EventReference ShotAudio => _weaponProperties.WeaponShotAudio;
-         private bool CanShoot => _elapsedRateOfFire <= 0 && _ammunitionAmount > 0 && _isActive;
+         private bool CanShoot => _elapsedRateOfFire <= 0 && _ammunitionAmount > 0;
 
          public Weapon(IWeaponProperties weaponProperties, IRandomUtility randomUtility = null)
          {

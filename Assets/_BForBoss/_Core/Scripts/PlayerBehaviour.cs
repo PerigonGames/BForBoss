@@ -15,29 +15,15 @@ namespace BForBoss
 
         public PlayerMovementBehaviour PlayerMovement => _playerMovement;
 
-        public void Initialize(PGInputSystem inputSystem)
+        public void Initialize(InputSettings inputSettings, Action onDeath)
         {
-            _playerMovement.Initialize(inputSystem);
+            _playerMovement.Initialize(inputSettings);
             if (_playerLifeCycle != null)
             {
-                _playerLifeCycle.Initialize(
-                    onEndGameCallback: () =>
-                {
-                    StateManager.Instance.SetState(State.EndGame);
-                }, 
-                    onDeathCallback: () =>
-                {
-                    StateManager.Instance.SetState(State.Death);
-                });
+                _playerLifeCycle.Initialize(onDeath);
             }
-
-            StateManager.Instance.OnStateChanged += HandleOnStateChanged;
         }
 
-        public void Reset()
-        {
-            _playerLifeCycle.Reset();
-        }
 
         public void SpawnAt(Vector3 position, Quaternion facing)
         {
@@ -66,19 +52,6 @@ namespace BForBoss
             {
                 PanicHelper.Panic(new Exception("Player Slow Motion is missing from Player Behaviour"));
             }
-        }
-
-        private void HandleOnStateChanged(State state)
-        {
-            if (state == State.Play)
-            {
-                _playerMovement.SetControlConfiguration();
-            }
-        }
-
-        private void OnDestroy()
-        {
-            StateManager.Instance.OnStateChanged -= HandleOnStateChanged;
         }
     }
 }

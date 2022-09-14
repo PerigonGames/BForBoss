@@ -5,9 +5,9 @@ namespace Perigon.Weapons
 {
     public class SemiAutomaticWeaponBehaviour : WeaponBehaviour
     {
-        protected override void OnFireInputAction(bool isFiring)
+        protected override void OnFireInputAction(InputAction.CallbackContext context)
         {
-            if (isFiring)
+            if (context.started)
             {
                 _weapon.FireIfPossible();
             }

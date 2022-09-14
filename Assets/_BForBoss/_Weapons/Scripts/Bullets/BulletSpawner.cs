@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Perigon.Utility;
 using UnityEngine;
 
@@ -13,33 +12,11 @@ namespace Perigon.Weapons
 
         [SerializeField] private LayerMask _layerMask = -1;
 
-        private List<BulletBehaviour> _listOfActiveBullets = new List<BulletBehaviour>();
-
         public IBullet SpawnBullet(BulletTypes typeOfBullet = BulletTypes.NoPhysics)
         {
             if(_pools == null) 
                 SetupPools();
-            var bullet = _pools[(int)typeOfBullet].Get();
-            _listOfActiveBullets.Add(bullet);
-            return bullet;
-        }
-
-
-        public void Reset()
-        {
-            if (_pools != null)
-            {
-                foreach (var pool in _pools)
-                {
-                    pool.Clear();
-                }
-            }
-            
-            foreach (var bullet in _listOfActiveBullets)
-            {
-                Destroy(bullet.gameObject);
-            }
-            _listOfActiveBullets.Clear();
+            return _pools[(int)typeOfBullet].Get();
         }
 
         private void SetupPools()
@@ -51,20 +28,13 @@ namespace Perigon.Weapons
                 var index = i;
                 _pools[i] = new ObjectPooler<BulletBehaviour>(() => GenerateBullet(prefab,index),
                     (bullet) => bullet.gameObject.SetActive(true),
-                    OnRelease);
+                    (bullet) => bullet.gameObject.SetActive(false));
             }
-        }
-
-        private void OnRelease(BulletBehaviour bullet)
-        {
-            _listOfActiveBullets.Remove(bullet);
-            bullet.gameObject.SetActive(false);
         }
 
         private BulletBehaviour GenerateBullet(BulletBehaviour prefab, int poolIndex)
         {
             var newBullet = Instantiate(prefab);
-            _listOfActiveBullets.Add(newBullet);
             newBullet.gameObject.layer = _layer;
             newBullet.Pool = _pools[poolIndex];
             newBullet.Mask = _layerMask;

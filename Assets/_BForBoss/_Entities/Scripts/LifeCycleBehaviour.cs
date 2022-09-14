@@ -1,3 +1,4 @@
+using System;
 using FMODUnity;
 using Perigon.Utility;
 using Perigon.Weapons;
@@ -18,12 +19,13 @@ namespace Perigon.Entities
 
         public bool IsAlive => _lifeCycle.IsAlive;
 
-        public virtual void Initialize()
+        public virtual void Initialize(Action onDeathCallback)
         {
             _lifeCycle = new LifeCycle(_health);
             _lifeCycle.OnDeath += LifeCycleFinished;
             _lifeCycle.OnDamageTaken += LifeCycleDamageTaken;
             _lifeCycle.OnHeal += LifeCycleOnHeal;
+            _lifeCycle.NotifyOnDeath(onDeathCallback);
         }
 
         protected virtual void LifeCycleOnHeal()
@@ -46,11 +48,18 @@ namespace Perigon.Entities
             if (_lifeCycle != null)
             {
                 _lifeCycle.Reset();
+                _lifeCycle.OnDeath += LifeCycleFinished;
+                _lifeCycle.OnDamageTaken += LifeCycleDamageTaken;
             }
         }
         
         public virtual void CleanUp()
         {
+            if (_lifeCycle != null)
+            {
+                _lifeCycle.OnDeath -= LifeCycleFinished;
+                _lifeCycle.OnDamageTaken -= LifeCycleDamageTaken;
+            }
         }
 
         protected abstract void LifeCycleFinished();

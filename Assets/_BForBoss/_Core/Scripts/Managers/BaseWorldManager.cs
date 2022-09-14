@@ -1,10 +1,10 @@
 using System;
-using DG.Tweening;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using InputSettings = Perigon.Character.InputSettings;
 
 namespace BForBoss
 {
@@ -15,13 +15,13 @@ namespace BForBoss
         [Title("Base Component")]
         [SerializeField] protected PlayerBehaviour _playerBehaviour = null;
 
-        [SerializeField] private InputActionAsset _actionAsset;
+        private IInputSettings _inputSettings = null;
+        private FreezeActionsUtility _freezeActionsUtility = null;
 
-        private PGInputSystem _inputSystem;
-        private EnvironmentManager _environmentManager;
+        private EnvironmentManager _environmentManager = null;
 
-        private WeaponSceneManager _weaponSceneManager;
-        private UserInterfaceManager _userInterfaceManager;
+        private WeaponSceneManager _weaponSceneManager = null;
+        private UserInterfaceManager _userInterfaceManager = null;
 
         private UserInterfaceManager UserInterfaceManager
         {
@@ -54,7 +54,6 @@ namespace BForBoss
 
         protected virtual void CleanUp()
         {
-            DOTween.KillAll();
             if (_environmentManager != null)
             {
                 _environmentManager.CleanUp();
@@ -63,42 +62,56 @@ namespace BForBoss
 
         protected virtual void Reset()
         {
-            _playerBehaviour.Reset();
+            _stateManager.SetState(State.Play);
             _playerBehaviour.SpawnAt(SpawnLocation, SpawnLookDirection);
             if (_environmentManager != null)
             {
                 _environmentManager.Reset();
             }
             VisualEffectsManager.Instance.Reset();
-            _stateManager.SetState(State.Play);
         }
 
         protected virtual void Awake()
         {
-            _inputSystem = new PGInputSystem(_actionAsset);
-            _inputSystem.OnPausePressed += HandlePausePressed;
             _stateManager.OnStateChanged += HandleStateChange;
+            _inputSettings = new InputSettings();
             _environmentManager = gameObject.AddComponent<EnvironmentManager>();
+            _environmentManager.Initialize();
             SceneManager.LoadScene("AdditiveWeaponManager", LoadSceneMode.Additive);
             SceneManager.LoadScene("AdditiveUserInterfaceScene", LoadSceneMode.Additive);
 #if (UNITY_EDITOR || DEVELOPMENT_BUILD)
             SceneManager.LoadScene("AdditiveDebugScene", LoadSceneMode.Additive);
 #endif
         }
+        
+        protected virtual void Update()
+        {
+            if (Keyboard.current.escapeKey.isPressed)
+            {
+                _stateManager.SetState(State.Pause);
+            }
+        }
 
         protected virtual void Start()
         {
-            _playerBehaviour.Initialize(_inputSystem);            
-            _environmentManager.Initialize();
-            WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
-            UserInterfaceManager.Initialize();
+            SetupSubManagers();
+            WeaponSceneManager.Initialize(_playerBehaviour);
+            UserInterfaceManager.Initialize(_inputSettings);
             _stateManager.SetState(State.PreGame);
         }
-        
+
+        private void SetupSubManagers()
+        {
+            _playerBehaviour.Initialize(_inputSettings as InputSettings, onDeath: () =>
+            {
+                StateManager.Instance.SetState(State.Death);
+            });
+            _freezeActionsUtility = new FreezeActionsUtility(_inputSettings);
+        }
+
         protected virtual void OnDestroy()
         {
             _stateManager.OnStateChanged -= HandleStateChange;
-            _inputSystem.OnPausePressed -= HandlePausePressed;
         }
 
         protected virtual void OnValidate()
@@ -106,18 +119,6 @@ namespace BForBoss
             if (_playerBehaviour == null)
             {
                 PanicHelper.Panic(new Exception("_playerBehaviour is missing from World Manager"));
-            }
-        }
-        
-        private void HandlePausePressed()
-        {
-            if (_stateManager.GetState() == State.Play)
-            {
-                _stateManager.SetState(State.Pause);
-            }
-            else if(_stateManager.GetState() == State.Pause)
-            {
-                _stateManager.SetState(State.Play);
             }
         }
 
@@ -141,14 +142,16 @@ namespace BForBoss
                     HandleStatePause();
                     break;
                 }
+                case State.EndRace:
+                {
+                    HandleOnEndOfRace();
+                    break;
+                }
                 case State.Death:
                 {
                     HandleOnDeath();
                     break;
                 }
-                case State.EndGame:
-                    HandleOnEndGame();
-                    break;
             }
         }
 
@@ -161,22 +164,24 @@ namespace BForBoss
         protected virtual void HandleStatePlay()
         {
             Time.timeScale = 1.0f;
-            _inputSystem.SetToPlayerControls();
+            _freezeActionsUtility.UnlockInput();
         }
 
         protected virtual void HandleStatePause()
         {
             Time.timeScale = 0.0f;
-            _inputSystem.SetToUIControls();
+            _freezeActionsUtility.LockInput();
+        }
+
+        protected virtual void HandleOnEndOfRace()
+        {
+
         }
 
         protected virtual void HandleOnDeath()
         {
-            _inputSystem.SetToUIControls();
-        }
-
-        protected virtual void HandleOnEndGame()
-        {
+            _playerBehaviour.SpawnAt(SpawnLocation, SpawnLookDirection);
+            _stateManager.SetState(State.Play);
         }
     }
 }
