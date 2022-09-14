@@ -31,7 +31,7 @@ namespace BForBoss
         {
             Aim,
             Shoot,
-            Reevaluate
+            Evaluate
         }
         
         private float _elapsedShootCountDown = 0;
@@ -78,8 +78,8 @@ namespace BForBoss
                 case ShootState.Shoot:
                     CountDownUntilShoot();
                     break;
-                case ShootState.Reevaluate:
-                    Reevaluate();
+                case ShootState.Evaluate:
+                    Evaluate();
                     break;
             }
         }
@@ -109,12 +109,12 @@ namespace BForBoss
             if (_elapsedShootCountDown <= 0)
             {
                 Shoot();
-                _state = ShootState.Reevaluate;
+                _state = ShootState.Evaluate;
                 _elapsedShootCountDown = _shootCountDownInSeconds;
             }
         }
 
-        private void Reevaluate()
+        private void Evaluate()
         {
             if (IsDestinationTooFar() || IsLineOfSightBlocked())
             {
@@ -139,7 +139,7 @@ namespace BForBoss
             if (Physics.Raycast(_shootingFromPosition.position, direction.normalized, out var hitInfo))
             {
                 Debug.DrawRay(_shootingFromPosition.position, direction.normalized, Color.red);
-                if (hitInfo.collider.GetComponent<PlayerLifeCycleBehaviour>() != null)
+                if (hitInfo.collider.CompareTag(TagsAndLayers.Tags.Player))
                 {
                     return false;
                 }
