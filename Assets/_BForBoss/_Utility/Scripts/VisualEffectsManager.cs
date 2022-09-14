@@ -24,7 +24,7 @@ namespace Perigon.Utility
         [Resolve][SerializeField] private CustomPassVolume _healPassVolume;
         [Resolve][SerializeField] private Volume _slowMotionVolume;
         [Resolve][SerializeField] private Volume _dashVolume;
-        [Resolve][SerializeField] private Volume _deathVolume;
+        [Resolve][SerializeField] private CustomPassVolume _deathVolume;
         private IVolumeWeightTool _damageTakenVFXTool;
         private IVolumeWeightTool _healVFXTool;
         private IVolumeWeightTool _slowMotionVFXTool;
@@ -44,7 +44,7 @@ namespace Perigon.Utility
             _healVFXTool = new CustomPassVolumeWeightTool(_healPassVolume, EMISSION_STRENGTH_KEY);
             _slowMotionVFXTool = new PostProcessingVolumeWeightTool(_slowMotionVolume);
             _dashVFXTool = new PostProcessingVolumeWeightTool(_dashVolume);
-            _deathVFXTool = new PostProcessingVolumeWeightTool(_deathVolume);
+            _deathVFXTool = new CustomPassVolumeWeightTool(_deathVolume, EMISSION_STRENGTH_KEY);
         }
         
         public void DistortAndRevert(HUDVisualEffect effect)
