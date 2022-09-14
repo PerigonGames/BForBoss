@@ -13,6 +13,15 @@ namespace Perigon.Utility
 #endif
         }
         
+        public static void LogFormat(string toLog, params object[] args)
+        {
+#if !UNITY_EDITOR && DEBUG
+            Debug.LogFormat(toLog, args);
+#elif UNITY_EDITOR
+            LogInEditor(toLog, (str) => Debug.LogFormat(str, args));
+#endif
+        }
+        
         public static void LogWarning(string toLog)
         {
 #if !UNITY_EDITOR && DEBUG
