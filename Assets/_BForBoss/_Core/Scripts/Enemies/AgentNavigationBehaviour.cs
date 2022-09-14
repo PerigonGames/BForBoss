@@ -1,9 +1,8 @@
 using System;
-using Perigon.Utility;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Perigon.Entities
+namespace BForBoss
 {
     [RequireComponent(typeof(NavMeshAgent))]
     public class AgentNavigationBehaviour : MonoBehaviour
@@ -13,11 +12,13 @@ namespace Perigon.Entities
         private Func<Vector3> _destination;
         private NavMeshAgent _agent;
         private Action _onDestinationReached;
+        private IsLineOfSightBlocked _isLineOfSightBlocked;
 
-        public void Initialize(Func<Vector3> navigationDestination, Action onDestinationReached)
+        public void Initialize(Func<Vector3> navigationDestination, IsLineOfSightBlocked isLineOfSightBlocked, Action onDestinationReached)
         {
             _destination = navigationDestination;
             _onDestinationReached = onDestinationReached;
+            _isLineOfSightBlocked = isLineOfSightBlocked;
         }
         
         public void MovementUpdate()
@@ -29,7 +30,7 @@ namespace Perigon.Entities
             _agent.destination = _destination();
             if (ReachedDestination())
             {
-                if (IsLineOfSightBlocked())
+                if (_isLineOfSightBlocked.Execute())
                 {
                     _agent.isStopped = false;
                 }
@@ -76,21 +77,6 @@ namespace Perigon.Entities
             return false;
         }
         
-        private bool IsLineOfSightBlocked()
-        {
-            var direction = _destination() - (transform.position + Vector3.up); 
-            if (Physics.Raycast((transform.position + Vector3.up), direction.normalized, out var hitInfo))
-            {
-                Debug.DrawRay((transform.position + Vector3.up), direction.normalized, Color.red);
-                if (hitInfo.collider.GetComponent<PlayerLifeCycleBehaviour>() != null)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
         private void Awake()
         {
             _agent = GetComponent<NavMeshAgent>();
@@ -103,3 +89,5 @@ namespace Perigon.Entities
         }
     }
 }
+
+
