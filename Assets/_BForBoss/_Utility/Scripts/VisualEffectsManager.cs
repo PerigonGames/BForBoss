@@ -40,6 +40,7 @@ namespace Perigon.Utility
             _instance = this;
             _damageTakenPassVolume.targetCamera = _mainCamera;
             _healPassVolume.targetCamera = _mainCamera;
+            _deathVolume.targetCamera = _mainCamera;
             _damageTakenVFXTool = new CustomPassVolumeWeightTool(_damageTakenPassVolume, EMISSION_STRENGTH_KEY);
             _healVFXTool = new CustomPassVolumeWeightTool(_healPassVolume, EMISSION_STRENGTH_KEY);
             _slowMotionVFXTool = new PostProcessingVolumeWeightTool(_slowMotionVolume);
