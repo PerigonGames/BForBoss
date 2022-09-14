@@ -1,4 +1,5 @@
 using System;
+using Perigon.Utility;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,8 +10,8 @@ namespace Perigon.Entities
     {
         [SerializeField] 
         private float _stopDistanceBeforeReachingDestination = 5;
-        private Func<Vector3> _destination = null;
-        private NavMeshAgent _agent = null;
+        private Func<Vector3> _destination;
+        private NavMeshAgent _agent;
         private Action _onDestinationReached;
 
         public void Initialize(Func<Vector3> navigationDestination, Action onDestinationReached)

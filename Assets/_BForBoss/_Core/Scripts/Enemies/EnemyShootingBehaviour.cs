@@ -1,5 +1,4 @@
 using System;
-using Perigon.Entities;
 using Perigon.Utility;
 using Perigon.Weapons;
 using Sirenix.OdinInspector;
@@ -10,7 +9,6 @@ namespace BForBoss
 {
     public class EnemyShootingBehaviour : MonoBehaviour
     {
-
         [InfoBox("Player must be within this distance for AI to shoot, when outside, AI will move closer")]
         [SerializeField] private float _distanceToShootAt = 4;
         [InfoBox("Time taken in seconds for AI to aim at players direction before shooting")]
