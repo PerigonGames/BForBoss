@@ -26,7 +26,6 @@ namespace Perigon.Weapons
         [SerializeField] private TimedVFXEffect _meleeVFXPrefab = null;
 
         private MeleeWeapon _weapon;
-        private InputAction _meleeActionInputAction;
         private Func<Transform> _getTransform;
         private Action _onSuccessfulAttack;
         private ObjectPooler<TimedVFXEffect> _meleeVFXPool;
@@ -36,12 +35,10 @@ namespace Perigon.Weapons
         public bool CanMelee => _weapon?.CanMelee ?? false;
 
         public void Initialize(
-            InputAction meleeAttackAction,
             Func<Transform> getTransform,
             Action onSuccessfulAttack,
             IMeleeProperties properties = null)
         {
-            _meleeActionInputAction = meleeAttackAction;
             _getTransform = getTransform;
             _onSuccessfulAttack = onSuccessfulAttack;
             _weapon = new MeleeWeapon(properties ?? _meleeScriptable);
@@ -67,52 +64,24 @@ namespace Perigon.Weapons
                         effect.gameObject.SetActive(false);
                     }));
             }
-
-            BindActions();
         }
 
-        private void OnMeleeInputAction(InputAction.CallbackContext context)
+        public void Melee()
         {
-            if (context.performed)
-            {
-                var t = _getTransform();
-                var isAttackSuccessful = _canAttackMany ?
-                    _weapon.TryAttackMany(t.position, t.forward) :
-                    _weapon.TryAttackOne(t.position, t.forward);
+            var t = _getTransform();
+            var isAttackSuccessful = _canAttackMany ?
+                _weapon.TryAttackMany(t.position, t.forward) :
+                _weapon.TryAttackOne(t.position, t.forward);
 
-                if (isAttackSuccessful)
-                {
-                    _onSuccessfulAttack();
-                }
+            if (isAttackSuccessful)
+            {
+                _onSuccessfulAttack();
             }
         }
-
-        private void BindActions()
-        {
-            _meleeActionInputAction.performed += OnMeleeInputAction;
-            _meleeActionInputAction.canceled += OnMeleeInputAction;
-        }
-
+        
         private void Update()
         {
             _weapon.DecrementCooldown(Time.deltaTime);
-        }
-
-        private void OnEnable()
-        {
-            if (_meleeActionInputAction != null)
-            {
-                BindActions();
-            }
-        }
-
-        private void OnDisable()
-        {
-            if (_meleeActionInputAction != null)
-            {
-                _meleeActionInputAction.performed -= OnMeleeInputAction;
-                _meleeActionInputAction.canceled -= OnMeleeInputAction;
-            }
         }
 
         private void OnValidate()

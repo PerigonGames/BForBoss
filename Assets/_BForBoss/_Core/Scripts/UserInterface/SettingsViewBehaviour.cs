@@ -20,11 +20,11 @@ namespace BForBoss
         
         private Action OnBackPressed;
 
-        public void Initialize(IInputSettings inputSettings, Action onBackPressed)
+        public void Initialize(Action onBackPressed)
         {
             base.Initialize();
-            _mouseKeyboardInputSettingsView.Initialize(new MouseKeyboardInputSettingsViewModel(inputSettings));
-            _controllerInputSettingsView.Initialize(new ControllerInputSettingsViewModel(inputSettings));
+            _mouseKeyboardInputSettingsView.Initialize(new MouseKeyboardInputSettingsViewModel());
+            _controllerInputSettingsView.Initialize(new ControllerInputSettingsViewModel());
             _gameplaySettingsView.Initialize();
             _audioSettingsView.Initialize();
             OnBackPressed = onBackPressed;

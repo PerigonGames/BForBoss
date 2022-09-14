@@ -13,7 +13,7 @@ namespace Perigon.Weapons
     {
         void MeleeAttack(WeaponAnimationType type);
         void WeaponFire(WeaponAnimationType type);
-        void SwapWeapon(bool isUpwards);
+        void SwapWeapon();
         void ReloadingWeapon(bool isReloading);
     }
     
@@ -26,8 +26,7 @@ namespace Perigon.Weapons
         private const string SHOOT_PISTOL_PARAM = "Shoot_Pistol";
         private const string SHOOT_RIFLE_PARAM = "Shoot_Rifle";
         
-        private const string SWAP_WEAPON_DOWN_PARAM = "Swap_Weapon_Down";
-        private const string SWAP_WEAPON_UP_PARAM = "Swap_Weapon_Up";
+        private const string SWAP_WEAPON_PARAM = "Swap_Weapon";
 
         private const string RELOADING_WEAPON_PARAM = "Reloading_Weapon";
         private const string WALKING_WEAPON_PARAM = "Walking_Velocity";
@@ -82,10 +81,9 @@ namespace Perigon.Weapons
             }
         }
         
-        public void SwapWeapon(bool isUpwards)
+        public void SwapWeapon()
         {
-            var param = isUpwards ? SWAP_WEAPON_UP_PARAM : SWAP_WEAPON_DOWN_PARAM;
-            _weaponAnimator.SetTrigger(param);
+            _weaponAnimator.SetTrigger(SWAP_WEAPON_PARAM);
         }
         
         public void ReloadingWeapon(bool isReloading)
