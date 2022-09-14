@@ -67,7 +67,7 @@
 	<object class="MarkerTrack" id="{c5224dcd-127b-4a69-8c52-824be78f89c6}" />
 	<object class="GroupTrack" id="{714502b9-ff46-463f-bb09-b25e10cd09fb}">
 		<relationship name="modules">
-			<destination>{031dda7e-2ba0-4fe9-a7ca-bf943fab4ee0}</destination>
+			<destination>{793e5052-44e4-4a6f-9ce8-a5bd4a67c574}</destination>
 		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{82f34a74-95fd-41ce-a886-a8630caa1096}</destination>
@@ -75,7 +75,7 @@
 	</object>
 	<object class="Timeline" id="{3905332e-2120-46a2-9be8-e69d6ce8e638}">
 		<relationship name="modules">
-			<destination>{031dda7e-2ba0-4fe9-a7ca-bf943fab4ee0}</destination>
+			<destination>{793e5052-44e4-4a6f-9ce8-a5bd4a67c574}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{2fff6e6d-e307-4243-8028-4d28e304e4f1}">
@@ -95,15 +95,15 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{d95e563a-fcba-4f8a-ba83-7ee76e221b3f}" />
-	<object class="SingleSound" id="{031dda7e-2ba0-4fe9-a7ca-bf943fab4ee0}">
+	<object class="SingleSound" id="{793e5052-44e4-4a6f-9ce8-a5bd4a67c574}">
 		<property name="length">
-			<value>1.1200000000000001</value>
+			<value>1.8638469860250546</value>
 		</property>
 		<property name="pitch">
-			<value>1.20000005</value>
+			<value>14</value>
 		</property>
 		<relationship name="audioFile">
-			<destination>{6a440984-08ea-4f0f-89ca-8985f90798c5}</destination>
+			<destination>{f05b9cfc-571e-4ed4-b78a-59beae262f9f}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{82f34a74-95fd-41ce-a886-a8630caa1096}">
@@ -152,10 +152,14 @@
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{3743eea3-2bad-42b1-a59b-08fd35e62b4b}" />
-	<object class="GainEffect" id="{aec759ba-237f-4905-bada-e6969d444b71}" />
+	<object class="GainEffect" id="{aec759ba-237f-4905-bada-e6969d444b71}">
+		<property name="gain">
+			<value>-16</value>
+		</property>
+	</object>
 	<object class="SFXReverbEffect" id="{b2c6b093-2863-4b2b-95e1-ffb57c97630e}">
 		<property name="decayTime">
-			<value>400</value>
+			<value>1700</value>
 		</property>
 		<property name="earlyDelay">
 			<value>8</value>
@@ -178,15 +182,15 @@
 	</object>
 	<object class="MultibandEqEffect" id="{9d039448-38a0-4cc4-8cc8-48eda29ca550}">
 		<property name="frequencyA">
-			<value>9806.01563</value>
+			<value>2498.10815</value>
 		</property>
 		<property name="qualityA">
-			<value>3.13793111</value>
+			<value>1.77706897</value>
 		</property>
 	</object>
 	<object class="DistortionEffect" id="{bfe90e72-7f97-4362-9393-1ac3feb231d5}">
 		<property name="level">
-			<value>0.514999986</value>
+			<value>0.675000012</value>
 		</property>
 	</object>
 </objects>
