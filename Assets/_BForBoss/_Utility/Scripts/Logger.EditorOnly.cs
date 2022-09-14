@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -131,19 +132,20 @@ namespace Perigon.Utility
                 Menu.SetChecked(MENU_ITEM_NAME, LoggerSettings._useLogging);
         }
 
-        private static void LogInEditor(string toLog)
+        private static void LogInEditor(string toLog, Action<string> debugMethod)
         {
             if (!LoggerSettings._useLogging)
                 return;
             StackTrace stackTrace = new StackTrace();
             var callingMethod = stackTrace.GetFrame(2).GetMethod();
             var nameSpace = callingMethod.DeclaringType?.Namespace;
-            if (string.IsNullOrEmpty(nameSpace) && _settings._noNameSpaceValue)
+            if (string.IsNullOrEmpty(nameSpace))
             {
-                Debug.Log(toLog);
+                if(_settings._noNameSpaceValue)
+                    debugMethod(toLog);
             }else if (_settings._loggerNamespaces.Contains(nameSpace))
             {
-                Debug.Log(toLog);
+                debugMethod(toLog);
             }
         }
     }

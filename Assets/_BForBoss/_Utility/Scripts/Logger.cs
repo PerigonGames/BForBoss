@@ -9,7 +9,25 @@ namespace Perigon.Utility
 #if !UNITY_EDITOR && DEBUG
             Debug.Log(toLog);
 #elif UNITY_EDITOR
-            LogInEditor(toLog);
+            LogInEditor(toLog, Debug.Log);
+#endif
+        }
+        
+        public static void LogWarning(string toLog)
+        {
+#if !UNITY_EDITOR && DEBUG
+            Debug.LogWarning(toLog);
+#elif UNITY_EDITOR
+            LogInEditor(toLog, Debug.LogWarning);
+#endif
+        }
+        
+        public static void LogError(string toLog)
+        {
+#if !UNITY_EDITOR && DEBUG
+            Debug.LogWarning(toLog);
+#elif UNITY_EDITOR
+            LogInEditor(toLog, Debug.LogError);
 #endif
         }
     }
