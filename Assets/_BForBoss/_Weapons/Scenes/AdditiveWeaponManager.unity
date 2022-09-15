@@ -988,7 +988,7 @@ GameObject:
   - component: {fileID: 3801608714048975956}
   - component: {fileID: 2884968623651107703}
   m_Layer: 9
-  m_Name: ScoutFlash
+  m_Name: HandCannonFlash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1009,6 +1009,9 @@ MonoBehaviour:
   _firePoint: {fileID: 5343888558069510660}
   _crosshair: {fileID: 1268115816}
   _muzzleFlash: {fileID: 4736466408740489722}
+  _rayCastBulletLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   _weaponScriptableObject: {fileID: 11400000, guid: b883d7c670b4f214695eeab3f0e3f74e, type: 2}
 --- !u!114 &1015501628726125979
 MonoBehaviour:
@@ -1025,6 +1028,9 @@ MonoBehaviour:
   _firePoint: {fileID: 5343888558787318221}
   _crosshair: {fileID: 1268115816}
   _muzzleFlash: {fileID: 3801608714048975956}
+  _rayCastBulletLayerMask:
+    serializedVersion: 2
+    m_Bits: 11520
   _weaponScriptableObject: {fileID: 11400000, guid: 02219ca89e64d9b4e9d475dad85dc0c4, type: 2}
 --- !u!73398921 &1346302675224208692
 VFXRenderer:
@@ -1648,6 +1654,9 @@ MonoBehaviour:
   _firePoint: {fileID: 1261616536}
   _crosshair: {fileID: 1268115816}
   _muzzleFlash: {fileID: 4698239998347661857}
+  _rayCastBulletLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   _weaponScriptableObject: {fileID: 11400000, guid: 48642ad1006cced44a8be5eef771876d, type: 2}
 --- !u!1 &8123454872238037579
 GameObject:

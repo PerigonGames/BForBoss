@@ -1,4 +1,3 @@
-using Perigon.Utility;
 using UnityEngine;
 
 namespace Perigon.Weapons
@@ -17,7 +16,7 @@ namespace Perigon.Weapons
 
         private void RayCastBullet(Vector3 from, Vector3 towards)
         {
-            if (Physics.Raycast(from, MainCamera.transform.TransformDirection(towards), out var hit, Mathf.Infinity, ~TagsAndLayers.Layers.TriggerArea))
+            if (Physics.Raycast(from, MainCamera.transform.TransformDirection(towards), out var hit, Mathf.Infinity, ~_rayCastBulletLayerMask.value))
             {
                 if (hit.collider.TryGetComponent(out IWeaponHolder weaponHolder))
                 {

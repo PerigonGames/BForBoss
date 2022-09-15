@@ -15,6 +15,7 @@ namespace Perigon.Weapons
         [SerializeField] protected Transform _firePoint = null;
         [SerializeField] protected CrosshairBehaviour _crosshair = null;
         [SerializeField] private VisualEffect _muzzleFlash = null;
+        [SerializeField] private LayerMask _rayCastBulletLayerMask;
         [InlineEditor]
         [SerializeField]
         private WeaponScriptableObject _weaponScriptableObject = null;
