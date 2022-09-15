@@ -10,7 +10,8 @@ namespace Perigon.Utility
         DamageTaken,
         Heal,
         SlowMotion,
-        Dash
+        Dash,
+        Death
     }
     public class VisualEffectsManager : MonoBehaviour
     {
@@ -19,14 +20,16 @@ namespace Perigon.Utility
 
         private static VisualEffectsManager _instance = null;
 
-        [Resolve][SerializeField] private CustomPassVolume _damageTakenPassVolume = null;
-        [Resolve][SerializeField] private CustomPassVolume _healPassVolume = null;
-        [Resolve][SerializeField] private Volume _slowMotionVolume = null;
-        [Resolve][SerializeField] private Volume _dashVolume = null;
+        [Resolve][SerializeField] private CustomPassVolume _damageTakenPassVolume;
+        [Resolve][SerializeField] private CustomPassVolume _healPassVolume;
+        [Resolve][SerializeField] private Volume _slowMotionVolume;
+        [Resolve][SerializeField] private Volume _dashVolume;
+        [Resolve][SerializeField] private CustomPassVolume _deathVolume;
         private IVolumeWeightTool _damageTakenVFXTool;
         private IVolumeWeightTool _healVFXTool;
         private IVolumeWeightTool _slowMotionVFXTool;
         private IVolumeWeightTool _dashVFXTool;
+        private IVolumeWeightTool _deathVFXTool;
         private Camera _mainCamera = null;
 
         public static VisualEffectsManager Instance => _instance;
@@ -37,10 +40,12 @@ namespace Perigon.Utility
             _instance = this;
             _damageTakenPassVolume.targetCamera = _mainCamera;
             _healPassVolume.targetCamera = _mainCamera;
+            _deathVolume.targetCamera = _mainCamera;
             _damageTakenVFXTool = new CustomPassVolumeWeightTool(_damageTakenPassVolume, EMISSION_STRENGTH_KEY);
             _healVFXTool = new CustomPassVolumeWeightTool(_healPassVolume, EMISSION_STRENGTH_KEY);
             _slowMotionVFXTool = new PostProcessingVolumeWeightTool(_slowMotionVolume);
             _dashVFXTool = new PostProcessingVolumeWeightTool(_dashVolume);
+            _deathVFXTool = new CustomPassVolumeWeightTool(_deathVolume, EMISSION_STRENGTH_KEY);
         }
         
         public void DistortAndRevert(HUDVisualEffect effect)
@@ -84,6 +89,8 @@ namespace Perigon.Utility
                     return _healVFXTool;
                 case HUDVisualEffect.SlowMotion:
                     return _slowMotionVFXTool;
+                case HUDVisualEffect.Death:
+                    return _deathVFXTool;
             }
 
             return null;
@@ -95,6 +102,7 @@ namespace Perigon.Utility
             _healVFXTool.Reset();
             _dashVFXTool.Reset();
             _slowMotionVFXTool.Reset();
+            _deathVFXTool.Reset();
         }
 
         private void OnDestroy()
