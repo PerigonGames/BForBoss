@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SingleShot
   m_EditorClassIdentifier: 
   _nameOfWeapon: Scout Rifle
-  _rateOfFire: 0.5
+  _rateOfFire: 0
   _bulletSpread: 0
   _bulletSpreadRateCurve:
     serializedVersion: 2
@@ -39,12 +39,13 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _reloadDuration: 0.79
+  _reloadDuration: 0.5
   _bulletsPerShot: 1
   _ammunitionAmount: 20
   _isRaycastWeapon: 1
-  _damagePerRayCast: 1
+  _damagePerRayCast: 3
   _typeOfBullet: 0
+  _animationType: 0
   _weaponShotAudio:
     Guid:
       Data1: -1440554226
@@ -53,4 +54,3 @@ MonoBehaviour:
       Data4: -475706240
     Path: event:/AudioEvents/Weapons/Weapon_Pistol
   _crosshair: {fileID: 21300000, guid: 30381596fec2d5a4781da94a833fdf75, type: 3}
-  _visualRecoil: 0.5
