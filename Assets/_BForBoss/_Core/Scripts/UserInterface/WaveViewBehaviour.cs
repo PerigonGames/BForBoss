@@ -28,7 +28,7 @@ namespace BForBoss
         private void SetData(int waveNumber, int maxEnemyCount)
         {
             _waveCounterLabel.text = $"{WAVES}\n<color=yellow>{waveNumber.ToString()}</color>";
-            _enemiesRemainingLabel.text = $"{REMAINING}\n<color=yellow>{maxEnemyCount.ToString()}</color>";
+            _enemiesRemainingLabel.text = $"{REMAINING}\n<color=red>{maxEnemyCount.ToString()}</color>";
         }
         
         private void OnDestroy()
