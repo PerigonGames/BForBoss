@@ -6,22 +6,30 @@ namespace BForBoss
     public class FreeRoamCameraDebugView : DebugView
     {
         private GUIStyle _boldInstructionStyle = null;
-        private Action<bool> _onOptionsChanged = null;
+        private Action<bool> _onCamerOptionsChanged = null;
         private Action _onBackButtonPressed = null;
 
         private bool _shouldInvertMouseYAxis = false;
+        private bool _shouldResumeTime = false;
 
         public override string PrettyName => "Free Roam Camera";
 
-        public FreeRoamCameraDebugView(Rect masterRect, Action<bool> onOptionsChanged, Action onBackButtonPressed) : base(masterRect)
+        public FreeRoamCameraDebugView(Rect masterRect, Action<bool> onCamerOptionsChanged, Action onBackButtonPressed) : base(masterRect)
         {
-            _onOptionsChanged = onOptionsChanged;
+            _onCamerOptionsChanged = onCamerOptionsChanged;
             _onBackButtonPressed = onBackButtonPressed;
         }
 
         public override void ResetData()
         {
             base.ResetData();
+
+            if (_shouldResumeTime)
+            {
+                _shouldResumeTime = false;
+                Time.timeScale = 0.0f;
+            }
+            
             _onBackButtonPressed?.Invoke();
         }
 
@@ -53,7 +61,15 @@ namespace BForBoss
 
                 if (GUI.changed)
                 {
-                    _onOptionsChanged?.Invoke(_shouldInvertMouseYAxis);
+                    _onCamerOptionsChanged?.Invoke(_shouldInvertMouseYAxis);
+                    GUI.changed = false;
+                }
+
+                _shouldResumeTime = GUILayout.Toggle(_shouldResumeTime, "Resume Time");
+
+                if (GUI.changed)
+                {
+                    Time.timeScale = _shouldResumeTime ? 1.0f : 0.0f;
                 }
             }
 
