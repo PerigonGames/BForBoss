@@ -1,3 +1,4 @@
+using Perigon.Utility;
 using Perigon.Weapons;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -13,7 +14,7 @@ namespace BForBoss
         [SerializeField] private AmmunitionCountViewBehaviour _ammunitionCountView = null;
         [SerializeField] private ReloadViewBehaviour _reloadView = null;
 
-        public void Initialize(PlayerBehaviour playerBehaviour)
+        public void Initialize(PlayerBehaviour playerBehaviour, PGInputSystem inputSystem)
         {
             weaponAnimationController.Initialize(
                 () => playerBehaviour.PlayerMovement.SpeedMagnitude,
@@ -21,7 +22,7 @@ namespace BForBoss
                 () => playerBehaviour.PlayerMovement.IsGrounded,
                 () => playerBehaviour.PlayerMovement.IsSliding,
                 () => playerBehaviour.PlayerMovement.IsDashing);
-            _equipmentBehaviour.Initialize(playerBehaviour.PlayerMovement.RootPivot, weaponAnimationController);
+            _equipmentBehaviour.Initialize(playerBehaviour.PlayerMovement.RootPivot, inputSystem, weaponAnimationController);
             _ammunitionCountView.Initialize(_equipmentBehaviour);
             _reloadView.Initialize(_equipmentBehaviour);
         }

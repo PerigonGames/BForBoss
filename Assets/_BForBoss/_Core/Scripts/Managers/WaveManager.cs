@@ -1,88 +1,70 @@
-using System;
 using System.Collections;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BForBoss
 {
     public class WaveManager : MonoBehaviour
     {
-        [Title("Settings")] 
-        [SerializeField, Tooltip("Number of enemies for the first wave")] private int _initialNumberOfEnemies = 10;
-        [SerializeField, Tooltip("Cooldown time between waves")] private float _timeBetweenWaves = 2.5f;
-        [SerializeField, Tooltip("Number of enemies per wave is the number of enemies from the previous wave multiplied by this multiplier")] private float _enemyAmountMultiplier = 1.2f;
-
-
-        private EnemySpawnerManager _enemySpawnerManager;
-        private WaveModel _waveModel;
+        private float _secondsBetweenWaves;
+        private float _enemyAmountMultiplier;
         
-        private int _spawnCount = 0;
-
-        public void Initialize(LifeCycleManager lifeCycleManager, EnemySpawnerManager enemySpawnerManager, WaveModel waveModel)
+        private ISpawnerControl _spawnerControl;
+        private WaveModel _waveModel;
+        private EnemyContainer _enemyContainer;
+        
+        public void Initialize(WaveModel waveModel, 
+            ISpawnerControl spawnerControl,
+            float secondsBetweenWaves,
+            float enemyAmountMultiplier)
         {
-            _enemySpawnerManager = enemySpawnerManager;
+            _spawnerControl = spawnerControl;
+            _secondsBetweenWaves = secondsBetweenWaves;
+            _enemyAmountMultiplier = enemyAmountMultiplier;
 
             _waveModel = waveModel;
             _waveModel.OnEnemySpawned += OnEnemySpawned;
             _waveModel.OnEnemyKilled += OnEnemyKilled;
-            _waveModel.SetupInitialWave(_initialNumberOfEnemies);
-            
-            _enemySpawnerManager.Initialize(lifeCycleManager, waveModel);
+            StartCoroutine(InitiateNextWave());
         }
 
         public void Reset()
         {
-            _spawnCount = 0;
-
-            if (_waveModel != null)
-            {
-                _waveModel.ResetData();
-            }
-
-            if (_enemySpawnerManager != null)
-            {
-                _enemySpawnerManager.Reset();
-            }
+            StartCoroutine(InitiateNextWave());
         }
 
         private void OnEnemySpawned()
         {
-            _spawnCount++;
-
-            if (_spawnCount >= _waveModel.MaxEnemyCount)
+            if (_waveModel.IsMaxEnemySpawnedReached)
             {
-                PauseSpawning();
+                Debug.Log("<color=Blue>Max Enemy Reached</color>");
+                _spawnerControl.PauseSpawning();
             }
         }
 
-        private void OnEnemyKilled(int numberOfRemainingEnemies)
+        private void OnEnemyKilled()
         {
-            //Added the second clause just in case no. spawned > max allowed
-            if (numberOfRemainingEnemies <= 0)
+            if (_waveModel.IsRoundConcluded)
             {
-                Debug.Log($"Please wait <b>{_timeBetweenWaves} seconds</b> before the next wave");
+                Debug.Log("<color=green>Wave Over</color>");
+                Debug.Log($"Please wait <color=green><b>{_secondsBetweenWaves} seconds</b></color> before the next wave");
                 StartCoroutine(InitiateNextWave());
+            }
+            else if (!_waveModel.IsMaxEnemySpawnedReached)
+            {
+                _spawnerControl.ResumeSpawning();
             }
         }
 
         private IEnumerator InitiateNextWave()
         {
-            yield return new WaitForSeconds(_timeBetweenWaves);
+            if (_spawnerControl != null)
+            {
+                _spawnerControl.PauseSpawning();
+                yield return new WaitForSeconds(_secondsBetweenWaves);
             
-            _spawnCount = 0;
-            _waveModel.IncrementWave((int)Math.Ceiling(_waveModel.MaxEnemyCount * _enemyAmountMultiplier));
-            
-            ResumeSpawning();
-        }
-
-        private void PauseSpawning()
-        {
-            _enemySpawnerManager.PauseSpawning();
-        }
-
-        private void ResumeSpawning()
-        {
-            _enemySpawnerManager.ResumeSpawning();
+                _waveModel.IncrementWave(_enemyAmountMultiplier);
+                _spawnerControl.ResumeSpawning();
+            }
         }
 
         private void OnDestroy()

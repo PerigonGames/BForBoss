@@ -1,6 +1,6 @@
 namespace Perigon.Utility
 {
-    public interface IInputSettings
+    public interface IInputConfiguration
     {
         bool IsInverted { get; set; }
         float MouseHorizontalSensitivity { get; set; }
@@ -8,7 +8,5 @@ namespace Perigon.Utility
         float ControllerHorizontalSensitivity { get; set; }
         float ControllerVerticalSensitivity { get; set; }
         void RevertAllSettings();
-        void SwapToUIActions();
-        void SwapToPlayerActions();
     }
 }

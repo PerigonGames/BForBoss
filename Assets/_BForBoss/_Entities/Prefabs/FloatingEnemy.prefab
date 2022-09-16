@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 548165371962725883}
   - component: {fileID: 548165371962725882}
   m_Layer: 14
-  m_Name: Image
+  m_Name: FloatingEnemyHealthbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -511,6 +511,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7036539539005687782}
   - component: {fileID: 7287096135450198932}
+  - component: {fileID: 8945181855382165517}
   - component: {fileID: 6566670856885270489}
   - component: {fileID: 5329797527737827575}
   - component: {fileID: 548165371661106835}
@@ -555,6 +556,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c24fae72c332d6e4e84104835c192559, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8945181855382165517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7036539539005687787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a54ddc0cb0d6a7b4f973b368524b3baa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _onHitAudio: {fileID: 6566670856885270489}

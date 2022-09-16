@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using Perigon.Utility;
 using UnityEngine;
 
@@ -7,13 +8,15 @@ namespace Perigon.Entities
     public class PlayerLifeCycleBehaviour : LifeCycleBehaviour
     {
         [SerializeField] private PlayerHealthViewBehaviour _healthBarView = null;
-        private Action _onDeathCallBack = null;
+        private Action _onEndGameCallback;
+        private Action _onDeathCallback;
 
-        public override void Initialize(Action onDeathCallback)
+        public void Initialize(Action onDeathCallback, Action onEndGameCallback)
         {
-            base.Initialize(onDeathCallback);
+            base.Initialize();
             _healthBarView?.Initialize(_lifeCycle);
-            _onDeathCallBack = onDeathCallback;
+            _onDeathCallback = onDeathCallback;
+            _onEndGameCallback = onEndGameCallback;
         }
 
         protected override void LifeCycleDamageTaken()
@@ -29,7 +32,11 @@ namespace Perigon.Entities
 
         protected override void LifeCycleFinished()
         {
-            _onDeathCallBack.Invoke();
+            _onDeathCallback?.Invoke();
+            VisualEffectsManager.Instance.Distort(HUDVisualEffect.Death).OnComplete(() =>
+            {
+                _onEndGameCallback.Invoke();
+            });
         }
 
         private void Awake()

@@ -10,11 +10,13 @@ namespace BForBoss
         {
             None,
             PauseView,
-            SettingsView
+            SettingsView,
+            EndGameView
         }
         
-        [SerializeField] private SettingsViewBehaviour _settingsViewBehaviour = null;
-        [SerializeField] private PauseViewBehaviour _pauseViewBehaviour = null;
+        [SerializeField] private SettingsViewBehaviour _settingsViewBehaviour;
+        [SerializeField] private PauseViewBehaviour _pauseViewBehaviour;
+        [SerializeField] private EndGameViewBehaviour _endGameViewBehaviour;
         
         private UserInterfaceState UIState
         {
@@ -27,28 +29,34 @@ namespace BForBoss
 
         private UserInterfaceState _state = UserInterfaceState.None;
         
-        public void Initialize(IInputSettings inputSettings)
+        public void Initialize()
         {
             StateManager.Instance.OnStateChanged += HandleOnStateChanged;
-            _settingsViewBehaviour.Initialize(inputSettings, onBackPressed: () =>
+            var resetGameUseCase = new ResetGameUseCase(StateManager.Instance);
+            _settingsViewBehaviour.Initialize(onBackPressed: () =>
             {
                 UIState = UserInterfaceState.PauseView;
             });
-            _pauseViewBehaviour.Initialize(onSettingsPressed: () =>
+            _pauseViewBehaviour.Initialize(resetGameUseCase, onSettingsPressed: () =>
             {
                 UIState = UserInterfaceState.SettingsView;
             });
+            _endGameViewBehaviour.Initialize(resetGameUseCase);
         }
 
         private void HandleOnStateChanged(State gameState)
         {
-            if (gameState == State.Pause)
+            switch (gameState)
             {
-                UIState = UserInterfaceState.PauseView;
-            }
-            else
-            {
-                UIState = UserInterfaceState.None;
+                case State.Pause:
+                    UIState = UserInterfaceState.PauseView;
+                    break;
+                case State.EndGame:
+                    UIState = UserInterfaceState.EndGameView;
+                    break;
+                default:
+                    UIState = UserInterfaceState.None;
+                    break;
             }
         }
 
@@ -59,6 +67,7 @@ namespace BForBoss
                 case UserInterfaceState.None:
                     _settingsViewBehaviour.gameObject.SetActive(false);
                     _pauseViewBehaviour.gameObject.SetActive(false);
+                    _endGameViewBehaviour.gameObject.SetActive(false);
                     break;
                 case UserInterfaceState.PauseView:
                     _settingsViewBehaviour.gameObject.SetActive(false);
@@ -67,6 +76,11 @@ namespace BForBoss
                 case UserInterfaceState.SettingsView:
                     _settingsViewBehaviour.gameObject.SetActive(true);
                     _pauseViewBehaviour.gameObject.SetActive(false);
+                    break;
+                case UserInterfaceState.EndGameView:
+                    _settingsViewBehaviour.gameObject.SetActive(false);
+                    _pauseViewBehaviour.gameObject.SetActive(false);
+                    _endGameViewBehaviour.gameObject.SetActive(true);
                     break;
             }
         }
