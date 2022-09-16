@@ -31,7 +31,7 @@ namespace BForBoss
             _animationBehaviour.Initialize();
             _animationBehaviour.SetMovementAnimation();
             var isLineOfSightBlocked =
-                new IsLineOfSightBlocked(getPlayerPosition, () => _shootingFromPosition.position);
+                new LineOfSight(getPlayerPosition, () => _shootingFromPosition.position);
 
             _navigationBehaviour = GetComponent<AgentNavigationBehaviour>();
             _navigationBehaviour.Initialize(

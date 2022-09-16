@@ -1,4 +1,5 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,18 +8,18 @@ namespace BForBoss
     [RequireComponent(typeof(NavMeshAgent))]
     public class AgentNavigationBehaviour : MonoBehaviour
     {
-        [SerializeField] 
+        [SerializeField, MinValue(0)] 
         private float _stopDistanceBeforeReachingDestination = 5;
         private Func<Vector3> _destination;
         private NavMeshAgent _agent;
         private Action _onDestinationReached;
-        private IsLineOfSightBlocked _isLineOfSightBlocked;
+        private LineOfSight _lineOfSight;
 
-        public void Initialize(Func<Vector3> navigationDestination, IsLineOfSightBlocked isLineOfSightBlocked, Action onDestinationReached)
+        public void Initialize(Func<Vector3> navigationDestination, LineOfSight lineOfSight, Action onDestinationReached)
         {
             _destination = navigationDestination;
             _onDestinationReached = onDestinationReached;
-            _isLineOfSightBlocked = isLineOfSightBlocked;
+            _lineOfSight = lineOfSight;
         }
         
         public void MovementUpdate()
@@ -30,7 +31,7 @@ namespace BForBoss
             _agent.destination = _destination();
             if (ReachedDestination())
             {
-                if (_isLineOfSightBlocked.Execute())
+                if (_lineOfSight.IsBlocked())
                 {
                     _agent.isStopped = false;
                 }
@@ -69,12 +70,8 @@ namespace BForBoss
 
         private bool ReachedDestination()
         {
-            if (_agent.remainingDistance > 0)
-            {
-                return _agent.remainingDistance < _stopDistanceBeforeReachingDestination;
-            }
-
-            return false;
+            return _agent.remainingDistance > 0.0f && 
+                   _agent.remainingDistance < _stopDistanceBeforeReachingDestination;
         }
         
         private void Awake()
