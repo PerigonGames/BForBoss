@@ -4,7 +4,7 @@ namespace BForBoss
 {
     public abstract class DebugView
     {
-        public bool IsInitialized = false;
+        public bool IsShown = false;
         
         protected Rect _masterRect;
         protected Rect _baseRect;
@@ -27,21 +27,20 @@ namespace BForBoss
         
         public virtual void ResetData()
         {
-            IsInitialized = false;
+            IsShown = false;
         }
 
         protected DebugView(Rect masterRect)
         {
             _masterRect = masterRect;
             CreateBaseRect();
-            IsInitialized = true;
         }
         
         public void DrawGUI()
         {
-            if (!IsInitialized)
+            if (!IsShown)
             {
-                return;
+                return; 
             }
             
             using (new GUILayout.AreaScope(_masterRect, string.Empty, GUI.skin.box))
