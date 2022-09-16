@@ -47,7 +47,7 @@ namespace Perigon.Utility
             _dashVFXTool = new PostProcessingVolumeWeightTool(_dashVolume);
             _deathVFXTool = new CustomPassVolumeWeightTool(_deathVolume, EMISSION_STRENGTH_KEY);
         }
-
+        
         public void DistortAndRevert(HUDVisualEffect effect)
         {
             var pass = GetCustomPass(effect);
@@ -70,7 +70,7 @@ namespace Perigon.Utility
             var pass = GetCustomPass(effect);
             return pass?.Distort();
         }
-
+        
         public Tweener Revert(HUDVisualEffect effect)
         {
             var pass = GetCustomPass(effect);
@@ -95,7 +95,7 @@ namespace Perigon.Utility
 
             return null;
         }
-
+        
         public void Reset()
         {
             _damageTakenVFXTool.Reset();
