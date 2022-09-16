@@ -73,7 +73,7 @@ namespace BForBoss
                 return;
             }
 
-            if (_currentDebugView != null && _currentDebugView.IsInitialized)
+            if (_currentDebugView?.IsShown ?? false)
             {
                 _currentDebugView.DrawGUI();
             }
@@ -114,6 +114,7 @@ namespace BForBoss
 
         private void OnViewOpened(DebugView view)
         {
+            view.IsShown = true;
             if (view is FreeRoamCameraDebugView)
             {
                 _freeRoamCamera.gameObject.SetActive(true);

@@ -6,6 +6,8 @@ namespace BForBoss
 {
     public class WaveViewBehaviour : MonoBehaviour
     {
+        private const string WAVES = "Wave";
+        private const string REMAINING = "Remaining";
         [SerializeField, Resolve] private TMP_Text _waveCounterLabel = null;
         [SerializeField, Resolve] private TMP_Text _enemiesRemainingLabel = null;
 
@@ -25,10 +27,10 @@ namespace BForBoss
 
         private void UpdateWaveCounter(int waveNumber, int maxEnemyCount)
         {
-            _waveCounterLabel.text = waveNumber.ToString();
-            _enemiesRemainingLabel.text = maxEnemyCount.ToString();
+            _waveCounterLabel.text = $"{WAVES}\n<color=yellow>{waveNumber.ToString()}</color>";
+            _enemiesRemainingLabel.text = $"{REMAINING}\n<color=red>{maxEnemyCount.ToString()}</color>";
         }
-
+        
         private void OnDestroy()
         {
             if (_model != null)
