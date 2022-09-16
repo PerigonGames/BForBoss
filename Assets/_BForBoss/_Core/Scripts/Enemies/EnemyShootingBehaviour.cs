@@ -45,6 +45,8 @@ namespace BForBoss
         private readonly int _vfxFireEvent = Shader.PropertyToID("OnFire");
         private readonly int _vfxChargeTime = Shader.PropertyToID("Charge Time");
 
+        public float DistanceToShootAt => _distanceToShootAt;
+
         public void Initialize(Func<Vector3> getPlayerPosition, 
             BulletSpawner bulletSpawner,
             Func<Vector3> shootingFromPosition,
@@ -146,12 +148,6 @@ namespace BForBoss
         {
             var vfxDuration = Mathf.Max(_shootCountDownInSeconds - _vfxShootDelay, 0);
             _muzzleFlashVFX.SetFloat(_vfxChargeTime, vfxDuration);
-        }
-        
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = new Color(0, 1, 0, 0.5f);
-            Gizmos.DrawWireSphere(transform.position, _distanceToShootAt);
         }
     }
 }

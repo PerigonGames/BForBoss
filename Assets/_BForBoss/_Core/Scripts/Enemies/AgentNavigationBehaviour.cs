@@ -8,12 +8,14 @@ namespace BForBoss
     [RequireComponent(typeof(NavMeshAgent))]
     public class AgentNavigationBehaviour : MonoBehaviour
     {
-        [SerializeField, MinValue(0)] 
+        [SerializeField, MinValue(0)]
         private float _stopDistanceBeforeReachingDestination = 5;
         private Func<Vector3> _destination;
         private NavMeshAgent _agent;
         private Action _onDestinationReached;
         private LineOfSight _lineOfSight;
+
+        public float StopDistanceBeforeReachingDestination => _stopDistanceBeforeReachingDestination;
 
         public void Initialize(Func<Vector3> navigationDestination, LineOfSight lineOfSight, Action onDestinationReached)
         {
@@ -21,7 +23,7 @@ namespace BForBoss
             _onDestinationReached = onDestinationReached;
             _lineOfSight = lineOfSight;
         }
-        
+
         public void MovementUpdate()
         {
             if (_destination == null || !_agent.enabled)
@@ -55,7 +57,7 @@ namespace BForBoss
                 _agent.enabled = false;
             }
         }
-        
+
         public void ResumeNavigation()
         {
             if (!_agent.enabled)
@@ -70,21 +72,13 @@ namespace BForBoss
 
         private bool ReachedDestination()
         {
-            return _agent.remainingDistance > 0.0f && 
+            return _agent.remainingDistance > 0.0f &&
                    _agent.remainingDistance < _stopDistanceBeforeReachingDestination;
         }
-        
+
         private void Awake()
         {
             _agent = GetComponent<NavMeshAgent>();
         }
-        
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = new Color(1, 0, 0, 0.5f);
-            Gizmos.DrawSphere(transform.position, _stopDistanceBeforeReachingDestination);
-        }
     }
 }
-
-
