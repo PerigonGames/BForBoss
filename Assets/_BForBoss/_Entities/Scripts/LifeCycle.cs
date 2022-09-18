@@ -8,6 +8,7 @@ namespace Perigon.Entities
         float MaxHealth { get; }
         float CurrentHealth { get; }
         bool IsAlive { get; }
+        bool IsInvincible { get; set; }
 
         event Action OnDamageTaken;
         event Action OnHeal;
@@ -25,6 +26,7 @@ namespace Perigon.Entities
         public event Action OnDeath;
 
         public bool IsAlive { get; private set; }
+        public bool IsInvincible { get; set; }
 
         public float MaxHealth => _maxHealth;
         public float CurrentHealth => _currentHealth;
@@ -54,7 +56,12 @@ namespace Perigon.Entities
             {
                 return;
             }
-            _currentHealth -= amount;
+
+            if (!IsInvincible)
+            {
+                _currentHealth -= amount;
+            }
+            
             if (_currentHealth <= 0f)
             {
                 IsAlive = false;

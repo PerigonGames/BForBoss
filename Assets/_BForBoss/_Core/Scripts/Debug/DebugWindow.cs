@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Perigon.Entities;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,6 +17,9 @@ namespace BForBoss
         [SerializeField] private RectTransform _rectTransform;
         [SerializeField] private FreeRoamCamera _freeRoamCamera = null;
 
+        //Action States
+        private PlayerLifeCycleBehaviour _playerLifeCycle;
+        
         //State Handling
         private StateManager _stateManager = StateManager.Instance;
         private State _currentState;
@@ -43,6 +47,7 @@ namespace BForBoss
             }
             
             _freeRoamCamera.Initialize(Camera.main.transform, onExit: OnFreeCameraDebugViewExited);
+            _playerLifeCycle = FindObjectOfType<PlayerLifeCycleBehaviour>();
         }
 
         private void Update()
@@ -73,37 +78,54 @@ namespace BForBoss
             }
             else
             {
-                CreateDebugViewList();
+                using (new GUILayout.AreaScope(_windowRect, "Debug Options", GUI.skin.window))
+                {
+                    CreateDebugViewList();
+                    CreateDebugActionList();
+                }
             }
         }
 
         private void CreateDebugViewList()
         {
-            using (new GUILayout.AreaScope(_windowRect, "Debug Options", GUI.skin.window))
+            using (new GUILayout.HorizontalScope())
             {
-                using (new GUILayout.HorizontalScope())
+                GUILayout.FlexibleSpace();
+
+                using (new GUILayout.VerticalScope())
                 {
-                    GUILayout.FlexibleSpace();
+                    GUILayout.Space(0.15f * _windowRect.height);
 
-                    using (new GUILayout.VerticalScope())
+                    foreach (var view in _debugViews)
                     {
-                        GUILayout.Space(0.15f * _windowRect.height);
-
-                        foreach (var view in _debugViews)
+                        if (GUILayout.Button(view.PrettyName))
                         {
-                            if (GUILayout.Button(view.PrettyName))
-                            {
-                                _currentDebugView = view;
-                                OnViewOpened(view);
-                            }
+                            _currentDebugView = view;
+                            OnViewOpened(view);
                         }
                     }
-                    
-                    GUILayout.FlexibleSpace();
                 }
-                
+                    
                 GUILayout.FlexibleSpace();
             }
+        }
+
+        private void CreateDebugActionList()
+        {
+            using (new GUILayout.HorizontalScope())
+            {
+                GUILayout.FlexibleSpace();
+
+                using (new GUILayout.VerticalScope())
+                {
+                    GUILayout.Space(0.15f * _windowRect.height);
+                    _playerLifeCycle.IsInvincible = DrawDebugToggle(_playerLifeCycle.IsInvincible, new GUIContent("Player Invincibility"));
+                }
+                    
+                GUILayout.FlexibleSpace();
+            }
+                
+            //GUILayout.FlexibleSpace();
         }
 
         private void OnViewOpened(DebugView view)
@@ -179,6 +201,16 @@ namespace BForBoss
                     anchorMin.y * Screen.height, Screen.width * CANVAS_WIDTH_MULTIPLIER,
                     Screen.height * CANVAS_HEIGHT_MULTIPLIER);
             }
+        }
+
+        private bool DrawDebugToggle(bool toggle, GUIContent content)
+        {
+            Color currentColor = GUI.color;
+            GUI.color = toggle ? Color.green : Color.red;
+            toggle = GUILayout.Toggle(toggle, content, GUI.skin.button);
+            GUI.color = currentColor;
+            
+            return toggle;
         }
 
         private void OnRectTransformDimensionsChange()
