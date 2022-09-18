@@ -11,14 +11,9 @@ namespace Perigon.Utility.Editor
 {
     public class LoggerEditor
     {
-        private static GUIContent _rootNamespacesLabel = new("Root Namespaces",
-            "Only namespaces under these will be used (comma seperated)");
 
-        private static GUIContent _noNamespacesLabel = new("<No Namespace>", "Show logs for scripts that are not in a namespace");
+        private static string _newKey;
 
-        private static List<string> _allNamespaces = null;
-        private static List<string> _filteredNamespaces = null;
-        
         [SettingsProvider]
         public static SettingsProvider CreateSettingsProvider()
         {
@@ -27,14 +22,12 @@ namespace Perigon.Utility.Editor
                 label = "Debug Logging",
                 guiHandler = (searchContext) =>
                 {
-                    var settings = Logger.LoggerSettings.GetEditorSettings(GetNamespaces());
+                    var settings = Logger.LoggerSettings.GetEditorSettings();
                     
                     EditorGUI.BeginChangeCheck();
-                    settings.ApplyFilter();
                     DrawSettings(settings);
                     if (EditorGUI.EndChangeCheck())
                     {
-                        settings.ApplyFilter();
                         Logger.LoggerSettings.SaveSettings(settings);
                     }
                 },
@@ -49,7 +42,8 @@ namespace Perigon.Utility.Editor
             EditorGUI.indentLevel += 1;
             var useLogging = EditorGUILayout.ToggleLeft("Enable Global Logging", Logger.LoggerSettings._useLogging);
             Logger.LoggerSettings.SetLoggingState(useLogging);
-            settings._filterString = EditorGUILayout.TextField(_rootNamespacesLabel, settings._filterString);
+
+            EditorGUILayout.Space();
             
             var oldAllSelected = settings.AllSelected;
             var oldNoneSelected = settings.NoneSelected;
@@ -58,36 +52,33 @@ namespace Perigon.Utility.Editor
             if(allSelected != oldAllSelected) settings.SetAll(true);
             if(noneSelected != oldNoneSelected) settings.SetAll(false);
             
-            settings._noNameSpaceValue = EditorGUILayout.ToggleLeft(_noNamespacesLabel, settings._noNameSpaceValue);
             var pairs = new List<KeyValuePair<string, bool>>(settings._loggerValues);
             foreach (var pair in pairs)
             {
+                GUILayout.BeginHorizontal();
                 settings._loggerValues[pair.Key] = EditorGUILayout.ToggleLeft(pair.Key, pair.Value);
+                if (GUILayout.Button("Remove Key", GUILayout.ExpandWidth(false)))
+                {
+                    LoggerKeysAsset.instance.RemoveKey(pair.Key);
+                    Logger.LoggerSettings.SaveSettings(settings);
+                }
+                GUILayout.EndHorizontal();
             }
+
+            EditorGUILayout.Space();
+            
+            GUILayout.BeginHorizontal();
+            _newKey = EditorGUILayout.TextField("Key To Add", _newKey);
+            if (GUILayout.Button("Add Key", GUILayout.ExpandWidth(false)))
+            {
+                LoggerKeysAsset.instance.AddKey(_newKey);
+                _newKey = "";
+                Logger.LoggerSettings.SaveSettings(settings);
+            }
+            GUILayout.EndHorizontal();
+            
             EditorGUI.indentLevel -= 1;
         }
-
-        private static List<string> GetNamespaces()
-        {
-            if (_allNamespaces == null)
-            {
-                var unityAssemblies = CompilationPipeline.GetAssemblies().Select((assembly => assembly.name));
-                _allNamespaces = AppDomain.CurrentDomain.GetAssemblies()
-                    .Where((assembly) => unityAssemblies.Contains(assembly.GetName().Name))
-                    .SelectMany(assembly => assembly.GetTypes())
-                    .Select(t => t.Namespace)
-                    .Distinct()
-                    .Where(t => !string.IsNullOrEmpty(t))
-                    .ToList();
-                _allNamespaces.Sort();
-            }
-
-            return _allNamespaces;
-        }
-        
-
-
-        
     }
     
     

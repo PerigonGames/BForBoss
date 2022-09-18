@@ -4,39 +4,39 @@ namespace Perigon.Utility
 {
     public static partial class Logger
     {
-        public static void LogString(string toLog)
+        public static void LogString(string toLog, string key)
         {
 #if !UNITY_EDITOR && DEBUG
             Debug.Log(toLog);
 #elif UNITY_EDITOR
-            LogInEditor(toLog, Debug.Log);
+            LogInEditor(toLog, key, Debug.Log);
 #endif
         }
         
-        public static void LogFormat(string toLog, params object[] args)
+        public static void LogFormat(string toLog, string key, params object[] args)
         {
 #if !UNITY_EDITOR && DEBUG
             Debug.LogFormat(toLog, args);
 #elif UNITY_EDITOR
-            LogInEditor(toLog, (str) => Debug.LogFormat(str, args));
+            LogInEditor(toLog, key, (str) => Debug.LogFormat(str, args));
 #endif
         }
         
-        public static void LogWarning(string toLog)
+        public static void LogWarning(string toLog, string key)
         {
 #if !UNITY_EDITOR && DEBUG
             Debug.LogWarning(toLog);
 #elif UNITY_EDITOR
-            LogInEditor(toLog, Debug.LogWarning);
+            LogInEditor(toLog, key, Debug.LogWarning);
 #endif
         }
         
-        public static void LogError(string toLog)
+        public static void LogError(string toLog, string key)
         {
 #if !UNITY_EDITOR && DEBUG
             Debug.LogWarning(toLog);
 #elif UNITY_EDITOR
-            LogInEditor(toLog, Debug.LogError);
+            LogInEditor(toLog, key, Debug.LogError);
 #endif
         }
     }
