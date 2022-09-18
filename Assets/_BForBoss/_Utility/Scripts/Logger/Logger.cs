@@ -4,7 +4,7 @@ namespace Perigon.Utility
 {
     public static partial class Logger
     {
-        public static void LogString(string toLog, string key)
+        public static void LogString(string toLog, string key = "Misc")
         {
 #if !UNITY_EDITOR && DEBUG
             Debug.Log(toLog);
@@ -13,7 +13,7 @@ namespace Perigon.Utility
 #endif
         }
         
-        public static void LogFormat(string toLog, string key, params object[] args)
+        public static void LogFormat(string toLog, string key = "Misc", params object[] args)
         {
 #if !UNITY_EDITOR && DEBUG
             Debug.LogFormat(toLog, args);
@@ -22,7 +22,7 @@ namespace Perigon.Utility
 #endif
         }
         
-        public static void LogWarning(string toLog, string key)
+        public static void LogWarning(string toLog, string key = "Misc")
         {
 #if !UNITY_EDITOR && DEBUG
             Debug.LogWarning(toLog);
@@ -31,7 +31,7 @@ namespace Perigon.Utility
 #endif
         }
         
-        public static void LogError(string toLog, string key)
+        public static void LogError(string toLog, string key = "Misc")
         {
 #if !UNITY_EDITOR && DEBUG
             Debug.LogWarning(toLog);
