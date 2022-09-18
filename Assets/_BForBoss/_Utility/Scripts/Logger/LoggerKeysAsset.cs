@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -12,8 +11,11 @@ namespace Perigon.Utility
 
         public List<string> LoggingKeys => _loggingKeys;
 
+        public bool HasKey(string key) => _loggingKeys.Contains(key);
+
         public void AddKey(string key)
         {
+            key = key.ToLower();
             _loggingKeys.Add(key);
             Save(true);
         }

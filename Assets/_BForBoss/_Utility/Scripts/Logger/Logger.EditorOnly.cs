@@ -101,9 +101,13 @@ namespace Perigon.Utility
         {
             if (!LoggerSettings._useLogging)
                 return;
+            key = key.ToLower();
             if (_settings._loggerNamespaces.Contains(key))
             {
                 debugMethod(toLog);
+            }else if (!LoggerKeysAsset.instance.HasKey(key))
+            {
+                Debug.LogWarning("Using a debug key that doesn't exist! Go to Preferences > Perigon > Debug Logging to fix this");
             }
         }
     }
