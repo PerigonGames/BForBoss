@@ -92,19 +92,6 @@ namespace BForBoss
             SceneManager.sceneLoaded += OnAdditiveSceneLoaded;
         }
 
-        private void OnAdditiveSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
-        {
-            if (scene.name == ADDITIVE_USERINTERFACE_SCENE_NAME)
-            {
-                UserInterfaceManager.Initialize();
-            }
-            
-            if (scene.name == ADDITIVE_WEAPON_SCENE_NAME)
-            {
-                WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
-            }
-        }
-
         protected virtual void Start()
         {
             _playerBehaviour.Initialize(_inputSystem);            
@@ -124,6 +111,19 @@ namespace BForBoss
             if (_playerBehaviour == null)
             {
                 PanicHelper.Panic(new Exception("_playerBehaviour is missing from World Manager"));
+            }
+        }
+        
+        private void OnAdditiveSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+        {
+            if (scene.name == ADDITIVE_USERINTERFACE_SCENE_NAME)
+            {
+                UserInterfaceManager.Initialize();
+            }
+            
+            if (scene.name == ADDITIVE_WEAPON_SCENE_NAME)
+            {
+                WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
             }
         }
         
