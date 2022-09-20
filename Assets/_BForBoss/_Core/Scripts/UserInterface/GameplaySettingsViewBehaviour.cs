@@ -49,12 +49,13 @@ namespace BForBoss
             _showPCSpecsToggle.isOn = false;
             _showRAMToggle.isOn = false;
         }
-
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         private void ShowSettingsForDevelopment()
         {
             _showPCSpecsToggle.gameObject.SetActive(true);
             _showRAMToggle.gameObject.SetActive(true);
         }
+#endif
     }
     
     public class GameplaySettingsViewModel

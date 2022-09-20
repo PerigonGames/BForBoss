@@ -11,7 +11,7 @@ namespace BForBoss
     public abstract class BaseWorldManager : MonoBehaviour
     {
         private const string ADDITIVE_WEAPON_SCENE_NAME = "AdditiveWeaponManager";
-        private const string ADDITIVE_USERINTERFACE_SCENE_NAME = "AdditiveUserInterfaceScene";
+        private const string ADDITIVE_USER_INTERFACE_SCENE_NAME = "AdditiveUserInterfaceScene";
         private const string ADDITIVE_DEBUG_SCENE_NAME = "AdditiveDebugScene";
         
         protected readonly StateManager _stateManager = StateManager.Instance;
@@ -79,17 +79,16 @@ namespace BForBoss
 
         protected virtual void Awake()
         {
+            SceneManager.sceneLoaded += OnAdditiveSceneLoaded;
             _inputSystem = new PGInputSystem(_actionAsset);
             _inputSystem.OnPausePressed += HandlePausePressed;
             _stateManager.OnStateChanged += HandleStateChange;
             _environmentManager = gameObject.AddComponent<EnvironmentManager>();
             SceneManager.LoadScene(ADDITIVE_WEAPON_SCENE_NAME, LoadSceneMode.Additive);
-            SceneManager.LoadScene(ADDITIVE_USERINTERFACE_SCENE_NAME, LoadSceneMode.Additive);
+            SceneManager.LoadScene(ADDITIVE_USER_INTERFACE_SCENE_NAME, LoadSceneMode.Additive);
 #if (UNITY_EDITOR || DEVELOPMENT_BUILD)
             SceneManager.LoadScene(ADDITIVE_DEBUG_SCENE_NAME, LoadSceneMode.Additive);
 #endif
-            
-            SceneManager.sceneLoaded += OnAdditiveSceneLoaded;
         }
 
         protected virtual void Start()
@@ -116,14 +115,16 @@ namespace BForBoss
         
         private void OnAdditiveSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
-            if (scene.name == ADDITIVE_USERINTERFACE_SCENE_NAME)
+            switch (scene.name)
             {
-                UserInterfaceManager.Initialize();
-            }
-            
-            if (scene.name == ADDITIVE_WEAPON_SCENE_NAME)
-            {
-                WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
+                case ADDITIVE_USER_INTERFACE_SCENE_NAME:
+                    UserInterfaceManager.Initialize();
+                    break;
+                case ADDITIVE_WEAPON_SCENE_NAME:
+                    WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
+                    break; 
+                default:
+                    return;
             }
         }
         
