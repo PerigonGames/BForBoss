@@ -17,8 +17,8 @@ namespace BForBoss
             _viewModel = new GameplaySettingsViewModel();
             SetViews();
             BindModel();
-#if !DEVELOPMENT_BUILD && !UNITY_EDITOR
-            HideSettingsForProduction();
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+            ShowSettingsForDevelopment();
 #endif
         }
 
@@ -50,12 +50,10 @@ namespace BForBoss
             _showRAMToggle.isOn = false;
         }
 
-        private void HideSettingsForProduction()
+        private void ShowSettingsForDevelopment()
         {
-            _viewModel.SetShowPCSpecifications(false);
-            _viewModel.SetShowRAMUsage(false);
-            _showPCSpecsToggle.gameObject.SetActive(false);
-            _showRAMToggle.gameObject.SetActive(false);
+            _showPCSpecsToggle.gameObject.SetActive(true);
+            _showRAMToggle.gameObject.SetActive(true);
         }
     }
     

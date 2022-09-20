@@ -10,6 +10,10 @@ namespace BForBoss
 {
     public abstract class BaseWorldManager : MonoBehaviour
     {
+        private const string ADDITIVE_WEAPON_SCENE_NAME = "AdditiveWeaponManager";
+        private const string ADDITIVE_USERINTERFACE_SCENE_NAME = "AdditiveUserInterfaceScene";
+        private const string ADDITIVE_DEBUG_SCENE_NAME = "AdditiveDebugScene";
+        
         protected readonly StateManager _stateManager = StateManager.Instance;
 
         [Title("Base Component")]
@@ -79,19 +83,32 @@ namespace BForBoss
             _inputSystem.OnPausePressed += HandlePausePressed;
             _stateManager.OnStateChanged += HandleStateChange;
             _environmentManager = gameObject.AddComponent<EnvironmentManager>();
-            SceneManager.LoadScene("AdditiveWeaponManager", LoadSceneMode.Additive);
-            SceneManager.LoadScene("AdditiveUserInterfaceScene", LoadSceneMode.Additive);
+            SceneManager.LoadScene(ADDITIVE_WEAPON_SCENE_NAME, LoadSceneMode.Additive);
+            SceneManager.LoadScene(ADDITIVE_USERINTERFACE_SCENE_NAME, LoadSceneMode.Additive);
 #if (UNITY_EDITOR || DEVELOPMENT_BUILD)
-            SceneManager.LoadScene("AdditiveDebugScene", LoadSceneMode.Additive);
+            SceneManager.LoadScene(ADDITIVE_DEBUG_SCENE_NAME, LoadSceneMode.Additive);
 #endif
+            
+            SceneManager.sceneLoaded += OnAdditiveSceneLoaded;
+        }
+
+        private void OnAdditiveSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+        {
+            if (scene.name == ADDITIVE_USERINTERFACE_SCENE_NAME)
+            {
+                UserInterfaceManager.Initialize();
+            }
+            
+            if (scene.name == ADDITIVE_WEAPON_SCENE_NAME)
+            {
+                WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
+            }
         }
 
         protected virtual void Start()
         {
             _playerBehaviour.Initialize(_inputSystem);            
             _environmentManager.Initialize();
-            WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
-            UserInterfaceManager.Initialize();
             _stateManager.SetState(State.PreGame);
         }
         
@@ -99,6 +116,7 @@ namespace BForBoss
         {
             _stateManager.OnStateChanged -= HandleStateChange;
             _inputSystem.OnPausePressed -= HandlePausePressed;
+            SceneManager.sceneLoaded -= OnAdditiveSceneLoaded;
         }
 
         protected virtual void OnValidate()
