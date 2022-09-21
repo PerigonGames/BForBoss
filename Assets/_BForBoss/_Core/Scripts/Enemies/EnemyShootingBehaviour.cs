@@ -21,32 +21,32 @@ namespace BForBoss
         [SerializeField] private float _vfxShootDelay = 0.1f;
 
         [SerializeField] private VisualEffect _muzzleFlashVFX = null;
-        
+
         private enum ShootState
         {
             Aim,
             Shoot,
             Evaluate
         }
-        
+
         private float _elapsedShootCountDown = 0;
         private float _elapsedAimCountDown = 0;
         private Func<Vector3> _destination = null;
         private BulletSpawner _bulletSpawner = null;
         private IFloatingEnemyAnimation _enemyAnimation = null;
         private Action _onFinishedShooting = null;
-        
+
         private ShootState _state = ShootState.Aim;
-        
+
         private Vector3 _shootDirection = Vector3.zero;
         private Func<Vector3> _shootingFromPosition;
-        
+
         private readonly int _vfxFireEvent = Shader.PropertyToID("OnFire");
         private readonly int _vfxChargeTime = Shader.PropertyToID("Charge Time");
 
         public float DistanceToShootAt => _distanceToShootAt;
 
-        public void Initialize(Func<Vector3> getPlayerPosition, 
+        public void Initialize(Func<Vector3> getPlayerPosition,
             BulletSpawner bulletSpawner,
             Func<Vector3> shootingFromPosition,
             IFloatingEnemyAnimation enemyAnimation,
@@ -137,7 +137,7 @@ namespace BForBoss
         {
             _muzzleFlashVFX.SendEvent(_vfxFireEvent);
             _enemyAnimation.SetShootingAnimation();
-            var bullet = _bulletSpawner.SpawnBullet();
+            var bullet = _bulletSpawner.SpawnBullet(BulletTypes.Physics);
             bullet.SetSpawnAndDirection(_shootingFromPosition(), _shootDirection.normalized);
         }
 
