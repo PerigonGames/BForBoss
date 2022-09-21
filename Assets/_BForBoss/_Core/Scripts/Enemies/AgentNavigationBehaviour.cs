@@ -1,44 +1,51 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Perigon.Entities
+namespace BForBoss
 {
     [RequireComponent(typeof(NavMeshAgent))]
     public class AgentNavigationBehaviour : MonoBehaviour
     {
-        [SerializeField] 
+        [SerializeField, MinValue(0)]
         private float _stopDistanceBeforeReachingDestination = 5;
-        private Func<Vector3> _destination = null;
-        private NavMeshAgent _agent = null;
+        private Func<Vector3> _destination;
+        private Func<Vector3> _shootingFromPosition;
+        private NavMeshAgent _agent;
         private Action _onDestinationReached;
 
         public float StopDistanceBeforeReachingDestination => _stopDistanceBeforeReachingDestination;
 
-        public void Initialize(Func<Vector3> navigationDestination, Action onDestinationReached)
+        public void Initialize(Func<Vector3> navigationDestination, Func<Vector3> shootingFromPosition, Action onDestinationReached)
         {
             _destination = navigationDestination;
             _onDestinationReached = onDestinationReached;
+            _shootingFromPosition = shootingFromPosition;
         }
-        
+
         public void MovementUpdate()
         {
             if (_destination == null || !_agent.enabled)
             {
                 return;
             }
-            
-            var destination = _destination();
-                
-            if (Vector3.Distance(transform.position, destination) > _stopDistanceBeforeReachingDestination)
+            _agent.destination = _destination();
+            if (ReachedDestination())
             {
-                _agent.isStopped = false;
-                _agent.destination = destination;
+                if (LineOfSight.IsBlocked(_destination, _shootingFromPosition))
+                {
+                    _agent.isStopped = false;
+                }
+                else
+                {
+                    _agent.isStopped = true;
+                    _onDestinationReached?.Invoke();
+                }
             }
             else
             {
-                _agent.isStopped = true;
-                _onDestinationReached?.Invoke();
+                _agent.isStopped = false;
             }
         }
 
@@ -50,7 +57,7 @@ namespace Perigon.Entities
                 _agent.enabled = false;
             }
         }
-        
+
         public void ResumeNavigation()
         {
             if (!_agent.enabled)
@@ -63,10 +70,15 @@ namespace Perigon.Entities
             }
         }
 
+        private bool ReachedDestination()
+        {
+            return _agent.remainingDistance > 0.0f &&
+                   _agent.remainingDistance < _stopDistanceBeforeReachingDestination;
+        }
+
         private void Awake()
         {
             _agent = GetComponent<NavMeshAgent>();
-            _agent.stoppingDistance = _stopDistanceBeforeReachingDestination;
         }
     }
 }

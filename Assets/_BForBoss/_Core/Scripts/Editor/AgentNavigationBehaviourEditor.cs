@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Perigon.Entities
+namespace BForBoss
 {
     [CustomEditor(typeof(AgentNavigationBehaviour))]
     public class AgentNavigationBehaviourEditor : Editor
