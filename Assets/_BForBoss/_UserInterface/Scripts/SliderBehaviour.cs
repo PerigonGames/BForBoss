@@ -43,8 +43,12 @@ namespace Perigon.UserInterface
         public float SliderValue
         {
              get=> CustomSlider.value;
-             
-             set => CustomSlider.value = value;
+
+             set
+             {
+                 CustomSlider.value = value;
+                 CustomInputField.text = value.ToString(FormatString);
+             }
         }
 
         private string FormatString => _wholeNumbers ? "F0" : "F";

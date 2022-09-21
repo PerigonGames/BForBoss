@@ -10,6 +10,10 @@ namespace BForBoss
 {
     public abstract class BaseWorldManager : MonoBehaviour
     {
+        private const string ADDITIVE_WEAPON_SCENE_NAME = "AdditiveWeaponManager";
+        private const string ADDITIVE_USER_INTERFACE_SCENE_NAME = "AdditiveUserInterfaceScene";
+        private const string ADDITIVE_DEBUG_SCENE_NAME = "AdditiveDebugScene";
+        
         protected readonly StateManager _stateManager = StateManager.Instance;
 
         [Title("Base Component")]
@@ -75,14 +79,15 @@ namespace BForBoss
 
         protected virtual void Awake()
         {
+            SceneManager.sceneLoaded += OnAdditiveSceneLoaded;
             _inputSystem = new PGInputSystem(_actionAsset);
             _inputSystem.OnPausePressed += HandlePausePressed;
             _stateManager.OnStateChanged += HandleStateChange;
             _environmentManager = gameObject.AddComponent<EnvironmentManager>();
-            SceneManager.LoadScene("AdditiveWeaponManager", LoadSceneMode.Additive);
-            SceneManager.LoadScene("AdditiveUserInterfaceScene", LoadSceneMode.Additive);
+            SceneManager.LoadScene(ADDITIVE_WEAPON_SCENE_NAME, LoadSceneMode.Additive);
+            SceneManager.LoadScene(ADDITIVE_USER_INTERFACE_SCENE_NAME, LoadSceneMode.Additive);
 #if (UNITY_EDITOR || DEVELOPMENT_BUILD)
-            SceneManager.LoadScene("AdditiveDebugScene", LoadSceneMode.Additive);
+            SceneManager.LoadScene(ADDITIVE_DEBUG_SCENE_NAME, LoadSceneMode.Additive);
 #endif
         }
 
@@ -90,8 +95,6 @@ namespace BForBoss
         {
             _playerBehaviour.Initialize(_inputSystem);            
             _environmentManager.Initialize();
-            WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
-            UserInterfaceManager.Initialize();
             _stateManager.SetState(State.PreGame);
         }
         
@@ -99,6 +102,7 @@ namespace BForBoss
         {
             _stateManager.OnStateChanged -= HandleStateChange;
             _inputSystem.OnPausePressed -= HandlePausePressed;
+            SceneManager.sceneLoaded -= OnAdditiveSceneLoaded;
         }
 
         protected virtual void OnValidate()
@@ -106,6 +110,21 @@ namespace BForBoss
             if (_playerBehaviour == null)
             {
                 PanicHelper.Panic(new Exception("_playerBehaviour is missing from World Manager"));
+            }
+        }
+        
+        private void OnAdditiveSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+        {
+            switch (scene.name)
+            {
+                case ADDITIVE_USER_INTERFACE_SCENE_NAME:
+                    UserInterfaceManager.Initialize();
+                    break;
+                case ADDITIVE_WEAPON_SCENE_NAME:
+                    WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
+                    break; 
+                default:
+                    return;
             }
         }
         
