@@ -16,13 +16,6 @@ namespace Perigon.Utility
             public const string CONTROLLER_VERTICAL_SENSITIVITY = "controller_vertical_sensitivity";
         }
 
-        public struct LeaderboardSettings
-        {
-            public const string USERNAME = "user_name";
-            public const string TIMER = "timer";
-            public const string SHOULD_UPLOAD = "should_upload";
-        }
-
         public struct AudioSettings
         {
             public const string MAIN_VOLUME = "main_volume";
@@ -33,7 +26,6 @@ namespace Perigon.Utility
         public static IList<string> GetAllKeys()
         {
             var keys = GetConstStringValuesFromStruct<InputSettings>().ToList();
-            keys.AddRange(GetConstStringValuesFromStruct<LeaderboardSettings>());
             keys.AddRange(GetConstStringValuesFromStruct<AudioSettings>());
             return keys;
         }
