@@ -1,5 +1,6 @@
 using System;
 using Perigon.Entities;
+using Perigon.Utility;
 using Perigon.Weapons;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ namespace BForBoss
     [RequireComponent(typeof(AgentNavigationBehaviour))]
     public class FloatingTargetBehaviour : EnemyBehaviour
     {
+        [SerializeField] private Transform _shootingFromPosition;
+        
         private EnemyLifeCycleBehaviour _lifeCycleBehaviour;
         private FloatingEnemyKnockbackBehaviour _knockbackBehaviour = null;
         private AgentNavigationBehaviour _navigationBehaviour = null;
@@ -29,7 +32,10 @@ namespace BForBoss
             _animationBehaviour.SetMovementAnimation();
 
             _navigationBehaviour = GetComponent<AgentNavigationBehaviour>();
-            _navigationBehaviour.Initialize(getPlayerPosition, () =>
+            _navigationBehaviour.Initialize(
+                getPlayerPosition,
+                () => _shootingFromPosition.position,
+                onDestinationReached: () =>
             {
                 _state = FloatingTargetState.ShootTarget;
             });
@@ -38,17 +44,25 @@ namespace BForBoss
             _lifeCycleBehaviour.Initialize(releaseToPool: ReleaseToPool);
             
             _shootingBehaviour = GetComponent<EnemyShootingBehaviour>();
-            _shootingBehaviour.Initialize(getPlayerPosition, bulletSpawner, _animationBehaviour,() =>
+            _shootingBehaviour.Initialize(
+                getPlayerPosition,
+                bulletSpawner,
+                () => _shootingFromPosition.position,
+                _animationBehaviour,
+                onFinishedShooting:() =>
             {
                 _state = FloatingTargetState.MoveTowardsDestination;
             });
 
             _knockbackBehaviour = GetComponent<FloatingEnemyKnockbackBehaviour>();
-            _knockbackBehaviour.Initialize(_lifeCycleBehaviour.LifeCycle, () =>
+            _knockbackBehaviour.Initialize(
+                _lifeCycleBehaviour.LifeCycle, 
+                onKnockbackStarted: () =>
             {
                 _navigationBehaviour.PauseNavigation();
                 _state = FloatingTargetState.KnockedBack;
-            }, () =>
+            }, 
+                onKnockbackFinished:() =>
             {
                 _navigationBehaviour.ResumeNavigation();
                 _state = FloatingTargetState.MoveTowardsDestination;
@@ -74,6 +88,14 @@ namespace BForBoss
                 case FloatingTargetState.KnockedBack:
                     _knockbackBehaviour.UpdateKnockback(Time.fixedDeltaTime);
                     break;
+            }
+        }
+
+        private void Awake()
+        {
+            if (_shootingFromPosition == null)
+            {
+                PanicHelper.Panic(new Exception("Shooting from transform missing from Floating TargetBehaviour"));
             }
         }
     }
