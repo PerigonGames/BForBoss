@@ -70,6 +70,11 @@ namespace BForBoss
                 if (GUI.changed)
                 {
                     Time.timeScale = _shouldResumeTime ? 1.0f : 0.0f;
+
+                    if (_shouldResumeTime)
+                    {
+                        Debug.Log("The Player will be invincible while time is resumed");
+                    }
                 }
             }
 
