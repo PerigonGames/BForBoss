@@ -10,6 +10,12 @@ namespace Perigon.Entities
         [SerializeField] private PlayerHealthViewBehaviour _healthBarView = null;
         private Action _onEndGameCallback;
         private Action _onDeathCallback;
+        
+        public bool IsInvincible
+        {
+            get => _lifeCycle.IsInvincible;
+            set => _lifeCycle.IsInvincible = value;
+        }
 
         public void Initialize(Action onDeathCallback, Action onEndGameCallback)
         {
