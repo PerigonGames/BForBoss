@@ -4,21 +4,14 @@ using UnityEngine;
 
 namespace BForBoss
 {
-    public class LineOfSight
+    public static class LineOfSight
     {
-        private Func<Vector3> _shootingFromPosition;
-        private Func<Vector3> _destination;
-        public LineOfSight(Func<Vector3> destination, Func<Vector3> shootFromPosition)
+        public static bool IsBlocked(Func<Vector3> destination, Func<Vector3> shootFromPosition)
         {
-            _destination = destination;
-            _shootingFromPosition = shootFromPosition;
-        }
-        public bool IsBlocked()
-        {
-            var direction = _destination() - _shootingFromPosition(); 
-            if (Physics.Raycast(_shootingFromPosition(), direction.normalized, out var hitInfo))
+            var direction = destination() - shootFromPosition(); 
+            if (Physics.Raycast(shootFromPosition(), direction.normalized, out var hitInfo))
             {
-                Debug.DrawRay(_shootingFromPosition(), direction.normalized, Color.red);
+                Debug.DrawRay(shootFromPosition(), direction.normalized, Color.red);
                 if (hitInfo.collider.CompareTag(TagsAndLayers.Tags.Player))
                 {
                     return false;

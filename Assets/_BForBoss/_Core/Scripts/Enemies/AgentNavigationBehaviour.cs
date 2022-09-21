@@ -11,17 +11,17 @@ namespace BForBoss
         [SerializeField, MinValue(0)]
         private float _stopDistanceBeforeReachingDestination = 5;
         private Func<Vector3> _destination;
+        private Func<Vector3> _shootingFromPosition;
         private NavMeshAgent _agent;
         private Action _onDestinationReached;
-        private LineOfSight _lineOfSight;
 
         public float StopDistanceBeforeReachingDestination => _stopDistanceBeforeReachingDestination;
 
-        public void Initialize(Func<Vector3> navigationDestination, LineOfSight lineOfSight, Action onDestinationReached)
+        public void Initialize(Func<Vector3> navigationDestination, Func<Vector3> shootingFromPosition, Action onDestinationReached)
         {
             _destination = navigationDestination;
             _onDestinationReached = onDestinationReached;
-            _lineOfSight = lineOfSight;
+            _shootingFromPosition = shootingFromPosition;
         }
 
         public void MovementUpdate()
@@ -33,7 +33,7 @@ namespace BForBoss
             _agent.destination = _destination();
             if (ReachedDestination())
             {
-                if (_lineOfSight.IsBlocked())
+                if (LineOfSight.IsBlocked(_destination, _shootingFromPosition))
                 {
                     _agent.isStopped = false;
                 }

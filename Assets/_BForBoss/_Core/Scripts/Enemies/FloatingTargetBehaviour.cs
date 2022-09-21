@@ -30,13 +30,11 @@ namespace BForBoss
             _animationBehaviour = GetComponent<FloatingEnemyAnimationBehaviour>();
             _animationBehaviour.Initialize();
             _animationBehaviour.SetMovementAnimation();
-            var isLineOfSightBlocked =
-                new LineOfSight(getPlayerPosition, () => _shootingFromPosition.position);
 
             _navigationBehaviour = GetComponent<AgentNavigationBehaviour>();
             _navigationBehaviour.Initialize(
                 getPlayerPosition,
-                isLineOfSightBlocked,
+                () => _shootingFromPosition.position,
                 onDestinationReached: () =>
             {
                 _state = FloatingTargetState.ShootTarget;
@@ -50,7 +48,6 @@ namespace BForBoss
                 getPlayerPosition,
                 bulletSpawner,
                 () => _shootingFromPosition.position,
-                isLineOfSightBlocked,
                 _animationBehaviour,
                 onFinishedShooting:() =>
             {

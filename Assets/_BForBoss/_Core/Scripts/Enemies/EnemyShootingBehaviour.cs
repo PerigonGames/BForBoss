@@ -40,7 +40,6 @@ namespace BForBoss
         
         private Vector3 _shootDirection = Vector3.zero;
         private Func<Vector3> _shootingFromPosition;
-        private LineOfSight _lineOfSight;
         
         private readonly int _vfxFireEvent = Shader.PropertyToID("OnFire");
         private readonly int _vfxChargeTime = Shader.PropertyToID("Charge Time");
@@ -50,7 +49,6 @@ namespace BForBoss
         public void Initialize(Func<Vector3> getPlayerPosition, 
             BulletSpawner bulletSpawner,
             Func<Vector3> shootingFromPosition,
-            LineOfSight lineOfSight,
             IFloatingEnemyAnimation enemyAnimation,
             Action onFinishedShooting
             )
@@ -58,7 +56,6 @@ namespace BForBoss
             _destination = getPlayerPosition;
             _bulletSpawner = bulletSpawner;
             _shootingFromPosition = shootingFromPosition;
-            _lineOfSight = lineOfSight;
             _enemyAnimation = enemyAnimation;
             _onFinishedShooting = onFinishedShooting;
         }
@@ -119,7 +116,7 @@ namespace BForBoss
 
         private void Evaluate()
         {
-            if (IsDestinationTooFar() || _lineOfSight.IsBlocked())
+            if (IsDestinationTooFar() || LineOfSight.IsBlocked(_destination, _shootingFromPosition))
             {
                 _enemyAnimation.SetMovementAnimation();
                 Reset();
