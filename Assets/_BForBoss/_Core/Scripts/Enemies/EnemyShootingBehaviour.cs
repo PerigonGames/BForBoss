@@ -1,5 +1,4 @@
 using System;
-using Perigon.Utility;
 using Perigon.Weapons;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -9,7 +8,6 @@ namespace BForBoss
 {
     public class EnemyShootingBehaviour : MonoBehaviour
     {
-
         [InfoBox("Player must be within this distance for AI to shoot, when outside, AI will move closer")]
         [SerializeField] private float _distanceToShootAt = 4;
         [InfoBox("Time taken in seconds for AI to aim at players direction before shooting")]
@@ -22,43 +20,44 @@ namespace BForBoss
         [InfoBox("Delay between shot readying effect and shot firing effect")]
         [SerializeField] private float _vfxShootDelay = 0.1f;
 
-        [SerializeField] private Transform _shootingFromPosition = null;
-
         [SerializeField] private VisualEffect _muzzleFlashVFX = null;
-        
+
         private enum ShootState
         {
             Aim,
             Shoot,
-            DistanceCheck
+            Evaluate
         }
-        
+
         private float _elapsedShootCountDown = 0;
         private float _elapsedAimCountDown = 0;
         private Func<Vector3> _destination = null;
         private BulletSpawner _bulletSpawner = null;
         private IFloatingEnemyAnimation _enemyAnimation = null;
-        private Action OnFinishedShooting = null;
-        
+        private Action _onFinishedShooting = null;
+
         private ShootState _state = ShootState.Aim;
-        
+
         private Vector3 _shootDirection = Vector3.zero;
-        
+        private Func<Vector3> _shootingFromPosition;
+
         private readonly int _vfxFireEvent = Shader.PropertyToID("OnFire");
         private readonly int _vfxChargeTime = Shader.PropertyToID("Charge Time");
 
         public float DistanceToShootAt => _distanceToShootAt;
 
-        public void Initialize(Func<Vector3> getPlayerPosition, 
+        public void Initialize(Func<Vector3> getPlayerPosition,
             BulletSpawner bulletSpawner,
+            Func<Vector3> shootingFromPosition,
             IFloatingEnemyAnimation enemyAnimation,
             Action onFinishedShooting
             )
         {
             _destination = getPlayerPosition;
             _bulletSpawner = bulletSpawner;
+            _shootingFromPosition = shootingFromPosition;
             _enemyAnimation = enemyAnimation;
-            OnFinishedShooting = onFinishedShooting;
+            _onFinishedShooting = onFinishedShooting;
         }
 
         private void Reset()
@@ -79,15 +78,15 @@ namespace BForBoss
                 case ShootState.Shoot:
                     CountDownUntilShoot();
                     break;
-                case  ShootState.DistanceCheck:
-                    DistanceCheck();
+                case ShootState.Evaluate:
+                    Evaluate();
                     break;
             }
         }
 
         private void RotateTowardPlayer()
         {
-            _shootDirection = _destination() - _shootingFromPosition.position;
+            _shootDirection = _destination() - _shootingFromPosition();
             Quaternion toRotation = Quaternion.LookRotation(_shootDirection);
             transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, _rotationSpeed * Time.fixedDeltaTime);
         }
@@ -110,23 +109,28 @@ namespace BForBoss
             if (_elapsedShootCountDown <= 0)
             {
                 Shoot();
-                _state = ShootState.DistanceCheck;
+                _state = ShootState.Evaluate;
                 _elapsedShootCountDown = _shootCountDownInSeconds;
             }
         }
 
-        private void DistanceCheck()
+        private void Evaluate()
         {
-            if (Vector3.Distance(transform.position, _destination()) > _distanceToShootAt)
+            if (IsDestinationTooFar() || LineOfSight.IsBlocked(_destination, _shootingFromPosition))
             {
                 _enemyAnimation.SetMovementAnimation();
                 Reset();
-                OnFinishedShooting?.Invoke();
+                _onFinishedShooting?.Invoke();
             }
             else
             {
                 _state = ShootState.Aim;
             }
+        }
+
+        private bool IsDestinationTooFar()
+        {
+            return Vector3.Distance(transform.position, _destination()) > _distanceToShootAt;
         }
 
         private void Shoot()
@@ -139,11 +143,6 @@ namespace BForBoss
 
         private void Awake()
         {
-            if (_shootingFromPosition == null)
-            {
-                PanicHelper.Panic(new Exception("Shooting from transform missing from EnemyShootingBehaviour"));
-            }
-
             var vfxDuration = Mathf.Max(_shootCountDownInSeconds - _vfxShootDelay, 0);
             _muzzleFlashVFX.SetFloat(_vfxChargeTime, vfxDuration);
         }
