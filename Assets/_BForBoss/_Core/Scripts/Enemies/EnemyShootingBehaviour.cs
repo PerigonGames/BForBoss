@@ -138,7 +138,7 @@ namespace BForBoss
             _muzzleFlashVFX.SendEvent(_vfxFireEvent);
             _enemyAnimation.SetShootingAnimation();
             var bullet = _bulletSpawner.SpawnBullet(BulletTypes.Physics);
-            bullet.SetSpawnAndDirection(_shootingFromPosition.position, _shootDirection.normalized);
+            bullet.SetSpawnAndDirection(_shootingFromPosition(), _shootDirection.normalized);
         }
 
         private void Awake()
