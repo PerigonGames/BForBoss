@@ -13,6 +13,8 @@ namespace Perigon.Entities
         private NavMeshAgent _agent = null;
         private Action _onDestinationReached;
 
+        public float StopDistanceBeforeReachingDestination => _stopDistanceBeforeReachingDestination;
+
         public void Initialize(Func<Vector3> navigationDestination, Action onDestinationReached)
         {
             _destination = navigationDestination;
@@ -65,12 +67,6 @@ namespace Perigon.Entities
         {
             _agent = GetComponent<NavMeshAgent>();
             _agent.stoppingDistance = _stopDistanceBeforeReachingDestination;
-        }
-        
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = new Color(1, 0, 0, 0.5f);
-            Gizmos.DrawWireSphere(transform.position, _stopDistanceBeforeReachingDestination);
         }
     }
 }
