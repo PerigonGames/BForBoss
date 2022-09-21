@@ -16,8 +16,7 @@ namespace BForBoss
         
         [SerializeField] private RectTransform _rectTransform;
         [SerializeField] private FreeRoamCamera _freeRoamCamera = null;
-
-        //Action States
+        
         private PlayerLifeCycleBehaviour _playerLifeCycle;
         
         //State Handling
@@ -124,8 +123,6 @@ namespace BForBoss
                     
                 GUILayout.FlexibleSpace();
             }
-                
-            //GUILayout.FlexibleSpace();
         }
 
         private void OnViewOpened(DebugView view)
