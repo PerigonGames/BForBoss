@@ -10,8 +10,7 @@ using UnityEngine.SceneManagement;
 public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
 {
     private const string SCENE_FILE_EXTENSION = ".unity";
-    private const string NOT_FAVORITE_ICON_NAME = "d_Favorite On Icon";
-    private const string FAVORITE_ICON_NAME = "d_Favorite Icon";
+    private const string FAVORITE_ICON_NAME = "d_Favorite On Icon";
     private const string ASSETS_PATH = "Assets";
 
     private bool _needsToRefreshElements = false;
@@ -19,8 +18,7 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
     private List<SceneConfigSetup> _favoriteSceneConfigs = new List<SceneConfigSetup>();
     private SceneConfigSetup _currentSceneConfig;
     private Vector2 _scrollView;
-
-    private Texture2D _notFavouriteSymbol;
+    
     private Texture2D _favouriteSymbol;
 
     [MenuItem("Tools/SceneSwitcher")]
@@ -154,8 +152,11 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
             {
                 using (new EditorGUILayout.HorizontalScope(GUI.skin.box))
                 {
-                    GUILayout.Label(new GUIContent("Favourite Scenes", _favouriteSymbol), EditorStyles.boldLabel,
-                        GUILayout.Height(EditorGUIUtility.singleLineHeight));
+                    Color currentGUIColor = GUI.color;
+                    GUI.color = Color.yellow;
+                    GUILayout.Label(_favouriteSymbol, GUILayout.Width(20f), GUILayout.Height(EditorGUIUtility.singleLineHeight));
+                    GUI.color = currentGUIColor;
+                    GUILayout.Label(new GUIContent("Favourite Scenes"), EditorStyles.boldLabel, GUILayout.Height(EditorGUIUtility.singleLineHeight));
                 }
 
                 foreach (SceneConfigSetup sceneConfig in _favoriteSceneConfigs)
@@ -203,8 +204,10 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
             using (new EditorGUI.DisabledGroupScope(disableFavouriteToggle))
             {
                 bool isFavoriteScene = EditorPrefs.GetBool(scenePath, false);
-                
-                if (GUILayout.Button(isFavoriteScene ? _favouriteSymbol : _notFavouriteSymbol, GUIStyle.none,
+
+                Color currentGUIColor = GUI.color;
+                GUI.color = isFavoriteScene ? Color.yellow : currentGUIColor;
+                if (GUILayout.Button(_favouriteSymbol, GUIStyle.none, 
                     GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20f), GUILayout.ExpandHeight(true)))
                 {
                     if (!isFavoriteScene)
@@ -218,6 +221,7 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
                         _favoriteSceneConfigs.Remove(scene);
                     }
                 }
+                GUI.color = currentGUIColor;
             }
             
             using (new EditorGUI.DisabledGroupScope(true))
@@ -258,7 +262,6 @@ public class SceneSwitcherEditorWindow : EditorWindow, IHasCustomMenu
 
     private void LoadSymbols()
     {
-        _notFavouriteSymbol = EditorGUIUtility.IconContent(NOT_FAVORITE_ICON_NAME).image as Texture2D;
         _favouriteSymbol = EditorGUIUtility.IconContent(FAVORITE_ICON_NAME).image as Texture2D;
     }
     
