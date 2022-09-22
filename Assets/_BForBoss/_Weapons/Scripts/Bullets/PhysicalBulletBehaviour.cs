@@ -42,7 +42,5 @@ namespace Perigon.Weapons
             OnBulletSpawn -= SetRigidbodyVelocity;
             OnBulletDeactivate -= ResetRigidbodyVelocity;
         }
-
-
     }
 }

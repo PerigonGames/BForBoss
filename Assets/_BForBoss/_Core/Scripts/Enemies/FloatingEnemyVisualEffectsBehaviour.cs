@@ -10,7 +10,7 @@ namespace BForBoss
     [RequireComponent(typeof(Rigidbody))]
     public class FloatingEnemyVisualEffectsBehaviour : MonoBehaviour
     {
-        private readonly IRandomUtility _randomUtility = new RandomUtility();
+        private IRandomUtility _randomUtility;
         
         [Title("Spawn Effect Properties")]
         [SerializeField] private GameObject _mainBody;
@@ -20,6 +20,8 @@ namespace BForBoss
 
         [Title("Death Effect Properties")] 
         [Resolve] [SerializeField] private TimedVFXEffect _explosionEffect;
+        [SerializeField] private float _deathRagDollForce = 3f;
+        [SerializeField] private float _deathFallMaxDuration = 2f;
         private Rigidbody _rigidbody;
         private float _elapsedFallTime = 1f;
 
@@ -31,6 +33,7 @@ namespace BForBoss
             _onSpawnVisualsComplete = onSpawnVisualsComplete;
             _onDeathVisualsComplete = onDeathVisualsComplete;
             _elapsedSpawnAnimationDuration = _spawnAnimationDuration;
+            _randomUtility = new RandomUtility(gameObject.GetInstanceID());
         }
         
         public void OnSpawningFixedUpdate()
@@ -63,20 +66,19 @@ namespace BForBoss
         {
             _rigidbody.isKinematic = false;
             _rigidbody.useGravity = true;
-            _rigidbody.AddTorque(new Vector3(RandomDirection(3), RandomDirection(3), RandomDirection(3)));
-            _rigidbody.AddForce(new Vector3(RandomDirection(3), RandomDirection(3), RandomDirection(3)), ForceMode.Impulse);
+            _rigidbody.AddTorque(new Vector3(RandomDirection(), RandomDirection(), RandomDirection()));
+            _rigidbody.AddForce(new Vector3(RandomDirection(), RandomDirection(), RandomDirection()), ForceMode.Impulse);
         }
 
-        private float RandomDirection(float multiplier)
+        private float RandomDirection()
         {
             var direction =  _randomUtility.CoinFlip() ? 1 : -1;
-            return direction * (float)_randomUtility.NextDouble() * multiplier;
+            return direction * (float)_randomUtility.NextDouble() * _deathRagDollForce;
         }
 
         public void Reset()
         {
-            var randomSeconds = (float) new RandomUtility().NextDouble();
-            _elapsedFallTime = 2 * randomSeconds;
+            _elapsedFallTime = _deathFallMaxDuration * (float) _randomUtility.NextDouble();
             _elapsedSpawnAnimationDuration = _spawnAnimationDuration;
             _mainBody.SetActive(false);
             _spawnEffect.SetActive(true);
