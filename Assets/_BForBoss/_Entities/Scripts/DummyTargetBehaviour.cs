@@ -5,7 +5,7 @@ namespace Perigon.Entities
 {
     public class DummyTargetBehaviour : LifeCycleBehaviour
     {
-        [SerializeField] private HealthbarViewBehaviour _healthbar;
+        [SerializeField] private HealthBarViewBehaviour _healthBar;
         private const float MAX_DISSOLVE = 1f;
         private readonly int DEATH_ID = Animator.StringToHash("IsDead");
         private readonly int HIT_ID = Animator.StringToHash("Hit");
@@ -23,9 +23,9 @@ namespace Perigon.Entities
             base.Initialize();
             _animator = GetComponentInChildren<Animator>();
             _renderer = GetComponentInChildren<Renderer>();
-            if (_healthbar != null)
+            if (_healthBar != null)
             {
-                _healthbar.Initialize(_lifeCycle);
+                _healthBar.Initialize(_lifeCycle);
             }
             _lifeCycle.OnDamageTaken += TriggerHitAnimation;
         }
@@ -41,7 +41,7 @@ namespace Perigon.Entities
             _lifeCycle.OnDamageTaken += TriggerHitAnimation;
             gameObject.SetActive(true);
             _renderer.material.SetFloat(DISSOLVE_ID, 0);
-            _healthbar.Reset();
+            _healthBar.Reset();
         }
 
         public override void CleanUp()
@@ -65,7 +65,7 @@ namespace Perigon.Entities
         
         private void Awake()
         {
-            if (_healthbar == null)
+            if (_healthBar == null)
             {
                 Debug.LogWarning("A dummyTargetBehaviour is missing a health bar");
             }

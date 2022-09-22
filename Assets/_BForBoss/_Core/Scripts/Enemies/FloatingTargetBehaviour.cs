@@ -12,10 +12,11 @@ namespace BForBoss
         [SerializeField] private Transform _shootingFromPosition;
         
         private EnemyLifeCycleBehaviour _lifeCycleBehaviour;
-        private FloatingEnemyKnockbackBehaviour _knockbackBehaviour = null;
-        private AgentNavigationBehaviour _navigationBehaviour = null;
-        private EnemyShootingBehaviour _shootingBehaviour = null;
-        private FloatingEnemyAnimationBehaviour _animationBehaviour = null;
+        private FloatingEnemyKnockbackBehaviour _knockbackBehaviour;
+        private AgentNavigationBehaviour _navigationBehaviour;
+        private EnemyShootingBehaviour _shootingBehaviour;
+        private FloatingEnemyAnimationBehaviour _animationBehaviour;
+        private FloatingEnemyVisualEffectsBehaviour _visualEffectsBehaviour;
         private FloatingTargetState _state = FloatingTargetState.Spawning;
 
         private enum FloatingTargetState
@@ -23,17 +24,25 @@ namespace BForBoss
             Spawning,
             MoveTowardsDestination,
             ShootTarget,
-            KnockedBack
+            KnockedBack,
+            Death
         }
         
         public void Initialize(Func<Vector3> getPlayerPosition, BulletSpawner bulletSpawner)
         {
             _animationBehaviour = GetComponent<FloatingEnemyAnimationBehaviour>();
-            _animationBehaviour.Initialize(onSpawnComplete: () =>
+            _animationBehaviour.Initialize();
+            _animationBehaviour.SetMovementAnimation();
+
+            _visualEffectsBehaviour = GetComponent<FloatingEnemyVisualEffectsBehaviour>();
+            _visualEffectsBehaviour.Initialize(onSpawnVisualsComplete: () =>
             {
                 _state = FloatingTargetState.MoveTowardsDestination;
+            },
+                onDeathVisualsComplete: () =>
+            {
+                ReleaseToPool();
             });
-            _animationBehaviour.SetMovementAnimation();
 
             _navigationBehaviour = GetComponent<AgentNavigationBehaviour>();
             _navigationBehaviour.Initialize(
@@ -45,7 +54,12 @@ namespace BForBoss
             });
             
             _lifeCycleBehaviour = GetComponent<EnemyLifeCycleBehaviour>();
-            _lifeCycleBehaviour.Initialize(releaseToPool: ReleaseToPool);
+            _lifeCycleBehaviour.Initialize(onDeath: () =>
+            {
+                _visualEffectsBehaviour.StartDeathVisual();
+                _navigationBehaviour.PauseNavigation();
+                _state = FloatingTargetState.Death;
+            });
             
             _shootingBehaviour = GetComponent<EnemyShootingBehaviour>();
             _shootingBehaviour.Initialize(
@@ -65,8 +79,7 @@ namespace BForBoss
             {
                 _navigationBehaviour.PauseNavigation();
                 _state = FloatingTargetState.KnockedBack;
-            }, 
-                onKnockbackFinished:() =>
+            }, onKnockbackFinished:() =>
             {
                 _navigationBehaviour.ResumeNavigation();
                 _state = FloatingTargetState.MoveTowardsDestination;
@@ -78,7 +91,7 @@ namespace BForBoss
             _state = FloatingTargetState.Spawning;
             _lifeCycleBehaviour.Reset();
             _knockbackBehaviour.Reset();
-            _animationBehaviour.Reset();
+            _visualEffectsBehaviour.Reset();
         }
 
         private void FixedUpdate()
@@ -86,7 +99,7 @@ namespace BForBoss
             switch (_state)
             {
                 case FloatingTargetState.Spawning:
-                    _animationBehaviour.OnAnimationFixedUpdate();
+                    _visualEffectsBehaviour.OnSpawningFixedUpdate();
                     break;
                 case FloatingTargetState.MoveTowardsDestination:
                     _navigationBehaviour.MovementUpdate();
@@ -96,6 +109,9 @@ namespace BForBoss
                     break;
                 case FloatingTargetState.KnockedBack:
                     _knockbackBehaviour.UpdateKnockback(Time.fixedDeltaTime);
+                    break;
+                case FloatingTargetState.Death:
+                    _visualEffectsBehaviour.OnDeathFixedUpdate();
                     break;
             }
         }

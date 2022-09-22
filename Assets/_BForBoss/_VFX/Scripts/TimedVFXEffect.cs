@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -16,10 +14,14 @@ namespace Perigon.VFX
 
         public Action OnEffectStop;
         
-        // Start is called before the first frame update
-        void Awake()
+        private void Awake()
         {
             _effect = GetComponent<VisualEffect>();
+        }
+
+        private void OnEnable()
+        {
+            _effect.Stop();
         }
 
         public void StartEffect()
