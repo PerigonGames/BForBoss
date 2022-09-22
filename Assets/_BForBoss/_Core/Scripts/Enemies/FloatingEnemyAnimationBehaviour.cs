@@ -10,6 +10,7 @@ namespace BForBoss
         void SetIdleAnimation();
         void SetMovementAnimation();
     }
+    
     public class FloatingEnemyAnimationBehaviour : MonoBehaviour, IFloatingEnemyAnimation
     {
         private const string ANIMATION_DEATH_KEY = "Death";
@@ -17,13 +18,40 @@ namespace BForBoss
         private const string ANIMATION_SHOOTING_KEY = "Shooting";
 
         [Resolve] [SerializeField] private Animator _animator = null;
+        [SerializeField] private GameObject _mainBody;
+        [SerializeField] private GameObject _spawnEffect;
+        [SerializeField] private float _spawnAnimationDuration = 1f;
+        private float _elapsedSpawnAnimationDuration = 0;
 
-        public void Initialize()
+        private Action _onSpawnComplete;
+        
+        public void Initialize(Action onSpawnComplete)
         {
             if (_animator == null)
             {
                 PanicHelper.Panic(new Exception("Animator missing from Floating Enemy Animation Behaviour"));
             }
+
+            _onSpawnComplete = onSpawnComplete;
+            _elapsedSpawnAnimationDuration = _spawnAnimationDuration;
+        }
+
+        public void OnAnimationFixedUpdate()
+        {
+            _elapsedSpawnAnimationDuration -= Time.fixedDeltaTime;
+            if (_elapsedSpawnAnimationDuration <= 0)
+            {
+                _mainBody.SetActive(true);
+                _spawnEffect.SetActive(false);
+                _onSpawnComplete?.Invoke();
+            }
+        }
+
+        public void Reset()
+        {
+            _elapsedSpawnAnimationDuration = _spawnAnimationDuration;
+            _mainBody.SetActive(false);
+            _spawnEffect.SetActive(true);
         }
 
         public void SetMovementAnimation()

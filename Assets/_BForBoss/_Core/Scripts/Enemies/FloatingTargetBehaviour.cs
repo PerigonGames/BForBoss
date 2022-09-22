@@ -16,10 +16,11 @@ namespace BForBoss
         private AgentNavigationBehaviour _navigationBehaviour = null;
         private EnemyShootingBehaviour _shootingBehaviour = null;
         private FloatingEnemyAnimationBehaviour _animationBehaviour = null;
-        private FloatingTargetState _state = FloatingTargetState.MoveTowardsDestination;
+        private FloatingTargetState _state = FloatingTargetState.Spawning;
 
         private enum FloatingTargetState
         {
+            Spawning,
             MoveTowardsDestination,
             ShootTarget,
             KnockedBack
@@ -28,7 +29,10 @@ namespace BForBoss
         public void Initialize(Func<Vector3> getPlayerPosition, BulletSpawner bulletSpawner)
         {
             _animationBehaviour = GetComponent<FloatingEnemyAnimationBehaviour>();
-            _animationBehaviour.Initialize();
+            _animationBehaviour.Initialize(onSpawnComplete: () =>
+            {
+                _state = FloatingTargetState.MoveTowardsDestination;
+            });
             _animationBehaviour.SetMovementAnimation();
 
             _navigationBehaviour = GetComponent<AgentNavigationBehaviour>();
@@ -70,20 +74,25 @@ namespace BForBoss
         }
 
         public override void Reset()
-        {
+        {            
+            _state = FloatingTargetState.Spawning;
             _lifeCycleBehaviour.Reset();
             _knockbackBehaviour.Reset();
+            _animationBehaviour.Reset();
         }
 
         private void FixedUpdate()
         {
             switch (_state)
             {
+                case FloatingTargetState.Spawning:
+                    _animationBehaviour.OnAnimationFixedUpdate();
+                    break;
                 case FloatingTargetState.MoveTowardsDestination:
                     _navigationBehaviour.MovementUpdate();
                     break;
                 case FloatingTargetState.ShootTarget:
-                    _shootingBehaviour.ShootingUpdate();
+                    _shootingBehaviour.ShootingFixedUpdate();
                     break;
                 case FloatingTargetState.KnockedBack:
                     _knockbackBehaviour.UpdateKnockback(Time.fixedDeltaTime);
