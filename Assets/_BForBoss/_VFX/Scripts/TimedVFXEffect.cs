@@ -34,7 +34,10 @@ namespace Perigon.VFX
         private async void StopAfterTime()
         {
             await Task.Delay(TimeSpan.FromSeconds(_duration));
-            _effect.Stop();
+            if (_effect != null)
+            {
+                _effect.Stop();
+            }
             OnEffectStop?.Invoke();
         }
     }
