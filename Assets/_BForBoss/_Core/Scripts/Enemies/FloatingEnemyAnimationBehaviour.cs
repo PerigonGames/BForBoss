@@ -13,7 +13,6 @@ namespace BForBoss
     
     public class FloatingEnemyAnimationBehaviour : MonoBehaviour, IFloatingEnemyAnimation
     {
-        private const string ANIMATION_DEATH_KEY = "Death";
         private const string ANIMATION_MOVEMENT_KEY = "Movement";
         private const string ANIMATION_SHOOTING_KEY = "Shooting";
 
@@ -33,12 +32,7 @@ namespace BForBoss
             _animator.SetBool(ANIMATION_MOVEMENT_KEY, true);
             _animator.SetBool(ANIMATION_SHOOTING_KEY, false);
         }
-
-        public void SetDeathAnimation()
-        {
-            _animator.SetTrigger(ANIMATION_DEATH_KEY);
-        }
-
+        
         public void SetIdleAnimation()
         {
             _animator.SetBool(ANIMATION_MOVEMENT_KEY, false);
