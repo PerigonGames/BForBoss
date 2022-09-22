@@ -1,5 +1,5 @@
 using System;
-using System.Threading.Tasks;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -28,17 +28,27 @@ namespace Perigon.VFX
         {
             _effect.Reinit();
             _effect.Play();
-            StopAfterTime();
+            StartCoroutine(StopAfterTime());
         }
-
-        private async void StopAfterTime()
+        
+        private IEnumerator StopAfterTime()
         {
-            await Task.Delay(TimeSpan.FromSeconds(_duration));
+            yield return new WaitForSeconds(_duration);
             if (_effect != null)
             {
                 _effect.Stop();
             }
             OnEffectStop?.Invoke();
+        }
+
+        private void OnDisable()
+        {
+            StopCoroutine(nameof(StopAfterTime));
+        }
+
+        private void OnDestroy()
+        {
+            StopAllCoroutines();
         }
     }
 }

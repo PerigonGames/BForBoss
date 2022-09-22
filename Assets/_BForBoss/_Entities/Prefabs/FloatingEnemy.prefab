@@ -516,7 +516,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f86a4320cb4b804b82838af79e916c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _healthbarImage: {fileID: 548165371962725883}
+  _healthBarImage: {fileID: 548165371962725883}
 --- !u!1 &4814267688260619932
 GameObject:
   m_ObjectHideFlags: 0
@@ -857,6 +857,8 @@ MonoBehaviour:
   _spawnEffect: {fileID: 2723218141401586641}
   _spawnAnimationDuration: 1
   _explosionEffect: {fileID: 1308995367495000670}
+  _deathRagDollForce: 3
+  _deathFallMaxDuration: 2
 --- !u!1 &7047665429213051704
 GameObject:
   m_ObjectHideFlags: 0

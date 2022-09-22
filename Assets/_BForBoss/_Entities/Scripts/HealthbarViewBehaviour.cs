@@ -7,12 +7,12 @@ namespace Perigon.Entities
 {
     public class HealthBarViewBehaviour : MonoBehaviour
     {
-        [Resolve][SerializeField]private Image _healthbarImage;
+        [Resolve][SerializeField]private Image _healthBarImage;
         private ILifeCycle _lifeCycle = null;
 
         private void Awake()
         {
-            if (_healthbarImage == null)
+            if (_healthBarImage == null)
             {
                 PanicHelper.Panic(new Exception("HealthBarImage missing from HealthBarViewBehaviour"));
             }
@@ -28,7 +28,7 @@ namespace Perigon.Entities
         
         public void Reset()
         {
-            _healthbarImage.fillAmount = 1;
+            _healthBarImage.fillAmount = 1;
         }
         
         private float GetHealthBarAmount()
@@ -42,9 +42,9 @@ namespace Perigon.Entities
 
         private void OnHealthChanged()
         {
-            if (_healthbarImage != null)
+            if (_healthBarImage != null)
             {
-                _healthbarImage.fillAmount = GetHealthBarAmount();
+                _healthBarImage.fillAmount = GetHealthBarAmount();
             }
         }
         

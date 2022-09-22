@@ -102,7 +102,7 @@ namespace BForBoss
                     _visualEffectsBehaviour.OnSpawningFixedUpdate();
                     break;
                 case FloatingTargetState.MoveTowardsDestination:
-                    _navigationBehaviour.MovementUpdate();
+                    _navigationBehaviour.OnMovementFixedUpdate();
                     break;
                 case FloatingTargetState.ShootTarget:
                     _shootingBehaviour.ShootingFixedUpdate();

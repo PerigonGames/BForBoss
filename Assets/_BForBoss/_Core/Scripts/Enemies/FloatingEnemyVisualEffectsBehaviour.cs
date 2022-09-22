@@ -10,7 +10,6 @@ namespace BForBoss
     [RequireComponent(typeof(Rigidbody))]
     public class FloatingEnemyVisualEffectsBehaviour : MonoBehaviour
     {
-        private IRandomUtility _randomUtility;
         
         [Title("Spawn Effect Properties")]
         [SerializeField] private GameObject _mainBody;
@@ -27,7 +26,9 @@ namespace BForBoss
 
         private Action _onSpawnVisualsComplete;
         private Action _onDeathVisualsComplete;
-
+        
+        private IRandomUtility _randomUtility;
+        
         public void Initialize(Action onSpawnVisualsComplete, Action onDeathVisualsComplete)
         {
             _onSpawnVisualsComplete = onSpawnVisualsComplete;
