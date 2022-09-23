@@ -103,10 +103,13 @@ namespace BForBoss
             _startingTransform = playerTransform;
             transform.SetPositionAndRotation(playerTransform.position, playerTransform.rotation);
             _onExitCamera = onExit;
-            _targetCameraState.SetFromTransform(transform);
-            _interpolatingCameraState.SetFromTransform(transform);
         }
-        
+
+        private void OnEnable()
+        {
+            ResetView();
+        }
+
         private void InitializeActionMap()
         {
             _actionMap = new InputActionMap("Free Roam Camera Controller");
@@ -175,8 +178,7 @@ namespace BForBoss
             // Return to starting position when Reset button is Pressed
             if (IsResetButtonPressed())
             {
-                _targetCameraState.SetFromTransform(_startingTransform);
-                _interpolatingCameraState.SetFromTransform(_startingTransform);
+                ResetView();
             }
 
             // Rotation
@@ -227,6 +229,12 @@ namespace BForBoss
             delta *= 0.5f; // Account for scaling applied directly in Windows code by old input system.
             delta *= 0.1f; // Account for sensitivity setting on old Mouse X and Y axes.
             return delta;
+        }
+        
+        private void ResetView()
+        {
+            _targetCameraState.SetFromTransform(_startingTransform);
+            _interpolatingCameraState.SetFromTransform(_startingTransform);
         }
 
         private bool IsBoostPressed()
