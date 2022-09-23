@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -16,24 +14,41 @@ namespace Perigon.VFX
 
         public Action OnEffectStop;
         
-        // Start is called before the first frame update
-        void Awake()
+        private void Awake()
         {
             _effect = GetComponent<VisualEffect>();
+        }
+
+        private void OnEnable()
+        {
+            _effect.Stop();
         }
 
         public void StartEffect()
         {
             _effect.Reinit();
             _effect.Play();
-            StopAfterTime();
+            StartCoroutine(StopAfterTime());
+        }
+        
+        private IEnumerator StopAfterTime()
+        {
+            yield return new WaitForSeconds(_duration);
+            if (_effect != null)
+            {
+                _effect.Stop();
+            }
+            OnEffectStop?.Invoke();
         }
 
-        private async void StopAfterTime()
+        private void OnDisable()
         {
-            await Task.Delay(TimeSpan.FromSeconds(_duration));
-            _effect.Stop();
-            OnEffectStop?.Invoke();
+            StopCoroutine(nameof(StopAfterTime));
+        }
+
+        private void OnDestroy()
+        {
+            StopAllCoroutines();
         }
     }
 }

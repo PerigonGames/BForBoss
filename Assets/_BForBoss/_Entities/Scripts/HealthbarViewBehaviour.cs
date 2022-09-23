@@ -1,17 +1,21 @@
+using System;
+using Perigon.Utility;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Perigon.Entities
 {
-    [RequireComponent(typeof(Image))]
-    public class HealthbarViewBehaviour : MonoBehaviour
+    public class HealthBarViewBehaviour : MonoBehaviour
     {
-        private Image _healthbarImage;
+        [Resolve][SerializeField]private Image _healthBarImage;
         private ILifeCycle _lifeCycle = null;
 
         private void Awake()
         {
-            _healthbarImage = GetComponent<Image>();
+            if (_healthBarImage == null)
+            {
+                PanicHelper.Panic(new Exception("HealthBarImage missing from HealthBarViewBehaviour"));
+            }
         }
 
         public void Initialize(ILifeCycle lifeCycle)
@@ -21,7 +25,12 @@ namespace Perigon.Entities
             _lifeCycle.OnHeal += OnHealthChanged;
             OnHealthChanged();
         }
-
+        
+        public void Reset()
+        {
+            _healthBarImage.fillAmount = 1;
+        }
+        
         private float GetHealthBarAmount()
         {
             if (_lifeCycle != null)
@@ -33,9 +42,9 @@ namespace Perigon.Entities
 
         private void OnHealthChanged()
         {
-            if (_healthbarImage != null)
+            if (_healthBarImage != null)
             {
-                _healthbarImage.fillAmount = GetHealthBarAmount();
+                _healthBarImage.fillAmount = GetHealthBarAmount();
             }
         }
         
@@ -55,11 +64,6 @@ namespace Perigon.Entities
                 _lifeCycle.OnHeal -= OnHealthChanged;
                 _lifeCycle.OnDamageTaken -= OnHealthChanged;
             }
-        }
-
-        public void Reset()
-        {
-            OnHealthChanged();
         }
     }
 }
