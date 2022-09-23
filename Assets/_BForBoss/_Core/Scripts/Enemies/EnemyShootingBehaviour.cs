@@ -67,8 +67,8 @@ namespace BForBoss
             _elapsedShootCountDown = _shootCountDownInSeconds;
         }
 
-        public void ShootingUpdate()
-        {
+        public void ShootingFixedUpdate()
+        {                
             switch (_state)
             {
                 case ShootState.Aim:
@@ -94,7 +94,7 @@ namespace BForBoss
         private void CountDownWhileAiming()
         {
             _enemyAnimation.SetIdleAnimation();
-            _elapsedAimCountDown -= Time.deltaTime;
+            _elapsedAimCountDown -= Time.fixedDeltaTime;
             if (_elapsedAimCountDown <= 0)
             {
                 _state = ShootState.Shoot;
@@ -145,6 +145,9 @@ namespace BForBoss
         {
             var vfxDuration = Mathf.Max(_shootCountDownInSeconds - _vfxShootDelay, 0);
             _muzzleFlashVFX.SetFloat(_vfxChargeTime, vfxDuration);
+            _muzzleFlashVFX.Stop();
+            _elapsedAimCountDown = _aimCountDownInSeconds;
+            _elapsedShootCountDown = _shootCountDownInSeconds;
         }
     }
 }

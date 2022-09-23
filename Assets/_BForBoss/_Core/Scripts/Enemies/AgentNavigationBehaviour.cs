@@ -24,7 +24,7 @@ namespace BForBoss
             _shootingFromPosition = shootingFromPosition;
         }
 
-        public void MovementUpdate()
+        public void OnMovementFixedUpdate()
         {
             if (_destination == null || !_agent.enabled)
             {
