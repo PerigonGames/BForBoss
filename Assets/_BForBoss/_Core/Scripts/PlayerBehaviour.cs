@@ -9,9 +9,10 @@ namespace BForBoss
     [RequireComponent(typeof(PlayerMovementBehaviour))]
     public class PlayerBehaviour : MonoBehaviour
     {
-        private PlayerMovementBehaviour _playerMovement = null;
-        private PlayerLifeCycleBehaviour _playerLifeCycle = null;
-        private PlayerSlowMotionBehaviour _playerSlowMotion = null;
+        private PlayerMovementBehaviour _playerMovement;
+        private PlayerLifeCycleBehaviour _playerLifeCycle;
+        private PlayerSlowMotionBehaviour _playerSlowMotion;
+        private PGInputSystem _inputSystem;
 
         public PlayerMovementBehaviour PlayerMovement => _playerMovement;
 
@@ -31,6 +32,8 @@ namespace BForBoss
                 });
             }
 
+            _inputSystem = inputSystem;
+            _inputSystem.OnSlowTimeAction += _playerSlowMotion.OnSlowMotion;
             StateManager.Instance.OnStateChanged += HandleOnStateChanged;
         }
 
@@ -73,12 +76,19 @@ namespace BForBoss
             if (state == State.Play)
             {
                 _playerMovement.SetControlConfiguration();
+                _playerSlowMotion.ResumeTween();
+            }
+
+            if (state == State.Pause)
+            {
+                _playerSlowMotion.PauseTween();
             }
         }
 
         private void OnDestroy()
         {
             StateManager.Instance.OnStateChanged -= HandleOnStateChanged;
+            _inputSystem.OnSlowTimeAction -= _playerSlowMotion.OnSlowMotion;
         }
     }
 }
