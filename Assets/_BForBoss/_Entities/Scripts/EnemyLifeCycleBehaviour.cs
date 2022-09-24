@@ -5,7 +5,7 @@ namespace Perigon.Entities
 {
     public class EnemyLifeCycleBehaviour : LifeCycleBehaviour
     {
-        [SerializeField] private HealthBarViewBehaviour _healthBar;
+        [SerializeField] private EnemyHealthBarViewBehaviour _enemyHealthBar;
 
         //TODO - don't do this.knockback should rely on something else
         public ILifeCycle LifeCycle => _lifeCycle;
@@ -15,25 +15,25 @@ namespace Perigon.Entities
         {
             base.Initialize();
             _onDeath = onDeath;
-            _healthBar.Initialize(_lifeCycle);
+            _enemyHealthBar.Initialize(_lifeCycle);
         }
 
         public override void Reset()
         {
             base.Reset();
-            _healthBar.gameObject.SetActive(true);
-            _healthBar.Reset();
+            _enemyHealthBar.gameObject.SetActive(true);
+            _enemyHealthBar.Reset();
         }
         
         protected override void LifeCycleFinished()
         {
-            _healthBar.gameObject.SetActive(false);
+            _enemyHealthBar.gameObject.SetActive(false);
             _onDeath?.Invoke();
         }
         
         private void Awake()
         {
-            if (_healthBar == null)
+            if (_enemyHealthBar == null)
             {                
                 Debug.LogWarning("A FloatingTargetBehaviour is missing a health bar");
             }
