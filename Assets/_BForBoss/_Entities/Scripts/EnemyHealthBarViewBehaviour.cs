@@ -5,10 +5,11 @@ using UnityEngine.UI;
 
 namespace Perigon.Entities
 {
-    public class HealthBarViewBehaviour : MonoBehaviour
+    public class EnemyHealthBarViewBehaviour : MonoBehaviour
     {
         [Resolve][SerializeField]private Image _healthBarImage;
         private ILifeCycle _lifeCycle = null;
+        
 
         private void Awake()
         {
