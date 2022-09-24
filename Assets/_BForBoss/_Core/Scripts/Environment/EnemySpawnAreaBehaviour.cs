@@ -1,6 +1,7 @@
 using System.Collections;
 using Perigon.Entities;
 using UnityEngine;
+using UnityEngine.AI;
 using Logger = Perigon.Utility.Logger;
 
 namespace BForBoss
