@@ -88,7 +88,10 @@ namespace BForBoss
         private void OnDestroy()
         {
             StateManager.Instance.OnStateChanged -= HandleOnStateChanged;
-            _inputSystem.OnSlowTimeAction -= _playerSlowMotion.OnSlowMotion;
+            if (_inputSystem != null)
+            {
+                _inputSystem.OnSlowTimeAction -= _playerSlowMotion.OnSlowMotion;
+            }
         }
     }
 }
