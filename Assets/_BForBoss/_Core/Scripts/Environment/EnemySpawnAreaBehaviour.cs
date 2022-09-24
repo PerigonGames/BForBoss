@@ -2,6 +2,7 @@ using System.Collections;
 using Perigon.Entities;
 using UnityEngine;
 using UnityEngine.AI;
+using Logger = Perigon.Utility.Logger;
 
 namespace BForBoss
 {
@@ -84,7 +85,7 @@ namespace BForBoss
 
         private void SpawnEnemy()
         {
-            Debug.Log("<color=red>Spawn Enemy</color>");
+            Logger.LogString("<color=red>Spawn Enemy</color>", "wavesmode");
             var enemy = _enemyContainer.GetEnemy();
             
             enemy.OnRelease += HandleOnEnemyReleased;
