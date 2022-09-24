@@ -18,7 +18,6 @@ namespace Perigon.Character
         private PlayerDashBehaviour _dashBehaviour = null;
         private PlayerWallRunBehaviour _wallRunBehaviour = null;
         private PlayerSlideBehaviour _slideBehaviour = null;
-        private PlayerSlowMotionBehaviour _slowMotionBehaviour = null;
 
         private IInputConfiguration _inputConfiguration;
         private PGInputSystem _inputSystem;
@@ -36,11 +35,6 @@ namespace Perigon.Character
             if (_dashBehaviour != null)
             {
                 _inputSystem.OnDashAction += _dashBehaviour.OnDash;
-            }
-
-            if (_slowMotionBehaviour != null)
-            {
-                _inputSystem.OnSlowTimeAction += _slowMotionBehaviour.OnSlowMotion;
             }
         }
 
@@ -80,7 +74,6 @@ namespace Perigon.Character
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();
             _wallRunBehaviour = GetComponent<PlayerWallRunBehaviour>();
             _slideBehaviour = GetComponent<PlayerSlideBehaviour>();
-            _slowMotionBehaviour = GetComponent<PlayerSlowMotionBehaviour>();
             base.OnAwake();
         }
 
