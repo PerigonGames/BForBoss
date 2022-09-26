@@ -1,10 +1,9 @@
 using System;
-using Perigon.Entities;
 using Perigon.Utility;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BForBoss
+namespace Perigon.Entities
 {
     public class EnemyHealthBarViewBehaviour : HealthViewBehaviour
     {
