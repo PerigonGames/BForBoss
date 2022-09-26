@@ -1,69 +1,33 @@
 using System;
+using Perigon.Entities;
 using Perigon.Utility;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Perigon.Entities
+namespace BForBoss
 {
-    public class EnemyHealthBarViewBehaviour : MonoBehaviour
+    public class EnemyHealthBarViewBehaviour : HealthViewBehaviour
     {
         [Resolve][SerializeField]private Image _healthBarImage;
-        private ILifeCycle _lifeCycle = null;
         
-
+        public override void Reset()
+        {
+            _healthBarImage.fillAmount = 1;
+        }
+        
+        protected override void OnHealthChanged()
+        {
+            if (_healthBarImage != null)
+            {
+                _healthBarImage.fillAmount = GetHealthPercentage();
+            }
+        }
+        
         private void Awake()
         {
             if (_healthBarImage == null)
             {
                 PanicHelper.Panic(new Exception("HealthBarImage missing from HealthBarViewBehaviour"));
-            }
-        }
-
-        public void Initialize(ILifeCycle lifeCycle)
-        {
-            _lifeCycle = lifeCycle;
-            _lifeCycle.OnDamageTaken += OnHealthChanged;
-            _lifeCycle.OnHeal += OnHealthChanged;
-            OnHealthChanged();
-        }
-        
-        public void Reset()
-        {
-            _healthBarImage.fillAmount = 1;
-        }
-        
-        private float GetHealthBarAmount()
-        {
-            if (_lifeCycle != null)
-            {
-                return _lifeCycle.CurrentHealth / _lifeCycle.MaxHealth;
-            }
-            return 0f;
-        }
-
-        private void OnHealthChanged()
-        {
-            if (_healthBarImage != null)
-            {
-                _healthBarImage.fillAmount = GetHealthBarAmount();
-            }
-        }
-        
-        private void OnEnable()
-        {
-            if (_lifeCycle != null)
-            {
-                _lifeCycle.OnHeal += OnHealthChanged;
-                _lifeCycle.OnDamageTaken += OnHealthChanged;
-            }
-        }
-
-        private void OnDisable()
-        {
-            if (_lifeCycle != null)
-            {
-                _lifeCycle.OnHeal -= OnHealthChanged;
-                _lifeCycle.OnDamageTaken -= OnHealthChanged;
             }
         }
     }

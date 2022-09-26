@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace BForBoss
 {
+    [RequireComponent(typeof(PlayerLifeCycleBehaviour))]
     [RequireComponent(typeof(PlayerMovementBehaviour))]
     public class PlayerBehaviour : MonoBehaviour
     {
@@ -16,21 +17,20 @@ namespace BForBoss
 
         public PlayerMovementBehaviour PlayerMovement => _playerMovement;
 
-        public void Initialize(PGInputSystem inputSystem)
+        public void Initialize(PGInputSystem inputSystem, LifeCycle lifeCycle)
         {
             _playerMovement.Initialize(inputSystem);
-            if (_playerLifeCycle != null)
+            _playerLifeCycle.Initialize(
+                lifeCycle,
+                onEndGameCallback: () =>
             {
-                _playerLifeCycle.Initialize(
-                    onEndGameCallback: () =>
-                {
-                    StateManager.Instance.SetState(State.EndGame);
-                }, 
-                    onDeathCallback: () =>
-                {
-                    StateManager.Instance.SetState(State.Death);
-                });
-            }
+                StateManager.Instance.SetState(State.EndGame);
+            }, 
+                onDeathCallback: () =>
+            {
+                StateManager.Instance.SetState(State.Death);
+            });
+            
 
             _inputSystem = inputSystem;
             _inputSystem.OnSlowTimeAction += _playerSlowMotion.OnSlowMotion;
@@ -53,17 +53,7 @@ namespace BForBoss
         private void Awake()
         {
             _playerMovement = GetComponent<PlayerMovementBehaviour>();
-            if (_playerMovement == null)
-            {
-                PanicHelper.Panic(new Exception("PlayerMovementBehaviour missing from PlayerBehaviour"));
-            }
-
             _playerLifeCycle = GetComponent<PlayerLifeCycleBehaviour>();
-            if (_playerLifeCycle == null)
-            {
-                PanicHelper.Panic(new Exception("Player Life Cycle is missing from Player Behaviour"));
-            }
-
             _playerSlowMotion = GetComponent<PlayerSlowMotionBehaviour>();
             if (_playerSlowMotion == null)
             {

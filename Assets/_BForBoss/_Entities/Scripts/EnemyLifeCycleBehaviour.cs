@@ -1,4 +1,5 @@
 using System;
+using BForBoss;
 using UnityEngine;
 
 namespace Perigon.Entities

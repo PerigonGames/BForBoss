@@ -1,3 +1,4 @@
+using BForBoss;
 using DG.Tweening;
 using UnityEngine;
 
@@ -18,9 +19,9 @@ namespace Perigon.Entities
         private Renderer _renderer;
         private Tween _deathTween;
 
-        public override void Initialize()
+        public override void Initialize(LifeCycle lifeCycle = null)
         {
-            base.Initialize();
+            base.Initialize(lifeCycle);
             _animator = GetComponentInChildren<Animator>();
             _renderer = GetComponentInChildren<Renderer>();
             if (_enemyHealthBar != null)

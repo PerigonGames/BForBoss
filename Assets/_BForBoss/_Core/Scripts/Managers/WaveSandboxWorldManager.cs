@@ -7,9 +7,6 @@ namespace BForBoss
 {
     public class WaveSandboxWorldManager : BaseWorldManager
     {
-        [SerializeField]
-        private Transform _spawnLocation = null;
-
         [Title("Waves Configuration")]
         [SerializeField, Tooltip("Cooldown time between waves")]
         private float _secondsBetweenWaves = 2.5f;

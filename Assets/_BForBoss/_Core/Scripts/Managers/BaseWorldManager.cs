@@ -1,5 +1,6 @@
 using System;
 using DG.Tweening;
+using Perigon.Entities;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -16,13 +17,21 @@ namespace BForBoss
         
         protected readonly StateManager _stateManager = StateManager.Instance;
 
-        [Title("Base Component")]
+        [Title("Base Components", "", TitleAlignments.Centered)]
+        [Title("","Base Dependencies", bold: false, horizontalLine: false)]
         [SerializeField] protected PlayerBehaviour _playerBehaviour = null;
-
         [SerializeField] private InputActionAsset _actionAsset;
 
+        [Title("","Base Configuration", bold: false, horizontalLine: false)]
+        [SerializeField] protected Transform _spawnLocation;
+        
+        [Title("","Base HUD", bold: false, horizontalLine: false)] 
+        [SerializeField] private PlayerHealthViewBehaviour _playerHealthView;
+
+        
         private PGInputSystem _inputSystem;
         private EnvironmentManager _environmentManager;
+        private readonly LifeCycle _playerLifeCycle = new LifeCycle();
 
         private WeaponSceneManager _weaponSceneManager;
         private UserInterfaceManager _userInterfaceManager;
@@ -93,8 +102,9 @@ namespace BForBoss
 
         protected virtual void Start()
         {
-            _playerBehaviour.Initialize(_inputSystem);            
+            _playerBehaviour.Initialize(_inputSystem, _playerLifeCycle);            
             _environmentManager.Initialize();
+            _playerHealthView.Initialize(_playerLifeCycle);
             _stateManager.SetState(State.PreGame);
         }
         
