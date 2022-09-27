@@ -27,6 +27,13 @@ public class MaterialGenerationAssetPostProcessor : AssetPostprocessor
 
     private void OnPreprocessTexture()
     {
+        //Does not apply for script outside the BForBoss root folder
+        //Assumes the root namespace will be in root folder name
+        if (!assetPath.Contains(EditorSettings.projectGenerationRootNamespace))
+        {
+            return;
+        }
+        
         string extension = string.Empty;
         foreach (string fileExtension in TEXTURE_FILE_EXTENSIONS)
         {
