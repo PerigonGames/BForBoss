@@ -32,6 +32,12 @@ namespace BForBoss
             }
 
             _playerLifeCycle = other.GetComponent<PlayerLifeCycleBehaviour>();
+
+            if (_playerLifeCycle == null)
+            {
+                return;
+            }
+            
             EffectPlayer();
         }
 
