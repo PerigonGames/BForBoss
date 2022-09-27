@@ -18,6 +18,7 @@ namespace BForBoss
         [SerializeField] private FreeRoamCamera _freeRoamCamera = null;
         
         private PlayerLifeCycleBehaviour _playerLifeCycle;
+        private bool _isPlayerCurrentlyInvincible;
         
         //State Handling
         private StateManager _stateManager = StateManager.Instance;
@@ -131,6 +132,8 @@ namespace BForBoss
             if (view is FreeRoamCameraDebugView)
             {
                 _freeRoamCamera.gameObject.SetActive(true);
+                _isPlayerCurrentlyInvincible = _playerLifeCycle.IsInvincible;
+                _playerLifeCycle.IsInvincible = true;
             }
         }
 
@@ -168,6 +171,7 @@ namespace BForBoss
         private void OnFreeCameraDebugViewExited()
         {
             _freeRoamCamera.gameObject.SetActive(false);
+            _playerLifeCycle.IsInvincible = _isPlayerCurrentlyInvincible;
         }
 
         private object[] GetDebugViewConstructorParameters(Type debugType)

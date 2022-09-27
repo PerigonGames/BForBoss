@@ -6,22 +6,33 @@ namespace BForBoss
     public class FreeRoamCameraDebugView : DebugView
     {
         private GUIStyle _boldInstructionStyle = null;
-        private Action<bool> _onOptionsChanged = null;
+        private Action<bool> _onCamerOptionsChanged = null;
         private Action _onBackButtonPressed = null;
 
         private bool _shouldInvertMouseYAxis = false;
+        private bool _shouldResumeTime = false;
+
+        private Vector2 _scrollPosition;
+        private GUIStyle _playerInvincibilityPopup;
 
         public override string PrettyName => "Free Roam Camera";
 
-        public FreeRoamCameraDebugView(Rect masterRect, Action<bool> onOptionsChanged, Action onBackButtonPressed) : base(masterRect)
+        public FreeRoamCameraDebugView(Rect masterRect, Action<bool> onCamerOptionsChanged, Action onBackButtonPressed) : base(masterRect)
         {
-            _onOptionsChanged = onOptionsChanged;
+            _onCamerOptionsChanged = onCamerOptionsChanged;
             _onBackButtonPressed = onBackButtonPressed;
         }
 
         public override void ResetData()
         {
             base.ResetData();
+
+            if (_shouldResumeTime)
+            {
+                _shouldResumeTime = false;
+                Time.timeScale = 0.0f;
+            }
+            
             _onBackButtonPressed?.Invoke();
         }
 
@@ -36,9 +47,21 @@ namespace BForBoss
                 fontStyle = FontStyle.BoldAndItalic,
                 alignment = TextAnchor.MiddleCenter
             };
-
-            using (new GUILayout.VerticalScope())
+            
+            _playerInvincibilityPopup ??= new GUIStyle(GUI.skin.box)
             {
+                normal =  new GUIStyleState
+                {
+                    textColor = Color.red
+                },
+                fontStyle = FontStyle.BoldAndItalic,
+                alignment = TextAnchor.MiddleCenter
+            };
+            
+            using (var scrollScope = new GUILayout.ScrollViewScope(_scrollPosition))
+            {
+                _scrollPosition = scrollScope.scrollPosition;
+                
                 GUILayout.Label("");
                 DrawInstruction("Use", "WASD", "to move");
                 DrawInstruction("Use", "Q", "to pan down");
@@ -53,7 +76,20 @@ namespace BForBoss
 
                 if (GUI.changed)
                 {
-                    _onOptionsChanged?.Invoke(_shouldInvertMouseYAxis);
+                    _onCamerOptionsChanged?.Invoke(_shouldInvertMouseYAxis);
+                    GUI.changed = false;
+                }
+
+                _shouldResumeTime = GUILayout.Toggle(_shouldResumeTime, "Resume Time");
+
+                if (GUI.changed)
+                {
+                    Time.timeScale = _shouldResumeTime ? 1.0f : 0.0f;
+                }
+                
+                if (_shouldResumeTime)
+                {
+                    GUILayout.Box("Player is now Invincible", _playerInvincibilityPopup);
                 }
             }
 

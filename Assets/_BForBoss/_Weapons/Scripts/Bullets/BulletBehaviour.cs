@@ -12,6 +12,7 @@ namespace Perigon.Weapons
         
         private ObjectPooler<BulletBehaviour> _pool = null;
         private Vector3 _startPosition;
+        protected bool _isActive = false;
         
         public ObjectPooler<BulletBehaviour> Pool
         {
@@ -27,8 +28,6 @@ namespace Perigon.Weapons
         }
         
         public LayerMask Mask { protected get; set; }
-
-        
         public Action<Vector3, Vector3> OnBulletHitWall { get; set; }
 
         public event Action OnBulletSpawn;
@@ -37,6 +36,7 @@ namespace Perigon.Weapons
 
         public void SetSpawnAndDirection(Vector3 location, Vector3 normalizedDirection)
         {
+            _isActive = true;
             if (normalizedDirection == Vector3.zero)
             {
                 Deactivate();
@@ -51,12 +51,14 @@ namespace Perigon.Weapons
 
         protected void Deactivate()
         {
+            _isActive = false;
             if(_pool == null)
             {
-                Debug.LogError("Bullet was not initialized properly!");
+                Debug.LogError("Bullet was not initialized properly! Destroying GameObject");
+                Destroy(gameObject);
                 return;
             }
-            
+        
             OnBulletDeactivate?.Invoke(this);
             _pool.Reclaim(this);
         }

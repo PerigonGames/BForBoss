@@ -54,7 +54,9 @@ namespace BForBoss
 
         public void Reset()
         {
-            ToggleKnockbackState(false);
+            _knockbackCurrentTime = 0f;
+            _rb.isKinematic = true;
+            _rb.useGravity = false;
         }
 
         private void Awake()
