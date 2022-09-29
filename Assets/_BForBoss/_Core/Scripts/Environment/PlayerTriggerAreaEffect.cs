@@ -7,7 +7,7 @@ using UnityEngine;
 namespace BForBoss
 {
     [RequireComponent(typeof(Collider))]
-    public class TriggerAreaEffect : MonoBehaviour
+    public class PlayerTriggerAreaEffect : MonoBehaviour
     {
         private enum PlayerEffect
         {
