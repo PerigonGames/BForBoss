@@ -68,6 +68,17 @@ namespace Perigon.Character
             characterLook.controllerHorizontalSensitivity = _inputConfiguration.ControllerHorizontalSensitivity;
             characterLook.controllerVerticalSensitivity = _inputConfiguration.ControllerVerticalSensitivity;
         }
+
+        public void ModifyPlayerSpeed(int modificationPercentage, out float originalPlayerSpeed)
+        {
+            originalPlayerSpeed = maxWalkSpeed;
+            maxWalkSpeed += maxWalkSpeed * (modificationPercentage / 100.0f);
+        }
+
+        public void ResetPlayerSpeed(float originalPayerSpeed)
+        {
+            maxWalkSpeed = originalPayerSpeed;
+        }
         
         protected override void OnAwake()
         {            
