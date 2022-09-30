@@ -1,4 +1,5 @@
 using System;
+using Perigon.Entities;
 using Perigon.Utility;
 using UnityEngine;
 
@@ -13,7 +14,8 @@ namespace BForBoss
             SettingsView,
             EndGameView
         }
-        
+
+        [SerializeField] private PlayerHealthViewBehaviour _playerHealthViewBehaviour;
         [SerializeField] private SettingsViewBehaviour _settingsViewBehaviour;
         [SerializeField] private PauseViewBehaviour _pauseViewBehaviour;
         [SerializeField] private EndGameViewBehaviour _endGameViewBehaviour;
@@ -31,7 +33,8 @@ namespace BForBoss
         
         public void Initialize()
         {
-            StateManager.Instance.OnStateChanged += HandleOnStateChanged;
+            StateManager.Instance.OnStateChanged += HandleOnStateChangedForUserInterface;
+            StateManager.Instance.OnStateChanged += HandleOnStateChangedForHUD;
             var resetGameUseCase = new ResetGameUseCase(StateManager.Instance);
             _settingsViewBehaviour.Initialize(onBackPressed: () =>
             {
@@ -44,7 +47,7 @@ namespace BForBoss
             _endGameViewBehaviour.Initialize(resetGameUseCase);
         }
 
-        private void HandleOnStateChanged(State gameState)
+        private void HandleOnStateChangedForUserInterface(State gameState)
         {
             switch (gameState)
             {
@@ -58,6 +61,12 @@ namespace BForBoss
                     UIState = UserInterfaceState.None;
                     break;
             }
+        }
+
+        private void HandleOnStateChangedForHUD(State gameState)
+        {
+            var shouldShowView = gameState != State.EndGame;
+            _playerHealthViewBehaviour.gameObject.SetActive(shouldShowView);
         }
 
         private void OnUserInterfaceStateChanged()
@@ -96,11 +105,17 @@ namespace BForBoss
             {
                 PanicHelper.Panic(new Exception("_pauseViewBehaviour missing from UserInterfaceManager"));
             }
+
+            if (_endGameViewBehaviour == null)
+            {
+                PanicHelper.Panic(new Exception("EndGameViewBehaviour missing from UserInterfaceManager"));
+            }
         }
 
         private void OnDestroy()
         {
-            StateManager.Instance.OnStateChanged -= HandleOnStateChanged;
+            StateManager.Instance.OnStateChanged -= HandleOnStateChangedForUserInterface;
+            StateManager.Instance.OnStateChanged += HandleOnStateChangedForHUD;
         }
     }
 }

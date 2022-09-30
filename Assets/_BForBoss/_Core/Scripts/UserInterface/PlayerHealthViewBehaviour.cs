@@ -10,7 +10,7 @@ namespace Perigon.Entities
         [SerializeField]
         [Resolve] private TMP_Text _healthPercentageLabel = null;
 
-        private string HealthAmountText => (GetHealthPercentage() * 100).ToString();
+        private string HealthAmountText => Mathf.Clamp(GetHealthPercentage() * 100, 0, float.MaxValue).ToString();
 
         public override void Reset()
         {
