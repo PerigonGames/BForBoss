@@ -16,6 +16,7 @@ namespace BForBoss
         private const string ADDITIVE_DEBUG_SCENE_NAME = "AdditiveDebugScene";
         
         protected readonly StateManager _stateManager = StateManager.Instance;
+        private readonly LifeCycle _playerLifeCycle = new LifeCycle();
 
         [Title("Base Components", "", TitleAlignments.Centered)]
         [Title("","Base Dependencies", bold: false, horizontalLine: false)]
@@ -27,7 +28,6 @@ namespace BForBoss
         
         private PGInputSystem _inputSystem;
         private EnvironmentManager _environmentManager;
-        private readonly LifeCycle _playerLifeCycle = new LifeCycle();
 
         private WeaponSceneManager _weaponSceneManager;
         private UserInterfaceManager _userInterfaceManager;
