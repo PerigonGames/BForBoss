@@ -6,13 +6,19 @@ using UnityEngine.UI;
 
 namespace Perigon.Weapons
 {
-    public class CrosshairBehaviour : MonoBehaviour
+    public interface ICrossHairProvider
+    {
+        void SetCrossHairImage(Sprite sprite);
+        void ActivateHitMarker(bool isDead);
+        void SetDefaultCrossHair();
+    }
+    public class CrossHairBehaviour : MonoBehaviour, ICrossHairProvider
     {
         private readonly Color KillHitMarkerColor = Color.red;
         private readonly Color HitMarkerColor = Color.white;
         
-        [SerializeField] private Sprite _defaultCrosshair = null;
-        [Resolve][SerializeField] private Image _crosshair = null;
+        [SerializeField] private Sprite _defaultCrossHair = null;
+        [Resolve][SerializeField] private Image _crossHair = null;
 
         [Title("HitMarkers")]
         [SerializeField] private float _hitMarkerStayOnScreenTime = 0.2f;
@@ -21,14 +27,14 @@ namespace Perigon.Weapons
         private float _elapsedHitMarkerTime = 0;
         private float _elapsedKillMarkerTime = 0;
             
-        public void SetDefaultCrosshair()
+        public void SetDefaultCrossHair()
         {
-            _crosshair.sprite = _defaultCrosshair;
+            _crossHair.sprite = _defaultCrossHair;
         }
 
-        public void SetCrosshairImage(Sprite image)
+        public void SetCrossHairImage(Sprite image)
         {
-            _crosshair.sprite = image;
+            _crossHair.sprite = image;
         }
 
         public void ActivateHitMarker(bool isDead)
@@ -61,12 +67,12 @@ namespace Perigon.Weapons
         
         private void Awake()
         {
-            SetDefaultCrosshair();
+            SetDefaultCrossHair();
         }
 
         private void OnValidate()
         {
-            if (_defaultCrosshair == null)
+            if (_defaultCrossHair == null)
             {
                 PanicHelper.Panic(new Exception("Crosshair Behaviour missing sprite"));
             }
@@ -76,7 +82,7 @@ namespace Perigon.Weapons
                 PanicHelper.Panic(new Exception("Crosshair behaviour missing hit marker"));
             }
             
-            if (_crosshair == null)
+            if (_crossHair == null)
             {
                 PanicHelper.Panic(new Exception("Crosshair behaviour missing crosshair"));
             }
