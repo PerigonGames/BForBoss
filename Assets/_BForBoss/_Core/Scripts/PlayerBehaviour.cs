@@ -11,17 +11,17 @@ namespace BForBoss
     public class PlayerBehaviour : MonoBehaviour
     {
         private PlayerMovementBehaviour _playerMovement;
-        private PlayerLifeCycleBehaviour _playerLifeCycle;
+        private PlayerLifeCycleBehaviour _playerLifeCycleBehaviour;
         private PlayerSlowMotionBehaviour _playerSlowMotion;
         private PGInputSystem _inputSystem;
 
         public PlayerMovementBehaviour PlayerMovement => _playerMovement;
 
-        public void Initialize(PGInputSystem inputSystem, LifeCycle lifeCycle)
+        public void Initialize(PGInputSystem inputSystem, LifeCycle playerLifeCycle)
         {
             _playerMovement.Initialize(inputSystem);
-            _playerLifeCycle.Initialize(
-                lifeCycle,
+            _playerLifeCycleBehaviour.Initialize(
+                playerLifeCycle,
                 onEndGameCallback: () =>
             {
                 StateManager.Instance.SetState(State.EndGame);
@@ -39,7 +39,7 @@ namespace BForBoss
 
         public void Reset()
         {
-            _playerLifeCycle.Reset();
+            _playerLifeCycleBehaviour.Reset();
         }
 
         public void SpawnAt(Vector3 position, Quaternion facing)
@@ -53,7 +53,7 @@ namespace BForBoss
         private void Awake()
         {
             _playerMovement = GetComponent<PlayerMovementBehaviour>();
-            _playerLifeCycle = GetComponent<PlayerLifeCycleBehaviour>();
+            _playerLifeCycleBehaviour = GetComponent<PlayerLifeCycleBehaviour>();
             _playerSlowMotion = GetComponent<PlayerSlowMotionBehaviour>();
             if (_playerSlowMotion == null)
             {
