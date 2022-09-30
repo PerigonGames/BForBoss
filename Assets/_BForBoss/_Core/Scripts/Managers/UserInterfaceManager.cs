@@ -31,7 +31,7 @@ namespace BForBoss
 
         private UserInterfaceState _state = UserInterfaceState.None;
         
-        public void Initialize()
+        public void Initialize(ILifeCycle playerLifeCycle)
         {
             StateManager.Instance.OnStateChanged += HandleOnStateChangedForUserInterface;
             StateManager.Instance.OnStateChanged += HandleOnStateChangedForHUD;
@@ -45,6 +45,7 @@ namespace BForBoss
                 UIState = UserInterfaceState.SettingsView;
             });
             _endGameViewBehaviour.Initialize(resetGameUseCase);
+            _playerHealthViewBehaviour.Initialize(playerLifeCycle);
         }
 
         private void HandleOnStateChangedForUserInterface(State gameState)

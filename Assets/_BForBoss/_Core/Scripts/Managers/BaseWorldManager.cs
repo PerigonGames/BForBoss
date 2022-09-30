@@ -25,10 +25,6 @@ namespace BForBoss
         [Title("","Base Configuration", bold: false, horizontalLine: false)]
         [SerializeField] protected Transform _spawnLocation;
         
-        [Title("","Base HUD", bold: false, horizontalLine: false)] 
-        [SerializeField] private PlayerHealthViewBehaviour _playerHealthView;
-
-        
         private PGInputSystem _inputSystem;
         private EnvironmentManager _environmentManager;
         private readonly LifeCycle _playerLifeCycle = new LifeCycle();
@@ -104,7 +100,6 @@ namespace BForBoss
         {
             _playerBehaviour.Initialize(_inputSystem, _playerLifeCycle);            
             _environmentManager.Initialize();
-            _playerHealthView.Initialize(_playerLifeCycle);
             _stateManager.SetState(State.PreGame);
         }
         
@@ -128,7 +123,7 @@ namespace BForBoss
             switch (scene.name)
             {
                 case ADDITIVE_USER_INTERFACE_SCENE_NAME:
-                    UserInterfaceManager.Initialize();
+                    UserInterfaceManager.Initialize(_playerLifeCycle);
                     break;
                 case ADDITIVE_WEAPON_SCENE_NAME:
                     WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
