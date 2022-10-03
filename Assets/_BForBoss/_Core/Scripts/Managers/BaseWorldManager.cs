@@ -1,5 +1,6 @@
 using System;
 using DG.Tweening;
+using Perigon.Entities;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -15,12 +16,16 @@ namespace BForBoss
         private const string ADDITIVE_DEBUG_SCENE_NAME = "AdditiveDebugScene";
         
         protected readonly StateManager _stateManager = StateManager.Instance;
+        private readonly LifeCycle _playerLifeCycle = new LifeCycle();
 
-        [Title("Base Component")]
+        [Title("Base Components", "", TitleAlignments.Centered)]
+        [Title("","Base Dependencies", bold: false, horizontalLine: false)]
         [SerializeField] protected PlayerBehaviour _playerBehaviour = null;
-
         [SerializeField] private InputActionAsset _actionAsset;
 
+        [Title("","Base Configuration", bold: false, horizontalLine: false)]
+        [SerializeField] protected Transform _spawnLocation;
+        
         private PGInputSystem _inputSystem;
         private EnvironmentManager _environmentManager;
 
@@ -93,7 +98,7 @@ namespace BForBoss
 
         protected virtual void Start()
         {
-            _playerBehaviour.Initialize(_inputSystem);            
+            _playerBehaviour.Initialize(_inputSystem, _playerLifeCycle);            
             _environmentManager.Initialize();
             _stateManager.SetState(State.PreGame);
         }
@@ -118,7 +123,7 @@ namespace BForBoss
             switch (scene.name)
             {
                 case ADDITIVE_USER_INTERFACE_SCENE_NAME:
-                    UserInterfaceManager.Initialize();
+                    UserInterfaceManager.Initialize(_playerLifeCycle);
                     break;
                 case ADDITIVE_WEAPON_SCENE_NAME:
                     WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);

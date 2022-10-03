@@ -18,9 +18,10 @@ namespace Perigon.Entities
 
         public bool IsAlive => _lifeCycle.IsAlive;
 
-        public virtual void Initialize()
+        public virtual void Initialize(LifeCycle lifeCycle = null)
         {
-            _lifeCycle = new LifeCycle(_health);
+            _lifeCycle = lifeCycle ?? new LifeCycle();
+            _lifeCycle.SetHealth(_health.Amount);
             _lifeCycle.OnDeath += LifeCycleFinished;
             _lifeCycle.OnDamageTaken += LifeCycleDamageTaken;
             _lifeCycle.OnHeal += LifeCycleOnHeal;
