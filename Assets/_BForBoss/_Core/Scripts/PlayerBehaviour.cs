@@ -6,37 +6,40 @@ using UnityEngine;
 
 namespace BForBoss
 {
+    [RequireComponent(typeof(PlayerLifeCycleBehaviour))]
     [RequireComponent(typeof(PlayerMovementBehaviour))]
     public class PlayerBehaviour : MonoBehaviour
     {
-        private PlayerMovementBehaviour _playerMovement = null;
-        private PlayerLifeCycleBehaviour _playerLifeCycle = null;
-        private PlayerSlowMotionBehaviour _playerSlowMotion = null;
+        private PlayerMovementBehaviour _playerMovement;
+        private PlayerLifeCycleBehaviour _playerLifeCycleBehaviour;
+        private PlayerSlowMotionBehaviour _playerSlowMotion;
+        private PGInputSystem _inputSystem;
 
         public PlayerMovementBehaviour PlayerMovement => _playerMovement;
 
-        public void Initialize(PGInputSystem inputSystem)
+        public void Initialize(PGInputSystem inputSystem, LifeCycle playerLifeCycle)
         {
             _playerMovement.Initialize(inputSystem);
-            if (_playerLifeCycle != null)
+            _playerLifeCycleBehaviour.Initialize(
+                playerLifeCycle,
+                onEndGameCallback: () =>
             {
-                _playerLifeCycle.Initialize(
-                    onEndGameCallback: () =>
-                {
-                    StateManager.Instance.SetState(State.EndGame);
-                }, 
-                    onDeathCallback: () =>
-                {
-                    StateManager.Instance.SetState(State.Death);
-                });
-            }
+                StateManager.Instance.SetState(State.EndGame);
+            }, 
+                onDeathCallback: () =>
+            {
+                StateManager.Instance.SetState(State.Death);
+            });
+            
 
+            _inputSystem = inputSystem;
+            _inputSystem.OnSlowTimeAction += _playerSlowMotion.OnSlowMotion;
             StateManager.Instance.OnStateChanged += HandleOnStateChanged;
         }
 
         public void Reset()
         {
-            _playerLifeCycle.Reset();
+            _playerLifeCycleBehaviour.Reset();
         }
 
         public void SpawnAt(Vector3 position, Quaternion facing)
@@ -50,17 +53,7 @@ namespace BForBoss
         private void Awake()
         {
             _playerMovement = GetComponent<PlayerMovementBehaviour>();
-            if (_playerMovement == null)
-            {
-                PanicHelper.Panic(new Exception("PlayerMovementBehaviour missing from PlayerBehaviour"));
-            }
-
-            _playerLifeCycle = GetComponent<PlayerLifeCycleBehaviour>();
-            if (_playerLifeCycle == null)
-            {
-                PanicHelper.Panic(new Exception("Player Life Cycle is missing from Player Behaviour"));
-            }
-
+            _playerLifeCycleBehaviour = GetComponent<PlayerLifeCycleBehaviour>();
             _playerSlowMotion = GetComponent<PlayerSlowMotionBehaviour>();
             if (_playerSlowMotion == null)
             {
@@ -73,12 +66,22 @@ namespace BForBoss
             if (state == State.Play)
             {
                 _playerMovement.SetControlConfiguration();
+                _playerSlowMotion.ResumeTween();
+            }
+
+            if (state == State.Pause)
+            {
+                _playerSlowMotion.PauseTween();
             }
         }
 
         private void OnDestroy()
         {
             StateManager.Instance.OnStateChanged -= HandleOnStateChanged;
+            if (_inputSystem != null)
+            {
+                _inputSystem.OnSlowTimeAction -= _playerSlowMotion.OnSlowMotion;
+            }
         }
     }
 }

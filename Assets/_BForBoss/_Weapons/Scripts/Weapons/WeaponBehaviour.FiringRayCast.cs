@@ -21,7 +21,7 @@ namespace Perigon.Weapons
                 if (hit.collider.TryGetComponent(out IWeaponHolder weaponHolder))
                 {
                     weaponHolder.DamagedBy(_weapon.DamagePerRayCast);
-                    _crosshair.ActivateHitMarker(!weaponHolder.IsAlive);
+                    _crossHairProvider.ActivateHitMarker(!weaponHolder.IsAlive);
                 }
                 else
                 {

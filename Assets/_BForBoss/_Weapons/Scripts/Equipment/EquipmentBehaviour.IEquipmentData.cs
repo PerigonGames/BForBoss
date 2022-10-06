@@ -12,7 +12,6 @@ namespace Perigon.Weapons
         EventReference WeaponShotAudio { get; }
         float CurrentMeleeCooldown { get; }
         float MaxMeleeCooldown { get; }
-        bool CanMelee { get; }
     }
 
     public partial class EquipmentBehaviour: IEquipmentData
@@ -30,6 +29,5 @@ namespace Perigon.Weapons
 
         public float CurrentMeleeCooldown => _meleeBehaviour != null ? _meleeBehaviour.CurrentCooldown : 0f;
         public float MaxMeleeCooldown => _meleeBehaviour != null ? _meleeBehaviour.MaxCooldown : 1f;
-        public bool CanMelee => _meleeBehaviour != null && _meleeBehaviour.CanMelee;
     }
 }

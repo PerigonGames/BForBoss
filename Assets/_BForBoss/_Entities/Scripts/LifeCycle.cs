@@ -18,7 +18,7 @@ namespace Perigon.Entities
     
     public class LifeCycle : ILifeCycle
     {
-        private readonly float _maxHealth;
+        private float _maxHealth;
         private float _currentHealth;
 
         public event Action OnDamageTaken;
@@ -31,10 +31,15 @@ namespace Perigon.Entities
         public float MaxHealth => _maxHealth;
         public float CurrentHealth => _currentHealth;
 
-        public LifeCycle(IHealth health)
+        public LifeCycle(float health = 100f)
         {
-            _maxHealth = _currentHealth = health.Health;
+            _maxHealth = _currentHealth = health;
             IsAlive = true;
+        }
+
+        public void SetHealth(float health)
+        {
+            _maxHealth = _currentHealth = health;
         }
 
         public void Reset()

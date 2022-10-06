@@ -476,18 +476,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2795967455221116628, guid: b7ba11e2a48654c4b8cc5bf1d0797519, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2795967455221116628, guid: b7ba11e2a48654c4b8cc5bf1d0797519, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2795967455221116628, guid: b7ba11e2a48654c4b8cc5bf1d0797519, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 8591326829607428196, guid: b7ba11e2a48654c4b8cc5bf1d0797519, type: 3}
       propertyPath: m_Name
       value: CrosshairCanvas
@@ -576,18 +564,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8591326830144898718, guid: b7ba11e2a48654c4b8cc5bf1d0797519, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8591326830144898718, guid: b7ba11e2a48654c4b8cc5bf1d0797519, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8591326830144898718, guid: b7ba11e2a48654c4b8cc5bf1d0797519, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b7ba11e2a48654c4b8cc5bf1d0797519, type: 3}
 --- !u!114 &1268115816 stripped
@@ -645,10 +621,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fdc93c3ade44004784907da688817ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponAnimationController: {fileID: 6931734448894651518}
+  _weaponAnimationController: {fileID: 6931734448894651518}
   _equipmentBehaviour: {fileID: 2047271910}
   _ammunitionCountView: {fileID: 1597833375}
   _reloadView: {fileID: 137657317}
+  _crossHairBehaviour: {fileID: 1268115816}
 --- !u!1001 &1597833374
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1007,7 +984,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _firePoint: {fileID: 5343888558069510660}
-  _crosshair: {fileID: 1268115816}
   _muzzleFlash: {fileID: 4736466408740489722}
   _rayCastBulletLayerMask:
     serializedVersion: 2
@@ -1026,7 +1002,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _firePoint: {fileID: 5343888558787318221}
-  _crosshair: {fileID: 1268115816}
   _muzzleFlash: {fileID: 3801608714048975956}
   _rayCastBulletLayerMask:
     serializedVersion: 2
@@ -1652,7 +1627,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _firePoint: {fileID: 1261616536}
-  _crosshair: {fileID: 1268115816}
   _muzzleFlash: {fileID: 4698239998347661857}
   _rayCastBulletLayerMask:
     serializedVersion: 2

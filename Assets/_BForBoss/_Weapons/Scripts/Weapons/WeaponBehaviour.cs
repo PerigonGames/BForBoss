@@ -13,7 +13,6 @@ namespace Perigon.Weapons
         protected readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
 
         [SerializeField] protected Transform _firePoint = null;
-        [SerializeField] protected CrosshairBehaviour _crosshair = null;
         [SerializeField] private VisualEffect _muzzleFlash = null;
         [SerializeField] private LayerMask _rayCastBulletLayerMask;
         [InlineEditor]
@@ -28,6 +27,7 @@ namespace Perigon.Weapons
         private BulletSpawner _bulletSpawner;
         private WallHitVFXSpawner _wallHitVFXSpawner;
         private IWeaponAnimationProvider _weaponAnimationProvider;
+        private ICrossHairProvider _crossHairProvider;
         private PGInputSystem _inputSystem;
         
         public Weapon WeaponViewModel => _weapon;
@@ -50,12 +50,14 @@ namespace Perigon.Weapons
             BulletSpawner bulletSpawner,
             WallHitVFXSpawner wallHitVFXSpawner,
             IWeaponAnimationProvider weaponAnimationProvider,
+            ICrossHairProvider crossHairProvider,
             IWeaponProperties properties = null)
         {
             _inputSystem = inputSystem;
             _bulletSpawner = bulletSpawner;
             _wallHitVFXSpawner = wallHitVFXSpawner;
             _weaponAnimationProvider = weaponAnimationProvider;
+            _crossHairProvider = crossHairProvider;
             _weapon = new Weapon(properties ?? _weaponScriptableObject);
             BindWeapon();
             SetCrosshairImage();
@@ -84,7 +86,7 @@ namespace Perigon.Weapons
         {
             if (_weapon != null)
             {
-                _crosshair.SetCrosshairImage(_weapon.Crosshair);
+                _crossHairProvider.SetCrossHairImage(_weapon.Crosshair);
             }
         }
 

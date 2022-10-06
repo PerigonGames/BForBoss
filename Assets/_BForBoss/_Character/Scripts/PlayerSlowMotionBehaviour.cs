@@ -31,6 +31,22 @@ namespace Perigon.Character
             }
         }
 
+        public void PauseTween()
+        {
+            if (_timeScaleTween.IsActive())
+            {
+                _timeScaleTween.Pause();
+            }
+        }
+
+        public void ResumeTween()
+        {
+            if (_timeScaleTween.IsActive())
+            {
+                _timeScaleTween.Play();
+            }
+        }
+
         private void Start()
         {
             _fixedDeltaTime = Time.fixedDeltaTime;
