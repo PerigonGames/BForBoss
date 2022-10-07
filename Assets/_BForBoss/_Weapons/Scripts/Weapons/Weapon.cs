@@ -121,6 +121,14 @@ namespace Perigon.Weapons
              Fire();
          }
 
+         public void Reset()
+         {
+             IsReloading = false;
+             _elapsedReloadDuration = _weaponProperties.ReloadDuration;
+             _ammunitionAmount = _weaponProperties.AmmunitionAmount;
+             ActivateWeapon = false;
+         }
+
          private void ResetWeaponState()
          {
              StopReloading();
