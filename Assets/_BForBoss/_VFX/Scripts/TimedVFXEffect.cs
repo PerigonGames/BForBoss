@@ -30,6 +30,11 @@ namespace Perigon.VFX
             _effect.Play();
             StartCoroutine(StopAfterTime());
         }
+
+        public void StopEffect()
+        {
+            _effect.Stop();
+        }
         
         private IEnumerator StopAfterTime()
         {
