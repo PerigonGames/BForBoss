@@ -32,11 +32,21 @@ namespace BForBoss
 
         private void OnStateChanged(State state)
         {
+            if (state == State.PreGame)
+            {
+                HandleOnPreGameState();
+            }
+
             var shouldShowWeaponHUD = state != State.EndGame;
             _reloadView.gameObject.SetActive(shouldShowWeaponHUD);
             _ammunitionCountView.gameObject.SetActive(shouldShowWeaponHUD);
             _weaponAnimationController.gameObject.SetActive(shouldShowWeaponHUD);
             _crossHairBehaviour.gameObject.SetActive(shouldShowWeaponHUD);
+        }
+
+        private void HandleOnPreGameState()
+        {
+            _equipmentBehaviour.Reset();
         }
 
         private void OnValidate()
