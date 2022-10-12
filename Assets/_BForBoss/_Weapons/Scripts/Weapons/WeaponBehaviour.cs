@@ -10,7 +10,7 @@ namespace Perigon.Weapons
         private const float WALL_HIT_ZFIGHT_BUFFER = 0.01f;
         private const float WALL_HIT_VFX_HIT_FADE_DURATION = 2.0f;
         private const float RAYCAST_DISTANCE_LIMIT = 50f;
-        protected readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
+        private readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
 
         [SerializeField] protected Transform _firePoint = null;
         [SerializeField] private VisualEffect _muzzleFlash = null;
@@ -32,7 +32,7 @@ namespace Perigon.Weapons
         
         public Weapon WeaponViewModel => _weapon;
 
-        protected Camera MainCamera
+        private Camera MainCamera
         {
             get
             {
@@ -60,8 +60,16 @@ namespace Perigon.Weapons
             _crossHairProvider = crossHairProvider;
             _weapon = new Weapon(properties ?? _weaponScriptableObject);
             BindWeapon();
-            SetCrosshairImage();
+            SetCrossHairImage();
             SetupPlayerInput();
+        }
+
+        public void Reset()
+        {
+            _isFiring = false;
+            _timeSinceFire = 0;
+            enabled = false;
+            gameObject.SetActive(false);
         }
 
         private void HandleOnWeaponActivate(bool activate)
@@ -82,7 +90,7 @@ namespace Perigon.Weapons
             _weapon.OnStopReloading += HandleOnStopReloading;
         }
 
-        private void SetCrosshairImage()
+        private void SetCrossHairImage()
         {
             if (_weapon != null)
             {
@@ -148,7 +156,7 @@ namespace Perigon.Weapons
 
         private void OnEnable()
         {
-            SetCrosshairImage();
+            SetCrossHairImage();
         }
 
         private void OnDestroy()
