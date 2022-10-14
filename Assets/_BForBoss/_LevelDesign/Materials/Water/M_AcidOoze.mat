@@ -86,7 +86,7 @@ Material:
     - _DstBlend: 10
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
-    - _Float: 0.71
+    - _Float: 3.4
     - _Main_Normal_Scale: 0.59
     - _Normal_Strength: 1
     - _OpaqueCullMode: 2
@@ -125,15 +125,17 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 0
     m_Colors:
-    - _DeepWaterColor: {r: 0.11764706, g: 1.082353, b: 0, a: 1}
-    - _DeepWaterColor_1: {r: 0, g: 0.7490196, b: 0.24705882, a: 0}
+    - _DeepWaterColor: {r: 0.0022499964, g: 0.021, b: 0, a: 1}
+    - _DeepWaterColor_1: {r: 0, g: 0, b: 0, a: 1}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
     - _Displacement_Speed: {r: -0.01, g: -0.01, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Main_Colour: {r: 0, g: 0.05660379, b: 0.02085403, a: 0}
     - _Main_Normal_Speed: {r: 0.01, g: 0.01, b: 0, a: 0}
+    - _Second_Colour: {r: 0.24313726, g: 2, b: 0, a: 0}
     - _Secondary_Normal_Speed: {r: 0, g: -0.001, b: 0, a: 0}
-    - _ShallowWaterColor: {r: 55.52536, g: 128, b: 0, a: 1}
+    - _ShallowWaterColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &2156165277955773818
 MonoBehaviour:
