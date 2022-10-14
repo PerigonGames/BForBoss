@@ -12,17 +12,17 @@ namespace Perigon.Weapons
             _visualEffect.StartEffect();
             _visualEffect.OnEffectStop += OnEffectStop;
         }
+        
+        public override void Reset()
+        {
+            _visualEffect.OnEffectStop -= OnEffectStop;
+            _visualEffect.StopEffect();
+        }
 
         private void OnEffectStop()
         {
             _visualEffect.OnEffectStop -= OnEffectStop;
             ReleaseToPool();
-        }
-
-        public override void Reset()
-        {
-            _visualEffect.OnEffectStop -= OnEffectStop;
-            _visualEffect.StopEffect();
         }
     }
 }

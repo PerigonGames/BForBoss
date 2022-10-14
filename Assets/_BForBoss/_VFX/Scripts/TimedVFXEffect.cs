@@ -14,16 +14,6 @@ namespace Perigon.VFX
 
         public Action OnEffectStop;
         
-        private void Awake()
-        {
-            _effect = GetComponent<VisualEffect>();
-        }
-
-        private void OnEnable()
-        {
-            _effect.Stop();
-        }
-
         public void StartEffect()
         {
             _effect.Reinit();
@@ -44,6 +34,16 @@ namespace Perigon.VFX
                 _effect.Stop();
             }
             OnEffectStop?.Invoke();
+        }
+        
+        private void Awake()
+        {
+            _effect = GetComponent<VisualEffect>();
+        }
+
+        private void OnEnable()
+        {
+            _effect.Stop();
         }
 
         private void OnDisable()
