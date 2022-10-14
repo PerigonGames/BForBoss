@@ -21,6 +21,9 @@ namespace Perigon.Character
 
         private IInputConfiguration _inputConfiguration;
         private PGInputSystem _inputSystem;
+        
+        private float _unModifiedPlayerSpeed;
+        
         public event Action OnDashActivated;
         public event Action Slid;
         
@@ -29,6 +32,7 @@ namespace Perigon.Character
         {
             _inputSystem = inputSystem;
             _inputConfiguration = inputConfiguration ?? new InputConfiguration();
+            _unModifiedPlayerSpeed = maxWalkSpeed;
             SetControlConfiguration();
             SetCameraCullingMask();
             
@@ -59,7 +63,7 @@ namespace Perigon.Character
         {
             return IsWallRunning ? _wallRunBehaviour.GetMaxAcceleration() : base.GetMaxAcceleration();
         }
-        
+
         public void SetControlConfiguration()
         {
             characterLook.invertLook = !_inputConfiguration.IsInverted;
@@ -68,16 +72,16 @@ namespace Perigon.Character
             characterLook.controllerHorizontalSensitivity = _inputConfiguration.ControllerHorizontalSensitivity;
             characterLook.controllerVerticalSensitivity = _inputConfiguration.ControllerVerticalSensitivity;
         }
-
-        public void ModifyPlayerSpeed(int modificationPercentage, out float originalPlayerSpeed)
+        
+        public void ModifyPlayerSpeed(float modificationMultiplier)
         {
-            originalPlayerSpeed = maxWalkSpeed;
-            maxWalkSpeed += maxWalkSpeed * (modificationPercentage / 100.0f);
+            _unModifiedPlayerSpeed = maxWalkSpeed;
+            maxWalkSpeed += maxWalkSpeed * modificationMultiplier;
         }
 
-        public void ResetPlayerSpeed(float originalPayerSpeed)
+        public void ResetPlayerSpeed()
         {
-            maxWalkSpeed = originalPayerSpeed;
+            maxWalkSpeed = _unModifiedPlayerSpeed;
         }
         
         protected override void OnAwake()
