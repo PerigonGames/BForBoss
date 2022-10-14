@@ -1,13 +1,11 @@
 using System;
 using DG.Tweening;
 using Perigon.Utility;
-using UnityEngine;
 
 namespace Perigon.Entities
 {
     public class PlayerLifeCycleBehaviour : LifeCycleBehaviour
     {
-        [SerializeField] private PlayerHealthViewBehaviour _healthBarView = null;
         private Action _onEndGameCallback;
         private Action _onDeathCallback;
         
@@ -17,10 +15,9 @@ namespace Perigon.Entities
             set => _lifeCycle.IsInvincible = value;
         }
 
-        public void Initialize(Action onDeathCallback, Action onEndGameCallback)
+        public void Initialize(LifeCycle lifeCycle, Action onDeathCallback, Action onEndGameCallback)
         {
-            base.Initialize();
-            _healthBarView?.Initialize(_lifeCycle);
+            base.Initialize(lifeCycle);
             _onDeathCallback = onDeathCallback;
             _onEndGameCallback = onEndGameCallback;
         }
@@ -43,14 +40,6 @@ namespace Perigon.Entities
             {
                 _onEndGameCallback.Invoke();
             });
-        }
-
-        private void Awake()
-        {
-            if (_healthBarView == null)
-            {
-                Debug.LogWarning("Missing Health Bar View from PlayerLifeCycleBehaviour");
-            }
         }
     }
 }
