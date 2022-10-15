@@ -76,7 +76,7 @@ namespace Perigon.Character
         public void ModifyPlayerSpeed(float modificationMultiplier)
         {
             _unModifiedPlayerSpeed = maxWalkSpeed;
-            maxWalkSpeed += maxWalkSpeed * modificationMultiplier;
+            maxWalkSpeed *= modificationMultiplier;
         }
 
         public void ResetPlayerSpeed()
