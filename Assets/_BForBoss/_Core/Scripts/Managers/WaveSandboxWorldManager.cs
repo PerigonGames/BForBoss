@@ -20,8 +20,8 @@ namespace BForBoss
         [SerializeField] private EnemySpawnersManager _enemySpawnersManager;
 
         [Title("HUD")]
-        [SerializeField] private WaveViewBehaviour _waveView = null;
-
+        [SerializeField] private WaveViewBehaviour _waveView;
+        [SerializeField] private TimerViewBehaviour _timerView;
         private WaveModel _waveModel;
         private WaveManager _waveManager;
 
@@ -36,6 +36,7 @@ namespace BForBoss
             _enemyContainer.Reset();
             _enemySpawnersManager.Reset();
             _waveManager.Reset();
+            _timerView.Reset();
         }
 
         protected override void CleanUp()
@@ -79,6 +80,29 @@ namespace BForBoss
             {
                 PanicHelper.Panic(new Exception("Wave View UI missing from the world Manager"));
             }
+
+            if (_timerView == null)
+            {
+                PanicHelper.Panic(new Exception("TimerViewUI is missing from the worldManager"));
+            }
+        }
+
+        protected override void HandleStatePause()
+        {
+            base.HandleStatePause();
+            _timerView.StopTimer();
+        }
+
+        protected override void HandleStatePlay()
+        {
+            base.HandleStatePlay();
+            _timerView.StartTimer();
+        }
+
+        protected override void HandleOnEndGame()
+        {
+            base.HandleOnEndGame();
+            _timerView.StopTimer();
         }
     }
 }
