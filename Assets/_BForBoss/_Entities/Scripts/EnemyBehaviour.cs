@@ -9,13 +9,17 @@ namespace Perigon.Entities
     {
         public IObjectPool<EnemyBehaviour> Pool { get; set; }
 
-        public event Action<EnemyBehaviour> OnRelease;
+        public event Action<EnemyBehaviour> OnDeath;
 
         public abstract void Reset();
+
+        protected void InvokeOnDeathEvent()
+        {
+            OnDeath?.Invoke(this);
+        }
         
         protected void ReleaseToPool()
         {
-            OnRelease?.Invoke(this);
             Pool.Release(this);
         }
     }

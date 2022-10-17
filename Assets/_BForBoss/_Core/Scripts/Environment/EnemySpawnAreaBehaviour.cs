@@ -88,7 +88,7 @@ namespace BForBoss
             Logger.LogString("<color=red>Spawn Enemy</color>", "wavesmode");
             var enemy = _enemyContainer.GetEnemy();
             
-            enemy.OnRelease += HandleOnEnemyReleased;
+            enemy.OnDeath += HandleOnEnemyDeath;
             enemy.transform.SetPositionAndRotation(transform.position, transform.rotation);
             enemy.transform.SetParent(transform, true);
             
@@ -100,9 +100,9 @@ namespace BForBoss
             _waveModel?.IncrementSpawnCount();
         }
 
-        private void HandleOnEnemyReleased(EnemyBehaviour enemy)
+        private void HandleOnEnemyDeath(EnemyBehaviour enemy)
         {
-            enemy.OnRelease -= HandleOnEnemyReleased;
+            enemy.OnDeath -= HandleOnEnemyDeath;
             _waveModel?.IncrementKillCount();
         }
     }
