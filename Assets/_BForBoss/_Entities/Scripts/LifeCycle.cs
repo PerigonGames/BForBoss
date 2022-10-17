@@ -27,6 +27,7 @@ namespace Perigon.Entities
 
         public bool IsAlive { get; private set; }
         public bool IsInvincible { get; set; }
+        public bool IsFullHealth => CurrentHealth >= MaxHealth;
 
         public float MaxHealth => _maxHealth;
         public float CurrentHealth => _currentHealth;

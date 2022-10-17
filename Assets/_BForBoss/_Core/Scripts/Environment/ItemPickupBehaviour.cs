@@ -27,7 +27,7 @@ namespace BForBoss
         
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out PlayerLifeCycleBehaviour _))
+            if (other.TryGetComponent(out PlayerLifeCycleBehaviour playerLife) && !playerLife.IsFullHealth)
             {
                 IsShown(false);
             }

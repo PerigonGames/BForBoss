@@ -8,7 +8,7 @@ namespace Perigon.Entities
         
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out PlayerLifeCycleBehaviour lifeCycle))
+            if (other.TryGetComponent(out PlayerLifeCycleBehaviour lifeCycle) && !lifeCycle.IsFullHealth)
             {
                 lifeCycle.Heal(_healAmount);
             }
