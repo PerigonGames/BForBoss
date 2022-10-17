@@ -90,7 +90,7 @@ namespace BForBoss
         protected override void HandleStatePause()
         {
             base.HandleStatePause();
-            _timerView.StopTimer();
+            _timerView.PauseTimer();
         }
 
         protected override void HandleStatePlay()
@@ -102,7 +102,7 @@ namespace BForBoss
         protected override void HandleOnEndGame()
         {
             base.HandleOnEndGame();
-            _timerView.StopTimer();
+            _timerView.PauseTimer();
         }
     }
 }
