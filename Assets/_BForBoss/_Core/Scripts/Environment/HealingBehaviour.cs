@@ -10,7 +10,7 @@ namespace Perigon.Entities
         {
             if (other.TryGetComponent(out PlayerLifeCycleBehaviour lifeCycle))
             {
-                lifeCycle.Heal(_healAmount);
+                lifeCycle.HealBy(_healAmount);
             }
         }
     }
