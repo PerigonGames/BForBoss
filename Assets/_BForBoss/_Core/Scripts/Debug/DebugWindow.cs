@@ -11,7 +11,7 @@ namespace BForBoss
     {
         private const Key KEYCODE_CHARACTER = Key.Backquote;
 
-        private const float CANVAS_WIDTH_MULTIPLIER = 0.15f;
+        private const float CANVAS_WIDTH_MULTIPLIER = 0.2f;
         private const float CANVAS_HEIGHT_MULTIPLIER = 0.5f;
         
         [SerializeField] private RectTransform _rectTransform;

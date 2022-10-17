@@ -11,8 +11,7 @@ namespace BForBoss
 
         private bool _shouldInvertMouseYAxis = false;
         private bool _shouldResumeTime = false;
-
-        private Vector2 _scrollPosition;
+        
         private GUIStyle _playerInvincibilityPopup;
 
         public override string PrettyName => "Free Roam Camera";
@@ -36,7 +35,7 @@ namespace BForBoss
             _onBackButtonPressed?.Invoke();
         }
 
-        protected override void DrawWindow()
+        protected override void DrawWindowContent()
         {
             _boldInstructionStyle ??= new GUIStyle(GUI.skin.label)
             {
@@ -57,11 +56,9 @@ namespace BForBoss
                 fontStyle = FontStyle.BoldAndItalic,
                 alignment = TextAnchor.MiddleCenter
             };
-            
-            using (var scrollScope = new GUILayout.ScrollViewScope(_scrollPosition))
+
+            using (new GUILayout.VerticalScope())
             {
-                _scrollPosition = scrollScope.scrollPosition;
-                
                 GUILayout.Label("");
                 DrawInstruction("Use", "WASD", "to move");
                 DrawInstruction("Use", "Q", "to pan down");

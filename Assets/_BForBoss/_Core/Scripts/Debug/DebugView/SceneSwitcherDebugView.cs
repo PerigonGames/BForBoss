@@ -12,7 +12,6 @@ namespace BForBoss
         private const string ADDITIVE_SCENE_PREFIX = "Additive";
         
         private List<string> _buildSceneNames = new List<string>();
-        private Vector2 _scrollPosition = Vector2.zero;
 
         public override string PrettyName => "Scene Switcher";
 
@@ -33,33 +32,23 @@ namespace BForBoss
             base.ResetData();
         }
 
-        protected override void DrawWindow()
+        protected override void DrawWindowContent()
         {
-            using (new GUILayout.AreaScope(_baseRect))
+            using (new GUILayout.VerticalScope())
             {
-                using (new GUILayout.VerticalScope())
+                using (var scrollViewScope = new GUILayout.ScrollViewScope(_scrollPosition))
                 {
-                    using (new GUILayout.HorizontalScope())
+                    _scrollPosition = scrollViewScope.scrollPosition;
+                    for (int i = 0, count = _buildSceneNames.Count; i < count; i++)
                     {
-                        GUILayout.FlexibleSpace();
-                        GUILayout.Label("Scenes");
-                        GUILayout.FlexibleSpace();
-                    }
-
-                    using (var scrollViewScope = new GUILayout.ScrollViewScope(_scrollPosition))
-                    {
-                        _scrollPosition = scrollViewScope.scrollPosition;
-                        for (int i = 0, count = _buildSceneNames.Count; i < count; i++)
+                        using (new GUILayout.HorizontalScope())
                         {
-                            using (new GUILayout.HorizontalScope())
+                            GUILayout.FlexibleSpace();
+                            if (GUILayout.Button(_buildSceneNames[i]))
                             {
-                                GUILayout.FlexibleSpace();
-                                if (GUILayout.Button(_buildSceneNames[i]))
-                                {
-                                    ChangeScene(i);
-                                }
-                                GUILayout.FlexibleSpace();
+                                ChangeScene(i);
                             }
+                            GUILayout.FlexibleSpace();
                         }
                     }
                 }
