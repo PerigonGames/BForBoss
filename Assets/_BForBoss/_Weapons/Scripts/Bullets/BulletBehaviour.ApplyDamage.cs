@@ -4,7 +4,7 @@ namespace Perigon.Weapons
 {
     public interface IWeaponHolder
     {
-        void DamagedBy(float amount);
+        void DamageBy(float amount);
         bool IsAlive { get; }
     }
     
@@ -14,7 +14,7 @@ namespace Perigon.Weapons
         {
             if(col.TryGetComponent(out IWeaponHolder weaponHolder))
             {
-                weaponHolder.DamagedBy(_properties.Damage);
+                weaponHolder.DamageBy(_properties.Damage);
                 OnBulletHitEntity?.Invoke(this, !weaponHolder.IsAlive);
             }
             else

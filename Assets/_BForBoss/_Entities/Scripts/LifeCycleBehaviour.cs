@@ -32,12 +32,12 @@ namespace Perigon.Entities
             
         }
 
-        public void DamagedBy(float amount)
+        public void DamageBy(float amount)
         {
             _lifeCycle.DamageBy(amount);
         }
         
-        public void Heal(float amount)
+        public void HealBy(float amount)
         {
             _lifeCycle.HealBy(amount);
         }
