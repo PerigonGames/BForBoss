@@ -10,7 +10,7 @@ namespace Perigon.Entities
             var lifeCycle = other.gameObject.GetComponent<LifeCycleBehaviour>();
             if (lifeCycle != null)
             {
-                lifeCycle.DamagedBy(_damage);
+                lifeCycle.DamageBy(_damage);
             }
         }
     }

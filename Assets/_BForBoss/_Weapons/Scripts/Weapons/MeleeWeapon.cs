@@ -75,7 +75,7 @@ namespace Perigon.Weapons
 
             if(enemyCollider.TryGetComponent(out IWeaponHolder weaponHolder))
             {
-                weaponHolder.DamagedBy(_meleeProperties.Damage);
+                weaponHolder.DamageBy(_meleeProperties.Damage);
                 _onHitEntity?.Invoke(!weaponHolder.IsAlive);
             }
             return enemyCollider.ClosestPointOnBounds(position);
