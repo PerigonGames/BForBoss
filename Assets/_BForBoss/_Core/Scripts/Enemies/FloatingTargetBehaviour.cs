@@ -38,11 +38,7 @@ namespace BForBoss
             _visualEffectsBehaviour.Initialize(onSpawnVisualsComplete: () =>
             {
                 _state = FloatingTargetState.MoveTowardsDestination;
-            },
-                onDeathVisualsComplete: () =>
-            {
-                ReleaseToPool();
-            });
+            }, onDeathVisualsComplete: ReleaseToPool);
 
             _navigationBehaviour = GetComponent<AgentNavigationBehaviour>();
             _navigationBehaviour.Initialize(
@@ -59,6 +55,7 @@ namespace BForBoss
                 _visualEffectsBehaviour.StartDeathVisual();
                 _navigationBehaviour.PauseNavigation();
                 _state = FloatingTargetState.Death;
+                InvokeOnDeathEvent();
             });
             
             _shootingBehaviour = GetComponent<EnemyShootingBehaviour>();

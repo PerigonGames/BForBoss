@@ -15,7 +15,7 @@ namespace BForBoss
             _isRunning = true;
         }
 
-        public void StopTimer()
+        public void PauseTimer()
         {
             _isRunning = false;
         }
