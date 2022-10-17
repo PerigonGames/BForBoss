@@ -98,5 +98,11 @@ namespace BForBoss
             base.HandleStatePlay();
             _timerView.StartTimer();
         }
+
+        protected override void HandleOnEndGame()
+        {
+            base.HandleOnEndGame();
+            _timerView.StopTimer();
+        }
     }
 }
