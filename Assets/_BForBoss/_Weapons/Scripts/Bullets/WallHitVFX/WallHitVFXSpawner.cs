@@ -1,33 +1,30 @@
-using Perigon.Utility;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace Perigon.Weapons
 {
     public class WallHitVFXSpawner : MonoBehaviour
     {
-        [SerializeField] private WallHitVFX _wallHitVFXPrefab = null;
-        private ObjectPooler<WallHitVFX> _pools = null;
+        [SerializeField] private BaseWallHitVFX _baseWallHitVFXPrefab = null;
+        private IObjectPool<BaseWallHitVFX> _pool = null;
         
-        public WallHitVFX SpawnWallHitVFX()
+        public BaseWallHitVFX SpawnWallHitVFX()
         {
-            if (_pools == null)
+            if (_pool == null)
             {
                 SetupPools();
             }
 
-            return _pools.Get();
+            return _pool.Get();
         }
 
         private void SetupPools()
         {
-            _pools = new ObjectPooler<WallHitVFX>(
+            _pool = new ObjectPool<BaseWallHitVFX>(
                 () =>
                 {
-                    var vfx = Instantiate(_wallHitVFXPrefab);
-                    vfx.Initialize(() =>
-                    {
-                        _pools.Reclaim(vfx);
-                    });
+                    var vfx = Instantiate(_baseWallHitVFXPrefab);
+                    vfx.Initialize(_pool);
                     return vfx;
                 },
                 (vfx) => vfx.gameObject.SetActive(true),
