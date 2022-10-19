@@ -1,0 +1,23 @@
+using BForBoss;
+using UnityEngine;
+
+namespace Perigon.Entities
+{
+    public class HealingItemBehaviour : ItemPickupBehaviour
+    {
+        [SerializeField] private float _healAmount = 50f;
+
+        protected override bool DidPickedUpItem(Collider other)
+        {
+            return other.TryGetComponent(out PlayerLifeCycleBehaviour lifeCycle) && !lifeCycle.IsFullHealth;
+        }
+
+        protected override void OnPickedUpItem(Collider other)
+        {
+            if (other.TryGetComponent(out PlayerLifeCycleBehaviour lifeCycle))
+            {
+                lifeCycle.HealBy(_healAmount);
+            }
+        }
+    }
+}
