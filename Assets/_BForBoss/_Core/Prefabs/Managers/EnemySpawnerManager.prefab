@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2499029584952915672}
   - component: {fileID: 4198383668750045300}
   - component: {fileID: 1276379816415047844}
+  - component: {fileID: 766848164552346442}
   m_Layer: 0
   m_Name: EnemySpawnerManager
   m_TagString: Untagged
@@ -78,3 +79,16 @@ MonoBehaviour:
   _layerMask:
     serializedVersion: 2
     m_Bits: 24832
+--- !u!114 &766848164552346442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6660600066799636870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2479f35d5b98d6e45be90bd0e9956671, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _baseWallHitVFXPrefab: {fileID: 5238339088934825502, guid: 8700a6def174e44cd9fb8778871ba067, type: 3}

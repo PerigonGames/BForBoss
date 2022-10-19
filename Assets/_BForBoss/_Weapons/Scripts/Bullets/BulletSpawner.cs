@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using Perigon.Utility;
 using UnityEngine;
 
 namespace Perigon.Weapons
 {
+    [RequireComponent(typeof(WallHitVFXSpawner))]
     public class BulletSpawner : MonoBehaviour
     {
         [SerializeField] private BulletBehaviour[] _bulletPrefabs;
@@ -14,7 +16,8 @@ namespace Perigon.Weapons
         [SerializeField] private LayerMask _layerMask = -1;
 
         private List<BulletBehaviour> _listOfActiveBullets = new List<BulletBehaviour>();
-
+        private WallHitVFXSpawner _wallHitVFXSpawner;
+        
         public IBullet SpawnBullet(BulletTypes typeOfBullet = BulletTypes.NoPhysics)
         {
             if(_pools == null) 
@@ -23,8 +26,7 @@ namespace Perigon.Weapons
             _listOfActiveBullets.Add(bullet);
             return bullet;
         }
-
-
+        
         public void Reset()
         {
             if (_pools != null)
@@ -56,8 +58,16 @@ namespace Perigon.Weapons
             }
         }
 
+        private void Awake()
+        {
+            _wallHitVFXSpawner = GetComponent<WallHitVFXSpawner>();
+        }
+
         private void OnRelease(BulletBehaviour bullet)
         {
+            var wallHit = _wallHitVFXSpawner.SpawnWallHitVFX();
+            wallHit.transform.position = bullet.transform.position;
+            wallHit.Spawn();
             _listOfActiveBullets.Remove(bullet);
             bullet.gameObject.SetActive(false);
         }
