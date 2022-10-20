@@ -8,7 +8,6 @@ namespace Perigon.Weapons
     public abstract partial class WeaponBehaviour : MonoBehaviour
     {
         private const float WALL_HIT_ZFIGHT_BUFFER = 0.01f;
-        private const float WALL_HIT_VFX_HIT_FADE_DURATION = 2.0f;
         private const float RAYCAST_DISTANCE_LIMIT = 50f;
         private readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
 
@@ -106,7 +105,7 @@ namespace Perigon.Weapons
             var wallHitVFX = _wallHitVFXSpawner.SpawnWallHitVFX();
             wallHitVFX.transform.SetPositionAndRotation(point, Quaternion.LookRotation(pointNormal));
             wallHitVFX.transform.Translate(0f, 0f, WALL_HIT_ZFIGHT_BUFFER, Space.Self);
-            wallHitVFX.Spawn(WALL_HIT_VFX_HIT_FADE_DURATION);
+            wallHitVFX.Spawn();
         }
 
         private void HandleOnFire(int numberOfBullets)
