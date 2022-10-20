@@ -1,11 +1,10 @@
-using Perigon.Entities;
 using Perigon.Utility;
 using UnityEngine;
 
 namespace BForBoss
 {
     [RequireComponent(typeof(BoxCollider))]
-    public class ItemPickupBehaviour : MonoBehaviour
+    public abstract class ItemPickupBehaviour : MonoBehaviour
     {
         [Resolve][SerializeField] private GameObject _itemToPickUp = null;
         [SerializeField] private float _respawnTime = 10f;
@@ -24,11 +23,16 @@ namespace BForBoss
             _isSpawned = true;
             _elapsedRespawnTime = 0;
         }
+
+        protected abstract bool DidPickUpItem(Collider other);
+
+        protected abstract void OnPickedUpItem(Collider other);
         
-        private void OnTriggerEnter(Collider other)
+        protected virtual void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out PlayerLifeCycleBehaviour _))
+            if (DidPickUpItem(other))
             {
+                OnPickedUpItem(other);
                 IsShown(false);
             }
         }

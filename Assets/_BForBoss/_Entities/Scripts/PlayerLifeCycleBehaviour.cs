@@ -15,6 +15,8 @@ namespace Perigon.Entities
             set => _lifeCycle.IsInvincible = value;
         }
 
+        public bool IsFullHealth => _lifeCycle.IsFullHealth;
+
         public void Initialize(LifeCycle lifeCycle, Action onDeathCallback, Action onEndGameCallback)
         {
             base.Initialize(lifeCycle);
