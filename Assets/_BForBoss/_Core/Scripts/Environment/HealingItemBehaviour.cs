@@ -7,7 +7,7 @@ namespace Perigon.Entities
     {
         [SerializeField] private float _healAmount = 50f;
 
-        protected override bool DidPickedUpItem(Collider other)
+        protected override bool DidPickUpItem(Collider other)
         {
             return other.TryGetComponent(out PlayerLifeCycleBehaviour lifeCycle) && !lifeCycle.IsFullHealth;
         }

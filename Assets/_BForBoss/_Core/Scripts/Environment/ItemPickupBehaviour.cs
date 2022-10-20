@@ -24,13 +24,13 @@ namespace BForBoss
             _elapsedRespawnTime = 0;
         }
 
-        protected abstract bool DidPickedUpItem(Collider other);
+        protected abstract bool DidPickUpItem(Collider other);
 
         protected abstract void OnPickedUpItem(Collider other);
         
         protected virtual void OnTriggerEnter(Collider other)
         {
-            if (DidPickedUpItem(other))
+            if (DidPickUpItem(other))
             {
                 OnPickedUpItem(other);
                 IsShown(false);
