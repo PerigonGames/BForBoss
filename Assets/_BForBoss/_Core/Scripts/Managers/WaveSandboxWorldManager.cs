@@ -1,4 +1,5 @@
 using System;
+using Perigon.Entities;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -14,6 +15,8 @@ namespace BForBoss
         private float _enemyAmountMultiplier = 1.2f;
         [SerializeField, Tooltip("Number of enemies for the first wave")]
         private int _initialNumberOfEnemies = 10;
+
+        [Title("Items")] [SerializeField, LabelWidth(310f)] private bool _shouldHealingItemsRespawnWhenWaveChanges = true;
 
         [Title("Component")]
         [SerializeField] private EnemyContainer _enemyContainer;
@@ -60,6 +63,15 @@ namespace BForBoss
             _enemyContainer.Initialize(() => _playerBehaviour.PlayerMovement.camera.transform.position);
             _enemySpawnersManager.Initialize(_enemyContainer, _waveModel);
             _waveManager.Initialize(_waveModel, _enemySpawnersManager, _secondsBetweenWaves, _enemyAmountMultiplier);
+
+            if (_shouldHealingItemsRespawnWhenWaveChanges)
+            {
+                foreach (HealingItemBehaviour healingItem in FindObjectsOfType<HealingItemBehaviour>())
+                {
+                    healingItem.Initialize(_waveModel);
+                }
+            }
+            
         }
 
         protected override void OnValidate()

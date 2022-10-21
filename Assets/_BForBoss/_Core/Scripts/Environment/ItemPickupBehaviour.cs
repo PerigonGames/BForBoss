@@ -9,7 +9,8 @@ namespace BForBoss
         [Resolve][SerializeField] private GameObject _itemToPickUp = null;
         [SerializeField] private float _respawnTime = 10f;
 
-        private bool _isSpawned = true;
+        protected bool _isSpawned = true;
+        
         private float _elapsedRespawnTime = 0;
         private BoxCollider _boxCollider = null;
 
@@ -37,7 +38,7 @@ namespace BForBoss
             }
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             if (_isSpawned)
             {
@@ -52,7 +53,7 @@ namespace BForBoss
             }
         }
 
-        private void IsShown(bool show)
+        protected void IsShown(bool show)
         {
             _isSpawned = show;
             _itemToPickUp.SetActive(show);
