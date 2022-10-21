@@ -1,8 +1,13 @@
 using System.Collections;
 using Perigon.Entities;
+using Perigon.Utility;
+using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.AI;
 using Logger = Perigon.Utility.Logger;
+using Quaternion = UnityEngine.Quaternion;
+using Random = UnityEngine.Random;
+using Vector3 = UnityEngine.Vector3;
 
 namespace BForBoss
 {
@@ -12,6 +17,8 @@ namespace BForBoss
         [SerializeField] [Min(0.0f)] private float _secondsBetweenSpawns = 2.5f;
         [SerializeField, Tooltip("Should max amount of enemies spawn upon initialization")]
         private bool _burstInitialSpawn = true;
+        [SerializeField] 
+        private float _spawnArea = 1;
         
         private bool _canSpawn = true;
         private WaveModel _waveModel;
@@ -86,24 +93,65 @@ namespace BForBoss
         private void SpawnEnemy()
         {
             Logger.LogString("<color=red>Spawn Enemy</color>", "wavesmode");
-            var enemy = _enemyContainer.GetEnemy();
+            Vector3? spawnPosition = GenerateSpawnPosition();
+            if (spawnPosition != null)
+            {
+                var enemy = _enemyContainer.GetEnemy();
             
-            enemy.OnDeath += HandleOnEnemyDeath;
-            enemy.transform.SetPositionAndRotation(transform.position, transform.rotation);
-            enemy.transform.SetParent(transform, true);
+                enemy.OnDeath += HandleOnEnemyDeath;
+                enemy.transform.SetPositionAndRotation((Vector3)spawnPosition, transform.rotation);
+                enemy.transform.SetParent(transform, true);
             
-            //https://answers.unity.com/questions/771908/navmesh-issue-with-spawning-players.html
-            NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
-            agent.enabled = false;
-            agent.enabled = true;
+                //https://answers.unity.com/questions/771908/navmesh-issue-with-spawning-players.html
+                NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
+                agent.enabled = false;
+                agent.enabled = true;
             
-            _waveModel?.IncrementSpawnCount();
+                _waveModel?.IncrementSpawnCount();
+            }
+        }
+
+        private Vector3? GenerateSpawnPosition()
+        {
+            if (IsPositionValid(transform.position))
+            {
+                return transform.position;
+            }
+
+            const int MaxRetries = 10;
+            for(int tries = 0; tries < MaxRetries; tries++)
+            {
+                var randomPosition = _spawnArea * Random.insideUnitSphere;
+                var randomSpawnPosition = transform.position +
+                                new Vector3(randomPosition.x, 0, randomPosition.z);
+
+                if (NavMesh.FindClosestEdge(randomSpawnPosition, out var hit, NavMesh.AllAreas) && 
+                    IsPositionValid(hit.position))
+                {
+                    return hit.position;
+                }
+            }
+
+            return null;
+        }
+
+        private bool IsPositionValid(Vector3 position)
+        {
+            const int halfExtentSizePositionValidityCheck = 2;
+            return Physics.OverlapBox(position, halfExtents: Vector3.one * halfExtentSizePositionValidityCheck, Quaternion.identity, TagsAndLayers.Layers.Enemy)
+                .IsNullOrEmpty();
         }
 
         private void HandleOnEnemyDeath(EnemyBehaviour enemy)
         {
             enemy.OnDeath -= HandleOnEnemyDeath;
             _waveModel?.IncrementKillCount();
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = new Color(1, 0, 1, 0.35f);
+            Gizmos.DrawSphere(transform.position, _spawnArea);
         }
     }
 }
