@@ -30,8 +30,14 @@ namespace BForBoss
             {
                 return;
             }
-            
+
             _link = _agent.currentOffMeshLinkData.offMeshLink;
+
+            if (_link == null)
+            {
+                return;
+            }
+            
             _oldCost = _link.costOverride;
             _link.costOverride = _oldCost <= 0.0f ? _multiplier : _oldCost * _multiplier;
         }
