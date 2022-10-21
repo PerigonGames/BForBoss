@@ -147,11 +147,5 @@ namespace BForBoss
             enemy.OnDeath -= HandleOnEnemyDeath;
             _waveModel?.IncrementKillCount();
         }
-
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = new Color(1, 0, 1, 0.35f);
-            Gizmos.DrawSphere(transform.position, _spawnArea);
-        }
     }
 }
