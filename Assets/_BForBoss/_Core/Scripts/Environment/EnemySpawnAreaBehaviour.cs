@@ -5,9 +5,7 @@ using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.AI;
 using Logger = Perigon.Utility.Logger;
-using Quaternion = UnityEngine.Quaternion;
 using Random = UnityEngine.Random;
-using Vector3 = UnityEngine.Vector3;
 
 namespace BForBoss
 {
