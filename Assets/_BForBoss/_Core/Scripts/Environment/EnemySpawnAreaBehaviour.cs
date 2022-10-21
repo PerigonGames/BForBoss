@@ -18,7 +18,7 @@ namespace BForBoss
         [SerializeField, Tooltip("Should max amount of enemies spawn upon initialization")]
         private bool _burstInitialSpawn = true;
         [SerializeField] 
-        private float _spawnArea = 1;
+        private float _spawnRadius = 1;
         
         private bool _canSpawn = true;
         private WaveModel _waveModel;
@@ -121,7 +121,7 @@ namespace BForBoss
             const int MaxRetries = 10;
             for(int tries = 0; tries < MaxRetries; tries++)
             {
-                var randomPosition = _spawnArea * Random.insideUnitSphere;
+                var randomPosition = _spawnRadius * Random.insideUnitSphere;
                 var randomSpawnPosition = transform.position +
                                 new Vector3(randomPosition.x, 0, randomPosition.z);
 
