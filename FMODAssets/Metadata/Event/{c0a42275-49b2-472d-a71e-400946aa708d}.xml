@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{c0a42275-49b2-472d-a71e-400946aa708d}">
 		<property name="name">
-			<value>Weapon_ShotGun</value>
+			<value>Weapon_Shotgun</value>
 		</property>
 		<property name="outputFormat">
 			<value>0</value>
@@ -97,13 +97,13 @@
 	<object class="MixerBusPanner" id="{d95e563a-fcba-4f8a-ba83-7ee76e221b3f}" />
 	<object class="SingleSound" id="{793e5052-44e4-4a6f-9ce8-a5bd4a67c574}">
 		<property name="length">
-			<value>1.8638469860250546</value>
+			<value>0.89089871814033927</value>
 		</property>
 		<property name="pitch">
 			<value>14</value>
 		</property>
 		<relationship name="audioFile">
-			<destination>{f05b9cfc-571e-4ed4-b78a-59beae262f9f}</destination>
+			<destination>{c6f9597c-6293-4096-b766-4b769fa13715}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{82f34a74-95fd-41ce-a886-a8630caa1096}">
@@ -136,9 +136,9 @@
 		<relationship name="effects">
 			<destination>{3743eea3-2bad-42b1-a59b-08fd35e62b4b}</destination>
 			<destination>{aec759ba-237f-4905-bada-e6969d444b71}</destination>
+			<destination>{bfe90e72-7f97-4362-9393-1ac3feb231d5}</destination>
 			<destination>{b2c6b093-2863-4b2b-95e1-ffb57c97630e}</destination>
 			<destination>{9d039448-38a0-4cc4-8cc8-48eda29ca550}</destination>
-			<destination>{bfe90e72-7f97-4362-9393-1ac3feb231d5}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{9b92003d-dbbd-4cdf-b69c-3d8faa553dd8}" />
@@ -154,7 +154,12 @@
 	<object class="MixerBusFader" id="{3743eea3-2bad-42b1-a59b-08fd35e62b4b}" />
 	<object class="GainEffect" id="{aec759ba-237f-4905-bada-e6969d444b71}">
 		<property name="gain">
-			<value>-16</value>
+			<value>-2.5</value>
+		</property>
+	</object>
+	<object class="DistortionEffect" id="{bfe90e72-7f97-4362-9393-1ac3feb231d5}">
+		<property name="level">
+			<value>0.675000012</value>
 		</property>
 	</object>
 	<object class="SFXReverbEffect" id="{b2c6b093-2863-4b2b-95e1-ffb57c97630e}">
@@ -186,11 +191,6 @@
 		</property>
 		<property name="qualityA">
 			<value>1.77706897</value>
-		</property>
-	</object>
-	<object class="DistortionEffect" id="{bfe90e72-7f97-4362-9393-1ac3feb231d5}">
-		<property name="level">
-			<value>0.675000012</value>
 		</property>
 	</object>
 </objects>

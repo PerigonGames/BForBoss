@@ -193,10 +193,10 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{35e89117-7c4d-4c27-9671-b8cba6673c36}">
 		<relationship name="effects">
-			<destination>{f823cfef-ea36-4c1f-881e-f7f72dad7d7b}</destination>
 			<destination>{86c660a9-72c2-448f-aba6-429884b9e75e}</destination>
-			<destination>{de0e58fc-845e-4e2e-879a-ce5aafa7e01e}</destination>
 			<destination>{40982450-f4f0-446f-b68b-47b016896400}</destination>
+			<destination>{de0e58fc-845e-4e2e-879a-ce5aafa7e01e}</destination>
+			<destination>{f823cfef-ea36-4c1f-881e-f7f72dad7d7b}</destination>
 			<destination>{53c400ab-d15e-4beb-adb4-03681ce78c3e}</destination>
 		</relationship>
 	</object>
@@ -226,21 +226,13 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{7aa65d0d-7c86-4ddd-9ad1-5b0095822a1a}" />
-	<object class="MixerBusFader" id="{f823cfef-ea36-4c1f-881e-f7f72dad7d7b}" />
 	<object class="DistortionEffect" id="{86c660a9-72c2-448f-aba6-429884b9e75e}">
 		<property name="level">
 			<value>0.0949999988</value>
 		</property>
 		<relationship name="modulators">
-			<destination>{86bcb1f9-8e2e-4818-9270-ff3e23ba8154}</destination>
-		</relationship>
-	</object>
-	<object class="SFXReverbEffect" id="{de0e58fc-845e-4e2e-879a-ce5aafa7e01e}">
-		<property name="decayTime">
-			<value>4600</value>
-		</property>
-		<relationship name="modulators">
-			<destination>{332e4318-0141-4191-9714-24fa6b9487c3}</destination>
+			<destination>{6dee8dd2-d9e2-4ae1-a62b-d98da52fea5b}</destination>
+			<destination>{2803d999-e153-4e50-95ad-c49a0e446f42}</destination>
 		</relationship>
 	</object>
 	<object class="ChorusEffect" id="{40982450-f4f0-446f-b68b-47b016896400}">
@@ -251,9 +243,18 @@
 			<value>7.5</value>
 		</property>
 		<relationship name="modulators">
-			<destination>{d9c7a27c-b56e-4a26-9deb-bed5b991a9a7}</destination>
+			<destination>{5507ac96-dc04-4701-8182-6a30fb9b2316}</destination>
 		</relationship>
 	</object>
+	<object class="SFXReverbEffect" id="{de0e58fc-845e-4e2e-879a-ce5aafa7e01e}">
+		<property name="decayTime">
+			<value>4600</value>
+		</property>
+		<relationship name="modulators">
+			<destination>{753975a2-8c39-4f4a-9d8e-9a9cd1da8598}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusFader" id="{f823cfef-ea36-4c1f-881e-f7f72dad7d7b}" />
 	<object class="ThreeEQEffect" id="{53c400ab-d15e-4beb-adb4-03681ce78c3e}">
 		<property name="lowGain">
 			<value>-11.5</value>
@@ -277,28 +278,45 @@
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{c389ce48-2d0e-476a-828e-9715e9d9f6ec}" />
-	<object class="RandomizerModulator" id="{86bcb1f9-8e2e-4818-9270-ff3e23ba8154}">
+	<object class="LFOModulator" id="{6dee8dd2-d9e2-4ae1-a62b-d98da52fea5b}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>level</value>
+		</property>
+		<property name="shape">
+			<value>6</value>
+		</property>
+		<property name="depth">
+			<value>39.5</value>
+		</property>
+	</object>
+	<object class="RandomizerModulator" id="{2803d999-e153-4e50-95ad-c49a0e446f42}">
 		<property name="nameOfPropertyBeingModulated">
 			<value>level</value>
 		</property>
 		<property name="amount">
-			<value>33.5</value>
+			<value>50</value>
 		</property>
 	</object>
-	<object class="RandomizerModulator" id="{332e4318-0141-4191-9714-24fa6b9487c3}">
-		<property name="nameOfPropertyBeingModulated">
-			<value>decayTime</value>
-		</property>
-		<property name="amount">
-			<value>50.5</value>
-		</property>
-	</object>
-	<object class="RandomizerModulator" id="{d9c7a27c-b56e-4a26-9deb-bed5b991a9a7}">
+	<object class="LFOModulator" id="{5507ac96-dc04-4701-8182-6a30fb9b2316}">
 		<property name="nameOfPropertyBeingModulated">
 			<value>depth</value>
 		</property>
-		<property name="amount">
-			<value>47.5</value>
+		<property name="depth">
+			<value>45</value>
+		</property>
+	</object>
+	<object class="LFOModulator" id="{753975a2-8c39-4f4a-9d8e-9a9cd1da8598}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>decayTime</value>
+		</property>
+		<property name="shape">
+			<value>1</value>
+		</property>
+		<property name="rate">
+			<value>0.100000001</value>
+		</property>
+		<property name="depth">
+			<value>49.5</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{57c7825f-973a-4143-beec-bd42f3f24f7f}">
