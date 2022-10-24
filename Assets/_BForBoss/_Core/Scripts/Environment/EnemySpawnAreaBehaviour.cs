@@ -1,6 +1,7 @@
 using System.Collections;
 using Perigon.Entities;
 using Perigon.Utility;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.AI;
@@ -15,7 +16,8 @@ namespace BForBoss
         [SerializeField] [Min(0.0f)] private float _secondsBetweenSpawns = 2.5f;
         [SerializeField, Tooltip("Should max amount of enemies spawn upon initialization")]
         private bool _burstInitialSpawn = true;
-        [SerializeField] 
+        [SerializeField, Range(1, 10)] 
+        [InfoBox("Spawn Radius dictates the area to check for empty space for an AI to spawn. HOWEVER, NavMesh.FindClosestEdge is used, and could return a position outside the area.")]
         private float _spawnRadius = 1;
         
         private bool _canSpawn = true;
@@ -135,8 +137,8 @@ namespace BForBoss
 
         private bool IsPositionValid(Vector3 position)
         {
-            const int halfExtentSizePositionValidityCheck = 2;
-            return Physics.OverlapBox(position, halfExtents: Vector3.one * halfExtentSizePositionValidityCheck, Quaternion.identity, TagsAndLayers.Layers.Enemy)
+            const int halfExtentSize = 2;
+            return Physics.OverlapBox(position, halfExtents: Vector3.one * halfExtentSize, Quaternion.identity, TagsAndLayers.Layers.Enemy)
                 .IsNullOrEmpty();
         }
 
@@ -144,6 +146,12 @@ namespace BForBoss
         {
             enemy.OnDeath -= HandleOnEnemyDeath;
             _waveModel?.IncrementKillCount();
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = new Color(1, 0, 1, 0.3f);
+            Gizmos.DrawCube(transform.position, Vector3.one * _spawnRadius);
         }
     }
 }
