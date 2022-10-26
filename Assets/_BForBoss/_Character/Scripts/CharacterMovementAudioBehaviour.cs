@@ -6,6 +6,8 @@ namespace Perigon.Character
     
     public class CharacterMovementAudioBehaviour : MonoBehaviour
     {
+        private const string PLAYER_SPEED_PARAM = "PlayerSpeed";
+        
         [SerializeField] private EventReference _dashAudio;
         [SerializeField] private EventReference _slideAudio;
         [SerializeField] private EventReference _jumpAudio;
@@ -55,6 +57,7 @@ namespace Perigon.Character
         private void Update()
         {
             _movementAudio.OnUpdate();
+            _runningAudio.SetParameter(PLAYER_SPEED_PARAM, _movementAudio.GetPlayerSpeedNormalized());
         }
 
         private void OnEnable()
