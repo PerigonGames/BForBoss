@@ -6,13 +6,11 @@ namespace Perigon.Entities
     public class HealingItemBehaviour : ItemPickupBehaviour
     {
         [SerializeField] private float _healAmount = 50f;
-        private bool _shouldResetOnlyWhenWaveIncrements = false;
-        private int _currentWaveNumber;
-        
-        public void Initialize(WaveModel waveModel)
+
+        public override void CleanUp()
         {
-            _shouldResetOnlyWhenWaveIncrements = true;
-            waveModel.OnDataUpdated += ResetItemIfWaveIncrements;
+            base.CleanUp();
+            _itemRespawnBehaviour.Reset();
         }
 
         protected override bool DidPickUpItem(Collider other)
@@ -28,24 +26,12 @@ namespace Perigon.Entities
             }
         }
 
-        protected override void Update()
+        private void Update()
         {
-            if (!_shouldResetOnlyWhenWaveIncrements)
+            if (!_isSpawned && _itemRespawnBehaviour.CanRespawn)
             {
-                base.Update();
+                IsShown(true);
             }
         }
-
-        private void ResetItemIfWaveIncrements(int waveNumber, int enemyCount)
-        {
-            if (waveNumber == _currentWaveNumber || !_shouldResetOnlyWhenWaveIncrements || _isSpawned)
-            {
-                return;
-            }
-            
-            IsShown(true);
-            _currentWaveNumber = waveNumber;
-        }
-
     }
 }
