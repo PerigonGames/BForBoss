@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 1114670888653822638}
   - component: {fileID: 276669621920954743}
   - component: {fileID: 494813333301958241}
-  - component: {fileID: 793527424}
   m_Layer: 10
   m_Name: P_HealthPickup
   m_TagString: Untagged
@@ -47,6 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73c73a405943e744d86c30e17b8d5490, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _itemToPickUp: {fileID: 1611459198912911263}
+  _respawnTime: 10
   _healAmount: 50
 --- !u!65 &494813333301958241
 BoxCollider:
@@ -61,20 +62,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.3974302, y: 2.4415398, z: 1.2384713}
   m_Center: {x: 0, y: 0.7207696, z: 0}
---- !u!114 &793527424
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6201864055225665967}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b67e4c1f3ffe8cc4a80b12c89e1a39f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _itemToPickUp: {fileID: 1611459198912911263}
-  _respawnTime: 2
 --- !u!1001 &1917517816335985358
 PrefabInstance:
   m_ObjectHideFlags: 0
