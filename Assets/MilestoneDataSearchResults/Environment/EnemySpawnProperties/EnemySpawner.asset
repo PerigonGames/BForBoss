@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13982, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: ShotgunAsset
+  m_Name: EnemySpawner
   m_EditorClassIdentifier: 
-  text: p:ScriptableObjects/Weapons/Shotgun.asset
+  text: p:Prefabs/EnemySpawner.prefab
   description: 
   providerIds: []
   viewState:
@@ -27,8 +27,8 @@ MonoBehaviour:
     - packages
     - store
     - settings
-    searchFlags: 436207874
-    searchText: p:ScriptableObjects/Weapons/Shotgun.asset
+    searchFlags: 436207618
+    searchText: p:Prefabs/EnemySpawner.prefab
     forceViewMode: 0
     m_SelectHandler:
       stream: 
@@ -45,9 +45,9 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 0
-      width: 950.4
-      height: 526.2
+      width: 890.4
+      height: 457.4
     flags: 2048
-    group: all
+    group: 
   icon: {fileID: 0}
   m_IsSearchTemplate: 0
