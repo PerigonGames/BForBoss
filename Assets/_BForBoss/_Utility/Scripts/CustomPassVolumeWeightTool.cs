@@ -37,12 +37,12 @@ namespace Perigon.Utility
         
         public Tweener Distort()
         {
-            return DOTween.To(intensity => _material.SetFloat(_materialKey, intensity), _startValue, _endValue, _distortDuration);
+            return DOTween.To(intensity => _material.SetFloat(_materialKey, intensity), _startValue, _endValue, _distortDuration).SetUpdate(true);
         }
 
         public Tweener Revert()
         {
-            return DOTween.To(intensity => _material.SetFloat(_materialKey, intensity), _endValue, _startValue, _revertDuration);
+            return DOTween.To(intensity => _material.SetFloat(_materialKey, intensity), _endValue, _startValue, _revertDuration).SetUpdate(true);
         }
 
         public void Reset()
