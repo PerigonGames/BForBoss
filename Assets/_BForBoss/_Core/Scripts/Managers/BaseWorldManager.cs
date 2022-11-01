@@ -196,6 +196,7 @@ namespace BForBoss
 
         protected virtual void HandleOnDeath()
         {
+            Time.timeScale = 0.0f;
             _inputSystem.SetToUIControls();
         }
 
