@@ -6,11 +6,11 @@ namespace BForBoss
     [RequireComponent(typeof(BoxCollider))]
     public abstract class ItemPickupBehaviour : MonoBehaviour
     {
-        [Resolve][SerializeField] private GameObject _itemToPickUp = null;
-        [SerializeField] private float _respawnTime = 10f;
+        [Resolve, SerializeField] protected ItemRespawnBehaviour _itemRespawnBehaviour;
+        [Resolve, SerializeField] private GameObject _itemToPickUp = null;
 
-        private bool _isSpawned = true;
-        private float _elapsedRespawnTime = 0;
+        protected bool _isSpawned = true;
+        
         private BoxCollider _boxCollider = null;
 
         public void Reset()
@@ -18,10 +18,9 @@ namespace BForBoss
             IsShown(_isSpawned);
         }
 
-        public void CleanUp()
+        public virtual void CleanUp()
         {
             _isSpawned = true;
-            _elapsedRespawnTime = 0;
         }
 
         protected abstract bool DidPickUpItem(Collider other);
@@ -36,27 +35,13 @@ namespace BForBoss
                 IsShown(false);
             }
         }
-
-        private void Update()
-        {
-            if (_isSpawned)
-            {
-                return;
-            }
-
-            _elapsedRespawnTime -= Time.deltaTime;
-            if (_elapsedRespawnTime <= 0)
-            {
-                IsShown(true);
-                _elapsedRespawnTime = _respawnTime;
-            }
-        }
-
-        private void IsShown(bool show)
+        
+        protected void IsShown(bool show)
         {
             _isSpawned = show;
             _itemToPickUp.SetActive(show);
             _boxCollider.enabled = show;
+            _itemRespawnBehaviour.Reset();
         }
 
         private void Awake()
