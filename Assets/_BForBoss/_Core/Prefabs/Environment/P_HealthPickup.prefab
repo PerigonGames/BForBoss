@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1114670888653822638}
+  - component: {fileID: 2086219310217332322}
   - component: {fileID: 276669621920954743}
   - component: {fileID: 494813333301958241}
   m_Layer: 10
@@ -34,6 +35,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2086219310217332322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6201864055225665967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d386e86762085b24f95914292a7326fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &276669621920954743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47,8 +60,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _itemToPickUp: {fileID: 1611459198912911263}
-  _respawnTime: 10
   _healAmount: 50
+  _itemRespawnBehaviour: {fileID: 2086219310217332322}
 --- !u!65 &494813333301958241
 BoxCollider:
   m_ObjectHideFlags: 0

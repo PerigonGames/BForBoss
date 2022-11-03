@@ -60,6 +60,10 @@ namespace BForBoss
             _enemyContainer.Initialize(() => _playerBehaviour.PlayerMovement.camera.transform.position);
             _enemySpawnersManager.Initialize(_enemyContainer, _waveModel);
             _waveManager.Initialize(_waveModel, _enemySpawnersManager, _secondsBetweenWaves, _enemyAmountMultiplier);
+            foreach (ItemWaveRespawnBehaviour itemWaveRespawnBehaviour in FindObjectsOfType<ItemWaveRespawnBehaviour>())
+            {
+                itemWaveRespawnBehaviour.Initialize(_waveModel);
+            }
         }
 
         protected override void OnValidate()
