@@ -81,12 +81,18 @@ namespace Perigon.Weapons
         {
             _weaponAnimationProvider.ReloadingWeapon(false);
         }
+        
+        protected virtual void HandleOnStartReloading()
+        {
+            FMODUnity.RuntimeManager.PlayOneShot(_weapon.ReloadAudio, transform.position);
+        }
 
         private void BindWeapon()
         {
             _weapon.OnFireWeapon += HandleOnFire;
             _weapon.OnSetWeaponActivate += HandleOnWeaponActivate;
             _weapon.OnStopReloading += HandleOnStopReloading;
+            _weapon.OnStartReloading += HandleOnStartReloading;
         }
 
         private void SetCrossHairImage()
@@ -99,6 +105,11 @@ namespace Perigon.Weapons
 
         protected abstract void OnFireInputAction(bool isFiring);
         protected abstract void Update();
+
+        protected virtual void PlayFiringAudio()
+        {
+            FMODUnity.RuntimeManager.PlayOneShot(_weapon.ShotAudio, transform.position);
+        }
         
         private void OnBulletHitWall(Vector3 point, Vector3 pointNormal)
         {
@@ -118,7 +129,7 @@ namespace Perigon.Weapons
             }
             
             _weaponAnimationProvider.WeaponFire(_weapon.AnimationType);
-            FMODUnity.RuntimeManager.PlayOneShot(_weapon.ShotAudio, transform.position);
+            PlayFiringAudio();
         }
 
         private void FireBullets(int numberOfBullets)
@@ -145,7 +156,7 @@ namespace Perigon.Weapons
             _inputSystem.OnReloadAction += OnReloadInputAction;
         }
 
-        private void Awake()
+        protected virtual void Awake()
         {
             if (_muzzleFlash == null)
             {
@@ -165,6 +176,7 @@ namespace Perigon.Weapons
                 _weapon.OnFireWeapon -= HandleOnFire;
                 _weapon.OnSetWeaponActivate -= HandleOnWeaponActivate;
                 _weapon.OnStopReloading -= HandleOnStopReloading;
+                _weapon.OnStartReloading -= HandleOnStartReloading;
                 _weapon = null;
             }
         }
