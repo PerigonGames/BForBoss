@@ -30,26 +30,18 @@ namespace Perigon.Weapons
             _currentCooldown -= _currentCooldown > 0 ? deltaTime : _currentCooldown;
         }
 
-        public bool TryAttackMany(Vector3 playerPosition, Vector3 playerForwardDirection)
+        public int? TryAttackMany(Vector3 playerPosition, Vector3 playerForwardDirection)
         {
-            if (!CanMelee)
-                return false;
-            _currentCooldown += _meleeProperties.AttackCoolDown;
-            
-            _hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, TagsAndLayers.Layers.PlayerMask, ref _enemyBuffer);
-            return true;
+            return TryAttack(playerPosition, playerForwardDirection);
         }
         
-        public bool TryAttackOne(Vector3 playerPosition, Vector3 playerForwardDirection)
+        public int? TryAttackOne(Vector3 playerPosition, Vector3 playerForwardDirection)
         {
-            if (!CanMelee)
-                return false;
-            _currentCooldown += _meleeProperties.AttackCoolDown;
-            
-            _hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, TagsAndLayers.Layers.PlayerMask, ref _enemyBuffer);
-            if (_hits > 1)
-                _hits = 1; //ensure we only damage first enemy
-            return true;
+            var hits = TryAttack(playerPosition, playerForwardDirection);
+
+            if (!hits.HasValue) return null;
+            _hits = hits.Value > 1 ? 1 : 0; //ensure we only damage first enemy
+            return _hits;
         }
         
         public IList<Vector3> ApplyDamage(Vector3 position)
@@ -64,6 +56,16 @@ namespace Perigon.Weapons
             }
 
             return pointsHit;
+        }
+
+        private int? TryAttack(Vector3 playerPosition, Vector3 playerForwardDirection)
+        {
+            if (!CanMelee)
+                return null;
+            _currentCooldown += _meleeProperties.AttackCoolDown;
+            
+            _hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, TagsAndLayers.Layers.PlayerMask, ref _enemyBuffer);
+            return _hits;
         }
 
         private Vector3 DamageEnemy(Collider enemyCollider, Vector3 position)
