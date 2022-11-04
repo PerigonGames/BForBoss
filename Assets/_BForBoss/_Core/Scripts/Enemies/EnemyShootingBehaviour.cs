@@ -1,4 +1,5 @@
 using System;
+using Perigon.Entities;
 using Perigon.Weapons;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -34,6 +35,7 @@ namespace BForBoss
         private Func<Vector3> _destination = null;
         private BulletSpawner _bulletSpawner = null;
         private IFloatingEnemyAnimation _enemyAnimation = null;
+        private IEnemyAudioController _enemyAudio = null;
         private Action _onFinishedShooting = null;
 
         private ShootState _state = ShootState.Aim;
@@ -50,6 +52,7 @@ namespace BForBoss
             BulletSpawner bulletSpawner,
             Func<Vector3> shootingFromPosition,
             IFloatingEnemyAnimation enemyAnimation,
+            IEnemyAudioController enemyAudio,
             Action onFinishedShooting
             )
         {
@@ -57,6 +60,7 @@ namespace BForBoss
             _bulletSpawner = bulletSpawner;
             _shootingFromPosition = shootingFromPosition;
             _enemyAnimation = enemyAnimation;
+            _enemyAudio = enemyAudio;
             _onFinishedShooting = onFinishedShooting;
         }
 
@@ -94,11 +98,13 @@ namespace BForBoss
         private void CountDownWhileAiming()
         {
             _enemyAnimation.SetIdleAnimation();
+            _enemyAudio.PlayIdleAudio();
             _elapsedAimCountDown -= Time.fixedDeltaTime;
             if (_elapsedAimCountDown <= 0)
             {
                 _state = ShootState.Shoot;
                 _muzzleFlashVFX.Play();
+                _enemyAudio.PlayAimingAudio();
                 _elapsedAimCountDown = _aimCountDownInSeconds;
             }
         }
@@ -119,6 +125,7 @@ namespace BForBoss
             if (IsDestinationTooFar() || LineOfSight.IsBlocked(_destination, _shootingFromPosition))
             {
                 _enemyAnimation.SetMovementAnimation();
+                _enemyAudio.PlayIdleAudio();
                 Reset();
                 _onFinishedShooting?.Invoke();
             }
@@ -137,6 +144,7 @@ namespace BForBoss
         {
             _muzzleFlashVFX.SendEvent(_vfxFireEvent);
             _enemyAnimation.SetShootingAnimation();
+            _enemyAudio.PlayShootingAudio();
             var bullet = _bulletSpawner.SpawnBullet(BulletTypes.Physics);
             bullet.SetSpawnAndDirection(_shootingFromPosition(), _shootDirection.normalized);
         }
