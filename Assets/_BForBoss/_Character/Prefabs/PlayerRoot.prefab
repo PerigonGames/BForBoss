@@ -164,10 +164,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a44abd3e89fcbc144a4755f82175c53d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _onHitAudio: {fileID: 0}
-  _onDeathAudio: {fileID: 0}
   _health: {fileID: 11400000, guid: 466883cf1a5011d4092580c693847745, type: 2}
-  _healthBarView: {fileID: 0}
+  _healthSFX:
+    Guid:
+      Data1: 1749138867
+      Data2: 1083208842
+      Data3: -771691080
+      Data4: 267954603
+    Path: event:/AudioEvents/Player/Player_Heal
 --- !u!114 &7177967516030943659
 MonoBehaviour:
   m_ObjectHideFlags: 0
