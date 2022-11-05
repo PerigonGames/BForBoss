@@ -17,6 +17,7 @@ namespace BForBoss
         private EnemyShootingBehaviour _shootingBehaviour;
         private FloatingEnemyAnimationBehaviour _animationBehaviour;
         private FloatingEnemyVisualEffectsBehaviour _visualEffectsBehaviour;
+        private EnemyAudioController _audioController;
         private FloatingTargetState _state = FloatingTargetState.Spawning;
 
         private enum FloatingTargetState
@@ -58,12 +59,16 @@ namespace BForBoss
                 InvokeOnDeathEvent();
             });
             
+            _audioController = GetComponent<EnemyAudioController>();
+            _audioController.Initialize(_lifeCycleBehaviour.LifeCycle);
+            
             _shootingBehaviour = GetComponent<EnemyShootingBehaviour>();
             _shootingBehaviour.Initialize(
                 getPlayerPosition,
                 bulletSpawner,
                 () => _shootingFromPosition.position,
                 _animationBehaviour,
+                _audioController,
                 onFinishedShooting:() =>
             {
                 _state = FloatingTargetState.MoveTowardsDestination;

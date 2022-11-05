@@ -31,6 +31,7 @@ namespace Tests
         public float VisualRecoilForce => 0;
         public WeaponAnimationType AnimationType => WeaponAnimationType.Pistol;
         public EventReference WeaponShotAudio => new EventReference();
+        public EventReference WeaponReloadAudio => new EventReference();
         public BulletTypes TypeOfBullet => BulletTypes.NoPhysics;
 
         public MockWeaponProperties (

@@ -79,7 +79,11 @@
 			<destination>{f246b846-b456-4e6f-9e81-5fd2100fe6da}</destination>
 		</relationship>
 	</object>
-	<object class="Timeline" id="{bf6370bd-7695-43b7-a7f4-879a23a782ae}" />
+	<object class="Timeline" id="{bf6370bd-7695-43b7-a7f4-879a23a782ae}">
+		<property name="isProxyEnabled">
+			<value>false</value>
+		</property>
+	</object>
 	<object class="ParameterProxy" id="{42f899cc-167e-4181-81cf-0434de2abc05}">
 		<relationship name="modules">
 			<destination>{49a978d4-4571-464a-a3c4-c903ffbfd13f}</destination>
@@ -113,9 +117,6 @@
 		</property>
 		<property name="length">
 			<value>2</value>
-		</property>
-		<property name="looping">
-			<value>true</value>
 		</property>
 		<relationship name="sounds">
 			<destination>{18c89a6c-eac5-44bf-b39e-df8edb367a1d}</destination>
