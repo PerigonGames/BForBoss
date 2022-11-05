@@ -77,10 +77,10 @@ namespace Perigon.Weapons
                 _weapon.TryAttackMany(t.position, t.forward) :
                 _weapon.TryAttackOne(t.position, t.forward);
 
-            if (isAttackSuccessful.HasValue)
+            if (isAttackSuccessful != -1)
             {
                 _onSuccessfulAttack?.Invoke();
-                RuntimeManager.PlayOneShot(isAttackSuccessful.Value < 1 ? _missAudio : _hitAudio, t.position);
+                RuntimeManager.PlayOneShot(isAttackSuccessful < 1 ? _missAudio : _hitAudio, t.position);
             }
         }
         

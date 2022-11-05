@@ -25,8 +25,14 @@ namespace Perigon.Weapons
              {
                  if (value == _isReloading) return;
                  _isReloading = value;
-                 if (_isReloading) OnStartReloading?.Invoke();
-                 else OnStopReloading?.Invoke();
+                 if (_isReloading)
+                 {
+                     OnStartReloading?.Invoke();
+                 }
+                 else
+                 {
+                     OnStopReloading?.Invoke();
+                 }
              }
          }
 
@@ -121,7 +127,7 @@ namespace Perigon.Weapons
              return new Vector3(xPosition, yPosition, 1);
          }
 
-         public bool FireIfPossible()
+         public bool TryFire()
          {
              if (!CanShoot)
              {

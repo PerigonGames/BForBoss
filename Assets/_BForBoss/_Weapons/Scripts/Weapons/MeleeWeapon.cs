@@ -30,17 +30,17 @@ namespace Perigon.Weapons
             _currentCooldown -= _currentCooldown > 0 ? deltaTime : _currentCooldown;
         }
 
-        public int? TryAttackMany(Vector3 playerPosition, Vector3 playerForwardDirection)
+        public int TryAttackMany(Vector3 playerPosition, Vector3 playerForwardDirection)
         {
             return TryAttack(playerPosition, playerForwardDirection);
         }
         
-        public int? TryAttackOne(Vector3 playerPosition, Vector3 playerForwardDirection)
+        public int TryAttackOne(Vector3 playerPosition, Vector3 playerForwardDirection)
         {
             var hits = TryAttack(playerPosition, playerForwardDirection);
 
-            if (!hits.HasValue) return null;
-            _hits = hits.Value > 1 ? 1 : 0; //ensure we only damage first enemy
+            if (hits < 0) return hits;
+            _hits = hits > 1 ? 1 : 0; //ensure we only damage first enemy
             return _hits;
         }
         
@@ -58,10 +58,10 @@ namespace Perigon.Weapons
             return pointsHit;
         }
 
-        private int? TryAttack(Vector3 playerPosition, Vector3 playerForwardDirection)
+        private int TryAttack(Vector3 playerPosition, Vector3 playerForwardDirection)
         {
             if (!CanMelee)
-                return null;
+                return -1;
             _currentCooldown += _meleeProperties.AttackCoolDown;
             
             _hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, TagsAndLayers.Layers.PlayerMask, ref _enemyBuffer);

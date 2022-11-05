@@ -1,6 +1,3 @@
-using System;
-using FMODUnity;
-using Perigon.Utility;
 using Perigon.Weapons;
 using Sirenix.OdinInspector;
 using UnityEngine;

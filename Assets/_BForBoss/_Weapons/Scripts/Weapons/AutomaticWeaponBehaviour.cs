@@ -12,6 +12,12 @@ namespace Perigon.Weapons
         private StudioEventEmitter _weaponFiringAudio;
 
         private int _shotsFired;
+
+        public override void Reset()
+        {
+            base.Reset();
+            _shotsFired = 0;
+        }
         
         protected override void Awake()
         {
@@ -35,7 +41,7 @@ namespace Perigon.Weapons
             if (_isFiring)
             {
                 _timeSinceFire += _weapon.ScaledDeltaTime(Time.deltaTime, Time.timeScale);
-                _shotsFired += _weapon.FireIfPossible() ? 1 : 0;
+                _shotsFired += _weapon.TryFire() ? 1 : 0;
                 float shotsPerSecond = _shotsFired / Mathf.Max(_timeSinceFire, 1f);
                 _weaponFiringAudio.SetParameter(FIRE_RATE_PARAM, shotsPerSecond);
             }

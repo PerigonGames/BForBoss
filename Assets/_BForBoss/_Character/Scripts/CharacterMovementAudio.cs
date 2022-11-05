@@ -45,8 +45,9 @@ namespace Perigon.Character
 
         public float GetPlayerSpeedNormalized()
         {
-            return _state == MovementSoundState.Running
-                ? _characterMovement.SpeedMagnitude / _characterMovement.CharacterMaxSpeed
+            var maxSpeed = _characterMovement.CharacterMaxSpeed;
+            return _state == MovementSoundState.Running && maxSpeed != 0
+                ? _characterMovement.SpeedMagnitude / maxSpeed
                 : 0f;
         }
         

@@ -22,7 +22,7 @@ namespace Tests.Weapons
             };
             
             //When
-            weapon.FireIfPossible();
+            weapon.TryFire();
             
             //Then
             Assert.AreEqual(shootTimes, 1);
@@ -40,10 +40,10 @@ namespace Tests.Weapons
             {
                 shootTimes++;
             };
-            weapon.FireIfPossible();
+            weapon.TryFire();
             
             //When
-            weapon.FireIfPossible();
+            weapon.TryFire();
             
             //Then
             Assert.AreEqual(shootTimes, 1);
@@ -61,11 +61,11 @@ namespace Tests.Weapons
             {
                 shootTimes++;
             };
-            weapon.FireIfPossible();
+            weapon.TryFire();
             weapon.DecrementElapsedTimeRateOfFire(100, 1);
             
             //When
-            weapon.FireIfPossible();
+            weapon.TryFire();
             
             //Then
             Assert.AreEqual(shootTimes, 2);
@@ -83,11 +83,11 @@ namespace Tests.Weapons
             {
                 shootTimes++;
             };
-            weapon.FireIfPossible();
+            weapon.TryFire();
             weapon.DecrementElapsedTimeRateOfFire(5, 0.5f);
             
             //When
-            weapon.FireIfPossible();
+            weapon.TryFire();
             
             //Then
             Assert.AreEqual(shootTimes, 2);
@@ -105,11 +105,11 @@ namespace Tests.Weapons
             {
                 shootTimes++;
             };
-            weapon.FireIfPossible();
+            weapon.TryFire();
             weapon.DecrementElapsedTimeRateOfFire(5, 1f);
             
             //When
-            weapon.FireIfPossible();
+            weapon.TryFire();
             
             //Then
             Assert.AreEqual(1, shootTimes);
@@ -169,7 +169,7 @@ namespace Tests.Weapons
             };
             
             //When
-            weapon.FireIfPossible();
+            weapon.TryFire();
             
             //Then
             Assert.AreEqual(expectedNumberOfBullets, actualNumberOfBullets, "Number of bullets shot");
@@ -182,7 +182,7 @@ namespace Tests.Weapons
             var mockProperties = new MockWeaponProperties(ammoAmount: 1);
             var weapon = new Weapon(mockProperties);
             weapon.ActivateWeapon = true;
-            weapon.FireIfPossible();
+            weapon.TryFire();
             
             //When
             weapon.ReloadWeaponCountDownIfNeeded(0, 1);
@@ -239,7 +239,7 @@ namespace Tests.Weapons
             //Given 
             var mockProperties = new MockWeaponProperties(ammoAmount: 5, reloadDuration: 0.5f);
             var weapon = new Weapon(mockProperties);
-            weapon.FireIfPossible();
+            weapon.TryFire();
             weapon.IsReloading = true;
             
             //When
