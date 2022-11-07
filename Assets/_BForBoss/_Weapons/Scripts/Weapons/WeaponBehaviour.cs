@@ -63,12 +63,33 @@ namespace Perigon.Weapons
             SetupPlayerInput();
         }
 
-        public void Reset()
+        public virtual void Reset()
         {
             _isFiring = false;
             _timeSinceFire = 0;
             enabled = false;
             gameObject.SetActive(false);
+        }
+        
+        protected abstract void OnFireInputAction(bool isFiring);
+        protected abstract void Update();
+
+        protected virtual void PlayFiringAudio()
+        {
+            FMODUnity.RuntimeManager.PlayOneShot(_weapon.ShotAudio, transform.position);
+        }
+
+        protected virtual void HandleOnStartReloading()
+        {
+            FMODUnity.RuntimeManager.PlayOneShot(_weapon.ReloadAudio, transform.position);
+        }
+        
+        protected virtual void Awake()
+        {
+            if (_muzzleFlash == null)
+            {
+                Debug.LogWarning("Missing VFX Visual Effect from this weapon");
+            }
         }
 
         private void HandleOnWeaponActivate(bool activate)
@@ -87,6 +108,7 @@ namespace Perigon.Weapons
             _weapon.OnFireWeapon += HandleOnFire;
             _weapon.OnSetWeaponActivate += HandleOnWeaponActivate;
             _weapon.OnStopReloading += HandleOnStopReloading;
+            _weapon.OnStartReloading += HandleOnStartReloading;
         }
 
         private void SetCrossHairImage()
@@ -96,9 +118,6 @@ namespace Perigon.Weapons
                 _crossHairProvider.SetCrossHairImage(_weapon.Crosshair);
             }
         }
-
-        protected abstract void OnFireInputAction(bool isFiring);
-        protected abstract void Update();
         
         private void OnBulletHitWall(Vector3 point, Vector3 pointNormal)
         {
@@ -118,7 +137,7 @@ namespace Perigon.Weapons
             }
             
             _weaponAnimationProvider.WeaponFire(_weapon.AnimationType);
-            FMODUnity.RuntimeManager.PlayOneShot(_weapon.ShotAudio, transform.position);
+            PlayFiringAudio();
         }
 
         private void FireBullets(int numberOfBullets)
@@ -145,14 +164,6 @@ namespace Perigon.Weapons
             _inputSystem.OnReloadAction += OnReloadInputAction;
         }
 
-        private void Awake()
-        {
-            if (_muzzleFlash == null)
-            {
-                Debug.LogWarning("Missing VFX Visual Effect from this weapon");
-            }
-        }
-
         private void OnEnable()
         {
             SetCrossHairImage();
@@ -165,6 +176,7 @@ namespace Perigon.Weapons
                 _weapon.OnFireWeapon -= HandleOnFire;
                 _weapon.OnSetWeaponActivate -= HandleOnWeaponActivate;
                 _weapon.OnStopReloading -= HandleOnStopReloading;
+                _weapon.OnStartReloading -= HandleOnStartReloading;
                 _weapon = null;
             }
         }

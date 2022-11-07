@@ -1,5 +1,3 @@
-using FMODUnity;
-using Perigon.Utility;
 using Perigon.Weapons;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -8,9 +6,6 @@ namespace Perigon.Entities
 {
     public abstract class LifeCycleBehaviour : MonoBehaviour, IWeaponHolder
     {
-        [Resolve][SerializeField] private StudioEventEmitter _onHitAudio = null;
-        [Resolve][SerializeField] private StudioEventEmitter _onDeathAudio = null;
-        
         [InlineEditor]
         [SerializeField] private HealthScriptableObject _health = null;
 
@@ -56,17 +51,7 @@ namespace Perigon.Entities
 
         protected abstract void LifeCycleFinished();
 
-        protected virtual void LifeCycleDamageTaken()
-        {
-            if (_lifeCycle.IsAlive)
-            {
-                _onHitAudio?.Play();
-            }
-            else
-            {
-                _onDeathAudio?.Play();
-            }
-        }
+        protected virtual void LifeCycleDamageTaken(){}
 
         protected void OnDisable()
         {

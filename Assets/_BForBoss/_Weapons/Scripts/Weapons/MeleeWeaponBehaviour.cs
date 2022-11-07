@@ -1,4 +1,5 @@
 using System;
+using FMODUnity;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -24,6 +25,9 @@ namespace Perigon.Weapons
 
         [SerializeField] private bool _canAttackMany = true;
         [SerializeField] private TimedVFXEffect _meleeVFXPrefab = null;
+
+        [SerializeField] private EventReference _hitAudio;
+        [SerializeField] private EventReference _missAudio;
 
         private MeleeWeapon _weapon;
         private Func<Transform> _getTransform;
@@ -73,9 +77,10 @@ namespace Perigon.Weapons
                 _weapon.TryAttackMany(t.position, t.forward) :
                 _weapon.TryAttackOne(t.position, t.forward);
 
-            if (isAttackSuccessful)
+            if (isAttackSuccessful != -1)
             {
-                _onSuccessfulAttack();
+                _onSuccessfulAttack?.Invoke();
+                RuntimeManager.PlayOneShot(isAttackSuccessful < 1 ? _missAudio : _hitAudio, t.position);
             }
         }
         

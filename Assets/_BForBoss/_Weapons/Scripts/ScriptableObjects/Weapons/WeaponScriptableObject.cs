@@ -18,6 +18,7 @@ namespace Perigon.Weapons
         BulletTypes TypeOfBullet { get; }
         WeaponAnimationType AnimationType { get; }
         EventReference WeaponShotAudio { get; } 
+        EventReference WeaponReloadAudio { get; } 
         float GetBulletSpreadRate(float timeSinceFiring);
     }
     
@@ -44,6 +45,7 @@ namespace Perigon.Weapons
         [Title("Effects")] 
         [SerializeField] private WeaponAnimationType _animationType = WeaponAnimationType.Rifle;
         [SerializeField] private EventReference _weaponShotAudio = new EventReference();
+        [SerializeField] private EventReference _weaponReloadAudio = new EventReference();
         [PreviewField]
         [SerializeField] private Sprite _crosshair = null;
         
@@ -58,6 +60,7 @@ namespace Perigon.Weapons
         public BulletTypes TypeOfBullet => _typeOfBullet;
         public WeaponAnimationType AnimationType => _animationType;
         public EventReference WeaponShotAudio => _weaponShotAudio;
+        public EventReference WeaponReloadAudio => _weaponReloadAudio;
         public Sprite Crosshair => _crosshair;
         
         public float GetBulletSpreadRate(float timeSinceFiring)

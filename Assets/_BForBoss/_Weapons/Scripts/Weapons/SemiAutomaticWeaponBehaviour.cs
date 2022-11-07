@@ -8,7 +8,7 @@ namespace Perigon.Weapons
         {
             if (isFiring)
             {
-                _weapon.FireIfPossible();
+                _weapon.TryFire();
             }
         }
 

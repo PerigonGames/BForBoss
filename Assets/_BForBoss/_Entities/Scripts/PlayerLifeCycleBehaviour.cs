@@ -1,6 +1,7 @@
 using System;
 using DG.Tweening;
 using Perigon.Utility;
+using UnityEngine;
 
 namespace Perigon.Entities
 {
@@ -8,6 +9,8 @@ namespace Perigon.Entities
     {
         private Action _onEndGameCallback;
         private Action _onDeathCallback;
+
+        [SerializeField] private FMODUnity.EventReference _healthSFX;
         
         public bool IsInvincible
         {
@@ -33,6 +36,7 @@ namespace Perigon.Entities
         protected override void LifeCycleOnHeal()
         {
             VisualEffectsManager.Instance.DistortAndRevert(HUDVisualEffect.Heal);
+            FMODUnity.RuntimeManager.PlayOneShot(_healthSFX, transform.position);
         }
 
         protected override void LifeCycleFinished()

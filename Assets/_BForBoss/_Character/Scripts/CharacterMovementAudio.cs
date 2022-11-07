@@ -42,6 +42,14 @@ namespace Perigon.Character
                 OnSoundStateChange?.Invoke(_state);
             }
         }
+
+        public float GetPlayerSpeedNormalized()
+        {
+            var maxSpeed = _characterMovement.CharacterMaxSpeed;
+            return _state == MovementSoundState.Running && maxSpeed != 0
+                ? _characterMovement.SpeedMagnitude / maxSpeed
+                : 0f;
+        }
         
         private MovementSoundState GetNextStateFromNotPlaying()
         {

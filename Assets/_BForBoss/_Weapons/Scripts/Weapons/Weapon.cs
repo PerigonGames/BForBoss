@@ -16,8 +16,25 @@ namespace Perigon.Weapons
          private float _elapsedReloadDuration;
          private int _ammunitionAmount;
          private bool _isActive = false;
+         private bool _isReloading = false;
 
-         public bool IsReloading { get; set; }
+         public bool IsReloading
+         {
+             get => _isReloading;
+             set
+             {
+                 if (value == _isReloading) return;
+                 _isReloading = value;
+                 if (_isReloading)
+                 {
+                     OnStartReloading?.Invoke();
+                 }
+                 else
+                 {
+                     OnStopReloading?.Invoke();
+                 }
+             }
+         }
 
          public bool ActivateWeapon
          {
@@ -31,6 +48,7 @@ namespace Perigon.Weapons
 
          public event Action<int> OnFireWeapon;
          public event Action<bool> OnSetWeaponActivate;
+         public event Action OnStartReloading;
          public event Action OnStopReloading;
 
          public int AmmunitionAmount => _ammunitionAmount;
@@ -44,6 +62,7 @@ namespace Perigon.Weapons
          public Sprite Crosshair => _weaponProperties.Crosshair;
          public WeaponAnimationType AnimationType => _weaponProperties.AnimationType;
          public EventReference ShotAudio => _weaponProperties.WeaponShotAudio;
+         public EventReference ReloadAudio => _weaponProperties.WeaponReloadAudio;
          private bool CanShoot => _elapsedRateOfFire <= 0 && _ammunitionAmount > 0 && _isActive;
 
          public Weapon(IWeaponProperties weaponProperties, IRandomUtility randomUtility = null)
@@ -108,17 +127,18 @@ namespace Perigon.Weapons
              return new Vector3(xPosition, yPosition, 1);
          }
 
-         public void FireIfPossible()
+         public bool TryFire()
          {
              if (!CanShoot)
              {
-                 return;
+                 return false;
              }
 
              StopReloading();
              _ammunitionAmount--;
              ResetRateOfFire();
              Fire();
+             return true;
          }
 
          public void Reset()
@@ -139,7 +159,6 @@ namespace Perigon.Weapons
          {
              IsReloading = false;
              _elapsedReloadDuration = _weaponProperties.ReloadDuration;
-             OnStopReloading?.Invoke();
          }
 
          private void Fire()

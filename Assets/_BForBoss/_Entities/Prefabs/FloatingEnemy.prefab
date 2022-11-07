@@ -592,8 +592,6 @@ GameObject:
   - component: {fileID: 7036539539005687782}
   - component: {fileID: 7287096135450198932}
   - component: {fileID: 8945181855382165517}
-  - component: {fileID: 6566670856885270489}
-  - component: {fileID: 5329797527737827575}
   - component: {fileID: 548165371661106835}
   - component: {fileID: 548165371661106837}
   - component: {fileID: 7367245697506017707}
@@ -603,6 +601,8 @@ GameObject:
   - component: {fileID: -4579011501620697046}
   - component: {fileID: 5114277891775755448}
   - component: {fileID: 6011004315866388711}
+  - component: {fileID: 6367329647653356213}
+  - component: {fileID: 6566670856885270489}
   m_Layer: 14
   m_Name: FloatingEnemy
   m_TagString: Untagged
@@ -652,70 +652,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a54ddc0cb0d6a7b4f973b368524b3baa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _onHitAudio: {fileID: 6566670856885270489}
-  _onDeathAudio: {fileID: 5329797527737827575}
   _health: {fileID: 11400000, guid: f9a35dc1cf51ae24487a718261a44073, type: 2}
   _enemyHealthBar: {fileID: 5224088476857332110}
---- !u!114 &6566670856885270489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7036539539005687787}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CollisionTag: 
-  EventReference:
-    Guid:
-      Data1: -302788556
-      Data2: 1301997779
-      Data3: 1319143076
-      Data4: -1910586928
-    Path: event:/AudioEvents/Enemy/Enemy_Hit
-  Event: 
-  PlayEvent: 0
-  StopEvent: 0
-  AllowFadeout: 1
-  TriggerOnce: 0
-  Preload: 0
-  Params: []
-  OverrideAttenuation: 0
-  OverrideMinDistance: 1
-  OverrideMaxDistance: 20
---- !u!114 &5329797527737827575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7036539539005687787}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CollisionTag: 
-  EventReference:
-    Guid:
-      Data1: 1252079714
-      Data2: 1136051915
-      Data3: 982433429
-      Data4: 1002477761
-    Path: event:/AudioEvents/Enemy/Enemy_KillConfirm
-  Event: 
-  PlayEvent: 0
-  StopEvent: 0
-  AllowFadeout: 1
-  TriggerOnce: 0
-  Preload: 0
-  Params: []
-  OverrideAttenuation: 0
-  OverrideMinDistance: 0
-  OverrideMaxDistance: 1.8000001
 --- !u!195 &548165371661106835
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -859,6 +797,83 @@ MonoBehaviour:
   _explosionEffect: {fileID: 1308995367495000670}
   _deathRagDollForce: 3
   _deathFallMaxDuration: 2
+--- !u!114 &6367329647653356213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7036539539005687787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ed3aa9760262b5429e8ab0040ca0e5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _onHitAudio:
+    Guid:
+      Data1: -302788556
+      Data2: 1301997779
+      Data3: 1319143076
+      Data4: -1910586928
+    Path: event:/AudioEvents/Enemy/Enemy_Hit
+  _onDeathAudio:
+    Guid:
+      Data1: 663073789
+      Data2: 1194137772
+      Data3: 1072963519
+      Data4: 37348632
+    Path: event:/AudioEvents/AI/AI_Death
+  _idleAudio:
+    Guid:
+      Data1: -396224137
+      Data2: 1082425612
+      Data3: -1180599403
+      Data4: 1643037867
+    Path: event:/AudioEvents/AI/AI_IdleMove
+  _chargeAudio:
+    Guid:
+      Data1: -637216322
+      Data2: 1208184050
+      Data3: -124072808
+      Data4: 566237380
+    Path: event:/AudioEvents/AI/AI_Charge
+  _fireAudio:
+    Guid:
+      Data1: 891218535
+      Data2: 1126209106
+      Data3: -2131694703
+      Data4: 1264627176
+    Path: event:/AudioEvents/AI/AI_Fire
+--- !u!114 &6566670856885270489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7036539539005687787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -396224137
+      Data2: 1082425612
+      Data3: -1180599403
+      Data4: 1643037867
+    Path: event:/AudioEvents/AI/AI_IdleMove
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &7047665429213051704
 GameObject:
   m_ObjectHideFlags: 0
