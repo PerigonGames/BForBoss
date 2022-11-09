@@ -38,11 +38,11 @@ namespace BForBoss
             if (_waveModel.IsMaxEnemySpawnedReached)
             {
                 Logger.LogString("<color=Blue>Max Enemy Reached</color>", "wavesmode");
-                _spawnerControl.PauseSpawning();
+                _spawnerControl.PauseAllSpawning();
             }
         }
 
-        private void OnEnemyKilled()
+        private void OnEnemyKilled(int index)
         {
             if (_waveModel.IsRoundConcluded)
             {
@@ -52,7 +52,7 @@ namespace BForBoss
             }
             else if (!_waveModel.IsMaxEnemySpawnedReached)
             {
-                _spawnerControl.ResumeSpawning();
+                _spawnerControl.ResumeSpawning(index);
             }
         }
 
@@ -60,11 +60,11 @@ namespace BForBoss
         {
             if (_spawnerControl != null)
             {
-                _spawnerControl.PauseSpawning();
+                _spawnerControl.PauseAllSpawning();
                 yield return new WaitForSeconds(_secondsBetweenWaves);
             
                 _waveModel.IncrementWave(_enemyAmountMultiplier);
-                _spawnerControl.ResumeSpawning();
+                _spawnerControl.ResumeAllSpawning();
             }
         }
 

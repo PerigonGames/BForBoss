@@ -12,6 +12,8 @@ namespace BForBoss
 {
     public class EnemySpawnAreaBehaviour : MonoBehaviour
     {
+        private int _spawnerIndex;
+        
         [SerializeField] [Min(1)] private int _enemiesToSpawn = 3;
         [SerializeField] [Min(0.0f)] private float _secondsBetweenSpawns = 2.5f;
         [SerializeField, Tooltip("Should max amount of enemies spawn upon initialization")]
@@ -24,12 +26,11 @@ namespace BForBoss
         private WaveModel _waveModel;
         private EnemyContainer _enemyContainer;
         
-        public void Initialize(EnemyContainer enemyContainer, WaveModel waveModel)
+        public void Initialize(EnemyContainer enemyContainer, WaveModel waveModel, int index)
         {
             _enemyContainer = enemyContainer;
             _waveModel = waveModel;
-
-            SpawnInitialEnemies();
+            _spawnerIndex = index;
         }
 
         public void PauseSpawning()
@@ -38,10 +39,23 @@ namespace BForBoss
             StopCoroutine(nameof(SpawnEnemies));
         }
 
-        public void ResumeSpawning()
+        public void ResumeSpawningIfPossible()
         {
+            if (_waveModel.IsMaxEnemySpawnedReached)
+            {
+                return;
+            }
+            
             _canSpawn = true;
-            SpawnInitialEnemies();
+
+            if (_waveModel.WaveNumber == 1)
+            {
+                SpawnInitialEnemies();
+            }
+            else
+            {
+                StartCoroutine(SpawnEnemies(1));
+            }
         }
 
         public void Reset()
@@ -92,6 +106,11 @@ namespace BForBoss
 
         private void SpawnEnemy()
         {
+            if (_waveModel.IsMaxEnemySpawnedReached)
+            {
+                return;
+            }
+            
             Logger.LogString("<color=red>Spawn Enemy</color>", "wavesmode");
             Vector3? spawnPosition = GenerateSpawnPosition();
             if (spawnPosition != null)
@@ -145,7 +164,7 @@ namespace BForBoss
         private void HandleOnEnemyDeath(EnemyBehaviour enemy)
         {
             enemy.OnDeath -= HandleOnEnemyDeath;
-            _waveModel?.IncrementKillCount();
+            _waveModel?.IncrementKillCount(_spawnerIndex);
         }
 
         private void OnDrawGizmosSelected()

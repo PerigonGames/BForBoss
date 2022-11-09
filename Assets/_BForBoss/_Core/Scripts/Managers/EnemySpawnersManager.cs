@@ -9,13 +9,18 @@ namespace BForBoss
 
         public void Initialize(EnemyContainer enemyContainer, WaveModel waveModel = null)
         {
-            foreach (var spawner in _enemySpawnerAreas)
+            // foreach (var spawner in _enemySpawnerAreas)
+            // {
+            //     spawner.Initialize(enemyContainer, waveModel);
+            // }
+
+            for (int i = 0; i < _enemySpawnerAreas.Length; i++)
             {
-                spawner.Initialize(enemyContainer, waveModel);
+                _enemySpawnerAreas[i].Initialize(enemyContainer,waveModel,i);
             }
         }
 
-        public void PauseSpawning()
+        public void PauseAllSpawning()
         {
             Logger.LogString("<color=green>Spawning Paused</color>", "wavesmode");
             foreach (EnemySpawnAreaBehaviour spawner in _enemySpawnerAreas)
@@ -24,12 +29,23 @@ namespace BForBoss
             }
         }
 
-        public void ResumeSpawning()
+        public void ResumeAllSpawning()
         {
             Logger.LogString("<color=green>Spawning Resumed</color>", "wavesmode");
             foreach (EnemySpawnAreaBehaviour spawner in _enemySpawnerAreas)
             {
-                spawner.ResumeSpawning();
+                spawner.ResumeSpawningIfPossible();
+            }
+        }
+
+        public void ResumeSpawning(int spawnerIndex)
+        {
+            EnemySpawnAreaBehaviour spawner = _enemySpawnerAreas[spawnerIndex];
+
+            if (spawner != null)
+            {
+                Logger.LogString("<color=green>Spawning Resumed</color>", "wavesmode");
+                _enemySpawnerAreas[spawnerIndex].ResumeSpawningIfPossible();
             }
         }
 
