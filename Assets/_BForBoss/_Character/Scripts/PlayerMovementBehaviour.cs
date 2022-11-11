@@ -22,17 +22,15 @@ namespace Perigon.Character
         private IInputConfiguration _inputConfiguration;
         private PGInputSystem _inputSystem;
         
-        private float _unModifiedPlayerSpeed;
+        private float _speedMultiplier = 1;
         
         public event Action OnDashActivated;
         public event Action Slid;
-        
         
         public void Initialize(PGInputSystem inputSystem, IInputConfiguration inputConfiguration = null)
         {
             _inputSystem = inputSystem;
             _inputConfiguration = inputConfiguration ?? new InputConfiguration();
-            _unModifiedPlayerSpeed = maxWalkSpeed;
             SetControlConfiguration();
             SetCameraCullingMask();
             
@@ -63,6 +61,17 @@ namespace Perigon.Character
         {
             return IsWallRunning ? _wallRunBehaviour.GetMaxAcceleration() : base.GetMaxAcceleration();
         }
+        
+        public void MutatePlayerSpeed(float multiplier)
+        {
+            _speedMultiplier = multiplier;
+        }
+
+        public void RevertPlayerSpeed()
+        {
+            _speedMultiplier = 1;
+        }
+
 
         public void SetControlConfiguration()
         {
@@ -72,18 +81,7 @@ namespace Perigon.Character
             characterLook.controllerHorizontalSensitivity = _inputConfiguration.ControllerHorizontalSensitivity;
             characterLook.controllerVerticalSensitivity = _inputConfiguration.ControllerVerticalSensitivity;
         }
-        
-        public void ModifyPlayerSpeed(float modificationMultiplier)
-        {
-            _unModifiedPlayerSpeed = maxWalkSpeed;
-            maxWalkSpeed *= modificationMultiplier;
-        }
 
-        public void ResetPlayerSpeed()
-        {
-            maxWalkSpeed = _unModifiedPlayerSpeed;
-        }
-        
         protected override void OnAwake()
         {            
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();
@@ -160,6 +158,11 @@ namespace Perigon.Character
             return IsWallRunning ? _wallRunBehaviour.CalcJumpVelocity() : base.CalcJumpVelocity();
         }
 
+        protected override float GetSpeedMultiplier()
+        {
+            return base.GetSpeedMultiplier() * _speedMultiplier;
+        }
+        
         protected override void OnMove()
         {
             base.OnMove();
