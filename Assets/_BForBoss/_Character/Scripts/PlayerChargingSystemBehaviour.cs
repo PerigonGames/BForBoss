@@ -26,6 +26,8 @@ namespace Perigon.Character
         private float _currentEnergy;
         private bool _isModeActivated;
 
+        public float Percentage => _currentEnergy / _maxEnergyBank;
+
         private void FixedUpdate()
         {
             if (_isModeActivated)
