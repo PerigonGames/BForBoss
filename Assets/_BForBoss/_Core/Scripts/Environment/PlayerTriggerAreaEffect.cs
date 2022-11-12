@@ -80,12 +80,12 @@ namespace BForBoss
 
         private void PerformOneTimePlayerStatChange()
         {
-            _playerMovementBehaviour.MutatePlayerSpeed(playerTriggerAreaMutation.speedMultiplier);
+            _playerMovementBehaviour.SetPenaltySpeed(playerTriggerAreaMutation.speedMultiplier);
         }
 
         private void ResetPlayerStats()
         {
-            _playerMovementBehaviour.RevertPlayerSpeed();
+            _playerMovementBehaviour.RevertPenaltySpeed();
         }
     }
 }

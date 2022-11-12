@@ -11,8 +11,9 @@ namespace BForBoss
     public class PlayerBehaviour : MonoBehaviour
     {
         private PlayerMovementBehaviour _playerMovement;
-        private PlayerLifeCycleBehaviour _playerLifeCycleBehaviour;
+        private PlayerLifeCycleBehaviour _playerLifeCycle;
         private PlayerSlowMotionBehaviour _playerSlowMotion;
+        private PlayerChargingSystemBehaviour _playerChargingSystem;
         private PGInputSystem _inputSystem;
 
         public PlayerMovementBehaviour PlayerMovement => _playerMovement;
@@ -20,7 +21,7 @@ namespace BForBoss
         public void Initialize(PGInputSystem inputSystem, LifeCycle playerLifeCycle)
         {
             _playerMovement.Initialize(inputSystem);
-            _playerLifeCycleBehaviour.Initialize(
+            _playerLifeCycle.Initialize(
                 playerLifeCycle,
                 onEndGameCallback: () =>
             {
@@ -30,7 +31,8 @@ namespace BForBoss
             {
                 StateManager.Instance.SetState(State.Death);
             });
-            
+            _playerChargingSystem.ChargingSystemDatasource = _playerMovement;
+            _playerChargingSystem.StaticTriggerModeDelegate = _playerMovement;
 
             _inputSystem = inputSystem;
             _inputSystem.OnSlowTimeAction += _playerSlowMotion.OnSlowMotion;
@@ -39,7 +41,7 @@ namespace BForBoss
 
         public void Reset()
         {
-            _playerLifeCycleBehaviour.Reset();
+            _playerLifeCycle.Reset();
         }
 
         public void SpawnAt(Vector3 position, Quaternion facing)
@@ -53,8 +55,9 @@ namespace BForBoss
         private void Awake()
         {
             _playerMovement = GetComponent<PlayerMovementBehaviour>();
-            _playerLifeCycleBehaviour = GetComponent<PlayerLifeCycleBehaviour>();
+            _playerLifeCycle = GetComponent<PlayerLifeCycleBehaviour>();
             _playerSlowMotion = GetComponent<PlayerSlowMotionBehaviour>();
+            _playerChargingSystem = GetComponent<PlayerChargingSystemBehaviour>();
             if (_playerSlowMotion == null)
             {
                 PanicHelper.Panic(new Exception("Player Slow Motion is missing from Player Behaviour"));

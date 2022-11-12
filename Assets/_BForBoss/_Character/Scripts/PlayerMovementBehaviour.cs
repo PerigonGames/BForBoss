@@ -22,7 +22,8 @@ namespace Perigon.Character
         private IInputConfiguration _inputConfiguration;
         private PGInputSystem _inputSystem;
         
-        private float _speedMultiplier = 1;
+        private float _penaltySpeedMultiplier = 1;
+        private float _poweredUpSpeedMultiplier = 1;
         
         public event Action OnDashActivated;
         public event Action Slid;
@@ -62,14 +63,14 @@ namespace Perigon.Character
             return IsWallRunning ? _wallRunBehaviour.GetMaxAcceleration() : base.GetMaxAcceleration();
         }
         
-        public void MutatePlayerSpeed(float multiplier)
+        public void SetPenaltySpeed(float multiplier)
         {
-            _speedMultiplier = multiplier;
+            _penaltySpeedMultiplier = multiplier;
         }
 
-        public void RevertPlayerSpeed()
+        public void RevertPenaltySpeed()
         {
-            _speedMultiplier = 1;
+            _penaltySpeedMultiplier = 1;
         }
 
 
@@ -160,7 +161,7 @@ namespace Perigon.Character
 
         protected override float GetSpeedMultiplier()
         {
-            return base.GetSpeedMultiplier() * _speedMultiplier;
+            return base.GetSpeedMultiplier() * _penaltySpeedMultiplier * _poweredUpSpeedMultiplier;
         }
         
         protected override void OnMove()

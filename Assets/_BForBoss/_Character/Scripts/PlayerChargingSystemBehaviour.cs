@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Perigon.Character
@@ -36,6 +35,7 @@ namespace Perigon.Character
                 {
                     _isModeActivated = false;
                     StaticTriggerModeDelegate.StopStaticTriggerMode();
+                    Debug.Log("-----Mode Deactivated");
                 }
                 return;
             }
@@ -43,10 +43,12 @@ namespace Perigon.Character
             if (ChargingSystemDatasource.IsCharging(_alphaVelocityThreshold))
             {
                 _currentEnergy += _increaseAmountPerAction;
+                Debug.Log("-----Increased Energy to :" + _currentEnergy);
                 if (_currentEnergy >= _maxEnergyBank)
                 {
                     StaticTriggerModeDelegate.StartStaticTriggerMode();
                     _isModeActivated = true;
+                    Debug.Log("-----Mode Activated");
                 }
             }
         }
