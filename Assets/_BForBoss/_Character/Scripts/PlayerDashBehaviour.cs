@@ -24,9 +24,22 @@ namespace Perigon.Character
 
         private ECM2.Characters.Character _baseCharacter = null;
         private Action _onDashing = null;
+        private float _powerUpDashImpulseMultiplier = 1;
 
         public bool IsDashing => _isDashing;
         private bool IsCoolDownOver => _dashCoolDownElapsedTime <= 0;
+
+        private float DashImpulse => _powerUpDashImpulseMultiplier * _dashImpulse;
+
+        public void SetDashImpulseMultiplier(float multiplier)
+        {
+            _powerUpDashImpulseMultiplier = multiplier;
+        }
+
+        public void RevertDashImpulseMultiplier()
+        {
+            _powerUpDashImpulseMultiplier = 1;
+        }
         
         public void Initialize(ECM2.Characters.Character baseCharacter, Func<Vector2> characterMovement, Action onDashing)
         {
@@ -105,7 +118,7 @@ namespace Perigon.Character
                 _baseCharacter.useSeparateBrakingFriction = true;
 
                 _dashingDirection = _characterInputMovement().sqrMagnitude > 0 ? _baseCharacter.GetMovementDirection() : _baseCharacter.GetForwardVector();
-                _baseCharacter.LaunchCharacter(_dashingDirection * _dashImpulse, true, true);
+                _baseCharacter.LaunchCharacter(_dashingDirection * DashImpulse, true, true);
             }
         }
 

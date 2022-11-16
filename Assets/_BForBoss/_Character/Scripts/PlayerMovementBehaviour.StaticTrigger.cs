@@ -9,6 +9,7 @@ namespace Perigon.Character
             _poweredUpSpeedMultiplier = 2;
             _wallRunBehaviour.SetPoweredUpWallRunSpeedMultiplier(2f);
             _slideBehaviour.SetPowerUpSlideImpulseMultiplier(1.5f);
+            _dashBehaviour.SetDashImpulseMultiplier(1.5f);
             Debug.Log("Max Speed: " + GetMaxSpeed());
 
         }
@@ -18,6 +19,7 @@ namespace Perigon.Character
             _poweredUpSpeedMultiplier = 1;
             _wallRunBehaviour.RevertPowerUpWallRunSpeedMultiplier();
             _slideBehaviour.RevertPowerUpSlideImpulseMultiplier();
+            _dashBehaviour.RevertDashImpulseMultiplier();
         }
 
         public bool IsCharging(float velocityThreshold)
