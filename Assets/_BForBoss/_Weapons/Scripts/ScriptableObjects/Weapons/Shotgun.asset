@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Shotgun
   m_EditorClassIdentifier: 
   _nameOfWeapon: Shotgun
-  _rateOfFire: 0.1
-  _bulletSpread: 0.5
+  _rateOfFire: 0.2
+  _bulletSpread: 1.7
   _bulletSpreadRateCurve:
     serializedVersion: 2
     m_Curve:
@@ -39,11 +39,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _reloadDuration: 0.5
-  _bulletsPerShot: 10
-  _ammunitionAmount: 10
+  _reloadDuration: 1.2
+  _bulletsPerShot: 8
+  _ammunitionAmount: 7
   _isRaycastWeapon: 1
-  _damagePerRayCast: 2
+  _damagePerRayCast: 15
   _typeOfBullet: 0
   _animationType: 1
   _weaponShotAudio:
