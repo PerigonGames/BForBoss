@@ -6,7 +6,6 @@ namespace Perigon.Character
 {
     public class PlayerSlideBehaviour : MonoBehaviour
     {
-        [SerializeField] private float _maxWalkSpeedSliding = 12;
         [SerializeField] private float _groundFrictionSliding = 0.5f;
         [SerializeField] private float _brakingDecelerationSliding = 10;
         [SerializeField] private float _slideImpulse = 10;
@@ -15,10 +14,22 @@ namespace Perigon.Character
 
         private ECM2.Characters.Character _baseCharacter = null;
         private Action _onSlide = null;
-        
+        private float _powerUpSlideImpulseMultiplier = 1;
+
         public bool IsSliding => _isSliding;
-        public float MaxWalkSpeedSliding => _maxWalkSpeedSliding;
-        public float brakingDecelerationSliding => _brakingDecelerationSliding;
+        public float BrakingDecelerationSliding => _brakingDecelerationSliding;
+        private float SlideImpulse => _powerUpSlideImpulseMultiplier * _slideImpulse;
+
+        public void SetPowerUpSlideImpulseMultiplier(float multiplier)
+        {
+            _powerUpSlideImpulseMultiplier = multiplier;
+            Debug.Log("Slide Impulse: "+ _slideImpulse);
+        }
+
+        public void RevertPowerUpSlideImpulseMultiplier()
+        {
+            _powerUpSlideImpulseMultiplier = 1;
+        }
 
         public void Initialize(ECM2.Characters.Character character, Action onSlide)
         {
@@ -42,7 +53,7 @@ namespace Perigon.Character
             // Add slide impulse to character's current velocity
 
             Vector3 slideDirection = _baseCharacter.GetVelocity().normalized;
-            _baseCharacter.LaunchCharacter(slideDirection * _slideImpulse);
+            _baseCharacter.LaunchCharacter(slideDirection * SlideImpulse);
         }
         
         public void StopSliding()

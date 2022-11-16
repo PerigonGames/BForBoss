@@ -50,12 +50,7 @@ namespace Perigon.Character
         
         public override float GetBrakingDeceleration()
         {
-            return IsSliding ? _slideBehaviour.brakingDecelerationSliding : base.GetBrakingDeceleration();
-        }
-
-        public override float GetMaxSpeed()
-        {
-            return IsSliding ? _slideBehaviour.MaxWalkSpeedSliding : base.GetMaxSpeed();
+            return IsSliding ? _slideBehaviour.BrakingDecelerationSliding : base.GetBrakingDeceleration();
         }
 
         public override float GetMaxAcceleration()

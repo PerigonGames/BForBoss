@@ -12,7 +12,7 @@ namespace Perigon.Character
         #region SERIALIZED_FIELDS
         [FoldoutGroup("Wall Run Movement properties")]
         [SerializeField] 
-        private float _speedMultiplier = 1f;
+        private float _wallRunSpeed = 1f;
         [FoldoutGroup("Wall Run Movement properties")]
         [SerializeField]
         private float _maxWallRunAcceleration = 20f;
@@ -111,6 +111,7 @@ namespace Perigon.Character
         private float _currentJumpDuration = 0f;
         private float _timeSinceWallAttach = 0f;
         private float _timeSinceWallDetach = 0f;
+        private float _powerUpWallRunSpeedMultiplier = 1;
 #endregion
 
         #region PROPERTIES
@@ -118,6 +119,18 @@ namespace Perigon.Character
 
         private Vector3 LastLookTowardsWall => (_lastPlayerWallRunDirection - _lastWallRunNormal).normalized;
         public bool IsWallRunning { get; private set; }
+
+        private float WallRunSpeed => _powerUpWallRunSpeedMultiplier * _wallRunSpeed;
+
+        public void SetPoweredUpWallRunSpeedMultiplier(float multiplier)
+        {
+            _powerUpWallRunSpeedMultiplier = multiplier;
+        }
+
+        public void RevertPowerUpWallRunSpeedMultiplier()
+        {
+            _powerUpWallRunSpeedMultiplier = 1;
+        }
 
         #endregion
 
@@ -287,7 +300,7 @@ namespace Perigon.Character
         {
             IsWallRunning = true;
             _baseMaxSpeed = _baseCharacter.maxWalkSpeed;
-            _baseCharacter.maxWalkSpeed *= _speedMultiplier;
+            _baseCharacter.maxWalkSpeed = WallRunSpeed;
             _timeSinceWallAttach = 0f;
             _timeSinceWallDetach = 0f;
         }
