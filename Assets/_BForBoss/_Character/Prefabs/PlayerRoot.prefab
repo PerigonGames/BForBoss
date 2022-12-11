@@ -187,14 +187,14 @@ MonoBehaviour:
   _actions: {fileID: -944628639613478452, guid: 11b5fd57f5ed74ef0a6fcf19057db823, type: 3}
   _rotationRate: 540
   _rotationMode: 0
-  _maxWalkSpeed: 6
+  _maxWalkSpeed: 8
   _minAnalogWalkSpeed: 0
   _maxAcceleration: 40
   _brakingDecelerationWalking: 40
   _groundFriction: 8
-  _sprintSpeedMultiplier: 1
+  _sprintSpeedMultiplier: 1.2
   _sprintAccelerationMultiplier: 1
-  _maxWalkSpeedCrouched: 3
+  _maxWalkSpeedCrouched: 4
   _crouchedHeight: 1
   _crouchedJump: 1
   _maxFallSpeed: 40
@@ -202,7 +202,7 @@ MonoBehaviour:
   _fallingLateralFriction: 0.3
   _airControl: 0.2
   _jumpMaxCount: 2
-  _jumpImpulse: 9
+  _jumpImpulse: 11
   _jumpMaxHoldTime: 0
   _jumpPreGroundedTime: 0
   _jumpPostGroundedTime: 5
@@ -330,7 +330,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85f6c41ec36c9d4e8cce5c2b68c6a07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speedMultiplier: 2
+  _speedMultiplier: 2.2
   _maxWallRunAcceleration: 20
   _wallGravityDownForce: 1
   _minSpeed: 3
@@ -339,8 +339,8 @@ MonoBehaviour:
   _minJumpDuration: 0.5
   _obtuseWallAngle: 70
   _gravityTimerDuration: 2
-  _wallResetTimer: 2
-  _wallBounciness: 6
+  _wallResetTimer: 0.8
+  _wallBounciness: 8
   _jumpHeightMultiplier: 1.5
   _jumpForwardVelocityMultiplier: 0.75
   _maxCameraAngleRoll: 20
@@ -360,10 +360,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c368352e54b4643acde934a259cf29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxWalkSpeedSliding: 12
+  _maxWalkSpeedSliding: 15
   _groundFrictionSliding: 0.5
   _brakingDecelerationSliding: 10
-  _slideImpulse: 10
+  _slideImpulse: 17
 --- !u!114 &910638780
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,9 +377,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dashEffectBehaviour: {fileID: 0}
-  _dashImpulse: 20
-  _dashDuration: 0.2
-  _dashCoolDown: 0.5
+  _dashImpulse: 25
+  _dashDuration: 0.5
+  _dashCoolDown: 0.3
 --- !u!114 &362631962692925180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -791,15 +791,15 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 616281459703929699}
   m_Lens:
-    FieldOfView: 60
+    FieldOfView: 90
     OrthographicSize: 5
-    NearClipPlane: 0.2
+    NearClipPlane: 0.1
     FarClipPlane: 1000
     Dutch: 0
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.3454158, y: 1}
+    m_SensorSize: {x: 1.9561998, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -869,9 +869,9 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 616281459703929699}
   m_Lens:
-    FieldOfView: 60
+    FieldOfView: 90
     OrthographicSize: 5
-    NearClipPlane: 0.2
+    NearClipPlane: 0.1
     FarClipPlane: 1000
     Dutch: 0
     ModeOverride: 0

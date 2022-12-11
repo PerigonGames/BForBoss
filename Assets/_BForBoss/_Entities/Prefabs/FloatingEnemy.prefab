@@ -664,7 +664,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 1
-  m_Speed: 5
+  m_Speed: 10
   m_Acceleration: 300
   avoidancePriority: 50
   m_AngularSpeed: 300
@@ -716,7 +716,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _distanceToShootAt: 25
   _aimCountDownInSeconds: 0.1
-  _rotationSpeed: 100
+  _rotationSpeed: 150
   _shootCountDownInSeconds: 0.5
   _vfxShootDelay: 0.1
   _muzzleFlashVFX: {fileID: 3777358975253556835}
@@ -763,7 +763,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _knockbackRadiusModifier: 10
   _knockbackUpwardsForceModifier: 10
-  _knockbackMaxDuration: 2
+  _knockbackMaxDuration: 1
   _applyGravity: 0
 --- !u!114 &5114277891775755448
 MonoBehaviour:
