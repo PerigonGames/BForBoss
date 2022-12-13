@@ -30,3 +30,10 @@ Inspirations:
 - Added in FMOD for Audio
 
 [![Milestone 2 - Demo](https://img.youtube.com/vi/SH9xvqlBY68/0.jpg)](https://youtu.be/SH9xvqlBY68)
+
+## Milestone 3 - Gunplay x Parkour x Arena Map - DONE
+- Added Arena style map
+- Added AI that shoots back
+- Added Waves of enemy for player to survive through
+
+[![Milestone 3 - Demo](https://img.youtube.com/vi/yE-ChIv-d0s/0.jpg)](https://youtu.be/yE-ChIv-d0s)
