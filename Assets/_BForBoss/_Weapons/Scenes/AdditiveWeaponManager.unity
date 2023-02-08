@@ -786,13 +786,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 537874363}
     - target: {fileID: 5644926148023334689, guid: d1b6eae1f0bf4054badf84daebd18c5e, type: 3}
+      propertyPath: _weaponBehaviours.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5644926148023334689, guid: d1b6eae1f0bf4054badf84daebd18c5e, type: 3}
       propertyPath: _weaponBehaviours.Array.data[0]
       value: 
       objectReference: {fileID: 1015501628726125979}
     - target: {fileID: 5644926148023334689, guid: d1b6eae1f0bf4054badf84daebd18c5e, type: 3}
       propertyPath: _weaponBehaviours.Array.data[1]
       value: 
-      objectReference: {fileID: 7477593526119949847}
+      objectReference: {fileID: 1015501627496728226}
     - target: {fileID: 5644926148023334689, guid: d1b6eae1f0bf4054badf84daebd18c5e, type: 3}
       propertyPath: _weaponBehaviours.Array.data[2]
       value: 
@@ -1015,7 +1019,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4183542892077357033}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -1649,7 +1653,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8932783783822377201
 Transform:
   m_ObjectHideFlags: 0
