@@ -6,5 +6,7 @@ namespace BForBoss
     {
         [SerializeField] 
         private WallRunSO _wallRunSerializedObject;
+
+        public WallRunData GetData => _wallRunSerializedObject.MapToData();
     }
 }
