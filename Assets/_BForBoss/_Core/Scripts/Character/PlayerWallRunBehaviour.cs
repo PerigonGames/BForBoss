@@ -308,6 +308,7 @@ namespace BForBoss
             if (!IsWallRunning) 
                 return;
             IsWallRunning = false;
+            _wallRunData = default;
             _baseCharacter.maxWalkSpeed = _baseMaxSpeed;
             _timeSinceWallAttach = 0f;
             _timeSinceWallDetach = 0f;

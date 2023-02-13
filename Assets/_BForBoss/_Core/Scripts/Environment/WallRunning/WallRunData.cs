@@ -1,6 +1,6 @@
 namespace BForBoss
 {
-    public struct WallRunData
+    public readonly struct WallRunData
     {
         public readonly float SpeedMultiplier;
         public readonly float MaxWallRunAcceleration;
@@ -45,25 +45,3 @@ namespace BForBoss
         }
     }
 }
-
-
-/*
-        private float _speedMultiplier = 1f;
-        private float _maxWallRunAcceleration = 20f;
-        private float _wallGravityDownForce = 0f;
-        private float _minSpeed = 3f;
-        private float _minHeight = 1f;
-        private float _wallMaxDistance = 1f;
-        private float _minJumpDuration = 0.3f;
-        private float _obtuseWallAngle = 70f;
-        private float _gravityTimerDuration = 1f;
-        private float _wallResetTimer = 2f;
-        private float _wallBounciness = 6f;
-        private float _jumpHeightMultiplier = 1f;
-        private float _jumpForwardVelocityMultiplier = .75f;
-        private float _maxCameraAngleRoll = 30f;
-        private float _cameraRotateDuration = 1f;
-        private float _lookAlongWallRotationSpeed = 3f;
-        private float _minLookAlongWallStabilizationAngle = 5f;
-        private bool _shouldPrintDebugLogs = false;
-        */
