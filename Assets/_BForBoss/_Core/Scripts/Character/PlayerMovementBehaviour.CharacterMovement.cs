@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Perigon.Character
+namespace BForBoss
 {
     public interface ICharacterMovement
     {

@@ -4,7 +4,7 @@ using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Perigon.Character
+namespace BForBoss
 {
     public class PlayerDashBehaviour : MonoBehaviour
     {

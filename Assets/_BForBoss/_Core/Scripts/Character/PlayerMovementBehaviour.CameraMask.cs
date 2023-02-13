@@ -1,6 +1,6 @@
 using Perigon.Utility;
 
-namespace Perigon.Character
+namespace BForBoss
 {
     public partial class PlayerMovementBehaviour
     {

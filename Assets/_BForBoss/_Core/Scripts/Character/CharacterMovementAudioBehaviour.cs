@@ -1,7 +1,7 @@
 using UnityEngine;
 using FMODUnity;
 
-namespace Perigon.Character
+namespace BForBoss
 {
     
     public class CharacterMovementAudioBehaviour : MonoBehaviour
