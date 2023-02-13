@@ -1,6 +1,6 @@
 using System;
 
-namespace Perigon.Character
+namespace BForBoss
 {
     public enum MovementSoundState
     {

@@ -2,7 +2,7 @@ using DG.Tweening;
 using Perigon.Utility;
 using UnityEngine;
 
-namespace Perigon.Character
+namespace BForBoss
 {
     public class PlayerSlowMotionBehaviour : MonoBehaviour
     {
