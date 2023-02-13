@@ -3,7 +3,7 @@ using System;
 using ECM2.Common;
 using Sirenix.OdinInspector;
 
-namespace Perigon.Character
+namespace BForBoss
 {
     public class PlayerWallRunBehaviour : MonoBehaviour
     {

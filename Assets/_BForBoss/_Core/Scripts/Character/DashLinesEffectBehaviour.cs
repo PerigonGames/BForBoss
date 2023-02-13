@@ -3,13 +3,10 @@
 //     Copyright (c) PERIGON GAMES. 2020 All Rights Reserved
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Perigon.Character
+namespace BForBoss
 {
     [RequireComponent(typeof(RawImage))]
     public class DashLinesEffectBehaviour : MonoBehaviour

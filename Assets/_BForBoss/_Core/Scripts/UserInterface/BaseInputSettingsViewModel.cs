@@ -1,5 +1,4 @@
 using Perigon.Analytics;
-using Perigon.Character;
 using Perigon.Utility;
 
 namespace BForBoss

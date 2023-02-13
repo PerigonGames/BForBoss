@@ -1,4 +1,4 @@
-using Perigon.Character;
+using BForBoss;
 using Perigon.Utility;
 using UnityEngine;
 using UnityEngine.InputSystem;

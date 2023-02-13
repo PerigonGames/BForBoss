@@ -1,6 +1,5 @@
+using BForBoss;
 using NUnit.Framework;
-using Perigon.Character;
-using UnityEngine;
 
 namespace Tests.Character
 {

@@ -2,7 +2,7 @@ using System;
 using ECM2.Common;
 using UnityEngine;
 
-namespace Perigon.Character
+namespace BForBoss
 {
     public class PlayerSlideBehaviour : MonoBehaviour
     {
