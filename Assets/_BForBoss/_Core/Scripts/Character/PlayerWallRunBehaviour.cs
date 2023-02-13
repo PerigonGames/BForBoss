@@ -371,7 +371,7 @@ namespace BForBoss
             {
                 targetAngle = Mathf.Sign(wallDirection) * heading * _wallRunData.MaxCameraAngleRoll;
             }
-            return Mathf.LerpAngle(cameraAngle, targetAngle, Mathf.Max(_timeSinceWallAttach, _timeSinceWallDetach) / _wallRunData.CameraRotateDuration);
+            return Mathf.LerpAngle(cameraAngle, targetAngle, Mathf.Max(_timeSinceWallAttach, _timeSinceWallDetach) / Mathf.Max(_wallRunData.CameraRotateDuration, 0.01f));
         }
 
         private Vector3 ProjectOntoWallNormalized(Vector3 direction)

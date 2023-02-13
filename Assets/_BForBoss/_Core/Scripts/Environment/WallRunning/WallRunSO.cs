@@ -41,9 +41,11 @@ namespace BForBoss
         private float _cameraRotateDuration = 1f;
         [FoldoutGroup("Camera Settings")]
         [SerializeField] 
+        [InfoBox("How fast the camera rotates towards where the player is wall running along")]
         private float _lookAlongWallRotationSpeed = 3f;
         [FoldoutGroup("Camera Settings")]
-        [SerializeField] 
+        [SerializeField]
+        [InfoBox("The angle between where you're looking at and the direction where you're wall running towards")]
         private float _minLookAlongWallStabilizationAngle = 5f;
 
         public WallRunData MapToData()
