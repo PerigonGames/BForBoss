@@ -488,6 +488,7 @@ GameObject:
   - component: {fileID: 373623171}
   - component: {fileID: 373623170}
   - component: {fileID: 373623169}
+  - component: {fileID: 373623173}
   m_Layer: 6
   m_Name: Blockade_Right_2
   m_TagString: Untagged
@@ -573,6 +574,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 26
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &373623173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 373623168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eff17bfe3b85a254fb648e7b930314d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _wallRunSerializedObject: {fileID: 11400000, guid: b4719d04d2d342d488052ab35b24ccb4, type: 2}
 --- !u!1 &426544569
 GameObject:
   m_ObjectHideFlags: 0
@@ -2900,6 +2914,7 @@ GameObject:
   - component: {fileID: 1763685914}
   - component: {fileID: 1763685913}
   - component: {fileID: 1763685912}
+  - component: {fileID: 1763685916}
   m_Layer: 6
   m_Name: Blockade_Right
   m_TagString: Untagged
@@ -2985,6 +3000,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1763685916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1763685911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eff17bfe3b85a254fb648e7b930314d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _wallRunSerializedObject: {fileID: 11400000, guid: b4719d04d2d342d488052ab35b24ccb4, type: 2}
 --- !u!1 &1881138503
 GameObject:
   m_ObjectHideFlags: 0
@@ -3125,6 +3153,7 @@ GameObject:
   - component: {fileID: 2137771789}
   - component: {fileID: 2137771788}
   - component: {fileID: 2137771787}
+  - component: {fileID: 2137771791}
   m_Layer: 6
   m_Name: Blockade_Left
   m_TagString: Untagged
@@ -3210,3 +3239,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2137771791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137771786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eff17bfe3b85a254fb648e7b930314d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _wallRunSerializedObject: {fileID: 11400000, guid: b4719d04d2d342d488052ab35b24ccb4, type: 2}
