@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 792bf67cbbbfa2248ad15d0cbcb62baa, type: 3}
+  m_Name: DefaultWallRunData
+  m_EditorClassIdentifier: 
+  _speedMultiplier: 1
+  _maxWallRunAcceleration: 20
+  _wallGravityDownForce: 0
+  _gravityTimerDuration: 1
+  _wallResetTimer: 2
+  _wallBounciness: 6
+  _jumpHeightMultiplier: 1
+  _jumpForwardVelocityMultiplier: 0.75
+  _maxCameraAngleRoll: 30
+  _cameraRotateDuration: 1
+  _lookAlongWallRotationSpeed: 3
+  _minLookAlongWallStabilizationAngle: 5

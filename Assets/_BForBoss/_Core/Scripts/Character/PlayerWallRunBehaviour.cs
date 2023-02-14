@@ -1,25 +1,14 @@
 using UnityEngine;
 using System;
 using ECM2.Common;
+using Perigon.Utility;
 using Sirenix.OdinInspector;
 
 namespace BForBoss
 {
     public class PlayerWallRunBehaviour : MonoBehaviour
     {
-        private const string PARKOUR_WALL_LAYER = "ParkourWall";
-
         #region SERIALIZED_FIELDS
-        [FoldoutGroup("Wall Run Movement properties")]
-        [SerializeField] 
-        private float _speedMultiplier = 1f;
-        [FoldoutGroup("Wall Run Movement properties")]
-        [SerializeField]
-        private float _maxWallRunAcceleration = 20f;
-        [FoldoutGroup("Wall Run Movement properties")]
-        [SerializeField]
-        private float _wallGravityDownForce = 0f;
-
         [FoldoutGroup("Wall Run Conditions")]
         [SerializeField, Tooltip("Stop a wall run if speed dips below this")]
         private float _minSpeed = 3f;
@@ -35,41 +24,13 @@ namespace BForBoss
         [FoldoutGroup("Wall Run Conditions")]
         [SerializeField, Tooltip("Stop wall running next angled wall is obtuse to this angle")]
         private float _obtuseWallAngle = 70f;
-
-        [FoldoutGroup("Timers")]
-        [SerializeField, Tooltip("Gravity won't apply until after this many seconds")]
-        private float _gravityTimerDuration = 1f;
-        [FoldoutGroup("Timers")]
-        [SerializeField, Tooltip("Wall runs on the same wall are only allowed after this long")]
-        private float _wallResetTimer = 2f;
-
-        [FoldoutGroup("Wall Run jump properties")]
-        [SerializeField]
-        private float _wallBounciness = 6f;
-        [FoldoutGroup("Wall Run jump properties")]
-        [SerializeField]
-        private float _jumpHeightMultiplier = 1f;
-        [FoldoutGroup("Wall Run jump properties")]
-        [SerializeField, Range(0f, 2f)]
-        private float _jumpForwardVelocityMultiplier = .75f;
-
-        [FoldoutGroup("Camera Settings")]
-        [SerializeField]
-        private float _maxCameraAngleRoll = 30f;
-        [FoldoutGroup("Camera Settings")]
-        [SerializeField]
-        private float _cameraRotateDuration = 1f;
-        [FoldoutGroup("Camera Settings")]
-        [SerializeField] 
-        private float _lookAlongWallRotationSpeed = 3f;
-        [FoldoutGroup("Camera Settings")]
-        [SerializeField] 
-        private float _minLookAlongWallStabilizationAngle = 5f;
         [SerializeField]
         private bool _shouldPrintDebugLogs = false;
         #endregion
 
         #region PRIVATE_FIELDS
+
+        private WallRunData _wallRunData = default;
         /// <summary>
         /// If we are in a wall run, check for walls all around the player
         /// </summary>
@@ -99,7 +60,6 @@ namespace BForBoss
         
         private ECM2.Characters.Character _baseCharacter = null;
         private PlayerMovementBehaviour _fpsCharacter = null;
-        private LayerMask _parkourWallMask;
         private Vector3 _lastWallRunNormal;
         private Vector3 _lastPlayerWallRunDirection;
         private Collider _lastWall;
@@ -128,7 +88,6 @@ namespace BForBoss
             _fpsCharacter = baseCharacter as PlayerMovementBehaviour;
             _movementInput = getMovementInput;
             _OnWallRunFinished = onWallRunFinished;
-            _parkourWallMask = LayerMask.GetMask(PARKOUR_WALL_LAYER);
         }
 
         public void Falling(Vector3 _)
@@ -216,11 +175,11 @@ namespace BForBoss
 
         public Vector3 CalcJumpVelocity()
         {
-            var velocity = _baseCharacter.GetVelocity() * _jumpForwardVelocityMultiplier;
+            var velocity = _baseCharacter.GetVelocity() * _wallRunData.JumpForwardVelocityMultiplier;
             if (IsWallRunning)
             {
-                velocity += _lastWallRunNormal * _wallBounciness +
-                            Vector3.up * (_baseCharacter.jumpImpulse * _jumpHeightMultiplier);
+                velocity += _lastWallRunNormal * _wallRunData.WallBounciness +
+                            Vector3.up * (_baseCharacter.jumpImpulse * _wallRunData.JumpHeightMultiplier);
             }
             return velocity;
         }
@@ -228,7 +187,7 @@ namespace BForBoss
 
         public float GetMaxAcceleration()
         {
-            return _maxWallRunAcceleration;
+            return _wallRunData.MaxWallRunAcceleration;
         }
 
         public void OnLateUpdate()
@@ -237,7 +196,7 @@ namespace BForBoss
                 _fpsCharacter.cmWalkingCamera.m_Lens.Dutch = GetCameraRoll();
         }
 
-        public float CalculateWallSideRelativeToPlayer()
+        private float CalculateWallSideRelativeToPlayer()
         {
             if (IsWallRunning)
             {
@@ -257,15 +216,20 @@ namespace BForBoss
         private bool ShouldStartWallRun(out RaycastHit hit)
         {
             var isRaycastingLastWallFromCenterBodyPosition = ProcessRaycasts(_startWallRunDirections, out hit,
-                                                                 ChildTransform, _parkourWallMask, _wallMaxDistance)
+                                                                 ChildTransform, TagsAndLayers.Layers.ParkourWallMask, _wallMaxDistance)
                                                              && hit.collider != _lastWall;
             var isRaycastingLastWallFromEyePosition = ProcessRaycasts(_startWallRunDirections, out hit,
-                                                          _fpsCharacter.eyePivot, _parkourWallMask, _wallMaxDistance)
+                                                          _fpsCharacter.eyePivot, TagsAndLayers.Layers.ParkourWallMask, _wallMaxDistance)
                                                       && hit.collider != _lastWall;
             var shouldStartWallRun = isRaycastingLastWallFromCenterBodyPosition 
                                      && isRaycastingLastWallFromEyePosition
                                      && IsClearOfGround();
-            return shouldStartWallRun;
+            if (shouldStartWallRun && hit.transform.TryGetComponent(out WallRunDataContainer wallRunDataContainer))
+            {
+                _wallRunData = wallRunDataContainer.GetData;
+                return true;
+            }
+            return false;
         }
 
         private void StartWallRun(Collider wallCollider, Vector3 normal)
@@ -287,7 +251,7 @@ namespace BForBoss
         {
             IsWallRunning = true;
             _baseMaxSpeed = _baseCharacter.maxWalkSpeed;
-            _baseCharacter.maxWalkSpeed *= _speedMultiplier;
+            _baseCharacter.maxWalkSpeed *= _wallRunData.SpeedMultiplier;
             _timeSinceWallAttach = 0f;
             _timeSinceWallDetach = 0f;
         }
@@ -308,7 +272,7 @@ namespace BForBoss
         
         private bool IsTooFarFromWall()
         {
-            if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, _parkourWallMask, _wallMaxDistance))
+            if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, TagsAndLayers.Layers.ParkourWallMask, _wallMaxDistance))
             {
                 PrintWallRunLogs("Distance away from Wall: " + Vector3.Distance(ChildTransform.position, hit.point));
                 _lastWallRunNormal = hit.normal;
@@ -329,9 +293,9 @@ namespace BForBoss
                 return;
             
             var angleDifference = Vector3.SignedAngle(characterForward, heading, Vector3.up);
-            if (Mathf.Abs(angleDifference) > _minLookAlongWallStabilizationAngle)
+            if (Mathf.Abs(angleDifference) > _wallRunData.MinLookAlongWallStabilizationAngle)
             {
-                _baseCharacter.AddYawInput(angleDifference * Time.deltaTime * _lookAlongWallRotationSpeed);
+                _baseCharacter.AddYawInput(angleDifference * Time.deltaTime * _wallRunData.LookAlongWallRotationSpeed);
             }
             else
             {
@@ -344,6 +308,7 @@ namespace BForBoss
             if (!IsWallRunning) 
                 return;
             IsWallRunning = false;
+            _wallRunData = default;
             _baseCharacter.maxWalkSpeed = _baseMaxSpeed;
             _timeSinceWallAttach = 0f;
             _timeSinceWallDetach = 0f;
@@ -360,7 +325,7 @@ namespace BForBoss
         private void ResetLastWallIfNeeded()
         {
             _timeSinceWallDetach += Time.deltaTime;
-            if(_timeSinceWallDetach > _wallResetTimer)
+            if(_timeSinceWallDetach > _wallRunData.WallResetTimer)
             {
                 _lastWall = null;
                 PrintWallRunLogs("Reset Last Wall");
@@ -369,8 +334,8 @@ namespace BForBoss
 
         private Vector3 DownwardForceIfNeeded()
         {
-            return _timeSinceWallAttach >= _gravityTimerDuration ? 
-                Vector3.down * (_wallGravityDownForce * Time.fixedDeltaTime)
+            return _timeSinceWallAttach >= _wallRunData.GravityTimerDuration ? 
+                Vector3.down * (_wallRunData.WallGravityDownForce * Time.fixedDeltaTime)
                 : Vector3.zero;
         }
 
@@ -404,9 +369,9 @@ namespace BForBoss
             float targetAngle = 0;
             if (wallDirection != 0)
             {
-                targetAngle = Mathf.Sign(wallDirection) * heading * _maxCameraAngleRoll;
+                targetAngle = Mathf.Sign(wallDirection) * heading * _wallRunData.MaxCameraAngleRoll;
             }
-            return Mathf.LerpAngle(cameraAngle, targetAngle, Mathf.Max(_timeSinceWallAttach, _timeSinceWallDetach) / _cameraRotateDuration);
+            return Mathf.LerpAngle(cameraAngle, targetAngle, Mathf.Max(_timeSinceWallAttach, _timeSinceWallDetach) / Mathf.Max(_wallRunData.CameraRotateDuration, 0.01f));
         }
 
         private Vector3 ProjectOntoWallNormalized(Vector3 direction)

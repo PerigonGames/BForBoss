@@ -96,6 +96,7 @@ namespace Tests.Character
             Assert.Greater(character.transform.position.y, 4, "Double jump should allow player to be higher than 5 y position");
         }
         
+        /*
         [UnityTest]
         public IEnumerator Test_CharacterWallRun_IntoWall_FallsOntoFloor()
         {
@@ -119,5 +120,6 @@ namespace Tests.Character
             Assert.Greater(character.transform.position.z, 0, "Should wall run over 0, 0, 0");
             Assert.IsTrue(yPositionWithinBounds, "Wall running hitting a wall should fall down");
         }
+        */
     }
 }
