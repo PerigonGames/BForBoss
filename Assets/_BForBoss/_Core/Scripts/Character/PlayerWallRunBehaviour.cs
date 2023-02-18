@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 using ECM2.Common;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
@@ -10,6 +11,8 @@ namespace BForBoss
     {
         #region SERIALIZED_FIELDS
         [FoldoutGroup("Wall Run Conditions")]
+        [SerializeField]
+        private float _wallResetTimer = 2;
         [SerializeField, Tooltip("Stop a wall run if speed dips below this")]
         private float _minSpeed = 3f;
         [FoldoutGroup("Wall Run Conditions")]
@@ -212,7 +215,6 @@ namespace BForBoss
 
         #region PRIVATE_METHODS
         
-        
         private bool ShouldStartWallRun(out RaycastHit hit)
         {
             var isRaycastingLastWallFromCenterBodyPosition = ProcessRaycasts(_startWallRunDirections, out hit,
@@ -325,7 +327,7 @@ namespace BForBoss
         private void ResetLastWallIfNeeded()
         {
             _timeSinceWallDetach += Time.deltaTime;
-            if(_timeSinceWallDetach > _wallRunData.WallResetTimer)
+            if(_timeSinceWallDetach > _wallResetTimer)
             {
                 _lastWall = null;
                 PrintWallRunLogs("Reset Last Wall");
@@ -415,8 +417,22 @@ namespace BForBoss
                 }
 #endif
             }
-            return GetSmallestRaycastHitIfValid(hits, out smallestRaycastResult);
+            
+            return GetSmallestRaycastHitIfValid(FilterRayCastedParkourWalls(hits), out smallestRaycastResult);
+        }
 
+        private RaycastHit[] FilterRayCastedParkourWalls(RaycastHit[] hits)
+        {
+            var filteredHits = new List<RaycastHit>();
+            foreach (var hit in hits)
+            {
+                if (hit.collider != null && hit.collider.TryGetComponent(out WallRunDataContainer _))
+                {
+                    filteredHits.Add(hit);
+                }
+            }
+
+            return filteredHits.ToArray();
         }
 
         private void PrintWallRunLogs(string log)

@@ -6,7 +6,6 @@ namespace BForBoss
         public readonly float MaxWallRunAcceleration;
         public readonly float WallGravityDownForce;
         public readonly float GravityTimerDuration;
-        public readonly float WallResetTimer;
         public readonly float WallBounciness;
         public readonly float JumpHeightMultiplier;
         public readonly float JumpForwardVelocityMultiplier;
@@ -20,7 +19,6 @@ namespace BForBoss
             float maxWallRunAcceleration,
             float wallGravityDownForce,
             float gravityTimerDuration,
-            float wallResetTimer,
             float wallBounciness,
             float jumpHeightMultiplier,
             float jumpForwardVelocityMultiplier,
@@ -34,7 +32,6 @@ namespace BForBoss
             MaxWallRunAcceleration = maxWallRunAcceleration;
             WallGravityDownForce = wallGravityDownForce;
             GravityTimerDuration = gravityTimerDuration;
-            WallResetTimer = wallResetTimer;
             WallBounciness = wallBounciness;
             JumpHeightMultiplier = jumpHeightMultiplier;
             JumpForwardVelocityMultiplier = jumpForwardVelocityMultiplier;

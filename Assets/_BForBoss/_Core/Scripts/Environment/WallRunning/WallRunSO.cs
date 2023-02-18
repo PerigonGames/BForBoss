@@ -19,9 +19,6 @@ namespace BForBoss
         [FoldoutGroup("Timers")]
         [SerializeField, Tooltip("Gravity won't apply until after this many seconds")]
         private float _gravityTimerDuration = 1f;
-        [FoldoutGroup("Timers")]
-        [SerializeField, Tooltip("Wall runs on the same wall are only allowed after this long")]
-        private float _wallResetTimer = 2f;
 
         [FoldoutGroup("Wall Run jump properties")]
         [SerializeField]
@@ -55,7 +52,6 @@ namespace BForBoss
                 maxWallRunAcceleration: _maxWallRunAcceleration,
                 wallGravityDownForce: _wallGravityDownForce,
                 gravityTimerDuration: _gravityTimerDuration,
-                wallResetTimer: _wallResetTimer,
                 wallBounciness: _wallBounciness,
                 jumpHeightMultiplier: _jumpHeightMultiplier,
                 jumpForwardVelocityMultiplier: _jumpForwardVelocityMultiplier,
