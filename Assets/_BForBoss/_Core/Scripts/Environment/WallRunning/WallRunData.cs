@@ -9,10 +9,6 @@ namespace BForBoss
         public readonly float WallBounciness;
         public readonly float JumpHeightMultiplier;
         public readonly float JumpForwardVelocityMultiplier;
-        public readonly float MaxCameraAngleRoll;
-        public readonly float CameraRotateDuration;
-        public readonly float LookAlongWallRotationSpeed;
-        public readonly float MinLookAlongWallStabilizationAngle;
 
         public WallRunData(
             float speedMultiplier,
@@ -21,12 +17,8 @@ namespace BForBoss
             float gravityTimerDuration,
             float wallBounciness,
             float jumpHeightMultiplier,
-            float jumpForwardVelocityMultiplier,
-            float maxCameraAngleRoll,
-            float cameraRotateDuration,
-            float lookAlongWallRotationSpeed,
-            float minLookAlongWallStabilizationAngle
-            )
+            float jumpForwardVelocityMultiplier
+        )
         {
             SpeedMultiplier = speedMultiplier;
             MaxWallRunAcceleration = maxWallRunAcceleration;
@@ -35,10 +27,6 @@ namespace BForBoss
             WallBounciness = wallBounciness;
             JumpHeightMultiplier = jumpHeightMultiplier;
             JumpForwardVelocityMultiplier = jumpForwardVelocityMultiplier;
-            MaxCameraAngleRoll = maxCameraAngleRoll;
-            CameraRotateDuration = cameraRotateDuration;
-            LookAlongWallRotationSpeed = lookAlongWallRotationSpeed;
-            MinLookAlongWallStabilizationAngle = minLookAlongWallStabilizationAngle;
         }
     }
 }

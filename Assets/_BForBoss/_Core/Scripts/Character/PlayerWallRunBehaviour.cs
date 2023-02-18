@@ -29,6 +29,21 @@ namespace BForBoss
         private float _obtuseWallAngle = 70f;
         [SerializeField]
         private bool _shouldPrintDebugLogs = false;
+        
+        [FoldoutGroup("Camera Settings")]
+        [SerializeField]
+        private float _maxCameraAngleRoll = 30f;
+        [FoldoutGroup("Camera Settings")]
+        [SerializeField]
+        private float _cameraRotateDuration = 1f;
+        [FoldoutGroup("Camera Settings")]
+        [SerializeField] 
+        [Tooltip("How fast the camera rotates towards where the player is wall running along")]
+        private float _lookAlongWallRotationSpeed = 3f;
+        [FoldoutGroup("Camera Settings")]
+        [SerializeField]
+        [Tooltip("The angle between where you're looking at and the direction where you're wall running towards")]
+        private float _minLookAlongWallStabilizationAngle = 5f;
         #endregion
 
         #region PRIVATE_FIELDS
@@ -160,6 +175,8 @@ namespace BForBoss
                 StopWallRunning(jumpedOutOfWallRun: false);
                 return;
             }
+            
+            //TODO - Get new Wall Run Data Container if hitting new wall
 
             _timeSinceWallAttach += Time.fixedDeltaTime;
             _lastPlayerWallRunDirection = ProjectOntoWallNormalized(_lastPlayerWallRunDirection);
@@ -295,9 +312,9 @@ namespace BForBoss
                 return;
             
             var angleDifference = Vector3.SignedAngle(characterForward, heading, Vector3.up);
-            if (Mathf.Abs(angleDifference) > _wallRunData.MinLookAlongWallStabilizationAngle)
+            if (Mathf.Abs(angleDifference) > _minLookAlongWallStabilizationAngle)
             {
-                _baseCharacter.AddYawInput(angleDifference * Time.deltaTime * _wallRunData.LookAlongWallRotationSpeed);
+                _baseCharacter.AddYawInput(angleDifference * Time.deltaTime * _lookAlongWallRotationSpeed);
             }
             else
             {
@@ -371,9 +388,9 @@ namespace BForBoss
             float targetAngle = 0;
             if (wallDirection != 0)
             {
-                targetAngle = Mathf.Sign(wallDirection) * heading * _wallRunData.MaxCameraAngleRoll;
+                targetAngle = Mathf.Sign(wallDirection) * heading * _maxCameraAngleRoll;
             }
-            return Mathf.LerpAngle(cameraAngle, targetAngle, Mathf.Max(_timeSinceWallAttach, _timeSinceWallDetach) / Mathf.Max(_wallRunData.CameraRotateDuration, 0.01f));
+            return Mathf.LerpAngle(cameraAngle, targetAngle, Mathf.Max(_timeSinceWallAttach, _timeSinceWallDetach) / Mathf.Max(_cameraRotateDuration, 0.01f));
         }
 
         private Vector3 ProjectOntoWallNormalized(Vector3 direction)

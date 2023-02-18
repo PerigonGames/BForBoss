@@ -105,7 +105,7 @@ namespace BForBoss
             }
             if (_wallRunBehaviour != null)
             {
-                _wallRunBehaviour.Initialize(this, base.GetMovementInput, SetJumpCount);
+                _wallRunBehaviour.Initialize(this, base.GetMovementInput, onWallRunFinished: SetJumpCount);
             }
         }
 
