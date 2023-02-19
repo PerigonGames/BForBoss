@@ -45,7 +45,7 @@ namespace BForBoss
         public override bool CanJump()
         {
             if (_wallRunBehaviour != null)
-                return _wallRunBehaviour.CanJump() || base.CanJump();
+                return _wallRunBehaviour.IsWallRunning || base.CanJump();
             return base.CanJump();
         }
         

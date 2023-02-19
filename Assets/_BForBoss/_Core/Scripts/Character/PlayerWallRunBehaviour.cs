@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using ECM2.Common;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
+using Logger = Perigon.Utility.Logger;
 
 namespace BForBoss
 {
@@ -27,8 +28,6 @@ namespace BForBoss
         [FoldoutGroup("Wall Run Conditions")]
         [SerializeField, Tooltip("Stop wall running next angled wall is obtuse to this angle")]
         private float _obtuseWallAngle = 70f;
-        [SerializeField]
-        private bool _shouldPrintDebugLogs = false;
         
         [FoldoutGroup("Camera Settings")]
         [SerializeField]
@@ -141,11 +140,6 @@ namespace BForBoss
             }
         }
 
-        public bool CanJump()
-        {
-            return IsWallRunning; // can always jump out of a wall run
-        }
-
         public void OnWallRunning()
         {
             var lastLookTowardsWall = LastLookTowardsWall;
@@ -176,8 +170,6 @@ namespace BForBoss
                 return;
             }
             
-            //TODO - Get new Wall Run Data Container if hitting new wall
-
             _timeSinceWallAttach += Time.fixedDeltaTime;
             _lastPlayerWallRunDirection = ProjectOntoWallNormalized(_lastPlayerWallRunDirection);
             var lookTowardsWall = LastLookTowardsWall;
@@ -189,8 +181,21 @@ namespace BForBoss
                 return;
             }
 
+            SetNextWallDifferentDataIfNeeded();
             StabilizeCameraIfNeeded(ChildTransform.forward, _lastPlayerWallRunDirection);
             _baseCharacter.SetVelocity(constantVelocity + DownwardForceIfNeeded());
+        }
+
+        private void SetNextWallDifferentDataIfNeeded()
+        {
+            if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, TagsAndLayers.Layers.ParkourWallMask, _wallMaxDistance))
+            {
+                if (hit.collider != null
+                    && hit.collider.TryGetComponent(out WallRunDataContainer wallRunDataContainer))
+                {
+                    _wallRunData = wallRunDataContainer.GetData;
+                }
+            }
         }
 
         public Vector3 CalcJumpVelocity()
@@ -454,10 +459,7 @@ namespace BForBoss
 
         private void PrintWallRunLogs(string log)
         {
-            if (_shouldPrintDebugLogs)
-            {
-                Debug.Log(log);
-            }
+            Logger.LogString(log, "wallrunning");
         }
         #endregion
     }
