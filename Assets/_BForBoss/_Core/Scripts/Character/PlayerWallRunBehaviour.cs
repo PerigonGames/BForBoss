@@ -1,8 +1,10 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 using ECM2.Common;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
+using Logger = Perigon.Utility.Logger;
 
 namespace BForBoss
 {
@@ -10,6 +12,8 @@ namespace BForBoss
     {
         #region SERIALIZED_FIELDS
         [FoldoutGroup("Wall Run Conditions")]
+        [SerializeField]
+        private float _wallResetTimer = 2;
         [SerializeField, Tooltip("Stop a wall run if speed dips below this")]
         private float _minSpeed = 3f;
         [FoldoutGroup("Wall Run Conditions")]
@@ -24,8 +28,21 @@ namespace BForBoss
         [FoldoutGroup("Wall Run Conditions")]
         [SerializeField, Tooltip("Stop wall running next angled wall is obtuse to this angle")]
         private float _obtuseWallAngle = 70f;
+        
+        [FoldoutGroup("Camera Settings")]
         [SerializeField]
-        private bool _shouldPrintDebugLogs = false;
+        private float _maxCameraAngleRoll = 30f;
+        [FoldoutGroup("Camera Settings")]
+        [SerializeField]
+        private float _cameraRotateDuration = 1f;
+        [FoldoutGroup("Camera Settings")]
+        [SerializeField] 
+        [Tooltip("How fast the camera rotates towards where the player is wall running along")]
+        private float _lookAlongWallRotationSpeed = 3f;
+        [FoldoutGroup("Camera Settings")]
+        [SerializeField]
+        [Tooltip("The angle between where you're looking at and the direction where you're wall running towards")]
+        private float _minLookAlongWallStabilizationAngle = 5f;
         #endregion
 
         #region PRIVATE_FIELDS
@@ -123,11 +140,6 @@ namespace BForBoss
             }
         }
 
-        public bool CanJump()
-        {
-            return IsWallRunning; // can always jump out of a wall run
-        }
-
         public void OnWallRunning()
         {
             var lastLookTowardsWall = LastLookTowardsWall;
@@ -157,7 +169,7 @@ namespace BForBoss
                 StopWallRunning(jumpedOutOfWallRun: false);
                 return;
             }
-
+            
             _timeSinceWallAttach += Time.fixedDeltaTime;
             _lastPlayerWallRunDirection = ProjectOntoWallNormalized(_lastPlayerWallRunDirection);
             var lookTowardsWall = LastLookTowardsWall;
@@ -169,8 +181,21 @@ namespace BForBoss
                 return;
             }
 
+            SetNextWallDifferentDataIfNeeded();
             StabilizeCameraIfNeeded(ChildTransform.forward, _lastPlayerWallRunDirection);
             _baseCharacter.SetVelocity(constantVelocity + DownwardForceIfNeeded());
+        }
+
+        private void SetNextWallDifferentDataIfNeeded()
+        {
+            if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, TagsAndLayers.Layers.ParkourWallMask, _wallMaxDistance))
+            {
+                if (hit.collider != null
+                    && hit.collider.TryGetComponent(out WallRunDataContainer wallRunDataContainer))
+                {
+                    _wallRunData = wallRunDataContainer.GetData;
+                }
+            }
         }
 
         public Vector3 CalcJumpVelocity()
@@ -211,7 +236,6 @@ namespace BForBoss
         #endregion
 
         #region PRIVATE_METHODS
-        
         
         private bool ShouldStartWallRun(out RaycastHit hit)
         {
@@ -293,9 +317,9 @@ namespace BForBoss
                 return;
             
             var angleDifference = Vector3.SignedAngle(characterForward, heading, Vector3.up);
-            if (Mathf.Abs(angleDifference) > _wallRunData.MinLookAlongWallStabilizationAngle)
+            if (Mathf.Abs(angleDifference) > _minLookAlongWallStabilizationAngle)
             {
-                _baseCharacter.AddYawInput(angleDifference * Time.deltaTime * _wallRunData.LookAlongWallRotationSpeed);
+                _baseCharacter.AddYawInput(angleDifference * Time.deltaTime * _lookAlongWallRotationSpeed);
             }
             else
             {
@@ -325,7 +349,7 @@ namespace BForBoss
         private void ResetLastWallIfNeeded()
         {
             _timeSinceWallDetach += Time.deltaTime;
-            if(_timeSinceWallDetach > _wallRunData.WallResetTimer)
+            if(_timeSinceWallDetach > _wallResetTimer)
             {
                 _lastWall = null;
                 PrintWallRunLogs("Reset Last Wall");
@@ -369,9 +393,9 @@ namespace BForBoss
             float targetAngle = 0;
             if (wallDirection != 0)
             {
-                targetAngle = Mathf.Sign(wallDirection) * heading * _wallRunData.MaxCameraAngleRoll;
+                targetAngle = Mathf.Sign(wallDirection) * heading * _maxCameraAngleRoll;
             }
-            return Mathf.LerpAngle(cameraAngle, targetAngle, Mathf.Max(_timeSinceWallAttach, _timeSinceWallDetach) / Mathf.Max(_wallRunData.CameraRotateDuration, 0.01f));
+            return Mathf.LerpAngle(cameraAngle, targetAngle, Mathf.Max(_timeSinceWallAttach, _timeSinceWallDetach) / Mathf.Max(_cameraRotateDuration, 0.01f));
         }
 
         private Vector3 ProjectOntoWallNormalized(Vector3 direction)
@@ -415,16 +439,27 @@ namespace BForBoss
                 }
 #endif
             }
-            return GetSmallestRaycastHitIfValid(hits, out smallestRaycastResult);
+            
+            return GetSmallestRaycastHitIfValid(FilterRayCastedParkourWalls(hits), out smallestRaycastResult);
+        }
 
+        private RaycastHit[] FilterRayCastedParkourWalls(RaycastHit[] hits)
+        {
+            var filteredHits = new List<RaycastHit>();
+            foreach (var hit in hits)
+            {
+                if (hit.collider != null && hit.collider.TryGetComponent(out WallRunDataContainer _))
+                {
+                    filteredHits.Add(hit);
+                }
+            }
+
+            return filteredHits.ToArray();
         }
 
         private void PrintWallRunLogs(string log)
         {
-            if (_shouldPrintDebugLogs)
-            {
-                Debug.Log(log);
-            }
+            Logger.LogString(log, "wallrunning");
         }
         #endregion
     }
