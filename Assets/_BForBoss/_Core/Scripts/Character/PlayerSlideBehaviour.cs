@@ -1,29 +1,32 @@
-using System;
 using ECM2.Common;
 using UnityEngine;
 
 namespace BForBoss
 {
+    public interface IPlayerSlideEvents
+    {
+        void OnSlideStarted();
+    }
+    
     public class PlayerSlideBehaviour : MonoBehaviour
     {
         [SerializeField] private float _maxWalkSpeedSliding = 12;
         [SerializeField] private float _groundFrictionSliding = 0.5f;
         [SerializeField] private float _brakingDecelerationSliding = 10;
         [SerializeField] private float _slideImpulse = 10;
+
+        public IPlayerSlideEvents SlideEventsDelegate = null;
         
         private bool _isSliding = false;
-
         private ECM2.Characters.Character _baseCharacter = null;
-        private Action _onSlide = null;
         
         public bool IsSliding => _isSliding;
         public float MaxWalkSpeedSliding => _maxWalkSpeedSliding;
         public float brakingDecelerationSliding => _brakingDecelerationSliding;
 
-        public void Initialize(ECM2.Characters.Character character, Action onSlide)
+        public void Initialize(ECM2.Characters.Character character)
         {
             _baseCharacter = character;
-            _onSlide = onSlide;
         }
         
         public void Slide()
@@ -34,7 +37,7 @@ namespace BForBoss
             }
 
             _isSliding = true;
-            _onSlide?.Invoke();
+            SlideEventsDelegate?.OnSlideStarted();
             
             _baseCharacter.brakingFriction = _groundFrictionSliding;
             _baseCharacter.useSeparateBrakingFriction = true;
