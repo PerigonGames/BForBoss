@@ -32,8 +32,6 @@ namespace BForBoss
             _unModifiedPlayerSpeed = maxWalkSpeed;
             SetControlConfiguration();
             SetCameraCullingMask();
-
-            _inputSystem.OnDashAction += _dashBehaviour.OnDash;
         }
 
         public override bool CanJump()
@@ -63,6 +61,7 @@ namespace BForBoss
             characterLook.mouseVerticalSensitivity = _inputConfiguration.MouseVerticalSensitivity;
             characterLook.controllerHorizontalSensitivity = _inputConfiguration.ControllerHorizontalSensitivity;
             characterLook.controllerVerticalSensitivity = _inputConfiguration.ControllerVerticalSensitivity;
+            _inputSystem.OnDashAction += _dashBehaviour.OnDash;
         }
         
         public void ModifyPlayerSpeed(float modificationMultiplier)
