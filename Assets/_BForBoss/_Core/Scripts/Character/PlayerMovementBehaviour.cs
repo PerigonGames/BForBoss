@@ -51,7 +51,7 @@ namespace BForBoss
 
         public override float GetMaxAcceleration()
         {
-            return IsWallRunning ? _wallRunBehaviour.GetMaxAcceleration() : base.GetMaxAcceleration();
+            return _wallRunBehaviour.IsWallRunning ? _wallRunBehaviour.GetMaxAcceleration() : base.GetMaxAcceleration();
         }
 
         public void SetControlConfiguration()
@@ -149,7 +149,7 @@ namespace BForBoss
 
         protected override Vector3 CalcJumpVelocity()
         {
-            return IsWallRunning ? _wallRunBehaviour.CalcJumpVelocity() : base.CalcJumpVelocity();
+            return _wallRunBehaviour.IsWallRunning ? _wallRunBehaviour.CalcJumpVelocity() : base.CalcJumpVelocity();
         }
 
         protected override void OnMove()

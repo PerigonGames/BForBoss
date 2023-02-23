@@ -6,18 +6,18 @@ namespace BForBoss
     {
         NotPlaying, Running, WallRunning
     }
-    
+
     public class CharacterMovementAudio
     {
-        private readonly ICharacterMovement _characterMovement = null;
+        private readonly IPlayerMovementStates _playerMovementStates = null;
         private MovementSoundState _state = MovementSoundState.NotPlaying;
-        private float _minSpeed = 0;
+        private readonly float _minSpeed = 0;
 
         public event Action<MovementSoundState> OnSoundStateChange;
 
-        public CharacterMovementAudio(ICharacterMovement characterMovement, float minSpeed)
+        public CharacterMovementAudio(IPlayerMovementStates playerMovementStates, float minSpeed)
         {
-            _characterMovement = characterMovement;
+            _playerMovementStates = playerMovementStates;
             _minSpeed = minSpeed;
         }
 
@@ -45,22 +45,27 @@ namespace BForBoss
 
         public float GetPlayerSpeedNormalized()
         {
-            var maxSpeed = _characterMovement.CharacterMaxSpeed;
-            return _state == MovementSoundState.Running && maxSpeed != 0
-                ? _characterMovement.SpeedMagnitude / maxSpeed
-                : 0f;
+            if (_state == MovementSoundState.Running)
+            {
+                return _playerMovementStates.GetNormalizedSpeed();
+            }
+
+            return 0;
         }
         
         private MovementSoundState GetNextStateFromNotPlaying()
         {
-            if (_characterMovement.SpeedMagnitude < _minSpeed) 
+            if (_playerMovementStates.IsLowerThanSpeed(_minSpeed))
+            {
                 return MovementSoundState.NotPlaying;
-            if (_characterMovement.IsWallRunning)
+            }
+            
+            if (_playerMovementStates.IsWallRunning)
             {
                 return MovementSoundState.WallRunning;
             }
             
-            if (_characterMovement.IsWalking())
+            if (_playerMovementStates.IsRunning)
             {
                 return MovementSoundState.Running;
             }
@@ -69,12 +74,12 @@ namespace BForBoss
         
         private MovementSoundState GetNextStateFromRunning()
         {
-            bool isWalkingOrWallRunning = _characterMovement.IsWallRunning || _characterMovement.IsWalking();
-            if (_characterMovement.SpeedMagnitude < _minSpeed || !isWalkingOrWallRunning)
+            if (_playerMovementStates.IsLowerThanSpeed(_minSpeed) || 
+                (!_playerMovementStates.IsWallRunning && !_playerMovementStates.IsRunning))
             {
                 return MovementSoundState.NotPlaying;
             }
-            if (_characterMovement.IsWallRunning)
+            if (_playerMovementStates.IsWallRunning)
             {
                 return MovementSoundState.WallRunning;
             }
@@ -83,12 +88,12 @@ namespace BForBoss
         
         private MovementSoundState GetNextStateFromWallRunning()
         {
-            bool isWalkingOrWallRunning = _characterMovement.IsWallRunning || _characterMovement.IsWalking();
-            if (_characterMovement.SpeedMagnitude < _minSpeed || !isWalkingOrWallRunning)
+            if (_playerMovementStates.IsLowerThanSpeed(_minSpeed) || 
+                (!_playerMovementStates.IsWallRunning && !_playerMovementStates.IsRunning))
             {
                 return MovementSoundState.NotPlaying;
             }
-            if (!_characterMovement.IsWallRunning)
+            if (!_playerMovementStates.IsWallRunning)
             {
                 return MovementSoundState.Running;
             }

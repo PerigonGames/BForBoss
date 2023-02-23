@@ -3,34 +3,48 @@ using UnityEngine;
 
 namespace BForBoss
 {
-    public interface ICharacterMovement
+    public interface IPlayerMovementStates
     {
-        Transform RootPivot { get; }
-        float CharacterMaxSpeed { get; }
+        bool IsLowerThanSpeed(float speed);
+        float GetNormalizedSpeed();
         bool IsWallRunning { get; }
-        float SpeedMagnitude { get; }
-        bool IsWalking();
+        bool IsRunning { get; }
     }
-    
-    public partial class PlayerMovementBehaviour : ICharacterMovement
+
+    public partial class PlayerMovementBehaviour : IPlayerMovementStates
     {
-        public Transform RootPivot => rootPivot;
-        public float SpeedMagnitude => GetVelocity().magnitude;
-        public float CharacterMaxSpeed => GetMaxSpeed();
+        public bool IsLowerThanSpeed(float speed) => GetVelocity().magnitude < speed;
+
+        public float GetNormalizedSpeed()
+        {
+            if (GetMaxSpeed() != 0)
+            {
+                return GetVelocity().magnitude / GetMaxSpeed();
+            }
+
+            return 0;
+        }
+
         public bool IsWallRunning => _wallRunBehaviour.IsWallRunning;
+        public bool IsRunning => IsWalking();
     }
     
+    public partial class PlayerMovementBehaviour : IGetPlayerTransform
+    {
+        Transform IGetPlayerTransform.Value => rootPivot;
+    }
+
     public partial class PlayerMovementBehaviour : IWeaponBobIntensity
     {
-        public float Value
+        float IWeaponBobIntensity.Value
         {
             get
             {
                 var canBob = (_wallRunBehaviour.IsWallRunning || IsOnGround()) && 
                              !_dashBehaviour.IsDashing && 
                              !_slideBehaviour.IsSliding && 
-                             SpeedMagnitude > 0;
-                return SpeedMagnitude * (canBob ? 1 : 0);
+                             GetVelocity().magnitude > 0;
+                return GetVelocity().magnitude * (canBob ? 1 : 0);
             }
         }
     }

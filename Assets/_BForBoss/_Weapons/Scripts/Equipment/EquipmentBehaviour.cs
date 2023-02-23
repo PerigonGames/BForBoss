@@ -5,6 +5,11 @@ using UnityEngine;
 
 namespace Perigon.Weapons
 {
+    public interface IGetPlayerTransform
+    {
+        Transform Value { get; }
+    }
+    
     [RequireComponent(typeof(BulletSpawner))]
     [RequireComponent(typeof(WallHitVFXSpawner))]
     public partial class EquipmentBehaviour : MonoBehaviour
@@ -19,11 +24,11 @@ namespace Perigon.Weapons
 
         private int _currentWeaponIndex = 0;
         
-        public void Initialize(Transform playerPivotTransform, PGInputSystem inputSystem, IWeaponAnimationProvider weaponAnimationProvider, ICrossHairProvider crossHairProvider)
+        public void Initialize(IGetPlayerTransform getPlayerTransform, PGInputSystem inputSystem, IWeaponAnimationProvider weaponAnimationProvider, ICrossHairProvider crossHairProvider)
         {
             _inputSystem = inputSystem;
             _weaponAnimationProvider = weaponAnimationProvider;
-            _meleeBehaviour.Initialize(() => playerPivotTransform, onSuccessfulAttack: () => _weaponAnimationProvider.MeleeAttack(CurrentWeapon.AnimationType));
+            _meleeBehaviour.Initialize(getPlayerTransform, onSuccessfulAttack: () => _weaponAnimationProvider.MeleeAttack(CurrentWeapon.AnimationType));
             SetupWeapons(crossHairProvider);
             SetupInputBinding();
         }

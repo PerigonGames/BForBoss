@@ -19,7 +19,7 @@ namespace BForBoss
         public void Initialize(PlayerBehaviour playerBehaviour, PGInputSystem inputSystem)
         {
             _weaponAnimationController.Initialize(playerBehaviour.PlayerMovement);
-            _equipmentBehaviour.Initialize(playerBehaviour.PlayerMovement.RootPivot, inputSystem, _weaponAnimationController, _crossHairBehaviour);
+            _equipmentBehaviour.Initialize(playerBehaviour.PlayerMovement, inputSystem, _weaponAnimationController, _crossHairBehaviour);
             _ammunitionCountView.Initialize(_equipmentBehaviour);
             _reloadView.Initialize(_equipmentBehaviour);
             StateManager.Instance.OnStateChanged += OnStateChanged;
