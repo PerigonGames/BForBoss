@@ -16,6 +16,11 @@ namespace Perigon.Weapons
         void SwapWeapon();
         void ReloadingWeapon(bool isReloading);
     }
+
+    public interface IWeaponBobIntensity
+    {
+        float Value { get; }
+    }
     
     [DefaultExecutionOrder(101)] // Cinemachine uses a modified script execution of 100, this ensures we run after cinemachine updates the camera position
     public class WeaponAnimationController : MonoBehaviour, IWeaponAnimationProvider
@@ -34,25 +39,12 @@ namespace Perigon.Weapons
         [Resolve][SerializeField] private GameObject _weaponHolder = null;
         [Resolve][SerializeField] private Animator _weaponAnimator = null;
         private Camera _mainCam;
-        
-        private Func<float> _characterVelocity = null;
-        private Func<bool> _isWallRunning = null;
-        private Func<bool> _isSliding = null;
-        private Func<bool> _isDashing = null;
-        private Func<bool> _isGrounded = null;
 
-        public void Initialize(
-            Func<float> characterVelocity, 
-            Func<bool> isWallRunning,
-            Func<bool> isGrounded,
-            Func<bool> isSliding,
-            Func<bool> isDashing)
+        private IWeaponBobIntensity _weaponBobIntensity;
+
+        public void Initialize(IWeaponBobIntensity weaponBobIntensity)
         {
-            _characterVelocity = characterVelocity;
-            _isGrounded = isGrounded;
-            _isSliding = isSliding;
-            _isDashing = isDashing;
-            _isWallRunning = isWallRunning;
+            _weaponBobIntensity = weaponBobIntensity;
         }
         
         public void MeleeAttack(WeaponAnimationType type) 
@@ -98,20 +90,12 @@ namespace Perigon.Weapons
 
         private void LateUpdate()
         {
-            _weaponAnimator.SetFloat(WALKING_WEAPON_PARAM, _characterVelocity() * (CanBobWeapon() ? 1 : 0));
+            _weaponAnimator.SetFloat(WALKING_WEAPON_PARAM, _weaponBobIntensity.Value);
             
             var camTransform = _mainCam.transform;
             _weaponHolder.transform.SetPositionAndRotation(
                 camTransform.position,
                 camTransform.rotation);
-        }
-
-        private bool CanBobWeapon()
-        {
-            return (_isWallRunning() || _isGrounded()) 
-                   && !_isDashing()
-                   && !_isSliding()
-                   && _characterVelocity() > 0;
         }
     }
 }

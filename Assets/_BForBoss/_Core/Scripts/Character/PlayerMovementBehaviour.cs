@@ -41,12 +41,12 @@ namespace BForBoss
         
         public override float GetBrakingDeceleration()
         {
-            return IsSliding ? _slideBehaviour.brakingDecelerationSliding : base.GetBrakingDeceleration();
+            return _slideBehaviour.IsSliding ? _slideBehaviour.brakingDecelerationSliding : base.GetBrakingDeceleration();
         }
 
         public override float GetMaxSpeed()
         {
-            return IsSliding ? _slideBehaviour.MaxWalkSpeedSliding : base.GetMaxSpeed();
+            return _slideBehaviour.IsSliding ? _slideBehaviour.MaxWalkSpeedSliding : base.GetMaxSpeed();
         }
 
         public override float GetMaxAcceleration()
@@ -115,7 +115,7 @@ namespace BForBoss
 
         protected override Vector3 CalcDesiredVelocity()
         {
-            return IsSliding ? Vector3.zero : base.CalcDesiredVelocity();
+            return _slideBehaviour.IsSliding ? Vector3.zero : base.CalcDesiredVelocity();
         }
 
         protected override void OnCrouched()
