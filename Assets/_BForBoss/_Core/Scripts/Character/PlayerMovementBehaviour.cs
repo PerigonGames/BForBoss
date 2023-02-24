@@ -3,18 +3,15 @@ using Cinemachine;
 using ECM2.Characters;
 using ECM2.Components;
 using Perigon.Utility;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BForBoss
 {
-    public partial class PlayerMovementBehaviour : FirstPersonCharacter
+    public partial class PlayerMovementBehaviour : FirstPersonCharacter, IPlayerDashEvents, IPlayerSlideEvents, IPlayerWallRunEvents
     {
         [Header("Cinemachine")]
         public CinemachineVirtualCamera cmWalkingCamera;
         public CinemachineVirtualCamera cmCrouchedCamera;
-
-        [Title("Optional Behaviour")]
         private PlayerDashBehaviour _dashBehaviour = null;
         private PlayerWallRunBehaviour _wallRunBehaviour = null;
         private PlayerSlideBehaviour _slideBehaviour = null;
@@ -24,8 +21,8 @@ namespace BForBoss
         
         private float _unModifiedPlayerSpeed;
         
-        public event Action OnDashActivated;
-        public event Action Slid;
+        public event Action OnDashStarted;
+        public event Action OnSlideStarted;
         
         
         public void Initialize(PGInputSystem inputSystem, IInputConfiguration inputConfiguration = null)
@@ -35,33 +32,26 @@ namespace BForBoss
             _unModifiedPlayerSpeed = maxWalkSpeed;
             SetControlConfiguration();
             SetCameraCullingMask();
-            
-            if (_dashBehaviour != null)
-            {
-                _inputSystem.OnDashAction += _dashBehaviour.OnDash;
-            }
         }
 
         public override bool CanJump()
         {
-            if (_wallRunBehaviour != null)
-                return _wallRunBehaviour.IsWallRunning || base.CanJump();
-            return base.CanJump();
+            return _wallRunBehaviour.IsWallRunning || base.CanJump();
         }
         
         public override float GetBrakingDeceleration()
         {
-            return IsSliding ? _slideBehaviour.brakingDecelerationSliding : base.GetBrakingDeceleration();
+            return _slideBehaviour.IsSliding ? _slideBehaviour.brakingDecelerationSliding : base.GetBrakingDeceleration();
         }
 
         public override float GetMaxSpeed()
         {
-            return IsSliding ? _slideBehaviour.MaxWalkSpeedSliding : base.GetMaxSpeed();
+            return _slideBehaviour.IsSliding ? _slideBehaviour.MaxWalkSpeedSliding : base.GetMaxSpeed();
         }
 
         public override float GetMaxAcceleration()
         {
-            return IsWallRunning ? _wallRunBehaviour.GetMaxAcceleration() : base.GetMaxAcceleration();
+            return _wallRunBehaviour.IsWallRunning ? _wallRunBehaviour.GetMaxAcceleration() : base.GetMaxAcceleration();
         }
 
         public void SetControlConfiguration()
@@ -71,6 +61,7 @@ namespace BForBoss
             characterLook.mouseVerticalSensitivity = _inputConfiguration.MouseVerticalSensitivity;
             characterLook.controllerHorizontalSensitivity = _inputConfiguration.ControllerHorizontalSensitivity;
             characterLook.controllerVerticalSensitivity = _inputConfiguration.ControllerVerticalSensitivity;
+            _inputSystem.OnDashAction += _dashBehaviour.OnDash;
         }
         
         public void ModifyPlayerSpeed(float modificationMultiplier)
@@ -89,24 +80,32 @@ namespace BForBoss
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();
             _wallRunBehaviour = GetComponent<PlayerWallRunBehaviour>();
             _slideBehaviour = GetComponent<PlayerSlideBehaviour>();
+            if (_dashBehaviour == null)
+            {
+                PanicHelper.Panic(new Exception("Missing DashBehaviour from PLayerMovement"));
+            }
+            
+            if (_wallRunBehaviour == null)
+            {
+                PanicHelper.Panic(new Exception("Missing WallRunBehaviour from PLayerMovement"));
+            }
+            
+            if (_slideBehaviour == null)
+            {
+                PanicHelper.Panic(new Exception("Missing SlideBehaviour from PLayerMovement"));
+            }
             base.OnAwake();
         }
 
         protected override void OnStart()
         {
             base.OnStart();
-            if (_dashBehaviour != null)
-            {
-                _dashBehaviour.Initialize(this, base.GetMovementInput, OnDashActivated);
-            }
-            if (_slideBehaviour != null)
-            {
-                _slideBehaviour.Initialize(this, Slid);
-            }
-            if (_wallRunBehaviour != null)
-            {
-                _wallRunBehaviour.Initialize(this, base.GetMovementInput, onWallRunFinished: SetJumpCount);
-            }
+            _dashBehaviour.Initialize(this, base.GetMovementInput);
+            _dashBehaviour.DashEventsDelegate = this;
+            _slideBehaviour.Initialize(this);
+            _slideBehaviour.SlideEventsDelegate = this;
+            _wallRunBehaviour.Initialize(this, base.GetMovementInput);
+            _wallRunBehaviour.WallRunEventsDelegate = this;
         }
 
         protected override void AnimateEye()
@@ -116,17 +115,14 @@ namespace BForBoss
 
         protected override Vector3 CalcDesiredVelocity()
         {
-            return IsSliding ? Vector3.zero : base.CalcDesiredVelocity();
+            return _slideBehaviour.IsSliding ? Vector3.zero : base.CalcDesiredVelocity();
         }
 
         protected override void OnCrouched()
         {
             base.OnCrouched();
-            if (_slideBehaviour != null)
-            {
-                _slideBehaviour.Slide();
-            }
-            
+            _slideBehaviour.Slide();
+
             cmWalkingCamera.gameObject.SetActive(false);
             cmCrouchedCamera.gameObject.SetActive(true);
         }
@@ -134,11 +130,7 @@ namespace BForBoss
         protected override void OnUncrouched()
         {
             base.OnUncrouched();
-            if (_slideBehaviour != null)
-            {
-                _slideBehaviour.StopSliding();
-            }
-            
+            _slideBehaviour.StopSliding();
             cmCrouchedCamera.gameObject.SetActive(false);
             cmWalkingCamera.gameObject.SetActive(true);
         }
@@ -146,55 +138,46 @@ namespace BForBoss
         protected override void Falling(Vector3 desiredVelocity)
         {
             base.Falling(desiredVelocity);
-            _wallRunBehaviour?.Falling(desiredVelocity);
+            _wallRunBehaviour.Falling(desiredVelocity);
         }
 
         protected override void OnJumped()
         {
             base.OnJumped();
-            _wallRunBehaviour?.OnJumped();
+            _wallRunBehaviour.OnJumped();
         }
 
         protected override Vector3 CalcJumpVelocity()
         {
-            return IsWallRunning ? _wallRunBehaviour.CalcJumpVelocity() : base.CalcJumpVelocity();
+            return _wallRunBehaviour.IsWallRunning ? _wallRunBehaviour.CalcJumpVelocity() : base.CalcJumpVelocity();
         }
 
         protected override void OnMove()
         {
             base.OnMove();
-            if (_dashBehaviour != null)
-            {
-                _dashBehaviour.OnDashing();
-            }
-            if (_slideBehaviour != null)
-            {
-                _slideBehaviour.Sliding();
-            }
-            _wallRunBehaviour?.OnWallRunning();
+            _dashBehaviour.DashDuringMovement();
+            _slideBehaviour.Sliding();
+            _wallRunBehaviour.OnWallRunning();
         }
 
         protected override void OnLanded()
         {
             base.OnLanded();
-            _wallRunBehaviour?.OnLanded();
+            _wallRunBehaviour.OnLanded();
         }
 
         protected override void OnLateUpdate()
         {
             base.OnLateUpdate();
-            _wallRunBehaviour?.OnLateUpdate();
+            _wallRunBehaviour.OnLateUpdate();
         }
 
         protected override void OnMovementHit(ref MovementHit movementHit)
         {
             base.OnMovementHit(ref movementHit);
-            if (_dashBehaviour != null)
-            {
-                _dashBehaviour.OnMovementHit(movementHit);
-            }
+            _dashBehaviour.OnMovementHit(movementHit);
 
-            if (_slideBehaviour != null && _slideBehaviour.IsSliding && !movementHit.isWalkable)
+            if (_slideBehaviour.IsSliding && !movementHit.isWalkable)
             {
                 _slideBehaviour.StopSliding();
             }
@@ -203,10 +186,7 @@ namespace BForBoss
         protected override void HandleInput()
         {
             base.HandleInput();
-            if (_dashBehaviour != null)
-            {
-                _dashBehaviour.HandleInput();
-            }
+            _dashBehaviour.HandleInput();
         }
 
         protected override void OnOnDestroy()
@@ -223,9 +203,21 @@ namespace BForBoss
             }
         }
 
-        private void SetJumpCount(int count)
+        #region EventDelegates
+        void IPlayerDashEvents.OnDashStarted()
         {
-            _jumpCount = count;
+            OnDashStarted?.Invoke();
         }
+        
+        void IPlayerSlideEvents.OnSlideStarted()
+        {
+            OnSlideStarted?.Invoke();
+        }
+        
+        void IPlayerWallRunEvents.OnWallCompleted(bool didJumpOut)
+        {
+            _jumpCount = didJumpOut ? 1 : 0;
+        }
+        #endregion
     }
 }

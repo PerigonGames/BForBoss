@@ -8,6 +8,11 @@ using Logger = Perigon.Utility.Logger;
 
 namespace BForBoss
 {
+    public interface IPlayerWallRunEvents
+    {
+        void OnWallCompleted(bool didJumpOut);
+    }
+    
     public class PlayerWallRunBehaviour : MonoBehaviour
     {
         #region SERIALIZED_FIELDS
@@ -44,6 +49,8 @@ namespace BForBoss
         [Tooltip("The angle between where you're looking at and the direction where you're wall running towards")]
         private float _minLookAlongWallStabilizationAngle = 5f;
         #endregion
+
+        public IPlayerWallRunEvents WallRunEventsDelegate = null;
 
         #region PRIVATE_FIELDS
 
@@ -82,7 +89,6 @@ namespace BForBoss
         private Collider _lastWall;
         private float _baseMaxSpeed;
         private Func<Vector2> _movementInput;
-        private Action<int> _OnWallRunFinished;
 
         private bool _isCameraStabilizeNeeded = true;
         private float _currentJumpDuration = 0f;
@@ -99,12 +105,11 @@ namespace BForBoss
         #endregion
 
         #region PUBLIC_METHODS
-        public void Initialize(ECM2.Characters.Character baseCharacter, Func<Vector2> getMovementInput, Action<int> onWallRunFinished)
+        public void Initialize(ECM2.Characters.Character baseCharacter, Func<Vector2> getMovementInput)
         {
             _baseCharacter = baseCharacter;
             _fpsCharacter = baseCharacter as PlayerMovementBehaviour;
             _movementInput = getMovementInput;
-            _OnWallRunFinished = onWallRunFinished;
         }
 
         public void Falling(Vector3 _)
@@ -338,7 +343,7 @@ namespace BForBoss
             _timeSinceWallDetach = 0f;
             _lastPlayerWallRunDirection = Vector3.zero;
             _isCameraStabilizeNeeded = true;
-            _OnWallRunFinished?.Invoke(jumpedOutOfWallRun ? 1 : 0);
+            WallRunEventsDelegate?.OnWallCompleted(jumpedOutOfWallRun);
         }
         
         private bool DidPlayerStopMoving()

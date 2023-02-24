@@ -65,8 +65,8 @@ namespace BForBoss
             if (_playerMovementBehaviour != null)
             {
                 _playerMovementBehaviour.Jumped += PlayJumpSound;
-                _playerMovementBehaviour.OnDashActivated += PlayOnDashSound;
-                _playerMovementBehaviour.Slid += PlaySlideSound;
+                _playerMovementBehaviour.OnDashStarted += PlayOnDashSound;
+                _playerMovementBehaviour.OnSlideStarted += PlaySlideSound;
             }
         }
         
@@ -75,8 +75,8 @@ namespace BForBoss
             if (_playerMovementBehaviour != null)
             {
                 _playerMovementBehaviour.Jumped -= PlayJumpSound;
-                _playerMovementBehaviour.OnDashActivated -= PlayOnDashSound;
-                _playerMovementBehaviour.Slid -= PlaySlideSound;
+                _playerMovementBehaviour.OnDashStarted -= PlayOnDashSound;
+                _playerMovementBehaviour.OnSlideStarted -= PlaySlideSound;
             }
         }
 
