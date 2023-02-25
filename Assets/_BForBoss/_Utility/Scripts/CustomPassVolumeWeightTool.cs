@@ -19,7 +19,13 @@ namespace Perigon.Utility
             {
                 if (pass is FullScreenCustomPass f)
                 {
+#if UNITY_EDITOR
+                    var mat = new Material(f.fullscreenPassMaterial);
+                    f.fullscreenPassMaterial = mat;
+                    _material = mat;
+#else
                     _material = f.fullscreenPassMaterial;
+#endif
                 }
             }
             
