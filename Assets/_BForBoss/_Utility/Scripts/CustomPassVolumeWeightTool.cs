@@ -19,6 +19,8 @@ namespace Perigon.Utility
             {
                 if (pass is FullScreenCustomPass f)
                 {
+                  // Fixes constant changes to material in Git Diff
+                  // https://forum.unity.com/threads/unity-touches-files-that-are-not-modified-with-explicit-intent.462117/
 #if UNITY_EDITOR
                     var mat = new Material(f.fullscreenPassMaterial);
                     f.fullscreenPassMaterial = mat;
@@ -28,7 +30,7 @@ namespace Perigon.Utility
 #endif
                 }
             }
-            
+
             if (_material == null)
             {
                 Debug.LogWarning("CustomPassVolume unable to find FullScreenCustomPass");
@@ -40,7 +42,7 @@ namespace Perigon.Utility
             _startValue = startValue;
             _endValue = endValue;
         }
-        
+
         public Tweener Distort()
         {
             return DOTween.To(intensity => _material.SetFloat(_materialKey, intensity), _startValue, _endValue, _distortDuration).SetUpdate(true);
