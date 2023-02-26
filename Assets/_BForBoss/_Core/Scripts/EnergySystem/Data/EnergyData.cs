@@ -4,17 +4,17 @@ namespace BForBoss
     {
         public readonly float Value;
         public readonly float MaxEnergyValue;
-        public readonly float RateOfAccruement;
+        public readonly float RateOfTransaction;
         
         public EnergyData(
             float value,
             float maxEnergyValue,
-            float rateOfAccruement
+            float rateOfTransaction
         )
         {
             Value = value;
             MaxEnergyValue = maxEnergyValue;
-            RateOfAccruement = rateOfAccruement;
+            RateOfTransaction = rateOfTransaction;
         }
     }
 }
