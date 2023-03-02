@@ -48,22 +48,21 @@ namespace Perigon.Weapons
         private readonly float _reloadDuration;
         private readonly float _bulletSpread;
 
-        private WeaponData _weaponData;
-        public WeaponData WeaponData
+        private WeaponData _data;
+        public WeaponData Data
         {
             private set
             {
-                _weaponData = value;
+                _data = value;
                 OnWeaponDataStateChange?.Invoke(value);
-                Debug.Log("Elapsed Rate Of Fire: " + value.ElapsedRateOfFire);
             }
-            get => _weaponData;
+            get => _data;
         }
 
         public event Action<WeaponData> OnWeaponDataStateChange;
         public event Action OnFireWeapon;
 
-        private bool CanShoot => _weaponData.ElapsedRateOfFire <= 0 && _weaponData.ElapsedAmmunitionAmount > 0;
+        private bool CanShoot => _data.ElapsedRateOfFire <= 0 && _data.ElapsedAmmunitionAmount > 0;
 
         public Weapon(
             int ammunitionAmount, 
@@ -73,7 +72,7 @@ namespace Perigon.Weapons
             IRandomUtility randomUtility = null)
         {
             _randomUtility = randomUtility ?? new RandomUtility();
-            WeaponData = _weaponData.Apply(rateOfFire, reloadDuration, ammunitionAmount);
+            Data = _data.Apply(rateOfFire, reloadDuration, ammunitionAmount);
             _ammunitionAmount = ammunitionAmount;
             _reloadDuration = reloadDuration;
             _rateOfFire = rateOfFire;
@@ -82,10 +81,9 @@ namespace Perigon.Weapons
 
         public void DecrementElapsedTimeRateOfFire(float deltaTime, float timeScale)
         {
-            Debug.Log("Decrement Elapsed Time");
             var scaledDeltaTime = ScaledDeltaTime(deltaTime, timeScale);
-            WeaponData = WeaponData.Apply(elapsedRateOfFire: Mathf.Clamp(
-                WeaponData.ElapsedRateOfFire - scaledDeltaTime,
+            Data = Data.Apply(elapsedRateOfFire: Mathf.Clamp(
+                Data.ElapsedRateOfFire - scaledDeltaTime,
                 0,
                 float.PositiveInfinity));
         }
@@ -98,18 +96,18 @@ namespace Perigon.Weapons
 
         public void ReloadWeaponCountDownIfNeeded(float deltaTime, float timeScale)
         {
-            if (WeaponData.ElapsedAmmunitionAmount <= 0)
+            if (Data.ElapsedAmmunitionAmount <= 0)
             {
-                WeaponData = WeaponData.Apply(isReloading: true);
+                Data = Data.Apply(isReloading: true);
             }
 
-            if (WeaponData.IsReloading)
+            if (Data.IsReloading)
             {
-                var reloadDuration = _weaponData.ElapsedReloadDuration - ScaledDeltaTime(deltaTime, timeScale);
-                WeaponData = WeaponData.Apply(elapsedReloadDuration: reloadDuration);
+                var reloadDuration = _data.ElapsedReloadDuration - ScaledDeltaTime(deltaTime, timeScale);
+                Data = Data.Apply(elapsedReloadDuration: reloadDuration);
             }
 
-            if (_weaponData.ElapsedReloadDuration <= 0)
+            if (_data.ElapsedReloadDuration <= 0)
             {
                 ResetWeaponState();
             }
@@ -117,9 +115,9 @@ namespace Perigon.Weapons
 
         public void ReloadWeaponIfPossible()
         {
-            if (WeaponData.ElapsedAmmunitionAmount < _ammunitionAmount)
+            if (Data.ElapsedAmmunitionAmount < _ammunitionAmount)
             {
-                WeaponData = WeaponData.Apply(isReloading: true);
+                Data = Data.Apply(isReloading: true);
             }
         }
 
@@ -147,8 +145,8 @@ namespace Perigon.Weapons
             }
 
             StopReloading();
-            WeaponData = WeaponData.Apply(
-                elapsedAmmunitionAmount: WeaponData.ElapsedAmmunitionAmount - 1,
+            Data = Data.Apply(
+                elapsedAmmunitionAmount: Data.ElapsedAmmunitionAmount - 1,
                 elapsedRateOfFire: _rateOfFire);
             OnFireWeapon?.Invoke();
             return true;
@@ -157,12 +155,12 @@ namespace Perigon.Weapons
         private void ResetWeaponState()
         {
             StopReloading();
-            WeaponData = WeaponData.Apply(elapsedAmmunitionAmount: _ammunitionAmount);
+            Data = Data.Apply(elapsedAmmunitionAmount: _ammunitionAmount);
         }
 
         private void StopReloading()
         {
-            WeaponData = WeaponData.Apply(
+            Data = Data.Apply(
                 isReloading: false,
                 elapsedReloadDuration: _reloadDuration);
         }

@@ -17,13 +17,13 @@ namespace Perigon.Weapons
         [InlineEditor]
         [SerializeField]
         private WeaponConfigurationSO _weaponConfigurationSo = null;
-
+        
         protected Weapon _weapon = null;
         protected WeaponConfigurationData _weaponConfigurationData;
-        protected WeaponData _weaponData = default;
         
         protected float _timeSinceFire = 0f;
         
+        private WeaponData _weaponData = default;
         private Camera _mainCamera = null;
         private BulletSpawner _bulletSpawner;
         private WallHitVFXSpawner _wallHitVFXSpawner;
@@ -104,6 +104,7 @@ namespace Perigon.Weapons
 
         public void Activate(bool activate)
         {
+            enabled = activate;
             gameObject.SetActive(activate);
             _weaponAnimationProvider.ReloadingWeapon(false);        
         }

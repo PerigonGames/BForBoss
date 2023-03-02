@@ -36,7 +36,7 @@ namespace Perigon.Weapons
         {
             foreach (var weapon in _weaponBehaviours)
             {
-                weapon.gameObject.SetActive(false);
+                weapon.Activate(false);
             }
 
             _weaponBehaviours[_currentWeaponIndex].Activate(true);
@@ -44,17 +44,12 @@ namespace Perigon.Weapons
 
         public void Reset()
         {
-            foreach (var weapon in _weaponBehaviours)
-            {
-                weapon.Reset();
-            }
-            
             foreach (var weaponBehaviour in _weaponBehaviours)
             {
                 weaponBehaviour.Reset();
             }
             _currentWeaponIndex = 0;
-            _weaponBehaviours[_currentWeaponIndex].Activate(true);;
+            _weaponBehaviours[_currentWeaponIndex].Activate(true);
         }
         
         private void SetupWeapons(ICrossHairProvider crossHairProvider)

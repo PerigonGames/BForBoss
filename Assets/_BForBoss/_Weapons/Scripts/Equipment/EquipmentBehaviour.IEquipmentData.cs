@@ -16,8 +16,8 @@ namespace Perigon.Weapons
         public int MaxAmmunitionAmount => 0;
         public string NameOfWeapon => "";
 
-        public float MaxReloadDuration => 0;
-        public float ElapsedReloadDuration => 0;
+        public float MaxReloadDuration => 1;
+        public float ElapsedReloadDuration => 1;
 
         private WeaponBehaviour CurrentWeapon => _weaponBehaviours[_currentWeaponIndex];
     }
