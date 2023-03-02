@@ -7,10 +7,10 @@ namespace Perigon.Weapons
     {
         private void FireProjectiles()
         {
-            for (int i = 0; i < _weaponData.BulletsPerShot; i++)
+            for (int i = 0; i < _weaponConfigurationData.BulletsPerShot; i++)
             {
                 var bullet = _bulletSpawner
-                    .SpawnBullet(_weaponData.BulletType);
+                    .SpawnBullet(_weaponConfigurationData.BulletType);
                 bullet.OnBulletHitWall = OnBulletHitWall;
                 bullet.SetSpawnAndDirection(_firePoint.position, GetDirectionOfShot());
                 bullet.OnBulletHitEntity += HandleOnBulletHitEntity;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Perigon.Weapons
 {
-    public readonly struct WeaponData
+    public readonly struct WeaponConfigurationData
     {
         public readonly string NameOfWeapon;
         public readonly float RateOfFire;
@@ -22,7 +22,7 @@ namespace Perigon.Weapons
 
         private readonly AnimationCurve _bulletSpreadRateCurve;
 
-        public WeaponData(
+        public WeaponConfigurationData(
             string nameOfWeapon,
             float rateOfFire,
             Sprite crosshair,
@@ -61,7 +61,7 @@ namespace Perigon.Weapons
     }
     
     [CreateAssetMenu(fileName = "Weapon", menuName = "PerigonGames/Weapon", order = 2)]
-    public class WeaponSO : ScriptableObject
+    public class WeaponConfigurationSO : ScriptableObject
     {
         [SerializeField] private string _nameOfWeapon = "";
         [SerializeField] private float _rateOfFire = 0.1f;
@@ -87,9 +87,9 @@ namespace Perigon.Weapons
         [PreviewField]
         [SerializeField] private Sprite _crosshair = null;
 
-        public WeaponData MapToData()
+        public WeaponConfigurationData MapToData()
         {
-            return new WeaponData
+            return new WeaponConfigurationData
             (
                 nameOfWeapon: _nameOfWeapon,
                 rateOfFire: _rateOfFire,

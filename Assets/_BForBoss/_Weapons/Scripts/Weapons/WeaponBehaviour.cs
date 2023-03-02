@@ -16,10 +16,11 @@ namespace Perigon.Weapons
         [SerializeField] private LayerMask _rayCastBulletLayerMask;
         [InlineEditor]
         [SerializeField]
-        private WeaponSO _weaponSo = null;
+        private WeaponConfigurationSO _weaponConfigurationSo = null;
 
         protected Weapon _weapon = null;
-        protected WeaponData _weaponData;
+        protected WeaponConfigurationData _weaponConfigurationData;
+        protected WeaponData _weaponData = default;
         
         protected float _timeSinceFire = 0f;
         
@@ -30,7 +31,7 @@ namespace Perigon.Weapons
         private ICrossHairProvider _crossHairProvider;
         private PGInputSystem _inputSystem;
 
-        public WeaponAnimationType AnimationType => _weaponData.AnimationType;
+        public WeaponAnimationType AnimationType => _weaponConfigurationData.AnimationType;
         
         private Camera MainCamera
         {
@@ -57,11 +58,12 @@ namespace Perigon.Weapons
             _wallHitVFXSpawner = wallHitVFXSpawner;
             _weaponAnimationProvider = weaponAnimationProvider;
             _crossHairProvider = crossHairProvider;
+            _weaponConfigurationData = _weaponConfigurationSo.MapToData();
             _weapon = new Weapon(
-                ammunitionAmount: _weaponData.AmmunitionAmount,
-                rateOfFire: _weaponData.RateOfFire,
-                reloadDuration: _weaponData.ReloadDuration,
-                bulletSpread: _weaponData.BulletSpread);
+                ammunitionAmount: _weaponConfigurationData.AmmunitionAmount,
+                rateOfFire: _weaponConfigurationData.RateOfFire,
+                reloadDuration: _weaponConfigurationData.ReloadDuration,
+                bulletSpread: _weaponConfigurationData.BulletSpread);
             BindWeapon();
             SetCrossHairImage();
             SetupPlayerInput();
@@ -84,26 +86,14 @@ namespace Perigon.Weapons
 
         protected virtual void PlayFiringAudio()
         {
-            FMODUnity.RuntimeManager.PlayOneShot(_weaponData.WeaponShotAudio, transform.position);
+            FMODUnity.RuntimeManager.PlayOneShot(_weaponConfigurationData.WeaponShotAudio, transform.position);
         }
 
         protected virtual void HandleOnStartReloading()
         {
-            FMODUnity.RuntimeManager.PlayOneShot(_weaponData.WeaponReloadAudio, transform.position);
+            FMODUnity.RuntimeManager.PlayOneShot(_weaponConfigurationData.WeaponReloadAudio, transform.position);
         }
 
-        private void HandleReloadingState(bool isReloading)
-        {
-            if (isReloading)
-            {
-                HandleOnStartReloading();
-            }
-            else
-            {
-                _weaponAnimationProvider.ReloadingWeapon(false);
-            }
-        }
-        
         protected virtual void Awake()
         {
             if (_muzzleFlash == null)
@@ -121,14 +111,26 @@ namespace Perigon.Weapons
         private void BindWeapon()
         {
             _weapon.OnFireWeapon += HandleOnFire;
-            _weapon.OnReloadingStateUpdate += HandleReloadingState;
+            _weapon.OnWeaponDataStateChange += OnWeaponDataStateChange;
+        }
+
+        private void OnWeaponDataStateChange(WeaponData data)
+        {
+            if (data.IsReloading)
+            {
+                HandleOnStartReloading();
+            }
+            else
+            {
+                _weaponAnimationProvider.ReloadingWeapon(false);
+            }
         }
 
         private void SetCrossHairImage()
         {
             if (_weapon != null)
             {
-                _crossHairProvider.SetCrossHairImage(_weaponData.Crosshair);
+                _crossHairProvider.SetCrossHairImage(_weaponConfigurationData.Crosshair);
             }
         }
         
@@ -152,7 +154,7 @@ namespace Perigon.Weapons
             }
             
             // Animation
-            _weaponAnimationProvider.WeaponFire(_weaponData.AnimationType);
+            _weaponAnimationProvider.WeaponFire(_weaponConfigurationData.AnimationType);
             
             //Audio
             PlayFiringAudio();
@@ -160,7 +162,7 @@ namespace Perigon.Weapons
 
         private void FireBullets()
         {
-            if (_weaponData.IsRayCastingWeapon)
+            if (_weaponConfigurationData.IsRayCastingWeapon)
             {
                 FireRayCastBullets();
             }
@@ -173,18 +175,13 @@ namespace Perigon.Weapons
         private void OnReloadInputAction()
         {
             _weapon.ReloadWeaponIfPossible();
-            _weaponAnimationProvider.ReloadingWeapon(_weapon.IsReloading);
+            _weaponAnimationProvider.ReloadingWeapon(_weaponData.IsReloading);
         }
         
         private void SetupPlayerInput()
         {
             _inputSystem.OnFireAction += OnFireInputAction;
             _inputSystem.OnReloadAction += OnReloadInputAction;
-        }
-
-        private void Start()
-        {
-            _weaponData = _weaponSo.MapToData();
         }
 
         private void OnEnable()
@@ -197,7 +194,7 @@ namespace Perigon.Weapons
             if (_weapon != null)
             {
                 _weapon.OnFireWeapon -= HandleOnFire;
-                _weapon.OnReloadingStateUpdate -= HandleReloadingState;
+                _weapon.OnWeaponDataStateChange -= OnWeaponDataStateChange;
                 _weapon = null;
             }
         }
