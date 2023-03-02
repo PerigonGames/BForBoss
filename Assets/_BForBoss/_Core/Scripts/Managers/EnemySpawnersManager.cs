@@ -1,3 +1,4 @@
+using Perigon.Utility;
 using UnityEngine;
 using Logger = Perigon.Utility.Logger;
 
@@ -17,7 +18,7 @@ namespace BForBoss
 
         public void PauseSpawning()
         {
-            Logger.LogString("<color=green>Spawning Paused</color>", "wavesmode");
+            Logger.LogString("Spawning Paused", LoggerColor.Green, "wavesmode");
             foreach (EnemySpawnAreaBehaviour spawner in _enemySpawnerAreas)
             {
                 spawner.PauseSpawning();
@@ -26,7 +27,7 @@ namespace BForBoss
 
         public void ResumeSpawning()
         {
-            Logger.LogString("<color=green>Spawning Resumed</color>", "wavesmode");
+            Logger.LogString("Spawning Resumed", LoggerColor.Green, "wavesmode");
             foreach (EnemySpawnAreaBehaviour spawner in _enemySpawnerAreas)
             {
                 spawner.ResumeSpawning();
