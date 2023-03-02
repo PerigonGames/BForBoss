@@ -5,12 +5,12 @@ namespace Perigon.Weapons
 {
     public abstract partial class WeaponBehaviour
     {
-        private void FireProjectiles(int numberOfBullets)
+        private void FireProjectiles()
         {
-            for (int i = 0; i < numberOfBullets; i++)
+            for (int i = 0; i < _weaponData.BulletsPerShot; i++)
             {
                 var bullet = _bulletSpawner
-                    .SpawnBullet(_weapon.TypeOfBullet);
+                    .SpawnBullet(_weaponData.BulletType);
                 bullet.OnBulletHitWall = OnBulletHitWall;
                 bullet.SetSpawnAndDirection(_firePoint.position, GetDirectionOfShot());
                 bullet.OnBulletHitEntity += HandleOnBulletHitEntity;

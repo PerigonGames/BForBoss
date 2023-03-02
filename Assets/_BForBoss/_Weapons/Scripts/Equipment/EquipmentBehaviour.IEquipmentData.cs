@@ -1,27 +1,24 @@
-using FMODUnity;
-
 namespace Perigon.Weapons
 {
     public interface IEquipmentData
     {
         int AmmunitionAmount { get; }
         int MaxAmmunitionAmount { get; }
+        
         string NameOfWeapon { get; }
         float MaxReloadDuration { get; }
         float ElapsedReloadDuration { get; }
-        EventReference WeaponShotAudio { get; }
     }
 
     public partial class EquipmentBehaviour: IEquipmentData
     {
-        public int AmmunitionAmount => CurrentWeapon.AmmunitionAmount;
-        public int MaxAmmunitionAmount => CurrentWeapon.MaxAmmunitionAmount;
-        public string NameOfWeapon => CurrentWeapon.NameOfWeapon;
+        public int AmmunitionAmount => 0;
+        public int MaxAmmunitionAmount => 0;
+        public string NameOfWeapon => "";
 
-        public float MaxReloadDuration => CurrentWeapon.MaxReloadDuration;
-        public float ElapsedReloadDuration => CurrentWeapon.ElapsedReloadDuration;
-        public EventReference WeaponShotAudio => CurrentWeapon.ShotAudio;
+        public float MaxReloadDuration => 0;
+        public float ElapsedReloadDuration => 0;
 
-        private Weapon CurrentWeapon => _weapons[_currentWeaponIndex];
+        private WeaponBehaviour CurrentWeapon => _weaponBehaviours[_currentWeaponIndex];
     }
 }

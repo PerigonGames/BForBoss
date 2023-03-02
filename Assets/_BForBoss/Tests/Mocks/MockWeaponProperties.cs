@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Tests
 {
-    public class MockWeaponProperties : IWeaponProperties
+    public class MockWeaponProperties 
     {
         private float _rateOfFire;
         private float _bulletSpread;

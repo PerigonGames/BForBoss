@@ -20,7 +20,6 @@ namespace Perigon.Weapons
         private MeleeWeaponBehaviour _meleeBehaviour = null;
         private IWeaponAnimationProvider _weaponAnimationProvider;
         private PGInputSystem _inputSystem;
-        private Weapon[] _weapons = null;
 
         private int _currentWeaponIndex = 0;
         
@@ -35,17 +34,17 @@ namespace Perigon.Weapons
 
         public void ScrollSwapWeapons(int direction)
         {
-            foreach (var weapon in _weapons)
+            foreach (var weapon in _weaponBehaviours)
             {
-                weapon.ActivateWeapon = false;
+                weapon.gameObject.SetActive(false);
             }
 
-            _weapons[_currentWeaponIndex].ActivateWeapon = true;
+            _weaponBehaviours[_currentWeaponIndex].Activate(true);
         }
 
         public void Reset()
         {
-            foreach (var weapon in _weapons)
+            foreach (var weapon in _weaponBehaviours)
             {
                 weapon.Reset();
             }
@@ -55,20 +54,18 @@ namespace Perigon.Weapons
                 weaponBehaviour.Reset();
             }
             _currentWeaponIndex = 0;
-            _weapons[_currentWeaponIndex].ActivateWeapon = true;
+            _weaponBehaviours[_currentWeaponIndex].Activate(true);;
         }
         
         private void SetupWeapons(ICrossHairProvider crossHairProvider)
         {
-            _weapons = new Weapon[_weaponBehaviours.Length];
             for(int i = 0; i < _weaponBehaviours.Length; i++)
             {
                 _weaponBehaviours[i].Initialize(_inputSystem, _bulletSpawner, _wallHitVFXSpawner, _weaponAnimationProvider, crossHairProvider);
-                _weapons[i] = _weaponBehaviours[i].WeaponViewModel;
-                _weapons[i].ActivateWeapon = false;
+                _weaponBehaviours[i].Activate(false);
             }
 
-            _weapons[_currentWeaponIndex].ActivateWeapon = true;
+            _weaponBehaviours[_currentWeaponIndex].Activate(true);
         }
 
         private void SetupInputBinding()

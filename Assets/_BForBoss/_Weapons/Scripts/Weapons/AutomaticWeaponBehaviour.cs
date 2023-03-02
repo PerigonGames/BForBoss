@@ -1,21 +1,22 @@
 using FMODUnity;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Perigon.Weapons
 {
     [RequireComponent(typeof(StudioEventEmitter))]
     public class AutomaticWeaponBehaviour : WeaponBehaviour
     {
-
         private const string FIRE_RATE_PARAM = "FireRate";
         private StudioEventEmitter _weaponFiringAudio;
 
         private int _shotsFired;
+        private bool _isFiring;
+
 
         public override void Reset()
         {
             base.Reset();
+            _isFiring = false;
             _shotsFired = 0;
         }
         
@@ -42,11 +43,9 @@ namespace Perigon.Weapons
             {
                 _timeSinceFire += _weapon.ScaledDeltaTime(Time.deltaTime, Time.timeScale);
                 _shotsFired += _weapon.TryFire() ? 1 : 0;
-                float shotsPerSecond = _shotsFired / Mathf.Max(_timeSinceFire, 1f);
-                _weaponFiringAudio.SetParameter(FIRE_RATE_PARAM, shotsPerSecond);
+                _weaponFiringAudio.SetParameter(FIRE_RATE_PARAM, _shotsFired / Mathf.Max(_timeSinceFire, 1f));
             }
-            _weapon.DecrementElapsedTimeRateOfFire(Time.deltaTime, Time.timeScale);
-            _weapon.ReloadWeaponCountDownIfNeeded(Time.deltaTime, Time.timeScale);
+            base.Update();
             if (!_isFiring && _weaponFiringAudio.IsPlaying())
             {
                 _weaponFiringAudio.Stop();
@@ -57,10 +56,9 @@ namespace Perigon.Weapons
         {
             if (!_weaponFiringAudio.IsPlaying())
             {
-                _weaponFiringAudio.EventReference = _weapon.ShotAudio;
+                _weaponFiringAudio.EventReference = _weaponData.WeaponShotAudio;
                 _weaponFiringAudio.SetParameter(FIRE_RATE_PARAM, 0f);
                 _weaponFiringAudio.Play();
-                
             }
         }
 

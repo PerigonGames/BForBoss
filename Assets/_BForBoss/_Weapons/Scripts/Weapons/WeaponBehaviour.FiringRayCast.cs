@@ -4,12 +4,12 @@ namespace Perigon.Weapons
 {
     public abstract partial class WeaponBehaviour
     {
-        private void FireRayCastBullets(int numberOfBullets)
+        private void FireRayCastBullets()
         {
             var camOrigin = MainCamera.transform.position;
-            for (int i = 0; i < numberOfBullets; i++)
+            for (int i = 0; i < _weaponData.BulletsPerShot; i++)
             {
-                var forwardAngle = _weapon.GetShootDirection(_timeSinceFire);
+                var forwardAngle = _weapon.GetShootDirection(_weaponData.GetBulletSpreadRate(_timeSinceFire));
                 RayCastBullet(camOrigin, forwardAngle);
             }
         }
@@ -20,7 +20,7 @@ namespace Perigon.Weapons
             {
                 if (hit.collider.TryGetComponent(out IWeaponHolder weaponHolder))
                 {
-                    weaponHolder.DamageBy(_weapon.DamagePerRayCast);
+                    weaponHolder.DamageBy(_weaponData.DamagePerRayCast);
                     _crossHairProvider.ActivateHitMarker(!weaponHolder.IsAlive);
                 }
                 else
