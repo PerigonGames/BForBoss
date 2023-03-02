@@ -17,6 +17,6 @@ namespace BForBoss
             RateOfTransaction = rateOfTransaction;
         }
 
-        public EnergyData Apply(float value) => new EnergyData(value, MaxEnergyValue, RateOfTransaction);
+        public EnergyData Apply(float value) => new(value, MaxEnergyValue, RateOfTransaction);
     }
 }

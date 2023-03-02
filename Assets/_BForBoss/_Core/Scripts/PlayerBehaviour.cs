@@ -13,12 +13,13 @@ namespace BForBoss
         private PlayerLifeCycleBehaviour _playerLifeCycleBehaviour;
         private PlayerSlowMotionBehaviour _playerSlowMotion;
         private PGInputSystem _inputSystem;
+        public IEnergySystem EnergySystem;
 
         public PlayerMovementBehaviour PlayerMovement => _playerMovement;
 
         public void Initialize(PGInputSystem inputSystem, LifeCycle playerLifeCycle)
         {
-            _playerMovement.Initialize(inputSystem);
+            _playerMovement.Initialize(EnergySystem, inputSystem);
             _playerLifeCycleBehaviour.Initialize(
                 playerLifeCycle,
                 onEndGameCallback: () =>
