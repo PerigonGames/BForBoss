@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using Perigon.Utility;
 using UnityEngine;
@@ -16,12 +17,18 @@ namespace BForBoss
         private bool _isSlowMotionActive = false;
         private float _fixedDeltaTime;
         private Sequence _timeScaleTween;
+        private IEnergySystem _energySystem;
 
         private float CurrentTimeScale => Time.timeScale;
+
+        public void Initialize(IEnergySystem energySystem)
+        {
+            _energySystem = energySystem;
+        }
         
         public void OnSlowMotion(bool isSlowingTime)
         {
-            if (!_isSlowMotionActive && isSlowingTime)
+            if (!_isSlowMotionActive && isSlowingTime && _energySystem.CanExpend(EnergyExpenseType.SlowMo))
             {
                 StartSlowMotion();
             }
@@ -87,6 +94,14 @@ namespace BForBoss
         {
             Time.timeScale = targetTimeScale;
             Time.fixedDeltaTime = _fixedDeltaTime * targetTimeScale;
+        }
+
+        private void Update()
+        {
+            if (_isSlowMotionActive)
+            {
+                _energySystem.Expend(EnergyExpenseType.SlowMo);
+            }
         }
     }
 }
