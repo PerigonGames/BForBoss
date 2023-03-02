@@ -23,7 +23,11 @@ namespace Perigon.Weapons
 
         private int _currentWeaponIndex = 0;
         
-        public void Initialize(IGetPlayerTransform getPlayerTransform, PGInputSystem inputSystem, IWeaponAnimationProvider weaponAnimationProvider, ICrossHairProvider crossHairProvider)
+        public void Initialize(
+            IGetPlayerTransform getPlayerTransform, 
+            PGInputSystem inputSystem, 
+            IWeaponAnimationProvider weaponAnimationProvider, 
+            ICrossHairProvider crossHairProvider)
         {
             _inputSystem = inputSystem;
             _weaponAnimationProvider = weaponAnimationProvider;
@@ -34,12 +38,15 @@ namespace Perigon.Weapons
 
         public void ScrollSwapWeapons(int direction)
         {
-            foreach (var weapon in _weaponBehaviours)
+            if (_weaponBehaviours.Length > 1)
             {
-                weapon.Activate(false);
-            }
+                foreach (var weapon in _weaponBehaviours)
+                {
+                    weapon.Activate(false);
+                }
 
-            _weaponBehaviours[_currentWeaponIndex].Activate(true);
+                _weaponBehaviours[_currentWeaponIndex].Activate(true);
+            }
         }
 
         public void Reset()
@@ -104,14 +111,20 @@ namespace Perigon.Weapons
 
         private void OnScrollWeaponSwapAction(bool direction)
         {
-            UpdateCurrentWeaponIndex(direction);
-            _weaponAnimationProvider.SwapWeapon();
+            if (_weaponBehaviours.Length > 1)
+            {
+                UpdateCurrentWeaponIndex(direction);
+                _weaponAnimationProvider.SwapWeapon();
+            }
         }
 
         private void OnDirectWeaponSwapAction(int numberKey)
         {
-            _currentWeaponIndex = numberKey - 1;
-            _weaponAnimationProvider.SwapWeapon();
+            if (_weaponBehaviours.Length > 1)
+            {
+                _currentWeaponIndex = numberKey - 1;
+                _weaponAnimationProvider.SwapWeapon();
+            }
         }
 
         #endregion
