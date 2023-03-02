@@ -2,14 +2,23 @@ using UnityEngine;
 
 namespace Perigon.Utility
 {
+    public enum LoggerColor
+    {
+        Black,
+        Red,
+        Blue,
+        Green,
+        Yellow
+    }
+    
     public static partial class Logger
     {
-        public static void LogString(string toLog, string key = "Misc")
+        public static void LogString(string toLog, LoggerColor color = LoggerColor.Black,  string key = "Misc")
         {
 #if !UNITY_EDITOR && DEBUG
-            Debug.Log(toLog);
+            Debug.Log(ColorizeLog(toLog, color));
 #elif UNITY_EDITOR
-            LogInEditor(toLog, key, Debug.Log);
+            LogInEditor(ColorizeLog(toLog, color), key, Debug.Log);
 #endif
         }
         
@@ -22,22 +31,51 @@ namespace Perigon.Utility
 #endif
         }
         
-        public static void LogWarning(string toLog, string key = "Misc")
+        public static void LogWarning(string toLog, LoggerColor color = LoggerColor.Black, string key = "Misc")
         {
 #if !UNITY_EDITOR && DEBUG
-            Debug.LogWarning(toLog);
+            Debug.LogWarning(ColorizeLog(toLog, color));
 #elif UNITY_EDITOR
-            LogInEditor(toLog, key, Debug.LogWarning);
+            LogInEditor(ColorizeLog(toLog, color), key, Debug.LogWarning);
 #endif
         }
         
-        public static void LogError(string toLog, string key = "Misc")
+        public static void LogError(string toLog, LoggerColor color = LoggerColor.Black,  string key = "Misc")
         {
 #if !UNITY_EDITOR && DEBUG
-            Debug.LogWarning(toLog);
+            Debug.LogError(ColorizeLog(toLog, color));
 #elif UNITY_EDITOR
-            LogInEditor(toLog, key, Debug.LogError);
+            LogInEditor(ColorizeLog(toLog, color), key, Debug.LogError);
 #endif
+        }
+
+        private static string ColorizeLog(string log, LoggerColor color)
+        {
+            string colorText;
+
+            switch (color)
+            {
+                case LoggerColor.Black:
+                    colorText = "black";
+                    break;
+                case LoggerColor.Red:
+                    colorText = "red";
+                    break;
+                case LoggerColor.Blue:
+                    colorText = "blue";
+                    break;
+                case LoggerColor.Green:
+                    colorText = "green";
+                    break;
+                case LoggerColor.Yellow:
+                    colorText = "yellow";
+                    break;
+                default:
+                    colorText = "black";
+                    break;
+            }
+
+            return $"<color={colorText}>{log}</color>";
         }
     }
 }
