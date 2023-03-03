@@ -22,9 +22,9 @@ namespace Perigon.Weapons
         private readonly float _bulletSpread;
 
         private WeaponData _data;
-        public WeaponData Data
+        private WeaponData Data
         {
-            private set
+            set
             {
                 _data = value;
                 OnWeaponDataStateChange?.Invoke(value);
@@ -69,7 +69,7 @@ namespace Perigon.Weapons
 
         public void ReloadWeaponCountDownIfNeeded(float deltaTime, float timeScale)
         {
-            if (Data.ElapsedAmmunitionAmount <= 0)
+            if (Data.ElapsedAmmunitionAmount <= 0 && !Data.IsReloading)
             {
                 Data = Data.Apply(isReloading: true);
                 OnWeaponEffectEmit?.Invoke(WeaponEffect.StartReloading);
@@ -89,7 +89,7 @@ namespace Perigon.Weapons
 
         public void ReloadWeaponIfPossible()
         {
-            if (Data.ElapsedAmmunitionAmount < _ammunitionAmount)
+            if (Data.ElapsedAmmunitionAmount < _ammunitionAmount && !Data.IsReloading)
             {
                 Data = Data.Apply(isReloading: true);
                 OnWeaponEffectEmit?.Invoke(WeaponEffect.StartReloading);
@@ -135,10 +135,13 @@ namespace Perigon.Weapons
 
         private void StopReloading()
         {
-            Data = Data.Apply(
-                isReloading: false,
-                elapsedReloadDuration: _reloadDuration);
-            OnWeaponEffectEmit?.Invoke(WeaponEffect.StopReloading);
+            if (Data.IsReloading)
+            {
+                Data = Data.Apply(
+                    isReloading: false,
+                    elapsedReloadDuration: _reloadDuration);
+                OnWeaponEffectEmit?.Invoke(WeaponEffect.StopReloading);
+            }
         }
 
         private Quaternion GenerateSpreadAngle(float spread)
