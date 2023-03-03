@@ -62,10 +62,10 @@ namespace Perigon.Weapons
             }
         }
 
-        protected override void HandleOnStartReloading()
+        protected override void PlayReloadingAudio()
         {
             _weaponFiringAudio.Stop();
-            base.HandleOnStartReloading();
+            base.PlayReloadingAudio();
         }
     }
 }

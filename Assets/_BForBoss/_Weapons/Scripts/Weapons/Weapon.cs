@@ -4,6 +4,13 @@ using UnityEngine;
 
 namespace Perigon.Weapons
 {
+    public enum WeaponEffect
+    {
+        FireWeapon,
+        StartReloading,
+        StopReloading
+    }
+    
     public class Weapon
     {
         private const float MIN_TO_MAX_RANGE_OF_SPREAD = 2;
@@ -26,7 +33,7 @@ namespace Perigon.Weapons
         }
 
         public event Action<WeaponData> OnWeaponDataStateChange;
-        public event Action OnFireWeapon;
+        public event Action<WeaponEffect> OnWeaponEffectEmit;
 
         private bool CanShoot => _data.ElapsedRateOfFire <= 0 && _data.ElapsedAmmunitionAmount > 0;
 
@@ -65,6 +72,7 @@ namespace Perigon.Weapons
             if (Data.ElapsedAmmunitionAmount <= 0)
             {
                 Data = Data.Apply(isReloading: true);
+                OnWeaponEffectEmit?.Invoke(WeaponEffect.StartReloading);
             }
 
             if (Data.IsReloading)
@@ -84,6 +92,7 @@ namespace Perigon.Weapons
             if (Data.ElapsedAmmunitionAmount < _ammunitionAmount)
             {
                 Data = Data.Apply(isReloading: true);
+                OnWeaponEffectEmit?.Invoke(WeaponEffect.StartReloading);
             }
         }
 
@@ -114,7 +123,7 @@ namespace Perigon.Weapons
             Data = Data.Apply(
                 elapsedAmmunitionAmount: Data.ElapsedAmmunitionAmount - 1,
                 elapsedRateOfFire: _rateOfFire);
-            OnFireWeapon?.Invoke();
+            OnWeaponEffectEmit?.Invoke(WeaponEffect.FireWeapon);
             return true;
         }
 
@@ -129,6 +138,7 @@ namespace Perigon.Weapons
             Data = Data.Apply(
                 isReloading: false,
                 elapsedReloadDuration: _reloadDuration);
+            OnWeaponEffectEmit?.Invoke(WeaponEffect.StopReloading);
         }
 
         private Quaternion GenerateSpreadAngle(float spread)

@@ -1,3 +1,4 @@
+using System;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -89,7 +90,7 @@ namespace Perigon.Weapons
             FMODUnity.RuntimeManager.PlayOneShot(_weaponConfigurationData.WeaponShotAudio, transform.position);
         }
 
-        protected virtual void HandleOnStartReloading()
+        protected virtual void PlayReloadingAudio()
         {
             FMODUnity.RuntimeManager.PlayOneShot(_weaponConfigurationData.WeaponReloadAudio, transform.position);
         }
@@ -111,19 +112,28 @@ namespace Perigon.Weapons
 
         private void BindWeapon()
         {
-            _weapon.OnFireWeapon += HandleOnFire;
-            _weapon.OnWeaponDataStateChange += OnWeaponDataStateChange;
+            _weapon.OnWeaponEffectEmit += HandleEffect;
+            _weapon.OnWeaponDataStateChange += HandleStateChange;
         }
 
-        private void OnWeaponDataStateChange(WeaponData data)
+        private void HandleStateChange(WeaponData data)
         {
-            if (data.IsReloading)
+            _weaponData = data;
+        }
+
+        private void HandleEffect(WeaponEffect effect)
+        {
+            switch (effect)
             {
-                HandleOnStartReloading();
-            }
-            else
-            {
-                _weaponAnimationProvider.ReloadingWeapon(false);
+                case WeaponEffect.FireWeapon:
+                    FireWeapon();
+                    break;
+                case WeaponEffect.StartReloading:
+                    PlayReloadingAudio();
+                    break;
+                case WeaponEffect.StopReloading:
+                    _weaponAnimationProvider.ReloadingWeapon(false);
+                    break;
             }
         }
 
@@ -143,7 +153,7 @@ namespace Perigon.Weapons
             wallHitVFX.Spawn();
         }
 
-        private void HandleOnFire()
+        private void FireWeapon()
         {
             // Shooting
             FireBullets();
@@ -194,8 +204,8 @@ namespace Perigon.Weapons
         {
             if (_weapon != null)
             {
-                _weapon.OnFireWeapon -= HandleOnFire;
-                _weapon.OnWeaponDataStateChange -= OnWeaponDataStateChange;
+                _weapon.OnWeaponEffectEmit -= HandleEffect;
+                _weapon.OnWeaponDataStateChange -= HandleStateChange;
                 _weapon = null;
             }
         }
