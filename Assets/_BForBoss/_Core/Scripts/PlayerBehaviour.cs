@@ -9,6 +9,8 @@ namespace BForBoss
     [RequireComponent(typeof(PlayerMovementBehaviour))]
     public class PlayerBehaviour : MonoBehaviour
     {
+        public IEnergySystem EnergySystem;
+        
         private PlayerMovementBehaviour _playerMovement;
         private PlayerLifeCycleBehaviour _playerLifeCycleBehaviour;
         private PlayerSlowMotionBehaviour _playerSlowMotion;
@@ -18,7 +20,7 @@ namespace BForBoss
 
         public void Initialize(PGInputSystem inputSystem, LifeCycle playerLifeCycle)
         {
-            _playerMovement.Initialize(inputSystem);
+            _playerMovement.Initialize(EnergySystem, inputSystem);
             _playerLifeCycleBehaviour.Initialize(
                 playerLifeCycle,
                 onEndGameCallback: () =>

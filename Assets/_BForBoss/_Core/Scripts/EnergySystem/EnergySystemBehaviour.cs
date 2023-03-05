@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Perigon.Utility;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Logger = Perigon.Utility.Logger;
 
@@ -14,8 +15,8 @@ namespace BForBoss
     
     public class EnergySystemBehaviour : MonoBehaviour, IEnergySystem
     {
-        [SerializeField] private EnergySystemConfigurationSO _energySystemConfiguration;
-        [SerializeField] private EnergySO _energy;
+        [InlineEditor] [SerializeField] private EnergySystemConfigurationSO _energySystemConfiguration;
+        [InlineEditor] [SerializeField] private EnergySO _energy;
 
         private EnergyData _energyData;
         public EnergyData EnergyData
@@ -34,8 +35,16 @@ namespace BForBoss
         private readonly Queue<(EnergyAccruementType, float)> _accruedEnergyTypeQueue = new();
         private readonly Queue<(EnergyExpenseType, float)> _expendEnergyTypeQueue = new();
 
-        private float _elapsedTime = 0;
+        private float _elapsedTime;
 
+        public void Reset()
+        {
+            EnergyData = _energy.MapToData();
+            _accruedEnergyTypeQueue.Clear();
+            _expendEnergyTypeQueue.Clear();
+            _elapsedTime = 0;
+        }
+        
         public void Accrue(EnergyAccruementType accruementType, float multiplier = 1)
         {
             switch (accruementType)
@@ -84,7 +93,11 @@ namespace BForBoss
 
         private void Update()
         {
-            _elapsedTime -= Time.deltaTime;
+            if (_accruedEnergyTypeQueue.Count > 0 || _expendEnergyTypeQueue.Count > 0)
+            {
+                _elapsedTime -= Time.deltaTime;
+            }
+            
             if (_elapsedTime < 0)
             {
                 _elapsedTime = EnergyData.RateOfTransaction;
@@ -144,8 +157,6 @@ namespace BForBoss
                     return _energySystemConfigurationData.WallRunEnergy * multiplier;
                 case EnergyAccruementType.Dash:
                     return _energySystemConfigurationData.DashEnergy * multiplier;
-                case EnergyAccruementType.DoubleJump:
-                    return _energySystemConfigurationData.DoubleJumpEnergy * multiplier;
                 case EnergyAccruementType.Slide:
                     return _energySystemConfigurationData.SlideEnergy * multiplier;
                 default:
