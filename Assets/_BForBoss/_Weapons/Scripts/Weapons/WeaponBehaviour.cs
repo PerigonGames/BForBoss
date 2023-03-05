@@ -61,7 +61,7 @@ namespace Perigon.Weapons
             _crossHairProvider = crossHairProvider;
             _weaponConfigurationData = _weaponConfigurationSo.MapToData();
             _weapon = new Weapon(
-                ammunitionAmount: _weaponConfigurationData.AmmunitionAmount,
+                maxAmmunitionAmount: _weaponConfigurationData.AmmunitionAmount,
                 rateOfFire: _weaponConfigurationData.RateOfFire,
                 reloadDuration: _weaponConfigurationData.ReloadDuration,
                 bulletSpread: _weaponConfigurationData.BulletSpread);
@@ -139,10 +139,7 @@ namespace Perigon.Weapons
 
         private void SetCrossHairImage()
         {
-            if (_weapon != null)
-            {
-                _crossHairProvider.SetCrossHairImage(_weaponConfigurationData.Crosshair);
-            }
+            _crossHairProvider.SetCrossHairImage(_weaponConfigurationData.Crosshair);
         }
         
         private void OnBulletHitWall(Vector3 point, Vector3 pointNormal)
