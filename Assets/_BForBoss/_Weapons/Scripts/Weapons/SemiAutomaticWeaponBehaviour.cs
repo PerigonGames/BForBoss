@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Perigon.Weapons
 {
     public class SemiAutomaticWeaponBehaviour : WeaponBehaviour
@@ -10,12 +8,6 @@ namespace Perigon.Weapons
             {
                 _weapon.TryFire();
             }
-        }
-
-        protected override void Update()
-        {
-            _weapon.DecrementElapsedTimeRateOfFire(Time.deltaTime, Time.timeScale);
-            _weapon.ReloadWeaponCountDownIfNeeded(Time.deltaTime, Time.timeScale);
         }
     }
 }

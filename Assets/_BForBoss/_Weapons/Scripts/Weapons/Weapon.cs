@@ -1,5 +1,4 @@
 using System;
-using FMODUnity;
 using PerigonGames;
 using UnityEngine;
 
@@ -10,187 +9,147 @@ namespace Perigon.Weapons
         private const float MIN_TO_MAX_RANGE_OF_SPREAD = 2;
         private const float MAP_TO_RAYCAST_RANGE_SPREAD = 0.1F;
         private readonly IRandomUtility _randomUtility;
-        private readonly IWeaponProperties _weaponProperties;
+        private readonly int _ammunitionAmount;
+        private readonly float _rateOfFire;
+        private readonly float _reloadDuration;
+        private readonly float _bulletSpread;
 
-         private float _elapsedRateOfFire;
-         private float _elapsedReloadDuration;
-         private int _ammunitionAmount;
-         private bool _isActive = false;
-         private bool _isReloading = false;
+        private WeaponData _data;
+        public WeaponData Data
+        {
+            private set
+            {
+                _data = value;
+                OnWeaponDataStateChange?.Invoke(value);
+            }
+            get => _data;
+        }
 
-         public bool IsReloading
-         {
-             get => _isReloading;
-             set
-             {
-                 if (value == _isReloading) return;
-                 _isReloading = value;
-                 if (_isReloading)
-                 {
-                     OnStartReloading?.Invoke();
-                 }
-                 else
-                 {
-                     OnStopReloading?.Invoke();
-                 }
-             }
-         }
+        public event Action<WeaponData> OnWeaponDataStateChange;
+        public event Action OnFireWeapon;
 
-         public bool ActivateWeapon
-         {
-             set
-             {
-                 _isActive = value;
-                 StopReloading();
-                 OnSetWeaponActivate?.Invoke(value);
-             }
-         }
+        private bool CanShoot => _data.ElapsedRateOfFire <= 0 && _data.ElapsedAmmunitionAmount > 0;
 
-         public event Action<int> OnFireWeapon;
-         public event Action<bool> OnSetWeaponActivate;
-         public event Action OnStartReloading;
-         public event Action OnStopReloading;
+        public Weapon(
+            int ammunitionAmount, 
+            float rateOfFire, 
+            float reloadDuration, 
+            float bulletSpread, 
+            IRandomUtility randomUtility = null)
+        {
+            _randomUtility = randomUtility ?? new RandomUtility();
+            Data = _data.Apply(rateOfFire, reloadDuration, ammunitionAmount);
+            _ammunitionAmount = ammunitionAmount;
+            _reloadDuration = reloadDuration;
+            _rateOfFire = rateOfFire;
+            _bulletSpread = bulletSpread;
+        }
 
-         public int AmmunitionAmount => _ammunitionAmount;
-         public int MaxAmmunitionAmount => _weaponProperties.AmmunitionAmount;
-         public float MaxReloadDuration => _weaponProperties.ReloadDuration;
-         public float ElapsedReloadDuration => _elapsedReloadDuration;
-         public string NameOfWeapon => _weaponProperties.NameOfWeapon;
-         public bool IsRayCastingWeapon => _weaponProperties.IsRayCastingWeapon;
-         public float DamagePerRayCast => IsRayCastingWeapon ? _weaponProperties.DamagePerRayCast : 0;
-         public BulletTypes TypeOfBullet => _weaponProperties.TypeOfBullet;
-         public Sprite Crosshair => _weaponProperties.Crosshair;
-         public WeaponAnimationType AnimationType => _weaponProperties.AnimationType;
-         public EventReference ShotAudio => _weaponProperties.WeaponShotAudio;
-         public EventReference ReloadAudio => _weaponProperties.WeaponReloadAudio;
-         private bool CanShoot => _elapsedRateOfFire <= 0 && _ammunitionAmount > 0 && _isActive;
+        public void DecrementElapsedTimeRateOfFire(float deltaTime, float timeScale)
+        {
+            var scaledDeltaTime = ScaledDeltaTime(deltaTime, timeScale);
+            Data = Data.Apply(elapsedRateOfFire: Mathf.Clamp(
+                Data.ElapsedRateOfFire - scaledDeltaTime,
+                0,
+                float.PositiveInfinity));
+        }
 
-         public Weapon(IWeaponProperties weaponProperties, IRandomUtility randomUtility = null)
-         {
-             _weaponProperties = weaponProperties;
-             _randomUtility = randomUtility ?? new RandomUtility();
-             _elapsedReloadDuration = weaponProperties.ReloadDuration;
-             _ammunitionAmount = weaponProperties.AmmunitionAmount;
-         }
+        public float ScaledDeltaTime(float deltaTime, float timeScale)
+        {
+            var clampedTimeScale = Mathf.Clamp(timeScale, 0.01f, float.MaxValue);
+            return 1 / clampedTimeScale * deltaTime;
+        }
 
-         public void DecrementElapsedTimeRateOfFire(float deltaTime, float timeScale)
-         {
-             var scaledDeltaTime = ScaledDeltaTime(deltaTime, timeScale);
-             _elapsedRateOfFire = Mathf.Clamp(_elapsedRateOfFire - scaledDeltaTime, 0, float.PositiveInfinity);
-         }
+        public void ReloadWeaponCountDownIfNeeded(float deltaTime, float timeScale)
+        {
+            if (Data.ElapsedAmmunitionAmount <= 0)
+            {
+                Data = Data.Apply(isReloading: true);
+            }
 
-         public float ScaledDeltaTime(float deltaTime, float timeScale)
-         {
-             var clampedTimeScale = Mathf.Clamp(timeScale, 0.01f, float.MaxValue);
-             return 1 / clampedTimeScale * deltaTime;
-         }
+            if (Data.IsReloading)
+            {
+                var reloadDuration = _data.ElapsedReloadDuration - ScaledDeltaTime(deltaTime, timeScale);
+                Data = Data.Apply(elapsedReloadDuration: reloadDuration);
+            }
 
-         public void ReloadWeaponCountDownIfNeeded(float deltaTime, float timeScale)
-         {
-             if (_ammunitionAmount <= 0)
-             {
-                 IsReloading = true;
-             }
+            if (_data.ElapsedReloadDuration <= 0)
+            {
+                ResetWeaponState();
+            }
+        }
 
-             if (IsReloading)
-             {
-                 _elapsedReloadDuration -= ScaledDeltaTime(deltaTime, timeScale);
-             }
+        public void ReloadWeaponIfPossible()
+        {
+            if (Data.ElapsedAmmunitionAmount < _ammunitionAmount)
+            {
+                Data = Data.Apply(isReloading: true);
+            }
+        }
 
-             if (_elapsedReloadDuration <= 0)
-             {
-                 ResetWeaponState();
-             }
-         }
+        public Vector3 GetShootDirection(Vector3 from, Vector3 to, float bulletSpreadRate)
+        {
+            var directionWithoutSpread = to - from;
+            var spread = GenerateSpread(bulletSpreadRate);
+            var directionWithSpread = GenerateSpreadAngle(spread) * directionWithoutSpread;
+            return directionWithSpread.normalized;
+        }
 
-         public void ReloadWeaponIfPossible()
-         {
-             if (_ammunitionAmount < _weaponProperties.AmmunitionAmount)
-             {
-                 IsReloading = true;
-             }
-         }
+        public Vector3 GetShootDirection(float bulletSpreadRate)
+        {
+            var bulletSpread = GenerateSpread(bulletSpreadRate);
+            var xPosition = RandomDoubleIncludingNegative() * MAP_TO_RAYCAST_RANGE_SPREAD * bulletSpread;
+            var yPosition = RandomDoubleIncludingNegative() * MAP_TO_RAYCAST_RANGE_SPREAD * bulletSpread;
+            return new Vector3(xPosition, yPosition, 1);
+        }
 
-         public Vector3 GetShootDirection(Vector3 from, Vector3 to, float timeSinceFiring)
-         {
-             var directionWithoutSpread = to - from;
-             var spread = GenerateSpread(timeSinceFiring);
-             var directionWithSpread = GenerateSpreadAngle(spread) * directionWithoutSpread;
-             return directionWithSpread.normalized;
-         }
+        public bool TryFire()
+        {
+            if (!CanShoot)
+            {
+                return false;
+            }
 
-         public Vector3 GetShootDirection(float timeSinceFiring)
-         {
-             var bulletSpread = GenerateSpread(timeSinceFiring);
-             var xPosition = RandomDoubleIncludingNegative() * MAP_TO_RAYCAST_RANGE_SPREAD * bulletSpread;
-             var yPosition = RandomDoubleIncludingNegative() * MAP_TO_RAYCAST_RANGE_SPREAD * bulletSpread;
-             return new Vector3(xPosition, yPosition, 1);
-         }
+            StopReloading();
+            Data = Data.Apply(
+                elapsedAmmunitionAmount: Data.ElapsedAmmunitionAmount - 1,
+                elapsedRateOfFire: _rateOfFire);
+            OnFireWeapon?.Invoke();
+            return true;
+        }
 
-         public bool TryFire()
-         {
-             if (!CanShoot)
-             {
-                 return false;
-             }
+        private void ResetWeaponState()
+        {
+            StopReloading();
+            Data = Data.Apply(elapsedAmmunitionAmount: _ammunitionAmount);
+        }
 
-             StopReloading();
-             _ammunitionAmount--;
-             ResetRateOfFire();
-             Fire();
-             return true;
-         }
+        private void StopReloading()
+        {
+            Data = Data.Apply(
+                isReloading: false,
+                elapsedReloadDuration: _reloadDuration);
+        }
 
-         public void Reset()
-         {
-             IsReloading = false;
-             _elapsedReloadDuration = _weaponProperties.ReloadDuration;
-             _ammunitionAmount = _weaponProperties.AmmunitionAmount;
-             ActivateWeapon = false;
-         }
+        private Quaternion GenerateSpreadAngle(float spread)
+        {
+            var spreadRange = spread * MIN_TO_MAX_RANGE_OF_SPREAD;
+            var randomizedSpread = -spread + (float)_randomUtility.NextDouble() * spreadRange;
+            var randomizedDirection = new Vector3(
+                RandomDoubleIncludingNegative(),
+                RandomDoubleIncludingNegative(),
+                RandomDoubleIncludingNegative());
+            return Quaternion.AngleAxis(randomizedSpread, randomizedDirection);
+        }
 
-         private void ResetWeaponState()
-         {
-             StopReloading();
-             _ammunitionAmount = _weaponProperties.AmmunitionAmount;
-         }
+        private float GenerateSpread(float bulletSpreadRate)
+        {
+            return _bulletSpread * bulletSpreadRate;
+        }
 
-         private void StopReloading()
-         {
-             IsReloading = false;
-             _elapsedReloadDuration = _weaponProperties.ReloadDuration;
-         }
-
-         private void Fire()
-         {
-             OnFireWeapon?.Invoke(_weaponProperties.BulletsPerShot);
-         }
-
-         private Quaternion GenerateSpreadAngle(float spread)
-         {
-             var spreadRange = spread * MIN_TO_MAX_RANGE_OF_SPREAD;
-             var randomizedSpread = -spread + (float)_randomUtility.NextDouble() * spreadRange;
-             var randomizedDirection = new Vector3(
-                 RandomDoubleIncludingNegative(),
-                 RandomDoubleIncludingNegative(),
-                 RandomDoubleIncludingNegative());
-             return Quaternion.AngleAxis(randomizedSpread, randomizedDirection);
-         }
-
-         private float GenerateSpread(float timeSinceFiring)
-         {
-             float spreadRate = _weaponProperties.GetBulletSpreadRate(timeSinceFiring);
-             return _weaponProperties.BulletSpread * spreadRate;
-         }
-
-         private float RandomDoubleIncludingNegative()
-         {
-             return (float) _randomUtility.NextDouble() * (_randomUtility.CoinFlip() ? 1 : -1);
-         }
-
-         private void ResetRateOfFire()
-         {
-             _elapsedRateOfFire = _weaponProperties.RateOfFire;
-         }
+        private float RandomDoubleIncludingNegative()
+        {
+            return (float)_randomUtility.NextDouble() * (_randomUtility.CoinFlip() ? 1 : -1);
+        }
     }
 }
