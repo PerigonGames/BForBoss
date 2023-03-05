@@ -9,11 +9,12 @@ namespace BForBoss
     [RequireComponent(typeof(PlayerMovementBehaviour))]
     public class PlayerBehaviour : MonoBehaviour
     {
+        public IEnergySystem EnergySystem;
+        
         private PlayerMovementBehaviour _playerMovement;
         private PlayerLifeCycleBehaviour _playerLifeCycleBehaviour;
         private PlayerSlowMotionBehaviour _playerSlowMotion;
         private PGInputSystem _inputSystem;
-        public IEnergySystem EnergySystem;
 
         public PlayerMovementBehaviour PlayerMovement => _playerMovement;
 
