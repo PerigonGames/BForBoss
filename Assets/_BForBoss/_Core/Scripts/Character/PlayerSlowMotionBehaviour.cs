@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using Perigon.Utility;
 using UnityEngine;
@@ -100,7 +99,14 @@ namespace BForBoss
         {
             if (_isSlowMotionActive)
             {
-                _energySystem.Expend(EnergyExpenseType.SlowMo);
+                if (_energySystem.CanExpend(EnergyExpenseType.SlowMo))
+                {
+                    _energySystem.Expend(EnergyExpenseType.SlowMo);
+                }
+                else
+                {
+                    StopSlowMotion();
+                }
             }
         }
     }

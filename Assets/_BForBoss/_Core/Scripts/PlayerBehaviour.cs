@@ -21,6 +21,7 @@ namespace BForBoss
         public void Initialize(PGInputSystem inputSystem, LifeCycle playerLifeCycle)
         {
             _playerMovement.Initialize(EnergySystem, inputSystem);
+            _playerSlowMotion.Initialize(EnergySystem);
             _playerLifeCycleBehaviour.Initialize(
                 playerLifeCycle,
                 onEndGameCallback: () =>
