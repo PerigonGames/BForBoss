@@ -16,21 +16,23 @@ namespace Perigon.Weapons
         [SerializeField] private LayerMask _rayCastBulletLayerMask;
         [InlineEditor]
         [SerializeField]
-        private WeaponScriptableObject _weaponScriptableObject = null;
-
+        private WeaponConfigurationSO _weaponConfigurationSo = null;
+        
         protected Weapon _weapon = null;
-        protected bool _isFiring = false;
+        protected WeaponConfigurationData _weaponConfigurationData;
+        
         protected float _timeSinceFire = 0f;
         
+        private WeaponData _weaponData = default;
         private Camera _mainCamera = null;
         private BulletSpawner _bulletSpawner;
         private WallHitVFXSpawner _wallHitVFXSpawner;
         private IWeaponAnimationProvider _weaponAnimationProvider;
         private ICrossHairProvider _crossHairProvider;
         private PGInputSystem _inputSystem;
-        
-        public Weapon WeaponViewModel => _weapon;
 
+        public WeaponAnimationType AnimationType => _weaponConfigurationData.AnimationType;
+        
         private Camera MainCamera
         {
             get
@@ -49,15 +51,19 @@ namespace Perigon.Weapons
             BulletSpawner bulletSpawner,
             WallHitVFXSpawner wallHitVFXSpawner,
             IWeaponAnimationProvider weaponAnimationProvider,
-            ICrossHairProvider crossHairProvider,
-            IWeaponProperties properties = null)
+            ICrossHairProvider crossHairProvider)
         {
             _inputSystem = inputSystem;
             _bulletSpawner = bulletSpawner;
             _wallHitVFXSpawner = wallHitVFXSpawner;
             _weaponAnimationProvider = weaponAnimationProvider;
             _crossHairProvider = crossHairProvider;
-            _weapon = new Weapon(properties ?? _weaponScriptableObject);
+            _weaponConfigurationData = _weaponConfigurationSo.MapToData();
+            _weapon = new Weapon(
+                ammunitionAmount: _weaponConfigurationData.AmmunitionAmount,
+                rateOfFire: _weaponConfigurationData.RateOfFire,
+                reloadDuration: _weaponConfigurationData.ReloadDuration,
+                bulletSpread: _weaponConfigurationData.BulletSpread);
             BindWeapon();
             SetCrossHairImage();
             SetupPlayerInput();
@@ -65,25 +71,36 @@ namespace Perigon.Weapons
 
         public virtual void Reset()
         {
-            _isFiring = false;
             _timeSinceFire = 0;
             enabled = false;
             gameObject.SetActive(false);
         }
         
+        public void Activate(bool activate)
+        {
+            enabled = activate;
+            gameObject.SetActive(activate);
+            _weaponAnimationProvider.ReloadingWeapon(false);        
+        }
+        
         protected abstract void OnFireInputAction(bool isFiring);
-        protected abstract void Update();
+
+        protected virtual void Update()
+        {
+            _weapon.DecrementElapsedTimeRateOfFire(Time.deltaTime, Time.timeScale);
+            _weapon.ReloadWeaponCountDownIfNeeded(Time.deltaTime, Time.timeScale);
+        }
 
         protected virtual void PlayFiringAudio()
         {
-            FMODUnity.RuntimeManager.PlayOneShot(_weapon.ShotAudio, transform.position);
+            FMODUnity.RuntimeManager.PlayOneShot(_weaponConfigurationData.WeaponShotAudio, transform.position);
         }
 
         protected virtual void HandleOnStartReloading()
         {
-            FMODUnity.RuntimeManager.PlayOneShot(_weapon.ReloadAudio, transform.position);
+            FMODUnity.RuntimeManager.PlayOneShot(_weaponConfigurationData.WeaponReloadAudio, transform.position);
         }
-        
+
         protected virtual void Awake()
         {
             if (_muzzleFlash == null)
@@ -91,31 +108,30 @@ namespace Perigon.Weapons
                 Debug.LogWarning("Missing VFX Visual Effect from this weapon");
             }
         }
-
-        private void HandleOnWeaponActivate(bool activate)
-        {
-            enabled = activate;
-            gameObject.SetActive(activate);
-        }
-
-        private void HandleOnStopReloading()
-        {
-            _weaponAnimationProvider.ReloadingWeapon(false);
-        }
-
+        
         private void BindWeapon()
         {
             _weapon.OnFireWeapon += HandleOnFire;
-            _weapon.OnSetWeaponActivate += HandleOnWeaponActivate;
-            _weapon.OnStopReloading += HandleOnStopReloading;
-            _weapon.OnStartReloading += HandleOnStartReloading;
+            _weapon.OnWeaponDataStateChange += OnWeaponDataStateChange;
+        }
+
+        private void OnWeaponDataStateChange(WeaponData data)
+        {
+            if (data.IsReloading)
+            {
+                HandleOnStartReloading();
+            }
+            else
+            {
+                _weaponAnimationProvider.ReloadingWeapon(false);
+            }
         }
 
         private void SetCrossHairImage()
         {
             if (_weapon != null)
             {
-                _crossHairProvider.SetCrossHairImage(_weapon.Crosshair);
+                _crossHairProvider.SetCrossHairImage(_weaponConfigurationData.Crosshair);
             }
         }
         
@@ -127,35 +143,40 @@ namespace Perigon.Weapons
             wallHitVFX.Spawn();
         }
 
-        private void HandleOnFire(int numberOfBullets)
+        private void HandleOnFire()
         {
-            FireBullets(numberOfBullets);
+            // Shooting
+            FireBullets();
 
+            //VFX
             if (_muzzleFlash != null)
             {
                 _muzzleFlash.Play();
             }
             
-            _weaponAnimationProvider.WeaponFire(_weapon.AnimationType);
+            // Animation
+            _weaponAnimationProvider.WeaponFire(_weaponConfigurationData.AnimationType);
+            
+            //Audio
             PlayFiringAudio();
         }
 
-        private void FireBullets(int numberOfBullets)
+        private void FireBullets()
         {
-            if (_weapon.IsRayCastingWeapon)
+            if (_weaponConfigurationData.IsRayCastingWeapon)
             {
-                FireRayCastBullets(numberOfBullets);
+                FireRayCastBullets();
             }
             else
             {
-                FireProjectiles(numberOfBullets);
+                FireProjectiles();
             }
         }
 
         private void OnReloadInputAction()
         {
             _weapon.ReloadWeaponIfPossible();
-            _weaponAnimationProvider.ReloadingWeapon(_weapon.IsReloading);
+            _weaponAnimationProvider.ReloadingWeapon(_weaponData.IsReloading);
         }
         
         private void SetupPlayerInput()
@@ -174,9 +195,7 @@ namespace Perigon.Weapons
             if (_weapon != null)
             {
                 _weapon.OnFireWeapon -= HandleOnFire;
-                _weapon.OnSetWeaponActivate -= HandleOnWeaponActivate;
-                _weapon.OnStopReloading -= HandleOnStopReloading;
-                _weapon.OnStartReloading -= HandleOnStartReloading;
+                _weapon.OnWeaponDataStateChange -= OnWeaponDataStateChange;
                 _weapon = null;
             }
         }
