@@ -18,6 +18,7 @@ namespace BForBoss
 
         private IInputConfiguration _inputConfiguration;
         private PGInputSystem _inputSystem;
+        private IEnergySystem _energySystem;
         
         private float _unModifiedPlayerSpeed;
         
@@ -25,8 +26,9 @@ namespace BForBoss
         public event Action OnSlideStarted;
         
         
-        public void Initialize(PGInputSystem inputSystem, IInputConfiguration inputConfiguration = null)
+        public void Initialize(IEnergySystem energySystem, PGInputSystem inputSystem, IInputConfiguration inputConfiguration = null)
         {
+            _energySystem = energySystem;
             _inputSystem = inputSystem;
             _inputConfiguration = inputConfiguration ?? new InputConfiguration();
             _unModifiedPlayerSpeed = maxWalkSpeed;
@@ -204,19 +206,26 @@ namespace BForBoss
         }
 
         #region EventDelegates
-        void IPlayerDashEvents.OnDashStarted()
+        void IPlayerDashEvents.OnDashStopped()
         {
+            _energySystem?.Accrue(EnergyAccruementType.Dash);
             OnDashStarted?.Invoke();
         }
         
         void IPlayerSlideEvents.OnSlideStarted()
         {
+            _energySystem?.Accrue(EnergyAccruementType.Slide);
             OnSlideStarted?.Invoke();
         }
         
         void IPlayerWallRunEvents.OnWallCompleted(bool didJumpOut)
         {
             _jumpCount = didJumpOut ? 1 : 0;
+        }
+
+        void IPlayerWallRunEvents.OnWallRunning()
+        {
+            _energySystem?.Accrue(EnergyAccruementType.WallRun);
         }
         #endregion
     }
