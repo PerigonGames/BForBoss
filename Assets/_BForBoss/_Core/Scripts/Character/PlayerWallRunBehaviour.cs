@@ -11,6 +11,7 @@ namespace BForBoss
     public interface IPlayerWallRunEvents
     {
         void OnWallCompleted(bool didJumpOut);
+        void OnWallRunning();
     }
     
     public class PlayerWallRunBehaviour : MonoBehaviour
@@ -84,6 +85,7 @@ namespace BForBoss
         
         private ECM2.Characters.Character _baseCharacter = null;
         private PlayerMovementBehaviour _fpsCharacter = null;
+
         private Vector3 _lastWallRunNormal;
         private Vector3 _lastPlayerWallRunDirection;
         private Collider _lastWall;
@@ -189,6 +191,7 @@ namespace BForBoss
             SetNextWallDifferentDataIfNeeded();
             StabilizeCameraIfNeeded(ChildTransform.forward, _lastPlayerWallRunDirection);
             _baseCharacter.SetVelocity(constantVelocity + DownwardForceIfNeeded());
+            WallRunEventsDelegate.OnWallRunning();
         }
 
         private void SetNextWallDifferentDataIfNeeded()
@@ -464,7 +467,7 @@ namespace BForBoss
 
         private void PrintWallRunLogs(string log)
         {
-            Logger.LogString(log, "wallrunning");
+            Logger.LogString(log, LoggerColor.Black, "wallrunning");
         }
         #endregion
     }

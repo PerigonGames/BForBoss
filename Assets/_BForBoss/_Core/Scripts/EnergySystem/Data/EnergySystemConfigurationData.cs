@@ -4,7 +4,6 @@ namespace BForBoss
     {
         WallRun,
         Dash,
-        DoubleJump,
         Slide
     }
 
@@ -19,7 +18,6 @@ namespace BForBoss
         //Accruements
         public readonly float WallRunEnergy;
         public readonly float DashEnergy;
-        public readonly float DoubleJumpEnergy;
         public readonly float SlideEnergy;
         
         //Expenses
@@ -29,7 +27,6 @@ namespace BForBoss
         public EnergySystemConfigurationData(
             float wallRunEnergy,
             float dashEnergy,
-            float doubleJumpEnergy,
             float slideEnergy,
             float shotEnergy,
             float slowMoEnergy
@@ -37,7 +34,6 @@ namespace BForBoss
         {
             WallRunEnergy = wallRunEnergy;
             DashEnergy = dashEnergy;
-            DoubleJumpEnergy = doubleJumpEnergy;
             SlideEnergy = slideEnergy;
 
             ShotEnergy = shotEnergy;
