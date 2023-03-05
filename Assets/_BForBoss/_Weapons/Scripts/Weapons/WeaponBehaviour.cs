@@ -76,6 +76,13 @@ namespace Perigon.Weapons
             gameObject.SetActive(false);
         }
         
+        public void Activate(bool activate)
+        {
+            enabled = activate;
+            gameObject.SetActive(activate);
+            _weaponAnimationProvider.ReloadingWeapon(false);        
+        }
+        
         protected abstract void OnFireInputAction(bool isFiring);
 
         protected virtual void Update()
@@ -101,14 +108,7 @@ namespace Perigon.Weapons
                 Debug.LogWarning("Missing VFX Visual Effect from this weapon");
             }
         }
-
-        public void Activate(bool activate)
-        {
-            enabled = activate;
-            gameObject.SetActive(activate);
-            _weaponAnimationProvider.ReloadingWeapon(false);        
-        }
-
+        
         private void BindWeapon()
         {
             _weapon.OnFireWeapon += HandleOnFire;
