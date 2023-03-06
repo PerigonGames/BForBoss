@@ -1,5 +1,6 @@
 using FMODUnity;
 using UnityEngine;
+using UnityEditor;
 
 namespace Perigon.Weapons
 {
@@ -18,6 +19,7 @@ namespace Perigon.Weapons
             base.Reset();
             _isFiring = false;
             _shotsFired = 0;
+            UnityEditor.Handles.color = Color.black;
         }
         
         protected override void Awake()
@@ -56,8 +58,8 @@ namespace Perigon.Weapons
         {
             if (!_weaponFiringAudio.IsPlaying())
             {
-                _weaponFiringAudio.EventReference = _weaponConfigurationData.WeaponShotAudio
-                _weaponFiringAudio.SetParameter(FIRE_RATE_PARAM, 0f)
+                _weaponFiringAudio.EventReference = _weaponConfigurationData.WeaponShotAudio;
+                _weaponFiringAudio.SetParameter(FIRE_RATE_PARAM, 0f);
                 _weaponFiringAudio.Play();
             }
         }
