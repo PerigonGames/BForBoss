@@ -13,9 +13,6 @@ namespace BForBoss
         [SerializeField] 
         private float _dashEnergy = 1f;
         [FoldoutGroup("Accruement properties")]
-        [SerializeField]
-        private float _doubleJumpEnergy = 1f;
-        [FoldoutGroup("Accruement properties")]
         [SerializeField] 
         private float _slideEnergy = 1f;
         
@@ -31,7 +28,6 @@ namespace BForBoss
             return new EnergySystemConfigurationData(
                 wallRunEnergy:_wallRunEnergy,
                 dashEnergy:_dashEnergy,
-                doubleJumpEnergy:_doubleJumpEnergy,
                 slideEnergy:_slideEnergy,
                 shotEnergy:_shotEnergy,
                 slowMoEnergy:_slowMoEnergy);
