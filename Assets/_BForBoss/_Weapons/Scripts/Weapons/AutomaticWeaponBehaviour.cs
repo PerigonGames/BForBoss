@@ -57,7 +57,7 @@ namespace Perigon.Weapons
             if (!_weaponFiringAudio.IsPlaying())
             {
                 _weaponFiringAudio.EventReference = _weaponConfigurationData.WeaponShotAudio;
-                _weaponFiringAudio.SetParameter(FIRE_RATE_PARAM, 0f);
+                _weaponFiringAudio.SetParameter(FIRE_RATE_PARAM, 0f)
                 _weaponFiringAudio.Play();
             }
         }
