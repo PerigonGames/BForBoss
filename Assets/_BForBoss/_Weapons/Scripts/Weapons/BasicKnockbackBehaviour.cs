@@ -15,6 +15,7 @@ namespace Perigon.Weapons
         
         private void Awake()
         {
+            Debug.Log("Hlelo");
             _rb = GetComponent<Rigidbody>();
         }
 
