@@ -18,7 +18,7 @@ namespace Perigon.Weapons
         {
             _rb = GetComponent<Rigidbody>();
             Debug.Log("Print Statssssssssesssfmdccdd");
-            Debug.Log("Print Stfdffftssssefmdccdd");
+            Debug.Log("Print Stfdsasasfftssssefmdccdd");
             Debug.Log("Print ");
             Debug.Log("Print Sssefmdccdd");
         }
