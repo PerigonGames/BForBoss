@@ -13,5 +13,10 @@ namespace Tests
         {
             
         }
+
+        public bool CanExpend(EnergyExpenseType expenseType, float multiplier = 1)
+        {
+            return true;
+        }
     }
 }
