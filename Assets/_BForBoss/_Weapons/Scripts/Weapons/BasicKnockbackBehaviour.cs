@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 namespace Perigon.Weapons
@@ -16,6 +17,7 @@ namespace Perigon.Weapons
         private void Awake()
         {
             _rb = GetComponent<Rigidbody>();
+            Debug.Log("Print Statement");
         }
 
         public void ApplyKnockback(float force, Vector3 originPosition)
