@@ -17,7 +17,7 @@ namespace Perigon.Weapons
         private void Awake()
         {
             _rb = GetComponent<Rigidbody>();
-            Debug.Log("Print Statementdccdd");
+            Debug.Log("Print Statemddddentdccdd");
         }
 
         public void ApplyKnockback(float force, Vector3 originPosition)
