@@ -11,6 +11,7 @@ namespace BForBoss
     {
         void Accrue(EnergyAccruementType accruementType, float multiplier = 1);
         void Expend(EnergyExpenseType expenseType, float multiplier = 1);
+        bool CanExpend(EnergyExpenseType expenseType, float multiplier = 1);
     }
     
     public class EnergySystemBehaviour : MonoBehaviour, IEnergySystem
@@ -71,6 +72,8 @@ namespace BForBoss
             }
             
         }
+
+        public bool CanExpend(EnergyExpenseType expenseType, float multiplier = 1) => _energyData.Value >= MapToExpendValue(expenseType, multiplier);
 
         private void Awake()
         {
