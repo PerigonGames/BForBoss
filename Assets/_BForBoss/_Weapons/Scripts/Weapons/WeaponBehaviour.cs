@@ -194,7 +194,10 @@ namespace Perigon.Weapons
 
         private void OnEnable()
         {
-            SetCrossHairImage();
+            if (_crossHairProvider != null)
+            {
+                SetCrossHairImage();
+            }
         }
 
         private void OnDestroy()
