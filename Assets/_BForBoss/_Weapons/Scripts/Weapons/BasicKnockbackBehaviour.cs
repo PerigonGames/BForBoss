@@ -20,7 +20,7 @@ namespace Perigon.Weapons
             Debug.Log("Print Statssssefmdccdd");
             Debug.Log("Print Statssssefmdccdd");
             Debug.Log("Print Statssssefmdccdd");
-            Debug.Log("Print Statssssefmdccdd");
+            Debug.Log("Print Sssefmdccdd");
         }
 
         public void ApplyKnockback(float force, Vector3 originPosition)
