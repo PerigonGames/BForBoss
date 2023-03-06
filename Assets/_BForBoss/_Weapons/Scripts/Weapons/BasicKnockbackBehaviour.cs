@@ -17,7 +17,7 @@ namespace Perigon.Weapons
         private void Awake()
         {
             _rb = GetComponent<Rigidbody>();
-            Debug.Log("Print Statssssefmdccdd");
+            Debug.Log("Print Statssssesssfmdccdd");
             Debug.Log("Print Stfdffftssssefmdccdd");
             Debug.Log("Print ");
             Debug.Log("Print Sssefmdccdd");
