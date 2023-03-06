@@ -12,7 +12,6 @@ namespace BForBoss
         private WeaponAnimationController _weaponAnimationController = null;
 
         [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
-        [SerializeField] private AmmunitionCountViewBehaviour _ammunitionCountView = null;
         [SerializeField] private ReloadViewBehaviour _reloadView = null;
         [SerializeField] private CrossHairBehaviour _crossHairBehaviour;
         
@@ -20,7 +19,6 @@ namespace BForBoss
         {
             _weaponAnimationController.Initialize(playerBehaviour.PlayerMovement);
             _equipmentBehaviour.Initialize(playerBehaviour.PlayerMovement, inputSystem, _weaponAnimationController, _crossHairBehaviour);
-            _ammunitionCountView.Initialize(_equipmentBehaviour);
             _reloadView.Initialize(_equipmentBehaviour);
             StateManager.Instance.OnStateChanged += OnStateChanged;
         }
@@ -34,7 +32,6 @@ namespace BForBoss
 
             var shouldShowWeaponHUD = state != State.EndGame;
             _reloadView.gameObject.SetActive(shouldShowWeaponHUD);
-            _ammunitionCountView.gameObject.SetActive(shouldShowWeaponHUD);
             _weaponAnimationController.gameObject.SetActive(shouldShowWeaponHUD);
             _crossHairBehaviour.gameObject.SetActive(shouldShowWeaponHUD);
         }
@@ -54,11 +51,6 @@ namespace BForBoss
             if (_equipmentBehaviour == null)
             {
                 PanicHelper.Panic(new Exception("Equipment Behaviour missing from World Manager"));
-            }
-            
-            if (_ammunitionCountView == null)
-            {
-                PanicHelper.Panic(new Exception("Ammunition Count View missing from World Manager"));
             }
             
             if (_reloadView == null)
