@@ -14,8 +14,7 @@ namespace BForBoss
             SettingsView,
             EndGameView
         }
-
-        [SerializeField] private PlayerHealthViewBehaviour _playerHealthViewBehaviour;
+        
         [SerializeField] private SettingsViewBehaviour _settingsViewBehaviour;
         [SerializeField] private PauseViewBehaviour _pauseViewBehaviour;
         [SerializeField] private EndGameViewBehaviour _endGameViewBehaviour;
@@ -34,7 +33,6 @@ namespace BForBoss
         public void Initialize(ILifeCycle playerLifeCycle)
         {
             StateManager.Instance.OnStateChanged += HandleOnStateChangedForUserInterface;
-            StateManager.Instance.OnStateChanged += HandleOnStateChangedForHUD;
             var resetGameUseCase = new ResetGameUseCase(StateManager.Instance);
             _settingsViewBehaviour.Initialize(onBackPressed: () =>
             {
@@ -45,7 +43,6 @@ namespace BForBoss
                 UIState = UserInterfaceState.SettingsView;
             });
             _endGameViewBehaviour.Initialize(resetGameUseCase);
-            _playerHealthViewBehaviour.Initialize(playerLifeCycle);
         }
 
         private void HandleOnStateChangedForUserInterface(State gameState)
@@ -62,12 +59,6 @@ namespace BForBoss
                     UIState = UserInterfaceState.None;
                     break;
             }
-        }
-
-        private void HandleOnStateChangedForHUD(State gameState)
-        {
-            var shouldShowView = gameState != State.EndGame;
-            _playerHealthViewBehaviour.gameObject.SetActive(shouldShowView);
         }
 
         private void OnUserInterfaceStateChanged()
@@ -116,7 +107,6 @@ namespace BForBoss
         private void OnDestroy()
         {
             StateManager.Instance.OnStateChanged -= HandleOnStateChangedForUserInterface;
-            StateManager.Instance.OnStateChanged += HandleOnStateChangedForHUD;
         }
     }
 }

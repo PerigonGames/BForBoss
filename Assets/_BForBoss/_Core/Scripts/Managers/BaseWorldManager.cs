@@ -13,8 +13,9 @@ namespace BForBoss
     {
         private const string ADDITIVE_WEAPON_SCENE_NAME = "AdditiveWeaponManager";
         private const string ADDITIVE_USER_INTERFACE_SCENE_NAME = "AdditiveUserInterfaceScene";
+        private const string ADDITIVE_HUD_SCENE_NAME = "AdditiveHUDScene";
         private const string ADDITIVE_DEBUG_SCENE_NAME = "AdditiveDebugScene";
-        
+
         protected readonly StateManager _stateManager = StateManager.Instance;
         private readonly LifeCycle _playerLifeCycle = new LifeCycle();
 
@@ -31,6 +32,7 @@ namespace BForBoss
 
         private WeaponSceneManager _weaponSceneManager;
         private UserInterfaceManager _userInterfaceManager;
+        private HUDManager _hudManager;
 
         private UserInterfaceManager UserInterfaceManager
         {
@@ -45,7 +47,7 @@ namespace BForBoss
             }
         }
 
-        protected WeaponSceneManager WeaponSceneManager
+        private WeaponSceneManager WeaponSceneManager
         {
             get
             {
@@ -55,6 +57,19 @@ namespace BForBoss
                 }
 
                 return _weaponSceneManager;
+            }
+        }
+
+        private HUDManager HUDManager
+        {
+            get
+            {
+                if (_hudManager == null)
+                {
+                    _hudManager = FindObjectOfType<HUDManager>();
+                }
+
+                return _hudManager;
             }
         }
 
@@ -91,6 +106,7 @@ namespace BForBoss
             _environmentManager = gameObject.AddComponent<EnvironmentManager>();
             SceneManager.LoadScene(ADDITIVE_WEAPON_SCENE_NAME, LoadSceneMode.Additive);
             SceneManager.LoadScene(ADDITIVE_USER_INTERFACE_SCENE_NAME, LoadSceneMode.Additive);
+            SceneManager.LoadScene(ADDITIVE_HUD_SCENE_NAME, LoadSceneMode.Additive);
 #if (UNITY_EDITOR || DEVELOPMENT_BUILD)
             SceneManager.LoadScene(ADDITIVE_DEBUG_SCENE_NAME, LoadSceneMode.Additive);
 #endif
@@ -128,6 +144,9 @@ namespace BForBoss
                 case ADDITIVE_WEAPON_SCENE_NAME:
                     WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
                     break; 
+                case ADDITIVE_HUD_SCENE_NAME:
+                    HUDManager.Initialize(_playerLifeCycle);
+                    break;
                 default:
                     return;
             }
