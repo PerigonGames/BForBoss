@@ -20,15 +20,10 @@ namespace Perigon.Weapons
         private WeaponData _data;
         private WeaponData Data
         {
-            set
-            {
-                _data = value;
-                OnWeaponDataStateChange?.Invoke(value);
-            }
+            set => _data = value;
             get => _data;
         }
 
-        public event Action<WeaponData> OnWeaponDataStateChange;
         public event Action<WeaponEffect> OnWeaponEffectEmit;
 
         private bool CanShoot => _data.ElapsedRateOfFire <= 0;

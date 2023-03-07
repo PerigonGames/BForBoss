@@ -38,14 +38,14 @@ namespace Perigon.Weapons
 
         protected override void Update()
         {
-            if (_isFiring)
+            if (_isFiring && (_externalShootingCases?.CanShoot ?? true))
             {
                 _timeSinceFire += _weapon.ScaledDeltaTime(Time.deltaTime, Time.timeScale);
                 _shotsFired += _weapon.TryFire() ? 1 : 0;
                 _weaponFiringAudio.SetParameter(FIRE_RATE_PARAM, _shotsFired / Mathf.Max(_timeSinceFire, 1f));
             }
             base.Update();
-            if (!_isFiring && _weaponFiringAudio.IsPlaying())
+            if (!(_isFiring && (_externalShootingCases?.CanShoot ?? true)) && _weaponFiringAudio.IsPlaying())
             {
                 _weaponFiringAudio.Stop();
             }

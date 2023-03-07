@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace BForBoss
 {
@@ -19,6 +20,17 @@ namespace BForBoss
         {
             _energySystemBehaviour.Reset();
             base.Reset();
+        }
+
+        protected override void OnAdditiveSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+        {
+            switch (scene.name)
+            {
+                case ADDITIVE_WEAPON_SCENE_NAME:
+                    WeaponSceneManager.EnergySystem = _energySystemBehaviour;
+                    break;
+            }
+            base.OnAdditiveSceneLoaded(scene, loadSceneMode);
         }
     }
 }

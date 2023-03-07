@@ -5,6 +5,12 @@ using UnityEngine.VFX;
 
 namespace Perigon.Weapons
 {
+    public interface IShootingCases
+    {
+        bool CanShoot { get; }
+        void OnShoot();
+    }
+    
     public abstract partial class WeaponBehaviour : MonoBehaviour
     {
         private const float WALL_HIT_ZFIGHT_BUFFER = 0.01f;
@@ -20,10 +26,10 @@ namespace Perigon.Weapons
         
         protected Weapon _weapon = null;
         protected WeaponConfigurationData _weaponConfigurationData;
-        
+        protected IShootingCases _externalShootingCases;
+
         protected float _timeSinceFire = 0f;
         
-        private WeaponData _weaponData = default;
         private Camera _mainCamera = null;
         private BulletSpawner _bulletSpawner;
         private WallHitVFXSpawner _wallHitVFXSpawner;
@@ -51,7 +57,8 @@ namespace Perigon.Weapons
             BulletSpawner bulletSpawner,
             WallHitVFXSpawner wallHitVFXSpawner,
             IWeaponAnimationProvider weaponAnimationProvider,
-            ICrossHairProvider crossHairProvider)
+            ICrossHairProvider crossHairProvider,
+            IShootingCases externalShootingCases)
         {
             _inputSystem = inputSystem;
             _bulletSpawner = bulletSpawner;
@@ -62,6 +69,7 @@ namespace Perigon.Weapons
             _weapon = new Weapon(
                 rateOfFire: _weaponConfigurationData.RateOfFire,
                 bulletSpread: _weaponConfigurationData.BulletSpread);
+            _externalShootingCases = externalShootingCases;
             BindWeapon();
             SetCrossHairImage();
             SetupPlayerInput();
@@ -104,14 +112,8 @@ namespace Perigon.Weapons
         private void BindWeapon()
         {
             _weapon.OnWeaponEffectEmit += HandleEffect;
-            _weapon.OnWeaponDataStateChange += HandleStateChange;
         }
-
-        private void HandleStateChange(WeaponData data)
-        {
-            _weaponData = data;
-        }
-
+        
         private void HandleEffect(WeaponEffect effect)
         {
             switch (effect)
@@ -151,6 +153,9 @@ namespace Perigon.Weapons
             
             //Audio
             PlayFiringAudio();
+            
+            // Expend Energy
+            _externalShootingCases?.OnShoot();
         }
 
         private void FireBullets()
@@ -183,7 +188,6 @@ namespace Perigon.Weapons
             if (_weapon != null)
             {
                 _weapon.OnWeaponEffectEmit -= HandleEffect;
-                _weapon.OnWeaponDataStateChange -= HandleStateChange;
                 _weapon = null;
             }
         }

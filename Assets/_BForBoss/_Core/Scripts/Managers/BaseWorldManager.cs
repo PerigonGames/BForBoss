@@ -11,7 +11,7 @@ namespace BForBoss
 {
     public abstract class BaseWorldManager : MonoBehaviour
     {
-        private const string ADDITIVE_WEAPON_SCENE_NAME = "AdditiveWeaponManager";
+        protected const string ADDITIVE_WEAPON_SCENE_NAME = "AdditiveWeaponManager";
         private const string ADDITIVE_USER_INTERFACE_SCENE_NAME = "AdditiveUserInterfaceScene";
         private const string ADDITIVE_HUD_SCENE_NAME = "AdditiveHUDScene";
         private const string ADDITIVE_DEBUG_SCENE_NAME = "AdditiveDebugScene";
@@ -27,10 +27,11 @@ namespace BForBoss
         [Title("","Base Configuration", bold: false, horizontalLine: false)]
         [SerializeField] protected Transform _spawnLocation;
         
+        protected WeaponSceneManager _weaponSceneManager;
+
         private PGInputSystem _inputSystem;
         private EnvironmentManager _environmentManager;
 
-        private WeaponSceneManager _weaponSceneManager;
         private UserInterfaceManager _userInterfaceManager;
         private HUDManager _hudManager;
 
@@ -47,7 +48,7 @@ namespace BForBoss
             }
         }
 
-        private WeaponSceneManager WeaponSceneManager
+        protected WeaponSceneManager WeaponSceneManager
         {
             get
             {
@@ -134,7 +135,7 @@ namespace BForBoss
             }
         }
         
-        private void OnAdditiveSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+        protected virtual void OnAdditiveSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
             switch (scene.name)
             {

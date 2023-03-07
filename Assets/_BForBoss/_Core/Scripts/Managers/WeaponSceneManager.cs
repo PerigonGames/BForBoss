@@ -12,14 +12,16 @@ namespace BForBoss
         private WeaponAnimationController _weaponAnimationController = null;
 
         [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
-        [SerializeField] private ReloadViewBehaviour _reloadView = null;
         [SerializeField] private CrossHairBehaviour _crossHairBehaviour;
-        
+        public EnergySystemBehaviour EnergySystem { get; set; }
+
         public void Initialize(PlayerBehaviour playerBehaviour, PGInputSystem inputSystem)
         {
             _weaponAnimationController.Initialize(playerBehaviour.PlayerMovement);
-            _equipmentBehaviour.Initialize(playerBehaviour.PlayerMovement, inputSystem, _weaponAnimationController, _crossHairBehaviour);
-            _reloadView.Initialize(_equipmentBehaviour);
+            _equipmentBehaviour.Initialize(
+                playerBehaviour.PlayerMovement,
+                inputSystem, _weaponAnimationController, 
+                _crossHairBehaviour, EnergySystem);
             StateManager.Instance.OnStateChanged += OnStateChanged;
         }
 
@@ -31,7 +33,6 @@ namespace BForBoss
             }
 
             var shouldShowWeaponHUD = state != State.EndGame;
-            _reloadView.gameObject.SetActive(shouldShowWeaponHUD);
             _weaponAnimationController.gameObject.SetActive(shouldShowWeaponHUD);
             _crossHairBehaviour.gameObject.SetActive(shouldShowWeaponHUD);
         }
@@ -51,11 +52,6 @@ namespace BForBoss
             if (_equipmentBehaviour == null)
             {
                 PanicHelper.Panic(new Exception("Equipment Behaviour missing from World Manager"));
-            }
-            
-            if (_reloadView == null)
-            {
-                PanicHelper.Panic(new Exception("Reload View missing from World Manager"));
             }
         }
 

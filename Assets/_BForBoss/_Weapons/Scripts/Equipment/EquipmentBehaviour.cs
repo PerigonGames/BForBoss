@@ -9,10 +9,10 @@ namespace Perigon.Weapons
     {
         Transform Value { get; }
     }
-    
+
     [RequireComponent(typeof(BulletSpawner))]
     [RequireComponent(typeof(WallHitVFXSpawner))]
-    public partial class EquipmentBehaviour : MonoBehaviour
+    public class EquipmentBehaviour : MonoBehaviour
     {
         [SerializeField] private WeaponBehaviour[] _weaponBehaviours = null;
         private BulletSpawner _bulletSpawner;
@@ -22,17 +22,19 @@ namespace Perigon.Weapons
         private PGInputSystem _inputSystem;
 
         private int _currentWeaponIndex = 0;
+        private WeaponBehaviour CurrentWeapon => _weaponBehaviours[_currentWeaponIndex];
         
         public void Initialize(
             IGetPlayerTransform getPlayerTransform, 
             PGInputSystem inputSystem, 
             IWeaponAnimationProvider weaponAnimationProvider, 
-            ICrossHairProvider crossHairProvider)
+            ICrossHairProvider crossHairProvider,
+            IShootingCases shootingCases)
         {
             _inputSystem = inputSystem;
             _weaponAnimationProvider = weaponAnimationProvider;
             _meleeBehaviour.Initialize(getPlayerTransform, onSuccessfulAttack: () => _weaponAnimationProvider.MeleeAttack(CurrentWeapon.AnimationType));
-            SetupWeapons(crossHairProvider);
+            SetupWeapons(crossHairProvider, shootingCases);
             SetupInputBinding();
         }
 
@@ -59,11 +61,11 @@ namespace Perigon.Weapons
             _weaponBehaviours[_currentWeaponIndex].Activate(true);
         }
         
-        private void SetupWeapons(ICrossHairProvider crossHairProvider)
+        private void SetupWeapons(ICrossHairProvider crossHairProvider, IShootingCases shootingCases)
         {
             for(int i = 0; i < _weaponBehaviours.Length; i++)
             {
-                _weaponBehaviours[i].Initialize(_inputSystem, _bulletSpawner, _wallHitVFXSpawner, _weaponAnimationProvider, crossHairProvider);
+                _weaponBehaviours[i].Initialize(_inputSystem, _bulletSpawner, _wallHitVFXSpawner, _weaponAnimationProvider, crossHairProvider, shootingCases);
                 _weaponBehaviours[i].Activate(false);
             }
 

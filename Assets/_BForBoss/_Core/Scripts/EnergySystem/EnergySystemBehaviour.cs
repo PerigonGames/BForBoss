@@ -14,7 +14,7 @@ namespace BForBoss
         bool CanExpend(EnergyExpenseType expenseType, float multiplier = 1);
     }
     
-    public class EnergySystemBehaviour : MonoBehaviour, IEnergySystem
+    public partial class EnergySystemBehaviour : MonoBehaviour, IEnergySystem
     {
         [InlineEditor] [SerializeField] private EnergySystemConfigurationSO _energySystemConfiguration;
         [InlineEditor] [SerializeField] private EnergySO _energy;
