@@ -1,4 +1,3 @@
-using System;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -61,9 +60,7 @@ namespace Perigon.Weapons
             _crossHairProvider = crossHairProvider;
             _weaponConfigurationData = _weaponConfigurationSo.MapToData();
             _weapon = new Weapon(
-                maxAmmunitionAmount: _weaponConfigurationData.AmmunitionAmount,
                 rateOfFire: _weaponConfigurationData.RateOfFire,
-                reloadDuration: _weaponConfigurationData.ReloadDuration,
                 bulletSpread: _weaponConfigurationData.BulletSpread);
             BindWeapon();
             SetCrossHairImage();
@@ -89,17 +86,11 @@ namespace Perigon.Weapons
         protected virtual void Update()
         {
             _weapon.DecrementElapsedTimeRateOfFire(Time.deltaTime, Time.timeScale);
-            _weapon.ReloadWeaponCountDownIfNeeded(Time.deltaTime, Time.timeScale);
         }
 
         protected virtual void PlayFiringAudio()
         {
             FMODUnity.RuntimeManager.PlayOneShot(_weaponConfigurationData.WeaponShotAudio, transform.position);
-        }
-
-        protected virtual void PlayReloadingAudio()
-        {
-            FMODUnity.RuntimeManager.PlayOneShot(_weaponConfigurationData.WeaponReloadAudio, transform.position);
         }
 
         protected virtual void Awake()
@@ -127,12 +118,6 @@ namespace Perigon.Weapons
             {
                 case WeaponEffect.FireWeapon:
                     FireWeapon();
-                    break;
-                case WeaponEffect.StartReloading:
-                    PlayReloadingAudio();
-                    break;
-                case WeaponEffect.StopReloading:
-                    _weaponAnimationProvider.ReloadingWeapon(false);
                     break;
             }
         }
@@ -180,16 +165,9 @@ namespace Perigon.Weapons
             }
         }
 
-        private void OnReloadInputAction()
-        {
-            _weapon.ReloadWeaponIfPossible();
-            _weaponAnimationProvider.ReloadingWeapon(_weaponData.IsReloading);
-        }
-        
         private void SetupPlayerInput()
         {
             _inputSystem.OnFireAction += OnFireInputAction;
-            _inputSystem.OnReloadAction += OnReloadInputAction;
         }
 
         private void OnEnable()

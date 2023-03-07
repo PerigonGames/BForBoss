@@ -6,9 +6,7 @@ namespace Perigon.Weapons
 {
     public enum WeaponEffect
     {
-        FireWeapon,
-        StartReloading,
-        StopReloading
+        FireWeapon
     }
     
     public class Weapon
@@ -16,9 +14,7 @@ namespace Perigon.Weapons
         private const float MIN_TO_MAX_RANGE_OF_SPREAD = 2;
         private const float MAP_TO_RAYCAST_RANGE_SPREAD = 0.1F;
         private readonly IRandomUtility _randomUtility;
-        private readonly int _maxAmmunitionAmount;
         private readonly float _rateOfFire;
-        private readonly float _reloadDuration;
         private readonly float _bulletSpread;
 
         private WeaponData _data;
@@ -35,19 +31,15 @@ namespace Perigon.Weapons
         public event Action<WeaponData> OnWeaponDataStateChange;
         public event Action<WeaponEffect> OnWeaponEffectEmit;
 
-        private bool CanShoot => _data.ElapsedRateOfFire <= 0 && _data.ElapsedAmmunitionAmount > 0;
+        private bool CanShoot => _data.ElapsedRateOfFire <= 0;
 
         public Weapon(
-            int maxAmmunitionAmount, 
             float rateOfFire, 
-            float reloadDuration, 
             float bulletSpread, 
             IRandomUtility randomUtility = null)
         {
             _randomUtility = randomUtility ?? new RandomUtility();
-            Data = _data.Apply(rateOfFire, reloadDuration, maxAmmunitionAmount);
-            _maxAmmunitionAmount = maxAmmunitionAmount;
-            _reloadDuration = reloadDuration;
+            Data = _data.Apply(rateOfFire);
             _rateOfFire = rateOfFire;
             _bulletSpread = bulletSpread;
         }
@@ -65,35 +57,6 @@ namespace Perigon.Weapons
         {
             var clampedTimeScale = Mathf.Clamp(timeScale, 0.01f, float.MaxValue);
             return 1 / clampedTimeScale * deltaTime;
-        }
-
-        public void ReloadWeaponCountDownIfNeeded(float deltaTime, float timeScale)
-        {
-            if (Data.ElapsedAmmunitionAmount <= 0 && !Data.IsReloading)
-            {
-                Data = Data.Apply(isReloading: true);
-                OnWeaponEffectEmit?.Invoke(WeaponEffect.StartReloading);
-            }
-
-            if (Data.IsReloading)
-            {
-                var reloadDuration = _data.ElapsedReloadDuration - ScaledDeltaTime(deltaTime, timeScale);
-                Data = Data.Apply(elapsedReloadDuration: reloadDuration);
-            }
-
-            if (_data.ElapsedReloadDuration <= 0)
-            {
-                ResetWeaponState();
-            }
-        }
-
-        public void ReloadWeaponIfPossible()
-        {
-            if (Data.ElapsedAmmunitionAmount < _maxAmmunitionAmount && !Data.IsReloading)
-            {
-                Data = Data.Apply(isReloading: true);
-                OnWeaponEffectEmit?.Invoke(WeaponEffect.StartReloading);
-            }
         }
 
         public Vector3 GetShootDirection(Vector3 from, Vector3 to, float bulletSpreadRate)
@@ -114,34 +77,14 @@ namespace Perigon.Weapons
 
         public bool TryFire()
         {
-            if (!CanShoot)
+            if (CanShoot)
             {
-                return false;
+                Data = Data.Apply(elapsedRateOfFire: _rateOfFire);
+                OnWeaponEffectEmit?.Invoke(WeaponEffect.FireWeapon);
+                return true;
             }
 
-            StopReloading();
-            Data = Data.Apply(
-                elapsedAmmunitionAmount: Data.ElapsedAmmunitionAmount - 1,
-                elapsedRateOfFire: _rateOfFire);
-            OnWeaponEffectEmit?.Invoke(WeaponEffect.FireWeapon);
-            return true;
-        }
-
-        private void ResetWeaponState()
-        {
-            StopReloading();
-            Data = Data.Apply(elapsedAmmunitionAmount: _maxAmmunitionAmount);
-        }
-
-        private void StopReloading()
-        {
-            if (Data.IsReloading)
-            {
-                Data = Data.Apply(
-                    isReloading: false,
-                    elapsedReloadDuration: _reloadDuration);
-                OnWeaponEffectEmit?.Invoke(WeaponEffect.StopReloading);
-            }
+            return false;
         }
 
         private Quaternion GenerateSpreadAngle(float spread)
