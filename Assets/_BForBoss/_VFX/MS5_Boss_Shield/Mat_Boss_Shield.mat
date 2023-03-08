@@ -1,21 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7844497806320977152
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da692e001514ec24dbc4cca1949ff7e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 12
-  hdPluginSubTargetMaterialVersions:
-    m_Keys: []
-    m_Values: 
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -24,13 +8,12 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Mat_Boss_Shield
-  m_Shader: {fileID: -6465566751694194690, guid: 526c25cd728f2b84eb2227cc0898d513, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 7e417bc7f53d24e4c846370401b3cf5a, type: 3}
   m_ValidKeywords:
-  - _DISABLE_SSR_TRANSPARENT
-  - _DOUBLESIDED_ON
   - _ENABLE_FOG_ON_TRANSPARENT
   - _SURFACE_TYPE_TRANSPARENT
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _DOUBLESIDED_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
@@ -39,13 +22,20 @@ Material:
     MotionVector: User
     RenderType: Transparent
   disabledShaderPasses:
-  - MOTIONVECTORS
-  - TransparentDepthPostpass
   - TransparentDepthPrepass
-  - RayTracingPrepass
+  - TransparentDepthPostpass
+  - MOTIONVECTORS
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _SampleTexture2D_0064d9bf14814fe1b9fe55c9602b5314_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 4d609c8f0ad74f24eb46d3e6d3788fa5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_1a75adc262484230aa5e6e007b4dcd99_Texture_1:
+        m_Texture: {fileID: 2800000, guid: b2e988d9af29585429001d93a3769f2b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_ab95038cb9064e5db78b5c41cddd3529_Texture_1:
         m_Texture: {fileID: 2800000, guid: 2ee3cc35981b83b4aa5f57fb43c4cfd9, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -79,18 +69,14 @@ Material:
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 2
     - _DstBlend: 10
-    - _EnableBlendModePreserveSpecularLighting: 1
+    - _EnableBlendModePreserveSpecularLighting: 0
     - _EnableFogOnTransparent: 1
-    - _FaceOpacity: 0.348
+    - _FaceOpacity: 0.858
+    - _FresnelPower: 3.57
+    - _FresnelPremulti: 0.348
+    - _LineOpacity: 0.15
     - _OpaqueCullMode: 2
-    - _RayTracing: 0
-    - _ReceivesSSR: 1
-    - _ReceivesSSRTransparent: 0
-    - _RefractionModel: 0
     - _RenderQueueType: 4
-    - _RequireSplitLighting: 0
-    - _SphereHardness: 1
-    - _SphereRadius: 0.5
     - _SrcBlend: 1
     - _StencilRef: 0
     - _StencilRefDepth: 0
@@ -102,7 +88,6 @@ Material:
     - _StencilWriteMaskDistortionVec: 4
     - _StencilWriteMaskGBuffer: 14
     - _StencilWriteMaskMV: 40
-    - _SupportDecals: 1
     - _SurfaceType: 1
     - _TransparentBackfaceEnable: 1
     - _TransparentCullMode: 2
@@ -112,16 +97,31 @@ Material:
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 0
     - _UseShadowThreshold: 0
-    - _UseSphereMask: 1
     - _ZTestDepthEqualForOpaque: 4
     - _ZTestGBuffer: 4
     - _ZTestTransparent: 4
     - _ZWrite: 0
     m_Colors:
-    - SphereCenter: {r: 14.6, g: 1.52, b: -5.01, a: 0}
-    - _BackColor: {r: 0.34571317, g: 0.10517572, b: 0.57172436, a: 1}
-    - _DoubleSidedConstants: {r: 1, g: 1, b: 1, a: 0}
+    - _BackColor: {r: 0, g: 0.16119383, b: 2, a: 1}
+    - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _FrontColor: {r: 0, g: 0.7450981, b: 2, a: 1}
-    - _UV: {r: 2, g: 1, b: 0.43, a: 0}
+    - _FresnelColor: {r: 3.9999995, g: 3.4343538, b: 0, a: 0}
+    - _FrontColor: {r: 0, g: 0.5647059, b: 1.4980392, a: 1}
+    - _UV: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
+--- !u!114 &4325509304634923088
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da692e001514ec24dbc4cca1949ff7e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 12
+  hdPluginSubTargetMaterialVersions:
+    m_Keys: []
+    m_Values: 
