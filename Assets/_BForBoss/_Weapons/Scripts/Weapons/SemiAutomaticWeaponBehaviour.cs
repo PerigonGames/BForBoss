@@ -4,7 +4,7 @@ namespace Perigon.Weapons
     {
         protected override void OnFireInputAction(bool isFiring)
         {
-            if (isFiring)
+            if (isFiring && (_externalShootingCases?.CanShoot ?? true))
             {
                 _weapon.TryFire();
             }

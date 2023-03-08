@@ -1,4 +1,3 @@
-using System;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -6,6 +5,12 @@ using UnityEngine.VFX;
 
 namespace Perigon.Weapons
 {
+    public interface IShootingCases
+    {
+        bool CanShoot { get; }
+        void OnShoot();
+    }
+    
     public abstract partial class WeaponBehaviour : MonoBehaviour
     {
         private const float WALL_HIT_ZFIGHT_BUFFER = 0.01f;
@@ -21,10 +26,10 @@ namespace Perigon.Weapons
         
         protected Weapon _weapon = null;
         protected WeaponConfigurationData _weaponConfigurationData;
-        
+        protected IShootingCases _externalShootingCases;
+
         protected float _timeSinceFire = 0f;
         
-        private WeaponData _weaponData = default;
         private Camera _mainCamera = null;
         private BulletSpawner _bulletSpawner;
         private WallHitVFXSpawner _wallHitVFXSpawner;
@@ -52,7 +57,8 @@ namespace Perigon.Weapons
             BulletSpawner bulletSpawner,
             WallHitVFXSpawner wallHitVFXSpawner,
             IWeaponAnimationProvider weaponAnimationProvider,
-            ICrossHairProvider crossHairProvider)
+            ICrossHairProvider crossHairProvider,
+            IShootingCases externalShootingCases)
         {
             _inputSystem = inputSystem;
             _bulletSpawner = bulletSpawner;
@@ -61,10 +67,9 @@ namespace Perigon.Weapons
             _crossHairProvider = crossHairProvider;
             _weaponConfigurationData = _weaponConfigurationSo.MapToData();
             _weapon = new Weapon(
-                maxAmmunitionAmount: _weaponConfigurationData.AmmunitionAmount,
                 rateOfFire: _weaponConfigurationData.RateOfFire,
-                reloadDuration: _weaponConfigurationData.ReloadDuration,
                 bulletSpread: _weaponConfigurationData.BulletSpread);
+            _externalShootingCases = externalShootingCases;
             BindWeapon();
             SetCrossHairImage();
             SetupPlayerInput();
@@ -77,22 +82,23 @@ namespace Perigon.Weapons
             gameObject.SetActive(false);
         }
         
+        public void Activate(bool activate)
+        {
+            enabled = activate;
+            gameObject.SetActive(activate);
+            _weaponAnimationProvider.ReloadingWeapon(false);        
+        }
+        
         protected abstract void OnFireInputAction(bool isFiring);
 
         protected virtual void Update()
         {
             _weapon.DecrementElapsedTimeRateOfFire(Time.deltaTime, Time.timeScale);
-            _weapon.ReloadWeaponCountDownIfNeeded(Time.deltaTime, Time.timeScale);
         }
 
         protected virtual void PlayFiringAudio()
         {
             FMODUnity.RuntimeManager.PlayOneShot(_weaponConfigurationData.WeaponShotAudio, transform.position);
-        }
-
-        protected virtual void PlayReloadingAudio()
-        {
-            FMODUnity.RuntimeManager.PlayOneShot(_weaponConfigurationData.WeaponReloadAudio, transform.position);
         }
 
         protected virtual void Awake()
@@ -102,37 +108,18 @@ namespace Perigon.Weapons
                 Debug.LogWarning("Missing VFX Visual Effect from this weapon");
             }
         }
-
-        public void Activate(bool activate)
-        {
-            enabled = activate;
-            gameObject.SetActive(activate);
-            _weaponAnimationProvider.ReloadingWeapon(false);        
-        }
-
+        
         private void BindWeapon()
         {
             _weapon.OnWeaponEffectEmit += HandleEffect;
-            _weapon.OnWeaponDataStateChange += HandleStateChange;
         }
-
-        private void HandleStateChange(WeaponData data)
-        {
-            _weaponData = data;
-        }
-
+        
         private void HandleEffect(WeaponEffect effect)
         {
             switch (effect)
             {
                 case WeaponEffect.FireWeapon:
                     FireWeapon();
-                    break;
-                case WeaponEffect.StartReloading:
-                    PlayReloadingAudio();
-                    break;
-                case WeaponEffect.StopReloading:
-                    _weaponAnimationProvider.ReloadingWeapon(false);
                     break;
             }
         }
@@ -166,6 +153,9 @@ namespace Perigon.Weapons
             
             //Audio
             PlayFiringAudio();
+            
+            // Expend Energy
+            _externalShootingCases?.OnShoot();
         }
 
         private void FireBullets()
@@ -180,16 +170,9 @@ namespace Perigon.Weapons
             }
         }
 
-        private void OnReloadInputAction()
-        {
-            _weapon.ReloadWeaponIfPossible();
-            _weaponAnimationProvider.ReloadingWeapon(_weaponData.IsReloading);
-        }
-        
         private void SetupPlayerInput()
         {
             _inputSystem.OnFireAction += OnFireInputAction;
-            _inputSystem.OnReloadAction += OnReloadInputAction;
         }
 
         private void OnEnable()
@@ -205,7 +188,6 @@ namespace Perigon.Weapons
             if (_weapon != null)
             {
                 _weapon.OnWeaponEffectEmit -= HandleEffect;
-                _weapon.OnWeaponDataStateChange -= HandleStateChange;
                 _weapon = null;
             }
         }
