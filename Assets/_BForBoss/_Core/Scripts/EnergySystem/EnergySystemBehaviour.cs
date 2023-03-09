@@ -7,6 +7,11 @@ using Logger = Perigon.Utility.Logger;
 
 namespace BForBoss
 {
+    public interface IEnergyDataSubject
+    { 
+        event Action<EnergyData> OnStateChanged;
+    }
+    
     public interface IEnergySystem
     {
         void Accrue(EnergyAccruementType accruementType, float multiplier = 1);
@@ -14,23 +19,27 @@ namespace BForBoss
         bool CanExpend(EnergyExpenseType expenseType, float multiplier = 1);
     }
     
-    public partial class EnergySystemBehaviour : MonoBehaviour, IEnergySystem
+    public partial class EnergySystemBehaviour : MonoBehaviour, IEnergySystem, IEnergyDataSubject
     {
         [InlineEditor] [SerializeField] private EnergySystemConfigurationSO _energySystemConfiguration;
         [InlineEditor] [SerializeField] private EnergySO _energy;
-
+        
         private EnergyData _energyData;
-        public EnergyData EnergyData
+
+        private EnergyData EnergyData
         {
-            private set
+            set
             {
                 _energyData = value;
+                OnStateChanged?.Invoke(_energyData);
                 Logger.LogFormat($"Energy Value: {_energyData.Value}", key: "energysystem");  
             } 
 
             get => _energyData;
         }
         
+        public event Action<EnergyData> OnStateChanged;
+
         private EnergySystemConfigurationData _energySystemConfigurationData;
 
         private readonly Queue<(EnergyAccruementType, float)> _accruedEnergyTypeQueue = new();
@@ -181,6 +190,5 @@ namespace BForBoss
                     return 0;
             }
         }
-
     }
 }

@@ -7,12 +7,15 @@ namespace BForBoss
 {
     public class HUDManager : MonoBehaviour
     {
-        [SerializeField] private PlayerHealthViewBehaviour _playerHealthViewBehaviour;
-
+        [Resolve] [SerializeField] private PlayerHealthViewBehaviour _playerHealthViewBehaviour;
+        [Resolve] [SerializeField] private EnergySystemViewBehaviour _energySystemViewBehaviour;
+        public IEnergyDataSubject EnergyDataSubject;
+        
         public void Initialize(ILifeCycle playerLifeCycle)
         {
             StateManager.Instance.OnStateChanged += HandleOnStateChanged;
             _playerHealthViewBehaviour.Initialize(playerLifeCycle);
+            _energySystemViewBehaviour.Initialize(EnergyDataSubject);
         }
 
         private void HandleOnStateChanged(State gameState)
