@@ -29,6 +29,9 @@ namespace BForBoss
                 case ADDITIVE_WEAPON_SCENE_NAME:
                     WeaponSceneManager.EnergySystem = _energySystemBehaviour;
                     break;
+                case ADDITIVE_HUD_SCENE_NAME:
+                    HUDManager.EnergyDataSubject = _energySystemBehaviour;
+                    break;
             }
             base.OnAdditiveSceneLoaded(scene, loadSceneMode);
         }

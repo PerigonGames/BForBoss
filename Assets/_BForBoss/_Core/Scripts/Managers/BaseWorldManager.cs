@@ -11,10 +11,10 @@ namespace BForBoss
 {
     public abstract class BaseWorldManager : MonoBehaviour
     {
-        protected const string ADDITIVE_WEAPON_SCENE_NAME = "AdditiveWeaponManager";
         private const string ADDITIVE_USER_INTERFACE_SCENE_NAME = "AdditiveUserInterfaceScene";
-        private const string ADDITIVE_HUD_SCENE_NAME = "AdditiveHUDScene";
         private const string ADDITIVE_DEBUG_SCENE_NAME = "AdditiveDebugScene";
+        protected const string ADDITIVE_WEAPON_SCENE_NAME = "AdditiveWeaponManager";
+        protected const string ADDITIVE_HUD_SCENE_NAME = "AdditiveHUDScene";
 
         protected readonly StateManager _stateManager = StateManager.Instance;
         private readonly LifeCycle _playerLifeCycle = new LifeCycle();
@@ -61,7 +61,7 @@ namespace BForBoss
             }
         }
 
-        private HUDManager HUDManager
+        protected HUDManager HUDManager
         {
             get
             {
