@@ -40,6 +40,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 2ee3cc35981b83b4aa5f57fb43c4cfd9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_e3465c6d24e74b0094ef95690c0de88a_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 977cbf313c42c0b4782f8e4b038a29c2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -71,11 +75,12 @@ Material:
     - _DstBlend: 10
     - _EnableBlendModePreserveSpecularLighting: 0
     - _EnableFogOnTransparent: 1
-    - _FaceOpacity: 0.858
-    - _FresnelPower: 3.57
-    - _FresnelPremulti: 0.348
-    - _LineOpacity: 0.15
+    - _FaceOpacity: 0.006
+    - _FresnelPower: 5.46
+    - _FresnelPremulti: 1
+    - _LineOpacity: 0.012
     - _OpaqueCullMode: 2
+    - _Position: 1
     - _RenderQueueType: 4
     - _SrcBlend: 1
     - _StencilRef: 0
@@ -102,12 +107,13 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 0
     m_Colors:
-    - _BackColor: {r: 0, g: 0.16119383, b: 2, a: 1}
+    - _BackColor: {r: 0, g: 55.03996, b: 383.49805, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
+    - _EdgeColor: {r: 256, g: 107.4196, b: 0, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _FresnelColor: {r: 3.9999995, g: 3.4343538, b: 0, a: 0}
-    - _FrontColor: {r: 0, g: 0.5647059, b: 1.4980392, a: 1}
-    - _UV: {r: 1, g: 1, b: 0, a: 0}
+    - _FresnelColor: {r: 0, g: 0, b: 0, a: 0}
+    - _FrontColor: {r: 0, g: 37.492676, b: 383.49805, a: 1}
+    - _UV: {r: 2, g: 2, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &4325509304634923088
 MonoBehaviour:
