@@ -8,8 +8,8 @@ using Logger = Perigon.Utility.Logger;
 namespace BForBoss
 {
     public interface IEnergyDataSubject
-    {
-        public event Action<EnergyData> OnStateChanged;
+    { 
+        event Action<EnergyData> OnStateChanged;
     }
     
     public interface IEnergySystem
