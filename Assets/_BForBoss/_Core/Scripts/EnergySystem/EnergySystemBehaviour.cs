@@ -23,12 +23,12 @@ namespace BForBoss
     {
         [InlineEditor] [SerializeField] private EnergySystemConfigurationSO _energySystemConfiguration;
         [InlineEditor] [SerializeField] private EnergySO _energy;
-
-
+        
         private EnergyData _energyData;
-        public EnergyData EnergyData
+
+        private EnergyData EnergyData
         {
-            private set
+            set
             {
                 _energyData = value;
                 OnStateChanged?.Invoke(_energyData);
