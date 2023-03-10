@@ -20,7 +20,9 @@ namespace BForBoss
 
         private void HandleOnStateChanged(State gameState)
         {
-            _playerHealthViewBehaviour.gameObject.SetActive(gameState != State.EndGame);
+            //TODO - Do we want to keep the HUD on in end game?
+            //I kinda like it, but not super strong feeling
+            //_playerHealthViewBehaviour.gameObject.SetActive(gameState != State.EndGame);
         }
 
         private void Awake()

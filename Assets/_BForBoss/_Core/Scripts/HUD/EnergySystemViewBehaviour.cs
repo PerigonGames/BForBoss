@@ -24,7 +24,7 @@ namespace BForBoss
 
         private void Update()
         {
-            _fillImage.fillAmount = Mathf.Lerp(_fillImage.fillAmount, _targetFillAmount, Time.deltaTime * 10f);
+            _fillImage.fillAmount = Mathf.Lerp(_fillImage.fillAmount, _targetFillAmount, Time.unscaledDeltaTime * 10f);
         }
 
         private void Awake()
