@@ -151,10 +151,10 @@ namespace BForBoss
                     UserInterfaceManager.Initialize(_playerLifeCycle);
                     break;
                 case ADDITIVE_WEAPON_SCENE_NAME:
-                    WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
+                    WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem, _energySystemBehaviour);
                     break; 
                 case ADDITIVE_HUD_SCENE_NAME:
-                    HUDManager.Initialize(_playerLifeCycle);
+                    HUDManager.Initialize(_playerLifeCycle, _energySystemBehaviour);
                     break;
                 default:
                     return;
