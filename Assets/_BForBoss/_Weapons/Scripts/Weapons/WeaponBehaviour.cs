@@ -14,8 +14,6 @@ namespace Perigon.Weapons
     public abstract partial class WeaponBehaviour : MonoBehaviour
     {
         private const float WALL_HIT_ZFIGHT_BUFFER = 0.01f;
-        private const float RAYCAST_DISTANCE_LIMIT = 50f;
-        private readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
 
         [SerializeField] protected Transform _firePoint = null;
         [SerializeField] private VisualEffect _muzzleFlash = null;
