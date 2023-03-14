@@ -9,18 +9,18 @@ namespace BForBoss
     {
         [Resolve] [SerializeField] private PlayerHealthViewBehaviour _playerHealthViewBehaviour;
         [Resolve] [SerializeField] private EnergySystemViewBehaviour _energySystemViewBehaviour;
-        public IEnergyDataSubject EnergyDataSubject;
         
-        public void Initialize(ILifeCycle playerLifeCycle)
+        public void Initialize(ILifeCycle playerLifeCycle, IEnergyDataSubject energyDataSubject)
         {
             StateManager.Instance.OnStateChanged += HandleOnStateChanged;
             _playerHealthViewBehaviour.Initialize(playerLifeCycle);
-            _energySystemViewBehaviour.Initialize(EnergyDataSubject);
+            _energySystemViewBehaviour.Initialize(energyDataSubject);
         }
 
         private void HandleOnStateChanged(State gameState)
         {
             _playerHealthViewBehaviour.gameObject.SetActive(gameState != State.EndGame);
+            _energySystemViewBehaviour.gameObject.SetActive(gameState != State.EndGame);
         }
 
         private void Awake()

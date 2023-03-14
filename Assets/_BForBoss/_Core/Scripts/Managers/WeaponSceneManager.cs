@@ -13,15 +13,16 @@ namespace BForBoss
 
         [SerializeField] private EquipmentBehaviour _equipmentBehaviour = null;
         [SerializeField] private CrossHairBehaviour _crossHairBehaviour;
-        public EnergySystemBehaviour EnergySystem { get; set; }
 
-        public void Initialize(PlayerBehaviour playerBehaviour, PGInputSystem inputSystem)
+        public void Initialize(PlayerBehaviour playerBehaviour, PGInputSystem inputSystem, EnergySystemBehaviour energySystemBehaviour)
         {
             _weaponAnimationController.Initialize(playerBehaviour.PlayerMovement);
             _equipmentBehaviour.Initialize(
                 playerBehaviour.PlayerMovement,
-                inputSystem, _weaponAnimationController, 
-                _crossHairBehaviour, EnergySystem);
+                inputSystem,
+                _weaponAnimationController, 
+                _crossHairBehaviour, 
+                shootingCases: energySystemBehaviour);
             StateManager.Instance.OnStateChanged += OnStateChanged;
         }
 
