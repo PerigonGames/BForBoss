@@ -20,6 +20,8 @@ namespace BForBoss
         private readonly LifeCycle _playerLifeCycle = new LifeCycle();
 
         [Title("Base Components", "", TitleAlignments.Centered)]
+        [SerializeField] private EnergySystemBehaviour _energySystemBehaviour;
+        
         [Title("","Base Dependencies", bold: false, horizontalLine: false)]
         [SerializeField] protected PlayerBehaviour _playerBehaviour = null;
         [SerializeField] private InputActionAsset _actionAsset;
@@ -88,6 +90,7 @@ namespace BForBoss
 
         protected virtual void Reset()
         {
+            _energySystemBehaviour.Reset();
             _playerBehaviour.Reset();
             _playerBehaviour.SpawnAt(SpawnLocation, SpawnLookDirection);
             if (_environmentManager != null)
@@ -115,7 +118,7 @@ namespace BForBoss
 
         protected virtual void Start()
         {
-            _playerBehaviour.Initialize(_inputSystem, _playerLifeCycle);            
+            _playerBehaviour.Initialize(_inputSystem, _playerLifeCycle, _energySystemBehaviour);            
             _environmentManager.Initialize();
             _stateManager.SetState(State.PreGame);
         }
@@ -133,9 +136,14 @@ namespace BForBoss
             {
                 PanicHelper.Panic(new Exception("_playerBehaviour is missing from World Manager"));
             }
+
+            if (_energySystemBehaviour == null)
+            {
+                PanicHelper.Panic(new Exception("_energySystemBehaviour is missing from World Manager"));
+            }
         }
         
-        protected virtual void OnAdditiveSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+        private void OnAdditiveSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
             switch (scene.name)
             {
@@ -143,10 +151,10 @@ namespace BForBoss
                     UserInterfaceManager.Initialize(_playerLifeCycle);
                     break;
                 case ADDITIVE_WEAPON_SCENE_NAME:
-                    WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
+                    WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem, _energySystemBehaviour);
                     break; 
                 case ADDITIVE_HUD_SCENE_NAME:
-                    HUDManager.Initialize(_playerLifeCycle);
+                    HUDManager.Initialize(_playerLifeCycle, _energySystemBehaviour);
                     break;
                 default:
                     return;
