@@ -7,6 +7,7 @@ namespace BForBoss
 {
     public class EnergySystemViewBehaviour : MonoBehaviour
     {
+        private const float LERP_SPEED = 10F;
         [SerializeField] private Image _fillImage; 
         private IEnergyDataSubject _energyDataSubject;
         private float _targetFillAmount = 0;
@@ -24,7 +25,7 @@ namespace BForBoss
 
         private void Update()
         {
-            _fillImage.fillAmount = Mathf.Lerp(_fillImage.fillAmount, _targetFillAmount, Time.unscaledDeltaTime * 10f);
+            _fillImage.fillAmount = Mathf.Lerp(_fillImage.fillAmount, _targetFillAmount, Time.unscaledDeltaTime * LERP_SPEED);
         }
 
         private void Awake()
