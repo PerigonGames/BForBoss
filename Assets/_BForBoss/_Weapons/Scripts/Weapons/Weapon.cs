@@ -62,7 +62,7 @@ namespace Perigon.Weapons
             return directionWithSpread.normalized;
         }
 
-        public Vector3 GetShootDirection(float bulletSpreadRate)
+        public Vector3 GetSpreadDirection(float bulletSpreadRate)
         {
             var bulletSpread = GenerateSpread(bulletSpreadRate);
             var xPosition = RandomDoubleIncludingNegative() * MAP_TO_RAYCAST_RANGE_SPREAD * bulletSpread;

@@ -9,7 +9,7 @@ namespace Perigon.Weapons
             var camOrigin = MainCamera.transform.position;
             for (int i = 0; i < _weaponConfigurationData.BulletsPerShot; i++)
             {
-                var forwardAngle = _weapon.GetShootDirection(_weaponConfigurationData.GetBulletSpreadRate(_timeSinceFire));
+                var forwardAngle = _weapon.GetSpreadDirection(_weaponConfigurationData.GetBulletSpreadRate(_timeSinceFire));
                 RayCastBullet(camOrigin, forwardAngle);
             }
         }
