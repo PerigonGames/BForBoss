@@ -21,22 +21,14 @@ namespace Perigon.Weapons
         private readonly Color KillHitMarkerColor = Color.red;
         private readonly Color HitMarkerColor = Color.white;
 
+        [Title("Default Configurations")]
         [SerializeField] private RectTransform _crossHairRectTransform = null;
-        
-        [SerializeField] private Sprite _defaultCrossHair = null;
-
-        [Title("HitMarkers")]
         [SerializeField] private float _hitMarkerStayOnScreenTime = 0.2f;
         [Resolve][SerializeField] private Image _hitMarker = null;
 
         private float _elapsedHitMarkerTime = 0;
         private float _elapsedKillMarkerTime = 0;
-        private bool _shouldSetToMaxSize = false;    
-        
-        public void SetDefaultCrossHair()
-        {
-            //_crossHair.sprite = _defaultCrossHair;
-        }
+        private bool _shouldSetToMaxSize = false;
 
         public void SetMaximumSize()
         {
@@ -97,12 +89,10 @@ namespace Perigon.Weapons
         
         private void Awake()
         {
-            SetDefaultCrossHair();
-            if (_defaultCrossHair == null)
+            if (_crossHairRectTransform == null)
             {
-                PanicHelper.Panic(new Exception("Crosshair Behaviour missing sprite"));
+                PanicHelper.Panic(new Exception("_crossHairRectTransform missing from CrossHairBehaviour"));
             }
-
             if (_hitMarker == null)
             {
                 PanicHelper.Panic(new Exception("Crosshair behaviour missing hit marker"));
