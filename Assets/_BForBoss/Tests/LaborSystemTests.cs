@@ -16,11 +16,9 @@ namespace Tests.Labors
             var mock3 = new MockLabor();
             var mock4 = new MockLabor();
             var array = new ILabor[] {mock1, mock2, mock3, mock4};
-            
-            var system = new LaborSystem();
-                
+
             // When
-            system.Initialize(array);
+            var system = new LaborSystem(array);
             
             // Then
             Assert.IsTrue(mock1.IsActivated);
@@ -37,11 +35,9 @@ namespace Tests.Labors
             var mock3 = new MockLabor();
             var mock4 = new MockLabor();
             var array = new ILabor[] {mock1, mock2, mock3, mock4};
-            
-            var system = new LaborSystem();
-                
+
             // When
-            system.Initialize(array);
+            var system = new LaborSystem(array);
             mock1.CompleteLabor();
             
             // Then
@@ -58,20 +54,17 @@ namespace Tests.Labors
             var mock3 = new MockLabor();
             var mock4 = new MockLabor();
             var array = new ILabor[] {mock1, mock2, mock3, mock4};
-            
-            var system = new LaborSystem();
-            var finishedQueue = false;
-                
+
             // When
-            system.onQueueCompleted += () => finishedQueue = true;
-            system.Initialize(array);
+            var system = new LaborSystem(array);
             mock1.CompleteLabor();
             mock2.CompleteLabor();
             mock3.CompleteLabor();
             mock4.CompleteLabor();
             
             // Then
-            Assert.IsTrue(finishedQueue);
+            Assert.IsTrue(system.IsComplete);
+            Assert.IsNull(system.CurrentLabor);
         }
         
         [Test]
@@ -83,19 +76,15 @@ namespace Tests.Labors
             var mock3 = new MockLabor();
             var mock4 = new MockLabor();
             var array = new ILabor[] {mock1, mock2, mock3, mock4};
-            
-            var system = new LaborSystem();
-            var finishedQueue = false;
-                
+
             // When
-            system.onQueueCompleted += () => finishedQueue = true;
-            system.Initialize(array);
+            var system = new LaborSystem(array);
             mock1.CompleteLabor();
             mock3.CompleteLabor();
             mock4.CompleteLabor();
             
             // Then
-            Assert.IsFalse(finishedQueue);
+            Assert.IsFalse(system.IsComplete);
             Assert.AreEqual(system.CurrentLabor, mock2);
             Assert.IsFalse(mock3.IsActivated);
         }

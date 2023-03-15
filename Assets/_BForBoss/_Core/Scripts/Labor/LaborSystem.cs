@@ -5,13 +5,12 @@ namespace BForBoss.Labor
 {
     public class LaborSystem
     {
-        public Action onLaborCompleted;
-        public Action onQueueCompleted;
-        
         private Queue<ILabor> _laborsToComplete;
         public ILabor CurrentLabor { get; private set; }
 
-        public void Initialize(IEnumerable<ILabor> labors)
+        public bool IsComplete { get; private set; } = false;
+
+        public LaborSystem(IEnumerable<ILabor> labors)
         {
             _laborsToComplete = new Queue<ILabor>(labors);
             SetNextLaborActive();
@@ -32,7 +31,6 @@ namespace BForBoss.Labor
 
         private void OnLaborCompleted()
         {
-            onLaborCompleted?.Invoke();
             if(_laborsToComplete.Count > 0)
                 SetNextLaborActive();
             else
@@ -47,7 +45,7 @@ namespace BForBoss.Labor
             }
 
             CurrentLabor = null;
-            onQueueCompleted?.Invoke();
+            IsComplete = true;
         }
     }
 }
