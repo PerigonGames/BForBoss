@@ -8,7 +8,6 @@ namespace Perigon.Weapons
     {
         public readonly string NameOfWeapon;
         public readonly float RateOfFire;
-        public readonly Sprite Crosshair;
         public readonly float BulletSpread;
         public readonly float ReloadDuration;
         public readonly int BulletsPerShot;
@@ -25,7 +24,6 @@ namespace Perigon.Weapons
         public WeaponConfigurationData(
             string nameOfWeapon,
             float rateOfFire,
-            Sprite crosshair,
             float bulletSpread,
             float reloadDuration,
             int bulletsPerShot,
@@ -40,7 +38,6 @@ namespace Perigon.Weapons
         {
             NameOfWeapon = nameOfWeapon;
             RateOfFire = rateOfFire;
-            Crosshair = crosshair;
             BulletSpread = bulletSpread;
             ReloadDuration = reloadDuration;
             BulletsPerShot = bulletsPerShot;
@@ -84,8 +81,6 @@ namespace Perigon.Weapons
         [SerializeField] private WeaponAnimationType _animationType = WeaponAnimationType.Rifle;
         [SerializeField] private EventReference _weaponShotAudio = new EventReference();
         [SerializeField] private EventReference _weaponReloadAudio = new EventReference();
-        [PreviewField]
-        [SerializeField] private Sprite _crosshair = null;
 
         public WeaponConfigurationData MapToData()
         {
@@ -93,7 +88,6 @@ namespace Perigon.Weapons
             (
                 nameOfWeapon: _nameOfWeapon,
                 rateOfFire: _rateOfFire,
-                crosshair: _crosshair,
                 bulletSpread: _bulletSpread,
                 reloadDuration: _reloadDuration,
                 bulletsPerShot: _bulletsPerShot,

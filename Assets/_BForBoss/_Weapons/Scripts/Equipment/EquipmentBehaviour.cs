@@ -28,7 +28,7 @@ namespace Perigon.Weapons
             IGetPlayerTransform getPlayerTransform, 
             PGInputSystem inputSystem, 
             IWeaponAnimationProvider weaponAnimationProvider, 
-            ICrossHairProvider crossHairProvider,
+            CrossHairBehaviour crossHairProvider,
             IShootingCases shootingCases)
         {
             _inputSystem = inputSystem;
@@ -61,7 +61,7 @@ namespace Perigon.Weapons
             _weaponBehaviours[_currentWeaponIndex].Activate(true);
         }
         
-        private void SetupWeapons(ICrossHairProvider crossHairProvider, IShootingCases shootingCases)
+        private void SetupWeapons(CrossHairBehaviour crossHairProvider, IShootingCases shootingCases)
         {
             for(int i = 0; i < _weaponBehaviours.Length; i++)
             {

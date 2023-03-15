@@ -21,7 +21,7 @@ namespace Perigon.Weapons
         
         private void HandleOnBulletHitEntity(IBullet bullet, bool isDead)
         {
-            _crossHairProvider.ActivateHitMarker(isDead);
+            _crossHairBehaviour.ActivateHitMarker(isDead);
             bullet.OnBulletHitEntity -= HandleOnBulletHitEntity;
             bullet.OnBulletDeactivate -= HandleOnBulletDeactivate;
         }
