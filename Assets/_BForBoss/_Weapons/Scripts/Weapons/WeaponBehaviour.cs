@@ -32,7 +32,7 @@ namespace Perigon.Weapons
         private BulletSpawner _bulletSpawner;
         private WallHitVFXSpawner _wallHitVFXSpawner;
         private IWeaponAnimationProvider _weaponAnimationProvider;
-        private ICrossHairProvider _crossHairProvider;
+        private CrossHairBehaviour _crossHairBehaviour;
         private PGInputSystem _inputSystem;
 
         public WeaponAnimationType AnimationType => _weaponConfigurationData.AnimationType;
@@ -55,21 +55,20 @@ namespace Perigon.Weapons
             BulletSpawner bulletSpawner,
             WallHitVFXSpawner wallHitVFXSpawner,
             IWeaponAnimationProvider weaponAnimationProvider,
-            ICrossHairProvider crossHairProvider,
+            CrossHairBehaviour crossHairBehaviour,
             IShootingCases externalShootingCases)
         {
             _inputSystem = inputSystem;
             _bulletSpawner = bulletSpawner;
             _wallHitVFXSpawner = wallHitVFXSpawner;
             _weaponAnimationProvider = weaponAnimationProvider;
-            _crossHairProvider = crossHairProvider;
+            _crossHairBehaviour = crossHairBehaviour;
             _weaponConfigurationData = _weaponConfigurationSo.MapToData();
             _weapon = new Weapon(
                 rateOfFire: _weaponConfigurationData.RateOfFire,
                 bulletSpread: _weaponConfigurationData.BulletSpread);
             _externalShootingCases = externalShootingCases;
             BindWeapon();
-            SetCrossHairImage();
             SetupPlayerInput();
         }
 
@@ -122,11 +121,6 @@ namespace Perigon.Weapons
             }
         }
 
-        private void SetCrossHairImage()
-        {
-            _crossHairProvider.SetCrossHairImage(_weaponConfigurationData.Crosshair);
-        }
-        
         private void OnBulletHitWall(Vector3 point, Vector3 pointNormal)
         {
             var wallHitVFX = _wallHitVFXSpawner.SpawnWallHitVFX();
@@ -154,6 +148,7 @@ namespace Perigon.Weapons
             
             // Expend Energy
             _externalShootingCases?.OnShoot();
+            _crossHairBehaviour.SetMaximumSize();
         }
 
         private void FireBullets()
@@ -171,14 +166,6 @@ namespace Perigon.Weapons
         private void SetupPlayerInput()
         {
             _inputSystem.OnFireAction += OnFireInputAction;
-        }
-
-        private void OnEnable()
-        {
-            if (_crossHairProvider != null)
-            {
-                SetCrossHairImage();
-            }
         }
 
         private void OnDestroy()
