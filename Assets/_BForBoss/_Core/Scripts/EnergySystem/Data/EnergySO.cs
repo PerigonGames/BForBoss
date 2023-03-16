@@ -8,7 +8,7 @@ namespace BForBoss
         [SerializeField, Tooltip("Player's starting value of Energy"), Min(0f)] 
         private float _startingEnergyValue = 0f;
 
-        [SerializeField, Tooltip("Max Energy Attainable")]
+        [SerializeField, Tooltip("Max Energy Attainable"), Min(1f)]
         private float _maxEnergyValue = 100f;
 
         [SerializeField, Tooltip("How often does the player gain/lose energy per second when in the middle of a transaction")]

@@ -9,10 +9,10 @@ namespace Perigon.Weapons
     {
         Transform Value { get; }
     }
-    
+
     [RequireComponent(typeof(BulletSpawner))]
     [RequireComponent(typeof(WallHitVFXSpawner))]
-    public partial class EquipmentBehaviour : MonoBehaviour
+    public class EquipmentBehaviour : MonoBehaviour
     {
         [SerializeField] private WeaponBehaviour[] _weaponBehaviours = null;
         private BulletSpawner _bulletSpawner;
@@ -20,55 +20,56 @@ namespace Perigon.Weapons
         private MeleeWeaponBehaviour _meleeBehaviour = null;
         private IWeaponAnimationProvider _weaponAnimationProvider;
         private PGInputSystem _inputSystem;
-        private Weapon[] _weapons = null;
 
         private int _currentWeaponIndex = 0;
+        private WeaponBehaviour CurrentWeapon => _weaponBehaviours[_currentWeaponIndex];
         
-        public void Initialize(IGetPlayerTransform getPlayerTransform, PGInputSystem inputSystem, IWeaponAnimationProvider weaponAnimationProvider, ICrossHairProvider crossHairProvider)
+        public void Initialize(
+            IGetPlayerTransform getPlayerTransform, 
+            PGInputSystem inputSystem, 
+            IWeaponAnimationProvider weaponAnimationProvider, 
+            CrossHairBehaviour crossHairProvider,
+            IShootingCases shootingCases)
         {
             _inputSystem = inputSystem;
             _weaponAnimationProvider = weaponAnimationProvider;
             _meleeBehaviour.Initialize(getPlayerTransform, onSuccessfulAttack: () => _weaponAnimationProvider.MeleeAttack(CurrentWeapon.AnimationType));
-            SetupWeapons(crossHairProvider);
+            SetupWeapons(crossHairProvider, shootingCases);
             SetupInputBinding();
         }
 
         public void ScrollSwapWeapons(int direction)
         {
-            foreach (var weapon in _weapons)
+            if (_weaponBehaviours.Length > 1)
             {
-                weapon.ActivateWeapon = false;
-            }
+                foreach (var weapon in _weaponBehaviours)
+                {
+                    weapon.Activate(false);
+                }
 
-            _weapons[_currentWeaponIndex].ActivateWeapon = true;
+                _weaponBehaviours[_currentWeaponIndex].Activate(true);
+            }
         }
 
         public void Reset()
         {
-            foreach (var weapon in _weapons)
-            {
-                weapon.Reset();
-            }
-            
             foreach (var weaponBehaviour in _weaponBehaviours)
             {
                 weaponBehaviour.Reset();
             }
             _currentWeaponIndex = 0;
-            _weapons[_currentWeaponIndex].ActivateWeapon = true;
+            _weaponBehaviours[_currentWeaponIndex].Activate(true);
         }
         
-        private void SetupWeapons(ICrossHairProvider crossHairProvider)
+        private void SetupWeapons(CrossHairBehaviour crossHairProvider, IShootingCases shootingCases)
         {
-            _weapons = new Weapon[_weaponBehaviours.Length];
             for(int i = 0; i < _weaponBehaviours.Length; i++)
             {
-                _weaponBehaviours[i].Initialize(_inputSystem, _bulletSpawner, _wallHitVFXSpawner, _weaponAnimationProvider, crossHairProvider);
-                _weapons[i] = _weaponBehaviours[i].WeaponViewModel;
-                _weapons[i].ActivateWeapon = false;
+                _weaponBehaviours[i].Initialize(_inputSystem, _bulletSpawner, _wallHitVFXSpawner, _weaponAnimationProvider, crossHairProvider, shootingCases);
+                _weaponBehaviours[i].Activate(false);
             }
 
-            _weapons[_currentWeaponIndex].ActivateWeapon = true;
+            _weaponBehaviours[_currentWeaponIndex].Activate(true);
         }
 
         private void SetupInputBinding()
@@ -112,14 +113,20 @@ namespace Perigon.Weapons
 
         private void OnScrollWeaponSwapAction(bool direction)
         {
-            UpdateCurrentWeaponIndex(direction);
-            _weaponAnimationProvider.SwapWeapon();
+            if (_weaponBehaviours.Length > 1)
+            {
+                UpdateCurrentWeaponIndex(direction);
+                _weaponAnimationProvider.SwapWeapon();
+            }
         }
 
         private void OnDirectWeaponSwapAction(int numberKey)
         {
-            _currentWeaponIndex = numberKey - 1;
-            _weaponAnimationProvider.SwapWeapon();
+            if (_weaponBehaviours.Length > 1)
+            {
+                _currentWeaponIndex = numberKey - 1;
+                _weaponAnimationProvider.SwapWeapon();
+            }
         }
 
         #endregion

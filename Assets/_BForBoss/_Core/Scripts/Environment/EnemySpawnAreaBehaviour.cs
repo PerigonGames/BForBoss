@@ -92,7 +92,7 @@ namespace BForBoss
 
         private void SpawnEnemy()
         {
-            Logger.LogString("<color=red>Spawn Enemy</color>", "wavesmode");
+            Logger.LogString("Spawn Enemy", LoggerColor.Red, "wavesmode");
             Vector3? spawnPosition = GenerateSpawnPosition();
             if (spawnPosition != null)
             {

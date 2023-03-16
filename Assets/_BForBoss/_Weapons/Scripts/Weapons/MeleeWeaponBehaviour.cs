@@ -3,7 +3,6 @@ using FMODUnity;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Perigon.VFX;
 
 namespace Perigon.Weapons
