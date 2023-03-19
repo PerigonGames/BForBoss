@@ -5,4 +5,10 @@ namespace Perigon.Weapons
         NoPhysics,
         Physics
     }
+
+    public enum BulletOwner
+    {
+        Player,
+        Enemy
+    }
 }

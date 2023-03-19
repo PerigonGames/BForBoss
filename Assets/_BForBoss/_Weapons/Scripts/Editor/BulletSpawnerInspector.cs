@@ -9,7 +9,9 @@ namespace Perigon.Weapons.Editor
     {
         private SerializedProperty _prefabListProp;
         private SerializedProperty _layerProperty;
-        private SerializedProperty _layerMaskProperty;
+        //private SerializedProperty _layerMaskProperty;
+        private SerializedProperty _playerLayerMaskProperty;
+        private SerializedProperty _enemyLayerMaskProperty;
         private string[] _bulletTypeNames;
 
         private static bool _showPrefabs = false;
@@ -18,7 +20,9 @@ namespace Perigon.Weapons.Editor
         {
             _prefabListProp = serializedObject.FindProperty("_bulletPrefabs");
             _layerProperty = serializedObject.FindProperty("_layer");
-            _layerMaskProperty = serializedObject.FindProperty("_layerMask");
+            //_layerMaskProperty = serializedObject.FindProperty("_layerMask");
+            _playerLayerMaskProperty = serializedObject.FindProperty("_playerLayerMask");
+            _enemyLayerMaskProperty = serializedObject.FindProperty("_enemyLayerMask");
             _bulletTypeNames = Enum.GetNames(typeof(BulletTypes));
         }
 
@@ -51,7 +55,9 @@ namespace Perigon.Weapons.Editor
             }
 
             EditorGUILayout.PropertyField(_layerProperty);
-            EditorGUILayout.PropertyField(_layerMaskProperty);
+            //EditorGUILayout.PropertyField(_layerMaskProperty);
+            EditorGUILayout.PropertyField(_playerLayerMaskProperty);
+            EditorGUILayout.PropertyField(_enemyLayerMaskProperty);
 
             serializedObject.ApplyModifiedProperties();
         }
