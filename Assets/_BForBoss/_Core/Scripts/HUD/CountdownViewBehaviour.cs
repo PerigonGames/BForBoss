@@ -13,8 +13,6 @@ namespace BForBoss
 
         private float _amountOfTime;
 
-        public Action OnCountdownComplete { get; private set;}
-
         public void StartCountdown(float amountOfTime)
         {
             _amountOfTime = amountOfTime;
@@ -38,7 +36,6 @@ namespace BForBoss
         {
             _isRunning = false;
             SetTimerLabel(_time);
-            OnCountdownComplete?.Invoke();
             gameObject.SetActive(false);
             Reset();
         }
