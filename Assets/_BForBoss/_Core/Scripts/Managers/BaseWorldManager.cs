@@ -21,6 +21,8 @@ namespace BForBoss
 
         [Title("Base Components", "", TitleAlignments.Centered)]
         [SerializeField] private EnergySystemBehaviour _energySystemBehaviour;
+
+        [SerializeField] private RingLaborManager _ringLaborManager;
         
         [Title("","Base Dependencies", bold: false, horizontalLine: false)]
         [SerializeField] protected PlayerBehaviour _playerBehaviour = null;
@@ -97,6 +99,11 @@ namespace BForBoss
             {
                 _environmentManager.Reset();
             }
+
+            if (_ringLaborManager != null)
+            {
+                _ringLaborManager.Reset();
+            }
             VisualEffectsManager.Instance.Reset();
             _stateManager.SetState(State.Play);
         }
@@ -120,6 +127,10 @@ namespace BForBoss
         {
             _playerBehaviour.Initialize(_inputSystem, _playerLifeCycle, _energySystemBehaviour);            
             _environmentManager.Initialize();
+            if (_ringLaborManager != null)
+            {
+                _ringLaborManager.Initialize();
+            }
             _stateManager.SetState(State.PreGame);
         }
         
