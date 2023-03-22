@@ -411,8 +411,8 @@ VisualEffect:
   m_GameObject: {fileID: 647174088}
   m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: 8925f050b53926648bbc3344bdb66861, type: 3}
-  m_InitialEventName: OnPlay
-  m_InitialEventNameOverriden: 0
+  m_InitialEventName: 
+  m_InitialEventNameOverriden: 1
   m_StartSeed: 0
   m_ResetSeedOnPlay: 1
   m_ResourceVersion: 1
@@ -633,6 +633,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1938183841797362839, guid: d1b6eae1f0bf4054badf84daebd18c5e, type: 3}
+      propertyPath: _bulletPrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 707287021218901738, guid: 03a3fb6308c3c534f9d151bcb2886157, type: 3}
     - target: {fileID: 5644926146355047616, guid: d1b6eae1f0bf4054badf84daebd18c5e, type: 3}
       propertyPath: _crosshair
       value: 
