@@ -89,6 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f86a4320cb4b804b82838af79e916c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _healthBarImage: {fileID: 401769493}
 --- !u!1 &4416416176866149843
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,10 +280,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61afec44d0414484d98112d6bc849be6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _onHitAudio: {fileID: 6681927712669361719}
-  _onDeathAudio: {fileID: 5650969820584284441}
   _health: {fileID: 11400000, guid: 28e47defb68c3f1438ce87e9a9832e8a, type: 2}
-  _healthbar: {fileID: 401769492}
+  _enemyHealthBar: {fileID: 401769492}
   _dissolveVFXDuration: 1
 --- !u!143 &7367245696679564806
 CharacterController:

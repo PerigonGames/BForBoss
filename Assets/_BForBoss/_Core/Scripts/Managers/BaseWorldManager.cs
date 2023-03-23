@@ -11,14 +11,17 @@ namespace BForBoss
 {
     public abstract class BaseWorldManager : MonoBehaviour
     {
-        private const string ADDITIVE_WEAPON_SCENE_NAME = "AdditiveWeaponManager";
         private const string ADDITIVE_USER_INTERFACE_SCENE_NAME = "AdditiveUserInterfaceScene";
         private const string ADDITIVE_DEBUG_SCENE_NAME = "AdditiveDebugScene";
-        
+        protected const string ADDITIVE_WEAPON_SCENE_NAME = "AdditiveWeaponManager";
+        protected const string ADDITIVE_HUD_SCENE_NAME = "AdditiveHUDScene";
+
         protected readonly StateManager _stateManager = StateManager.Instance;
         private readonly LifeCycle _playerLifeCycle = new LifeCycle();
 
         [Title("Base Components", "", TitleAlignments.Centered)]
+        [SerializeField] private EnergySystemBehaviour _energySystemBehaviour;
+        
         [Title("","Base Dependencies", bold: false, horizontalLine: false)]
         [SerializeField] protected PlayerBehaviour _playerBehaviour = null;
         [SerializeField] private InputActionAsset _actionAsset;
@@ -26,11 +29,13 @@ namespace BForBoss
         [Title("","Base Configuration", bold: false, horizontalLine: false)]
         [SerializeField] protected Transform _spawnLocation;
         
+        protected WeaponSceneManager _weaponSceneManager;
+
         private PGInputSystem _inputSystem;
         private EnvironmentManager _environmentManager;
 
-        private WeaponSceneManager _weaponSceneManager;
         private UserInterfaceManager _userInterfaceManager;
+        private HUDManager _hudManager;
 
         private UserInterfaceManager UserInterfaceManager
         {
@@ -58,6 +63,19 @@ namespace BForBoss
             }
         }
 
+        protected HUDManager HUDManager
+        {
+            get
+            {
+                if (_hudManager == null)
+                {
+                    _hudManager = FindObjectOfType<HUDManager>();
+                }
+
+                return _hudManager;
+            }
+        }
+
         protected abstract Vector3 SpawnLocation { get; }
         protected abstract Quaternion SpawnLookDirection { get; }
 
@@ -72,6 +90,7 @@ namespace BForBoss
 
         protected virtual void Reset()
         {
+            _energySystemBehaviour.Reset();
             _playerBehaviour.Reset();
             _playerBehaviour.SpawnAt(SpawnLocation, SpawnLookDirection);
             if (_environmentManager != null)
@@ -91,6 +110,7 @@ namespace BForBoss
             _environmentManager = gameObject.AddComponent<EnvironmentManager>();
             SceneManager.LoadScene(ADDITIVE_WEAPON_SCENE_NAME, LoadSceneMode.Additive);
             SceneManager.LoadScene(ADDITIVE_USER_INTERFACE_SCENE_NAME, LoadSceneMode.Additive);
+            SceneManager.LoadScene(ADDITIVE_HUD_SCENE_NAME, LoadSceneMode.Additive);
 #if (UNITY_EDITOR || DEVELOPMENT_BUILD)
             SceneManager.LoadScene(ADDITIVE_DEBUG_SCENE_NAME, LoadSceneMode.Additive);
 #endif
@@ -98,7 +118,7 @@ namespace BForBoss
 
         protected virtual void Start()
         {
-            _playerBehaviour.Initialize(_inputSystem, _playerLifeCycle);            
+            _playerBehaviour.Initialize(_inputSystem, _playerLifeCycle, _energySystemBehaviour);            
             _environmentManager.Initialize();
             _stateManager.SetState(State.PreGame);
         }
@@ -116,6 +136,11 @@ namespace BForBoss
             {
                 PanicHelper.Panic(new Exception("_playerBehaviour is missing from World Manager"));
             }
+
+            if (_energySystemBehaviour == null)
+            {
+                PanicHelper.Panic(new Exception("_energySystemBehaviour is missing from World Manager"));
+            }
         }
         
         private void OnAdditiveSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
@@ -126,8 +151,11 @@ namespace BForBoss
                     UserInterfaceManager.Initialize(_playerLifeCycle);
                     break;
                 case ADDITIVE_WEAPON_SCENE_NAME:
-                    WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem);
+                    WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem, _energySystemBehaviour);
                     break; 
+                case ADDITIVE_HUD_SCENE_NAME:
+                    HUDManager.Initialize(_playerLifeCycle, _energySystemBehaviour);
+                    break;
                 default:
                     return;
             }

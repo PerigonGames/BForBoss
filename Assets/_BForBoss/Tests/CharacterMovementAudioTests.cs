@@ -1,6 +1,5 @@
+using BForBoss;
 using NUnit.Framework;
-using Perigon.Character;
-using UnityEngine;
 
 namespace Tests.Character
 {
@@ -16,7 +15,7 @@ namespace Tests.Character
             var minSpeed = 1;
             var currentSpeed = 10;
             dummyCharacterMovement.IsWallRunning = true;
-            dummyCharacterMovement.SpeedMagnitude = currentSpeed;
+            dummyCharacterMovement._isLowerThanSpeed = false;
             var movementAudio = new CharacterMovementAudio(dummyCharacterMovement, minSpeed);
             MovementSoundState resultingState = MovementSoundState.NotPlaying;
             movementAudio.OnSoundStateChange += delegate(MovementSoundState state)
@@ -39,7 +38,7 @@ namespace Tests.Character
             var minSpeed = 10;
             var currentSpeed = 1;
             dummyCharacterMovement.IsWallRunning = true;
-            dummyCharacterMovement.SpeedMagnitude = currentSpeed;
+            dummyCharacterMovement._isLowerThanSpeed = true;
             var movementAudio = new CharacterMovementAudio(dummyCharacterMovement, minSpeed);
             MovementSoundState resultingState = MovementSoundState.NotPlaying;
             movementAudio.OnSoundStateChange += delegate(MovementSoundState state)
@@ -55,15 +54,14 @@ namespace Tests.Character
         }
         
         [Test]
-        public void GetNextStateFromNotPlaying_whenWalking_resultingStateRunning()
+        public void GetNextStateFromNotPlaying_whenRunning_resultingStateRunning()
         {
             // Given
             var dummyCharacterMovement = new MockCharacterMovement();
             var minSpeed = 1;
             var currentSpeed = 10;
             dummyCharacterMovement.IsWallRunning = false;
-            dummyCharacterMovement._isWalking = true;
-            dummyCharacterMovement.SpeedMagnitude = currentSpeed;
+            dummyCharacterMovement.IsRunning = true;
             var movementAudio = new CharacterMovementAudio(dummyCharacterMovement, minSpeed);
             MovementSoundState resultingState = MovementSoundState.NotPlaying;
             movementAudio.OnSoundStateChange += delegate(MovementSoundState state)
@@ -79,14 +77,14 @@ namespace Tests.Character
         }
         
         [Test]
-        public void GetNextStateFromNotPlaying_nothingPasses_resultingNotPlaying()
+        public void GetNextStateFromNotPlaying_NoMovement_resultingNotPlaying()
         {
             // Given
             var dummyCharacterMovement = new MockCharacterMovement();
             var currentSpeed = 10;
             dummyCharacterMovement.IsWallRunning = false;
-            dummyCharacterMovement._isWalking = false;
-            dummyCharacterMovement.SpeedMagnitude = currentSpeed;
+            dummyCharacterMovement.IsRunning = false;
+            dummyCharacterMovement._isLowerThanSpeed = true;
             var movementAudio = new CharacterMovementAudio(dummyCharacterMovement, MIN_SPEED);
             MovementSoundState resultingState = MovementSoundState.NotPlaying;
             movementAudio.OnSoundStateChange += delegate(MovementSoundState state)
@@ -108,8 +106,8 @@ namespace Tests.Character
             var dummyCharacterMovement = new MockCharacterMovement();
             var movementAudio = GenerateCharacterMovementAudio(dummyCharacterMovement, MovementSoundState.Running);
             dummyCharacterMovement.IsWallRunning = false;
-            dummyCharacterMovement._isWalking = false;
-            dummyCharacterMovement.SpeedMagnitude = MIN_SPEED - 1;
+            dummyCharacterMovement.IsRunning = false;
+            dummyCharacterMovement._isLowerThanSpeed = true;
             MovementSoundState resultingState = MovementSoundState.Running;
             movementAudio.OnSoundStateChange += delegate(MovementSoundState state)
             {
@@ -130,8 +128,8 @@ namespace Tests.Character
             var dummyCharacterMovement = new MockCharacterMovement();
             var movementAudio = GenerateCharacterMovementAudio(dummyCharacterMovement, MovementSoundState.Running);
             dummyCharacterMovement.IsWallRunning = true;
-            dummyCharacterMovement._isWalking = false;
-            dummyCharacterMovement.SpeedMagnitude = MIN_SPEED + 1;
+            dummyCharacterMovement.IsRunning = false;
+            dummyCharacterMovement._isLowerThanSpeed = false;
             MovementSoundState resultingState = MovementSoundState.Running;
             movementAudio.OnSoundStateChange += delegate(MovementSoundState state)
             {
@@ -152,8 +150,8 @@ namespace Tests.Character
             var dummyCharacterMovement = new MockCharacterMovement();
             var movementAudio = GenerateCharacterMovementAudio(dummyCharacterMovement, MovementSoundState.Running);
             dummyCharacterMovement.IsWallRunning = false;
-            dummyCharacterMovement._isWalking = true;
-            dummyCharacterMovement.SpeedMagnitude = MIN_SPEED + 1;
+            dummyCharacterMovement.IsRunning = true;
+            dummyCharacterMovement._isLowerThanSpeed = false;
             MovementSoundState resultingState = MovementSoundState.Running;
             movementAudio.OnSoundStateChange += delegate(MovementSoundState state)
             {
@@ -174,8 +172,8 @@ namespace Tests.Character
             var dummyCharacterMovement = new MockCharacterMovement();
             var movementAudio = GenerateCharacterMovementAudio(dummyCharacterMovement, MovementSoundState.WallRunning);
             dummyCharacterMovement.IsWallRunning = false;
-            dummyCharacterMovement._isWalking = false;
-            dummyCharacterMovement.SpeedMagnitude = MIN_SPEED + 1;
+            dummyCharacterMovement.IsRunning = false;
+            dummyCharacterMovement._isLowerThanSpeed = false;
             MovementSoundState resultingState = MovementSoundState.Running;
             movementAudio.OnSoundStateChange += delegate(MovementSoundState state)
             {
@@ -196,8 +194,8 @@ namespace Tests.Character
             var dummyCharacterMovement = new MockCharacterMovement();
             var movementAudio = GenerateCharacterMovementAudio(dummyCharacterMovement, MovementSoundState.WallRunning);
             dummyCharacterMovement.IsWallRunning = true;
-            dummyCharacterMovement._isWalking = true;
-            dummyCharacterMovement.SpeedMagnitude = MIN_SPEED - 1;
+            dummyCharacterMovement.IsRunning = true;
+            dummyCharacterMovement._isLowerThanSpeed = true;
             MovementSoundState resultingState = MovementSoundState.Running;
             movementAudio.OnSoundStateChange += delegate(MovementSoundState state)
             {
@@ -218,8 +216,8 @@ namespace Tests.Character
             var dummyCharacterMovement = new MockCharacterMovement();
             var movementAudio = GenerateCharacterMovementAudio(dummyCharacterMovement, MovementSoundState.WallRunning);
             dummyCharacterMovement.IsWallRunning = false;
-            dummyCharacterMovement._isWalking = true;
-            dummyCharacterMovement.SpeedMagnitude = MIN_SPEED + 1;
+            dummyCharacterMovement.IsRunning = true;
+            dummyCharacterMovement._isLowerThanSpeed = false;
             MovementSoundState resultingState = MovementSoundState.NotPlaying;
             movementAudio.OnSoundStateChange += delegate(MovementSoundState state)
             {
@@ -240,8 +238,8 @@ namespace Tests.Character
             var dummyCharacterMovement = new MockCharacterMovement();
             var movementAudio = GenerateCharacterMovementAudio(dummyCharacterMovement, MovementSoundState.WallRunning);
             dummyCharacterMovement.IsWallRunning = true;
-            dummyCharacterMovement._isWalking = true;
-            dummyCharacterMovement.SpeedMagnitude = MIN_SPEED + 1;
+            dummyCharacterMovement.IsRunning = true;
+            dummyCharacterMovement._isLowerThanSpeed = false;
             MovementSoundState resultingState = MovementSoundState.NotPlaying;
             movementAudio.OnSoundStateChange += delegate(MovementSoundState state)
             {
@@ -259,14 +257,12 @@ namespace Tests.Character
         {
             if (state == MovementSoundState.WallRunning)
             {
-                movement.SpeedMagnitude = 10;
                 movement.IsWallRunning = true;
             } 
             else if (state == MovementSoundState.Running)
             {
-                movement.SpeedMagnitude = 10;
                 movement.IsWallRunning = false;
-                movement._isWalking = true;
+                movement.IsRunning = true;
             }
 
             var movementAudio = new CharacterMovementAudio(movement, MIN_SPEED);

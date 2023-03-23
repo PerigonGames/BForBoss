@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: SingleShot
   m_EditorClassIdentifier: 
   _nameOfWeapon: Hand Cannon
-  _rateOfFire: 1
-  _bulletSpread: 0.15
+  _rateOfFire: 0.3
+  _bulletSpread: 0
   _bulletSpreadRateCurve:
     serializedVersion: 2
     m_Curve:
@@ -41,10 +41,10 @@ MonoBehaviour:
     m_RotationOrder: 4
   _reloadDuration: 0.5
   _bulletsPerShot: 1
-  _ammunitionAmount: 1
-  _isRaycastWeapon: 1
+  _ammunitionAmount: 15
+  _isRaycastWeapon: 0
   _damagePerRayCast: 8
-  _typeOfBullet: 0
+  _typeOfBullet: 1
   _animationType: 0
   _weaponShotAudio:
     Guid:

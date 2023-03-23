@@ -5,32 +5,38 @@ using UnityEngine.VFX;
 
 namespace Perigon.Weapons
 {
+    public interface IShootingCases
+    {
+        bool CanShoot { get; }
+        void OnShoot();
+    }
+    
     public abstract partial class WeaponBehaviour : MonoBehaviour
     {
         private const float WALL_HIT_ZFIGHT_BUFFER = 0.01f;
-        private const float RAYCAST_DISTANCE_LIMIT = 50f;
-        private readonly Vector3 CenterOfCameraPosition = new Vector3(0.5f, 0.5f, 0);
 
         [SerializeField] protected Transform _firePoint = null;
         [SerializeField] private VisualEffect _muzzleFlash = null;
         [SerializeField] private LayerMask _rayCastBulletLayerMask;
         [InlineEditor]
         [SerializeField]
-        private WeaponScriptableObject _weaponScriptableObject = null;
-
+        private WeaponConfigurationSO _weaponConfigurationSo = null;
+        
         protected Weapon _weapon = null;
-        protected bool _isFiring = false;
+        protected WeaponConfigurationData _weaponConfigurationData;
+        protected IShootingCases _externalShootingCases;
+
         protected float _timeSinceFire = 0f;
         
         private Camera _mainCamera = null;
         private BulletSpawner _bulletSpawner;
         private WallHitVFXSpawner _wallHitVFXSpawner;
         private IWeaponAnimationProvider _weaponAnimationProvider;
-        private ICrossHairProvider _crossHairProvider;
+        private CrossHairBehaviour _crossHairBehaviour;
         private PGInputSystem _inputSystem;
-        
-        public Weapon WeaponViewModel => _weapon;
 
+        public WeaponAnimationType AnimationType => _weaponConfigurationData.AnimationType;
+        
         private Camera MainCamera
         {
             get
@@ -49,41 +55,49 @@ namespace Perigon.Weapons
             BulletSpawner bulletSpawner,
             WallHitVFXSpawner wallHitVFXSpawner,
             IWeaponAnimationProvider weaponAnimationProvider,
-            ICrossHairProvider crossHairProvider,
-            IWeaponProperties properties = null)
+            CrossHairBehaviour crossHairBehaviour,
+            IShootingCases externalShootingCases)
         {
             _inputSystem = inputSystem;
             _bulletSpawner = bulletSpawner;
             _wallHitVFXSpawner = wallHitVFXSpawner;
             _weaponAnimationProvider = weaponAnimationProvider;
-            _crossHairProvider = crossHairProvider;
-            _weapon = new Weapon(properties ?? _weaponScriptableObject);
+            _crossHairBehaviour = crossHairBehaviour;
+            _weaponConfigurationData = _weaponConfigurationSo.MapToData();
+            _weapon = new Weapon(
+                rateOfFire: _weaponConfigurationData.RateOfFire,
+                bulletSpread: _weaponConfigurationData.BulletSpread);
+            _externalShootingCases = externalShootingCases;
             BindWeapon();
-            SetCrossHairImage();
             SetupPlayerInput();
         }
 
         public virtual void Reset()
         {
-            _isFiring = false;
             _timeSinceFire = 0;
             enabled = false;
             gameObject.SetActive(false);
         }
         
+        public void Activate(bool activate)
+        {
+            enabled = activate;
+            gameObject.SetActive(activate);
+            _weaponAnimationProvider.ReloadingWeapon(false);        
+        }
+        
         protected abstract void OnFireInputAction(bool isFiring);
-        protected abstract void Update();
+
+        protected virtual void Update()
+        {
+            _weapon.DecrementElapsedTimeRateOfFire(Time.deltaTime, Time.timeScale);
+        }
 
         protected virtual void PlayFiringAudio()
         {
-            FMODUnity.RuntimeManager.PlayOneShot(_weapon.ShotAudio, transform.position);
+            FMODUnity.RuntimeManager.PlayOneShot(_weaponConfigurationData.WeaponShotAudio, transform.position);
         }
 
-        protected virtual void HandleOnStartReloading()
-        {
-            FMODUnity.RuntimeManager.PlayOneShot(_weapon.ReloadAudio, transform.position);
-        }
-        
         protected virtual void Awake()
         {
             if (_muzzleFlash == null)
@@ -91,34 +105,22 @@ namespace Perigon.Weapons
                 Debug.LogWarning("Missing VFX Visual Effect from this weapon");
             }
         }
-
-        private void HandleOnWeaponActivate(bool activate)
-        {
-            enabled = activate;
-            gameObject.SetActive(activate);
-        }
-
-        private void HandleOnStopReloading()
-        {
-            _weaponAnimationProvider.ReloadingWeapon(false);
-        }
-
+        
         private void BindWeapon()
         {
-            _weapon.OnFireWeapon += HandleOnFire;
-            _weapon.OnSetWeaponActivate += HandleOnWeaponActivate;
-            _weapon.OnStopReloading += HandleOnStopReloading;
-            _weapon.OnStartReloading += HandleOnStartReloading;
-        }
-
-        private void SetCrossHairImage()
-        {
-            if (_weapon != null)
-            {
-                _crossHairProvider.SetCrossHairImage(_weapon.Crosshair);
-            }
+            _weapon.OnWeaponEffectEmit += HandleEffect;
         }
         
+        private void HandleEffect(WeaponEffect effect)
+        {
+            switch (effect)
+            {
+                case WeaponEffect.FireWeapon:
+                    FireWeapon();
+                    break;
+            }
+        }
+
         private void OnBulletHitWall(Vector3 point, Vector3 pointNormal)
         {
             var wallHitVFX = _wallHitVFXSpawner.SpawnWallHitVFX();
@@ -127,56 +129,50 @@ namespace Perigon.Weapons
             wallHitVFX.Spawn();
         }
 
-        private void HandleOnFire(int numberOfBullets)
+        private void FireWeapon()
         {
-            FireBullets(numberOfBullets);
+            // Shooting
+            FireBullets();
 
+            //VFX
             if (_muzzleFlash != null)
             {
                 _muzzleFlash.Play();
             }
             
-            _weaponAnimationProvider.WeaponFire(_weapon.AnimationType);
+            // Animation
+            _weaponAnimationProvider.WeaponFire(_weaponConfigurationData.AnimationType);
+            
+            //Audio
             PlayFiringAudio();
+            
+            // Expend Energy
+            _externalShootingCases?.OnShoot();
+            _crossHairBehaviour.SetMaximumSize();
         }
 
-        private void FireBullets(int numberOfBullets)
+        private void FireBullets()
         {
-            if (_weapon.IsRayCastingWeapon)
+            if (_weaponConfigurationData.IsRayCastingWeapon)
             {
-                FireRayCastBullets(numberOfBullets);
+                FireRayCastBullets();
             }
             else
             {
-                FireProjectiles(numberOfBullets);
+                FireProjectiles();
             }
         }
 
-        private void OnReloadInputAction()
-        {
-            _weapon.ReloadWeaponIfPossible();
-            _weaponAnimationProvider.ReloadingWeapon(_weapon.IsReloading);
-        }
-        
         private void SetupPlayerInput()
         {
             _inputSystem.OnFireAction += OnFireInputAction;
-            _inputSystem.OnReloadAction += OnReloadInputAction;
-        }
-
-        private void OnEnable()
-        {
-            SetCrossHairImage();
         }
 
         private void OnDestroy()
         {
             if (_weapon != null)
             {
-                _weapon.OnFireWeapon -= HandleOnFire;
-                _weapon.OnSetWeaponActivate -= HandleOnWeaponActivate;
-                _weapon.OnStopReloading -= HandleOnStopReloading;
-                _weapon.OnStartReloading -= HandleOnStartReloading;
+                _weapon.OnWeaponEffectEmit -= HandleEffect;
                 _weapon = null;
             }
         }

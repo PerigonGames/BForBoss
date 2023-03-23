@@ -6,35 +6,33 @@ using UnityEngine.UI;
 
 namespace Perigon.Weapons
 {
-    public interface ICrossHairProvider
+    public class CrossHairBehaviour : MonoBehaviour
     {
-        void SetCrossHairImage(Sprite sprite);
-        void ActivateHitMarker(bool isDead);
-        void SetDefaultCrossHair();
-    }
-    public class CrossHairBehaviour : MonoBehaviour, ICrossHairProvider
-    {
+        [FoldoutGroup("CrossHair Configurations")]
+        [SerializeField]
+        private float _maxCrossHairOffsetFromCenter = 75f;
+        [FoldoutGroup("CrossHair Configurations")] 
+        [SerializeField]
+        private float _expandingCrossHairSpeed = 50f;
+        [FoldoutGroup("CrossHair Configurations")] 
+        [SerializeField]
+        private float _shrinkingCrossHairSpeed = 20f;
+        
         private readonly Color KillHitMarkerColor = Color.red;
         private readonly Color HitMarkerColor = Color.white;
-        
-        [SerializeField] private Sprite _defaultCrossHair = null;
-        [Resolve][SerializeField] private Image _crossHair = null;
 
-        [Title("HitMarkers")]
+        [Title("Default Configurations")]
+        [SerializeField] private RectTransform _crossHairRectTransform = null;
         [SerializeField] private float _hitMarkerStayOnScreenTime = 0.2f;
         [Resolve][SerializeField] private Image _hitMarker = null;
 
         private float _elapsedHitMarkerTime = 0;
         private float _elapsedKillMarkerTime = 0;
-            
-        public void SetDefaultCrossHair()
-        {
-            _crossHair.sprite = _defaultCrossHair;
-        }
+        private bool _shouldSetToMaxSize = false;
 
-        public void SetCrossHairImage(Sprite image)
+        public void SetMaximumSize()
         {
-            _crossHair.sprite = image;
+            _shouldSetToMaxSize = true;
         }
 
         public void ActivateHitMarker(bool isDead)
@@ -48,6 +46,30 @@ namespace Perigon.Weapons
         }
 
         private void Update()
+        {
+            OnShoot();
+            HitMarkerUpdate();
+        }
+
+        private void OnShoot()
+        {
+            if (_shouldSetToMaxSize)
+            {
+                var width = Mathf.Lerp(_crossHairRectTransform.rect.width, _maxCrossHairOffsetFromCenter, Time.deltaTime * _expandingCrossHairSpeed);
+                _crossHairRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+                if (Math.Abs(_crossHairRectTransform.rect.width - _maxCrossHairOffsetFromCenter) < 0.01)
+                {
+                    _shouldSetToMaxSize = false;
+                }
+            }
+            else
+            {
+                var width = Mathf.Lerp(_crossHairRectTransform.rect.width, 0, Time.deltaTime * _shrinkingCrossHairSpeed);
+                _crossHairRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+            }
+        }
+
+        private void HitMarkerUpdate()
         {
             _elapsedHitMarkerTime -= Time.deltaTime;
             _elapsedKillMarkerTime -= Time.deltaTime;
@@ -67,24 +89,13 @@ namespace Perigon.Weapons
         
         private void Awake()
         {
-            SetDefaultCrossHair();
-        }
-
-        private void OnValidate()
-        {
-            if (_defaultCrossHair == null)
+            if (_crossHairRectTransform == null)
             {
-                PanicHelper.Panic(new Exception("Crosshair Behaviour missing sprite"));
+                PanicHelper.Panic(new Exception("_crossHairRectTransform missing from CrossHairBehaviour"));
             }
-
             if (_hitMarker == null)
             {
                 PanicHelper.Panic(new Exception("Crosshair behaviour missing hit marker"));
-            }
-            
-            if (_crossHair == null)
-            {
-                PanicHelper.Panic(new Exception("Crosshair behaviour missing crosshair"));
             }
         }
     }

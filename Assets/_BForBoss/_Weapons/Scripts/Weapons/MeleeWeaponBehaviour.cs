@@ -3,20 +3,11 @@ using FMODUnity;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Perigon.VFX;
 
 namespace Perigon.Weapons
 {
-
-    public interface IMeleeWeapon
-    {
-        float CurrentCooldown { get; }
-        float MaxCooldown { get; }
-        bool CanMelee { get; }
-    }
-
-    public class MeleeWeaponBehaviour : MonoBehaviour, IMeleeWeapon
+    public class MeleeWeaponBehaviour : MonoBehaviour
     {
         [InlineEditor]
         [SerializeField] private MeleeScriptableObject _meleeScriptable;
@@ -30,20 +21,16 @@ namespace Perigon.Weapons
         [SerializeField] private EventReference _missAudio;
 
         private MeleeWeapon _weapon;
-        private Func<Transform> _getTransform;
+        private IGetPlayerTransform _getPlayerTransform;
         private Action _onSuccessfulAttack;
         private ObjectPooler<TimedVFXEffect> _meleeVFXPool;
 
-        public float CurrentCooldown => _weapon?.CurrentCooldown ?? 0f;
-        public float MaxCooldown => _meleeScriptable != null ? _meleeScriptable.AttackCoolDown : 1f;
-        public bool CanMelee => _weapon?.CanMelee ?? false;
-
         public void Initialize(
-            Func<Transform> getTransform,
+            IGetPlayerTransform getPlayerTransform,
             Action onSuccessfulAttack,
             IMeleeProperties properties = null)
         {
-            _getTransform = getTransform;
+            _getPlayerTransform = getPlayerTransform;
             _onSuccessfulAttack = onSuccessfulAttack;
             _weapon = new MeleeWeapon(properties ?? _meleeScriptable);
 
@@ -72,7 +59,7 @@ namespace Perigon.Weapons
 
         public void Melee()
         {
-            var t = _getTransform();
+            var t = _getPlayerTransform.Value;
             var isAttackSuccessful = _canAttackMany ?
                 _weapon.TryAttackMany(t.position, t.forward) :
                 _weapon.TryAttackOne(t.position, t.forward);
@@ -117,7 +104,7 @@ namespace Perigon.Weapons
 
         public void ApplyDamage()
         {
-            var t = _getTransform();
+            var t = _getPlayerTransform.Value;
             var pointsHit = _weapon.ApplyDamage(t.position + t.up); // use player's torso instead of feet
 
             if (_meleeVFXPool == null)

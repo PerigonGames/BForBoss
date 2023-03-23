@@ -1,4 +1,5 @@
 using System;
+using Perigon.Utility;
 using UnityEngine;
 using Logger = Perigon.Utility.Logger;
 
@@ -61,9 +62,9 @@ namespace BForBoss
         {
             DEBUG_ACTIVE_SPAWN_COUNT++;
             RoundTotalSpawnCount++;
-            Logger.LogString($"Enemy Spawned: <color=red>Active Spawn Count: {DEBUG_ACTIVE_SPAWN_COUNT}</color>", "wavesmode");
-            Logger.LogString($"Enemy Spawned: <color=red>Round Spawn Count {_totalRoundTotalSpawnCount}</color>", "wavesmode");
-            Logger.LogString($"===========================================", "wavesmode");
+            Logger.LogString($"Enemy Spawned: Active Spawn Count: {DEBUG_ACTIVE_SPAWN_COUNT}", LoggerColor.Red, "wavesmode");
+            Logger.LogString($"Enemy Spawned: Round Spawn Count {_totalRoundTotalSpawnCount}", LoggerColor.Red, "wavesmode");
+            Logger.LogString($"===========================================", LoggerColor.Black, "wavesmode");
         }
 
         public void IncrementKillCount()
@@ -72,9 +73,9 @@ namespace BForBoss
             KillCount++;
             OnEnemyKilled?.Invoke();
 
-            Logger.LogString($"Enemy Killed:  <color=red>Active Spawn Count: {DEBUG_ACTIVE_SPAWN_COUNT}</color>", "wavesmode");
-            Logger.LogString($"Enemy Killed:  <color=red>Round Spawn Count {_totalRoundTotalSpawnCount}</color>", "wavesmode");
-            Logger.LogString($"===========================================", "wavesmode");
+            Logger.LogString($"Enemy Killed:  Active Spawn Count: {DEBUG_ACTIVE_SPAWN_COUNT}", LoggerColor.Red,"wavesmode");
+            Logger.LogString($"Enemy Killed:  Round Spawn Count {_totalRoundTotalSpawnCount}", LoggerColor.Red,"wavesmode");
+            Logger.LogString($"===========================================", LoggerColor.Black, "wavesmode");
         }
 
         public void IncrementWave(float maxAmountMultiplier)

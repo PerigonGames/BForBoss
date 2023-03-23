@@ -1,4 +1,5 @@
 using System.Collections;
+using Perigon.Utility;
 using UnityEngine;
 using Logger = Perigon.Utility.Logger;
 
@@ -37,7 +38,7 @@ namespace BForBoss
         {
             if (_waveModel.IsMaxEnemySpawnedReached)
             {
-                Logger.LogString("<color=Blue>Max Enemy Reached</color>", "wavesmode");
+                Logger.LogString("Max Enemy Reached", LoggerColor.Blue, "wavesmode");
                 _spawnerControl.PauseSpawning();
             }
         }
@@ -46,8 +47,8 @@ namespace BForBoss
         {
             if (_waveModel.IsRoundConcluded)
             {
-                Logger.LogString("<color=green>Wave Over</color>", "wavesmode");
-                Logger.LogString($"Please wait <color=green><b>{_secondsBetweenWaves} seconds</b></color> before the next wave", "wavesmode");
+                Logger.LogString("Wave Over", LoggerColor.Green, "wavesmode");
+                Logger.LogString($"Please wait <color=green><b>{_secondsBetweenWaves} seconds</b></color> before the next wave", LoggerColor.Black, "wavesmode");
                 StartCoroutine(InitiateNextWave());
             }
             else if (!_waveModel.IsMaxEnemySpawnedReached)

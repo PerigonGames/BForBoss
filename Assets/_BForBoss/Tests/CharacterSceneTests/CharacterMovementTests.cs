@@ -1,6 +1,6 @@
 using System.Collections;
+using BForBoss;
 using NUnit.Framework;
-using Perigon.Character;
 using Perigon.Utility;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -13,7 +13,8 @@ namespace Tests.Character
     public class CharacterMovementTests: InputTestFixture
     {
         private Keyboard _keyboard = null;
-
+        private IEnergySystem _energySystem = new MockEnergySystem();
+        
         [SetUp]
         public override void Setup()
         {
@@ -34,7 +35,7 @@ namespace Tests.Character
             var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>(); 
             var mockWorld = GameObject.FindObjectOfType<MockGenericCharacterWorldManager>(); 
             var pgInputSystem = new PGInputSystem(mockWorld.ActionAsset);
-            character.Initialize(pgInputSystem);
+            character.Initialize(_energySystem, pgInputSystem);
             pgInputSystem.SetToPlayerControls();
             character.transform.position = startingPosition;
             
@@ -58,7 +59,7 @@ namespace Tests.Character
             var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             var mockWorld = GameObject.FindObjectOfType<MockGenericCharacterWorldManager>(); 
             var pgInputSystem = new PGInputSystem(mockWorld.ActionAsset);
-            character.Initialize(pgInputSystem);
+            character.Initialize(_energySystem, pgInputSystem);
             pgInputSystem.SetToPlayerControls();
             character.transform.position = originalPosition;
             Press(_keyboard.sKey);
@@ -81,7 +82,7 @@ namespace Tests.Character
             var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             var mockWorld = GameObject.FindObjectOfType<MockGenericCharacterWorldManager>(); 
             var pgInputSystem = new PGInputSystem(mockWorld.ActionAsset);
-            character.Initialize(pgInputSystem);
+            character.Initialize(_energySystem, pgInputSystem);
             pgInputSystem.SetToPlayerControls();
             character.transform.position = originalPosition;
             Press(_keyboard.aKey);
@@ -104,7 +105,7 @@ namespace Tests.Character
             var character = GameObject.FindObjectOfType<PlayerMovementBehaviour>();
             var mockWorld = GameObject.FindObjectOfType<MockGenericCharacterWorldManager>(); 
             var pgInputSystem = new PGInputSystem(mockWorld.ActionAsset);
-            character.Initialize(pgInputSystem);
+            character.Initialize(_energySystem, pgInputSystem);
             pgInputSystem.SetToPlayerControls();
             character.transform.position = originalPosition;
             Press(_keyboard.dKey);

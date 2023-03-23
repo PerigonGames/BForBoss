@@ -1,4 +1,3 @@
-using Perigon.Character;
 using UnityEngine;
 using UnityEngine.UI;
 
