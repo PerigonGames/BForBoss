@@ -18,7 +18,6 @@ namespace BForBoss
 
         public void Reset()
         {
-            Debug.Log("Reset called");
             foreach (var system in _ringSystems)
             {
                 system.Reset();
@@ -39,7 +38,13 @@ namespace BForBoss
             _ringSystems = new List<RingSystem>();
             foreach (var grouping in _systemsToBuild)
             {
-                var newSystem = new RingSystem(grouping.Rings, grouping.RingSystemType);
+                RingSystem newSystem = grouping.RingSystemType switch
+                {
+                    RingSystemTypes.Standard => new OrderedRingSystem(grouping.Rings),
+                    RingSystemTypes.DisplayAllAtOnce => new AllAtOnceRingSystem(grouping.Rings),
+                    RingSystemTypes.RandomSelection => new OrderedRingSystem(grouping.Rings, true),
+                    _ => throw new ArgumentOutOfRangeException()
+                };
                 newSystem.OnLaborCompleted += () => Debug.Log($"Completed {grouping.Rings.Length} ring {grouping.RingSystemType} system");
                 _ringSystems.Add(newSystem);
             }
@@ -58,8 +63,13 @@ namespace BForBoss
         [System.Serializable]
         public class RingGrouping
         {
-            public RingSystem.RingSystemTypes RingSystemType;
+            public RingSystemTypes RingSystemType;
             public RingBehaviour[] Rings;
+        }
+        
+        public enum RingSystemTypes
+        {
+            Standard, DisplayAllAtOnce, RandomSelection
         }
     }
 }
