@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 5644926148023334750}
   - component: {fileID: 5644926148023334689}
   - component: {fileID: 6420529781571845753}
-  - component: {fileID: 2011114159979033675}
-  - component: {fileID: 1938183841797362839}
   m_Layer: 0
   m_Name: Equipment
   m_TagString: Untagged
@@ -27,7 +25,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5644926148023334688}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -51,6 +49,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  _playerBulletSpawner: {fileID: 0}
+  _wallHitVFXSpawner: {fileID: 0}
 --- !u!114 &6420529781571845753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,35 +81,3 @@ MonoBehaviour:
       Data3: -2124070748
       Data4: 1684251512
     Path: event:/AudioEvents/Melee/MeleeMiss
---- !u!114 &2011114159979033675
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5644926148023334688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2479f35d5b98d6e45be90bd0e9956671, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _baseWallHitVFXPrefab: {fileID: 8649202109497906533, guid: 50c83137de8eca94fbe89a017c444931, type: 3}
---- !u!114 &1938183841797362839
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5644926148023334688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e4392a5aea01e34ba83cc3645de52b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _bulletPrefabs:
-  - {fileID: 1892035446757454776, guid: 38af836d2b96d6344a03ffa6d654e071, type: 3}
-  - {fileID: 707287021218901738, guid: 64feb7857fb1e8d46841c601a8a06077, type: 3}
-  _layer: 8
-  _layerMask:
-    serializedVersion: 2
-    m_Bits: 3328
