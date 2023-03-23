@@ -1,42 +1,47 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using BForBoss.Labor;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Debug = UnityEngine.Debug;
 
 namespace BForBoss
 {
     public class RingLaborManager : MonoBehaviour
     {
-        public RingGrouping[] RingSystems;
+        [SerializeField] private RingGrouping[] _systemsToBuild;
 
         private LaborSystem _laborSystem;
         private bool _hasCompletedSystem = false;
-        private List<RingSystem> ringSystems;
+        private List<RingSystem> _ringSystems;
 
         public void Reset()
         {
             Debug.Log("Reset called");
-            foreach (var system in ringSystems)
+            foreach (var system in _ringSystems)
             {
                 system.Reset();
             }
 
-            _laborSystem = new LaborSystem(ringSystems);
+            _laborSystem?.Dispose();
+            _laborSystem = new LaborSystem(_ringSystems);
         }
         
         public void Initialize()
         {
             CreateSystems();
-            _laborSystem = new LaborSystem(ringSystems);
+            _laborSystem = new LaborSystem(_ringSystems);
         }
 
         private void CreateSystems()
         {
-            ringSystems = new List<RingSystem>();
-            foreach (var grouping in RingSystems)
+            _ringSystems = new List<RingSystem>();
+            foreach (var grouping in _systemsToBuild)
             {
                 var newSystem = new RingSystem(grouping.Rings, grouping.RingSystemType);
                 newSystem.OnLaborCompleted += () => Debug.Log($"Completed {grouping.Rings.Length} ring {grouping.RingSystemType} system");
-                ringSystems.Add(newSystem);
+                _ringSystems.Add(newSystem);
             }
         }
 

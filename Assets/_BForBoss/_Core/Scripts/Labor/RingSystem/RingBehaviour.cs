@@ -14,6 +14,8 @@ namespace BForBoss
 
         private PlayerTriggerHelper _trigger;
 
+        public string Label => _label;
+
         private void Awake()
         {
             _trigger = GetComponentInChildren<PlayerTriggerHelper>();

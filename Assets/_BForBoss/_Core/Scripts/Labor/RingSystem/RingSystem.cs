@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using BForBoss.Labor;
 using PerigonGames;
+using UnityEngine;
 
 namespace BForBoss
 {
@@ -9,19 +10,20 @@ namespace BForBoss
     {
         public event Action OnLaborCompleted;
 
-        private RingSystemTypes _type;
+        private readonly RingSystemTypes _type;
 
         private Queue<RingBehaviour> _ringQueue;
         private List<RingBehaviour> _remainingRings;
-        private List<RingBehaviour> _completedRings;
+        private readonly RingBehaviour[] _allRings;
 
         public RingSystem(RingBehaviour[] rings, RingSystemTypes type = RingSystemTypes.Standard)
         {
             _type = type;
 
-            SetupRingLists(rings);
+            _allRings = rings;
+            SetupRingLists(_allRings);
 
-            foreach (var ring in rings)
+            foreach (var ring in _allRings)
             {
                 ring.gameObject.SetActive(false);
             }
@@ -29,6 +31,7 @@ namespace BForBoss
         
         public void Activate()
         {
+            Debug.Log("Activating system of type " + _type);
             if (_type == RingSystemTypes.DisplayAllAtOnce)
             {
                 ActivateAllAtOnce();
@@ -41,22 +44,12 @@ namespace BForBoss
 
         public void Reset()
         {
-            _completedRings.Reverse();
-            if (_ringQueue is {Count: > 0})
+            foreach (var ring in _allRings)
             {
-                _completedRings.AddRange(_ringQueue);
-            }
-            if (_remainingRings is {Count: > 0})
-            {
-                _completedRings.AddRange(_remainingRings);
-            }
-            foreach (var ring in _completedRings)
-            {
-                ring.gameObject.SetActive(false);
-                ring.RingActivated -= RingTriggered;
+                DeactivateRing(ring);
             }
             
-            SetupRingLists(_completedRings);
+            SetupRingLists(_allRings);
         }
 
         private void SetupRingLists(IList<RingBehaviour> rings)
@@ -76,14 +69,11 @@ namespace BForBoss
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            _completedRings = new List<RingBehaviour>();
         }
 
         private void RingTriggered(RingBehaviour ring)
         {
-            ring.gameObject.SetActive(false);
-            ring.RingActivated -= RingTriggered;
-            _completedRings.Add(ring);
+            DeactivateRing(ring);
             if (_type == RingSystemTypes.DisplayAllAtOnce)
             {
                 HandleRingTriggeredAllAtOnce(ring);
@@ -102,17 +92,27 @@ namespace BForBoss
                 return;
             }
             var ring = _ringQueue.Dequeue();
-            ring.RingActivated += RingTriggered;
-            ring.gameObject.SetActive(true);
+            ActivateRing(ring);
         }
 
         private void ActivateAllAtOnce()
         {
             foreach (var ring in _remainingRings)
             {
-                ring.RingActivated += RingTriggered;
-                ring.gameObject.SetActive(true);
+                ActivateRing(ring);
             }
+        }
+
+        private void DeactivateRing(RingBehaviour ring)
+        {
+            ring.gameObject.SetActive(false);
+            ring.RingActivated -= RingTriggered;
+        }
+
+        private void ActivateRing(RingBehaviour ring)
+        {
+            ring.RingActivated += RingTriggered;
+            ring.gameObject.SetActive(true);
         }
 
         private void HandleRingTriggeredAllAtOnce(RingBehaviour ring)
