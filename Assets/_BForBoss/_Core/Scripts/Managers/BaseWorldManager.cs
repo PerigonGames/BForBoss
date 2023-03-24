@@ -21,7 +21,7 @@ namespace BForBoss
 
         [Title("Base Components", "", TitleAlignments.Centered)]
         [SerializeField] private EnergySystemBehaviour _energySystemBehaviour;
-
+        
         [Title("","Base Dependencies", bold: false, horizontalLine: false)]
         [SerializeField] protected PlayerBehaviour _playerBehaviour = null;
         [SerializeField] private InputActionAsset _actionAsset;
@@ -97,7 +97,6 @@ namespace BForBoss
             {
                 _environmentManager.Reset();
             }
-            
             VisualEffectsManager.Instance.Reset();
             _stateManager.SetState(State.Play);
         }
