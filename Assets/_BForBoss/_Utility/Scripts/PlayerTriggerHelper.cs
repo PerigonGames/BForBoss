@@ -1,4 +1,5 @@
 using System;
+using Perigon.Utility;
 using UnityEngine;
 
 namespace BForBoss.Utility
@@ -9,7 +10,7 @@ namespace BForBoss.Utility
         
         private void OnTriggerEnter(Collider other)
         {
-            if(other.gameObject.layer == 11)
+            if(other.gameObject.layer == TagsAndLayers.Layers.Player)
                 PlayerEnteredTrigger?.Invoke();
         }
     }

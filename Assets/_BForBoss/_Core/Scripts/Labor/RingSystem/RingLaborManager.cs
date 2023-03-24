@@ -18,6 +18,8 @@ namespace BForBoss
 
         public void Reset()
         {
+            if(_ringSystems == null) CreateSystems();
+            
             foreach (var system in _ringSystems)
             {
                 system.Reset();
