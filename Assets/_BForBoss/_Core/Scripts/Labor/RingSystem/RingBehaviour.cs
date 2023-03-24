@@ -12,13 +12,11 @@ namespace BForBoss
         [SerializeField] private TMPro.TMP_Text[] _labels;
         [SerializeField] private string _label;
 
-        private PlayerTriggerHelper _trigger;
-
-        public string Label => _label;
+        private PlayerTriggerBehaviour _trigger;
 
         private void Awake()
         {
-            _trigger = GetComponentInChildren<PlayerTriggerHelper>();
+            _trigger = GetComponentInChildren<PlayerTriggerBehaviour>();
         }
 
         private void OnEnable()
@@ -36,7 +34,7 @@ namespace BForBoss
             RingActivated?.Invoke(this);
         }
 
-        public void SetLabel(string label)
+        private void SetLabel(string label)
         {
             _label = label;
             foreach (var tmp in _labels)

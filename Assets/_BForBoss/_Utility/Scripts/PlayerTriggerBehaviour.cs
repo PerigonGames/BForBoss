@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BForBoss.Utility
 {
-    public class PlayerTriggerHelper : MonoBehaviour
+    public class PlayerTriggerBehaviour : MonoBehaviour
     {
         public event Action PlayerEnteredTrigger;
         

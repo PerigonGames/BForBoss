@@ -8,12 +8,12 @@ namespace BForBoss
 {
     public class OrderedRingSystem : RingSystem
     {
-        private readonly bool _randomise;
+        private readonly bool _isRandomized;
         private Queue<RingBehaviour> _ringQueue;
 
-        public OrderedRingSystem(RingBehaviour[] rings, bool randomise = false) : base(rings)
+        public OrderedRingSystem(RingBehaviour[] rings, bool isRandomized = false) : base(rings)
         {
-            _randomise = randomise;
+            _isRandomized = isRandomized;
         }
         
         public override void Activate()
@@ -23,7 +23,7 @@ namespace BForBoss
 
         protected override void SetupRingLists(IList<RingBehaviour> rings)
         {
-            if(_randomise)
+            if(_isRandomized)
                 rings.ShuffleFisherYates();
             _ringQueue = new Queue<RingBehaviour>(rings);
         }
