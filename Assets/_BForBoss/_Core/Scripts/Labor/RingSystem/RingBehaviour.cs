@@ -9,9 +9,9 @@ namespace BForBoss
     {
         public event Action<RingBehaviour> RingActivated;
         
-        [SerializeField] private TMPro.TMP_Text[] _labels;
         [SerializeField] private string _label;
-
+        
+        private TMPro.TMP_Text[] _labels;
         private PlayerTriggerBehaviour _trigger;
 
         private void Awake()
@@ -45,6 +45,7 @@ namespace BForBoss
 
         private void OnValidate()
         {
+            if (_labels.IsNullOrEmpty()) _labels = GetComponentsInChildren<TMPro.TMP_Text>();
             if (string.IsNullOrEmpty(_label) || _labels.IsNullOrEmpty()) return;
             SetLabel(_label);
         }
