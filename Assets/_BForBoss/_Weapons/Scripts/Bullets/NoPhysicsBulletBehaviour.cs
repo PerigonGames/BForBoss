@@ -6,12 +6,10 @@ namespace Perigon.Weapons
     {
         private bool TryMoveForward(out Vector3 translationForward)
         {
-            Debug.Log("Try Moving Forward");
             var distance = _properties.Speed * Time.deltaTime;
             translationForward = transform.forward * distance;
             if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, distance, ~Mask))
             {
-                Debug.Log("Hitting Something: " + hit.collider.name);
                 HitObject(hit.collider, hit.point, hit.normal);
                 return false;
             }
