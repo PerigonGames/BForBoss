@@ -1,34 +1,39 @@
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEditor.Build.Reporting;
 
 // Output the build size or a failure depending on BuildPlayer.
 
-public class ProdBuildScript : MonoBehaviour
+public class CIBuildScript : MonoBehaviour
 {
-    [MenuItem("Build/Prod Build Windows")]
-    public static void MyBuild()
+    public static void MakeProductionBuild()
+    {
+        MyBuild(BuildOptions.None);
+    }
+
+    public static void MakeDevelopmentBuild()
+    {
+        MyBuild(BuildOptions.Development);
+    }
+    
+    private static void MyBuild(BuildOptions option)
     {
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
         List<string> scenePaths = new List<string>();
         
         foreach (EditorBuildSettingsScene e in EditorBuildSettings.scenes)
         {
-            //Do not include AdditiveDebugScene in ProdBuild
-            if (e.path.Contains("AdditiveDebugScene"))
-            {
-                continue;
-            }
-            
             scenePaths.Add(e.path);
             Debug.Log("Scene added to build: " + e.path);
         }
 
         buildPlayerOptions.scenes = scenePaths.ToArray();
-        buildPlayerOptions.locationPathName = "C:/Users/Developer/OneDrive/_PerigonGames/new_prod_build/windowsBuild.exe";
+        //buildPlayerOptions.locationPathName = "build/StandaloneWindows64/windows.exe";
+        buildPlayerOptions.locationPathName = "C:/Users/Developer/Documents/TempUnityBuilds/windowsBuild.exe";
         buildPlayerOptions.target = BuildTarget.StandaloneWindows64;
-        buildPlayerOptions.options = BuildOptions.None;
+        buildPlayerOptions.options = option;
 
         BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
         BuildSummary summary = report.summary;
@@ -40,7 +45,7 @@ public class ProdBuildScript : MonoBehaviour
 
         if (summary.result == BuildResult.Failed)
         {
-            Debug.Log("Build failed");
+            throw new BuildFailedException("Build failed");
         }
     }
 }
