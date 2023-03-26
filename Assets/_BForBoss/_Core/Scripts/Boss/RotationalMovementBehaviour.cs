@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Perigon.Entities
+namespace BForBoss
 {
     public enum RotationState
     {
