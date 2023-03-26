@@ -14,7 +14,6 @@ namespace BForBoss
         private float rotationRate = 30f;
         private int _direction = 0;
         
-        [Button]
         public void StartRotation(RotationState rotation)
         {
             switch (rotation)
@@ -28,7 +27,6 @@ namespace BForBoss
             }
         }
 
-        [Button]
         public void StopRotation()
         {
             _direction = 0;

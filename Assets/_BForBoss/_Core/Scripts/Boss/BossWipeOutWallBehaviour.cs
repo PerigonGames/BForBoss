@@ -1,4 +1,5 @@
 using Perigon.Weapons;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BForBoss
@@ -11,32 +12,54 @@ namespace BForBoss
         private RotationalMovementBehaviour _rotationalMovementBehaviour;
         private IGetPlayerTransform _getPlayerTransform;
 
-
-        public void Initialize(IGetPlayerTransform getPlayerTransform)
+        private class PlayerPosition : IGetPlayerTransform
         {
-            _getPlayerTransform = getPlayerTransform;
+            public Transform Value => FindObjectOfType<PlayerBehaviour>().transform;
         }
 
-        public void ActivateClosestWall()
+
+        [Button]
+        public void Initialize(IGetPlayerTransform getPlayerTransform)
+        {
+            _getPlayerTransform = new PlayerPosition();
+        }
+
+        [Button]
+        public void ActivateClosestAndRotateWall()
         {
             var playerPosition = _getPlayerTransform.Value.position;
             _wipeOutWallBehaviour.ActivateWallClosestToPlayer(playerPosition);
-            var wallPosition = _wipeOutWallBehaviour.FindClosestWipeOutWallPositionTo(playerPosition);
-            var rotationState = GetRotationalDirectionBetween(playerPosition, wallPosition);
+            var rotationState = GetRotationalDirectionFrom(playerPosition);
             _rotationalMovementBehaviour.StartRotation(rotationState);
         }
 
-        private RotationState GetRotationalDirectionBetween(Vector3 playerPosition, Vector3 closestWipeOutWallPosition)
+        [Button]
+        public void DeactivateWallAndRotation()
         {
-            Vector3 direction = playerPosition - closestWipeOutWallPosition;
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            _wipeOutWallBehaviour.DeactivateAllShields();
+            _rotationalMovementBehaviour.StopRotation();
+        }
+
+        private RotationState GetRotationalDirectionFrom(Vector3 playerPosition)
+        {
+            var centerPointRotation = transform.rotation;
+            var localPlayerPosition = Quaternion.Inverse(centerPointRotation) * (playerPosition - transform.position);
+            var angle = Mathf.Atan2(localPlayerPosition.z, localPlayerPosition.x);
+            angle *= Mathf.Rad2Deg;
+
+            if (angle > 180)
+            {
+                angle -= 360;
+            }
 
             if (angle < 0)
             {
-                angle += 360f;
+                return RotationState.CounterClockWise;
             }
-
-            return angle > 180f ? RotationState.ClockWise : RotationState.CounterClockWise;
+            else
+            {
+                return RotationState.ClockWise;
+            }        
         }
 
         private void Awake()

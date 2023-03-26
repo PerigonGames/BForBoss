@@ -1,6 +1,5 @@
 using System;
 using Perigon.Utility;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BForBoss
@@ -20,7 +19,6 @@ namespace BForBoss
         [SerializeField] private DeathAreaBehaviour _eastPlane;
         [SerializeField] private DeathAreaBehaviour _westPlane;
 
-        [Button]
         public void ActivateLongWallClosestTo(Vector3 position)
         {
             var wall = FindClosestWipeOutWallTo(position);
@@ -29,7 +27,6 @@ namespace BForBoss
             MapToDeathArea(wall).gameObject.SetActive(true);
         }
 
-        [Button]
         public void DeactivateAllShields()
         {
             _northPlane.gameObject.SetActive(false);
@@ -38,19 +35,12 @@ namespace BForBoss
             _westPlane.gameObject.SetActive(false);
         }
 
-        [Button]
         public void ActivateWallClosestToPlayer(Vector3 position)
         {
             var wall = FindClosestWipeOutWallTo(position);
             MapToDeathArea(wall).gameObject.SetActive(true);
         }
 
-        public Vector3 FindClosestWipeOutWallPositionTo(Vector3 position)
-        {
-            var wall = FindClosestWipeOutWallTo(position);
-            return MapToDeathArea(wall).transform.position;
-        }
-        
         private WipeOutWall FindClosestWipeOutWallTo(Vector3 position)
         {
             var closestWall = WipeOutWall.North;
