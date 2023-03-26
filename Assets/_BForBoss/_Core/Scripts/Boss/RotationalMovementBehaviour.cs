@@ -34,7 +34,7 @@ namespace Perigon.Entities
             _direction = 0;
         }
         
-        private void Update()
+        private void FixedUpdate()
         {
             if (_direction != 0)
             {
