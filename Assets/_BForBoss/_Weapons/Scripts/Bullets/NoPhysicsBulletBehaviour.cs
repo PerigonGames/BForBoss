@@ -8,7 +8,7 @@ namespace Perigon.Weapons
         {
             var distance = _properties.Speed * Time.deltaTime;
             translationForward = transform.forward * distance;
-            if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, distance, ~Mask.value))
+            if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, distance, ~Mask))
             {
                 HitObject(hit.collider, hit.point, hit.normal);
                 return false;
