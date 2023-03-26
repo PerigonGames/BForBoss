@@ -12,16 +12,19 @@ namespace BForBoss
         private RotationalMovementBehaviour _rotationalMovementBehaviour;
         private IGetPlayerTransform _getPlayerTransform;
 
-        private class PlayerPosition : IGetPlayerTransform
-        {
-            public Transform Value => FindObjectOfType<PlayerBehaviour>().transform;
-        }
-
-
         [Button]
         public void Initialize(IGetPlayerTransform getPlayerTransform)
         {
-            _getPlayerTransform = new PlayerPosition();
+            _getPlayerTransform = getPlayerTransform;
+        }
+        
+        [Button]
+        public void ActivateClosestLongWallAndRotate()
+        {
+            var playerPosition = _getPlayerTransform.Value.position;
+            _wipeOutWallBehaviour.ActivateLongWallClosestTo(playerPosition);
+            var rotationState = GetRotationalDirectionFrom(playerPosition);
+            _rotationalMovementBehaviour.StartRotation(rotationState);
         }
 
         [Button]
@@ -52,14 +55,7 @@ namespace BForBoss
                 angle -= 360;
             }
 
-            if (angle < 0)
-            {
-                return RotationState.CounterClockWise;
-            }
-            else
-            {
-                return RotationState.ClockWise;
-            }        
+            return angle < 0 ? RotationState.CounterClockWise : RotationState.ClockWise;        
         }
 
         private void Awake()

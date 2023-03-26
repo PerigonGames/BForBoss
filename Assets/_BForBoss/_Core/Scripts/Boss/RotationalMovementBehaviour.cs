@@ -11,7 +11,7 @@ namespace BForBoss
     public class RotationalMovementBehaviour : MonoBehaviour
     {
         [SerializeField]
-        private float rotationRate = 30f;
+        private float _rotationRate = 30f;
         private int _direction = 0;
         
         public void StartRotation(RotationState rotation)
@@ -36,7 +36,7 @@ namespace BForBoss
         {
             if (_direction != 0)
             {
-                transform.Rotate(Vector3.up, _direction * rotationRate * Time.deltaTime);
+                transform.Rotate(Vector3.up, _direction * _rotationRate * Time.deltaTime);
             }
         }
     }
