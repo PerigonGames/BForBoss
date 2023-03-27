@@ -16,7 +16,7 @@ namespace BForBoss
 
         public void SetMaxEnergy()
         {
-            EnergyData = _energyData.Apply(_energyData.MaxEnergyValue);
+            EnergyData = _energyData.Apply(value:_energyData.MaxEnergyValue);
         }
     }
 }
