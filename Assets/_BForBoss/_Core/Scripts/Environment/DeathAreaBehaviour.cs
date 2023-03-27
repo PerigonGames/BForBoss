@@ -1,14 +1,16 @@
+using Perigon.Utility;
 using UnityEngine;
 
 namespace BForBoss
 {
     public class DeathAreaBehaviour : MonoBehaviour
-    {
-        [SerializeField] private string _deathAreaName = "deathArea";
-        
+    {        
         private void OnCollisionEnter(Collision other)
         {
-            StateManager.Instance.SetState(State.PreGame);
+            if (other.gameObject.CompareTag(TagsAndLayers.Tags.Player))
+            {
+                StateManager.Instance.SetState(State.PreGame);
+            }
         }
     }
 }
