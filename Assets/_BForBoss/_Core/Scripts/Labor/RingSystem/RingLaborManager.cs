@@ -47,7 +47,7 @@ namespace BForBoss
                     RingSystemTypes.RandomSelection => new OrderedRingSystem(grouping.Rings, true),
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                newSystem.OnLaborCompleted += () => Debug.Log($"Completed {grouping.Rings.Length} ring {grouping.RingSystemType} system");
+                newSystem.OnLaborCompleted += () => Perigon.Utility.Logger.LogString($"Completed {grouping.Rings.Length} ring {grouping.RingSystemType} system", key:"Labor");
                 _ringSystems.Add(newSystem);
             }
         }
@@ -57,7 +57,7 @@ namespace BForBoss
             if(_laborSystem == null) return;
             if (!_hasCompletedSystem && _laborSystem.IsComplete)
             {
-                Debug.Log("All labors completed");
+                Perigon.Utility.Logger.LogString("All labors completed", key: "Labor");
                 _hasCompletedSystem = true;
             }
         }
