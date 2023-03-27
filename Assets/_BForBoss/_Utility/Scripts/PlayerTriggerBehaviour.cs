@@ -6,7 +6,7 @@ namespace BForBoss.Utility
 {
     public class PlayerTriggerBehaviour : MonoBehaviour
     {
-        public event Action PlayerEnteredTrigger;
+        public Action PlayerEnteredTrigger;
         
         private void OnTriggerEnter(Collider other)
         {
