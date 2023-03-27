@@ -122,7 +122,7 @@ namespace BForBoss
                 {
                     GUILayout.Space(0.15f * _windowRect.height);
                     _playerLifeCycle.IsInvincible = DrawDebugToggle(_playerLifeCycle.IsInvincible, new GUIContent("Player Invincibility"));
-                    _energySystemBehaviour.UseDebugEnergyCost = DrawDebugToggle(_energySystemBehaviour.UseDebugEnergyCost, new GUIContent("Freeze Energy Cost"));
+                    _energySystemBehaviour.UseDebugEnergySystemConfig = DrawDebugToggle(_energySystemBehaviour.UseDebugEnergySystemConfig, new GUIContent("Freeze Energy"));
 
                     if (GUILayout.Button("Give Max Energy"))
                     {

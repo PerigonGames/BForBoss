@@ -179,13 +179,6 @@ namespace BForBoss
         
         private float MapToExpendValue(EnergyExpenseType type, float multiplier)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            if (UseDebugEnergyCost)
-            {
-                return 0.0f;
-            }
-#endif
-            
             switch (type)
             {
                 case EnergyExpenseType.Shot:
@@ -194,7 +187,7 @@ namespace BForBoss
                     return _energySystemConfigurationData.SlowMoEnergy * multiplier;
                 default:
                     PanicHelper.Panic(new Exception("Missing Case for MapToExpendValue"));
-                    return 0.0f;
+                    return 0;
             }
         }
     }
