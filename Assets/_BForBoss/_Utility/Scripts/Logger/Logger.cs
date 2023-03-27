@@ -73,8 +73,7 @@ namespace Perigon.Utility
                     break;
                 case LoggerColor.Default:
                 default:
-                    colorText = GUI.color == Color.black ? "black" : "white";
-                    break;
+                    return log;
             }
             
 
