@@ -7,6 +7,11 @@ namespace Perigon.Weapons
         void DamageBy(float amount);
         bool IsAlive { get; }
     }
+
+    public interface IBulletCollision
+    {
+        void OnCollided(Vector3 collisionPoint);
+    }
     
     public abstract partial class BulletBehaviour
     {
@@ -16,6 +21,10 @@ namespace Perigon.Weapons
             {
                 weaponHolder.DamageBy(_properties.Damage);
                 OnBulletHitEntity?.Invoke(this, !weaponHolder.IsAlive);
+            } 
+            else if (col.TryGetComponent(out IBulletCollision bulletCollision))
+            {
+                bulletCollision.OnCollided(hitPosition);    
             }
             else
             {
