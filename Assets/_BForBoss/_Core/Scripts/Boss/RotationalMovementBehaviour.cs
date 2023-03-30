@@ -1,4 +1,3 @@
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BForBoss
@@ -36,7 +35,7 @@ namespace BForBoss
         {
             if (_direction != 0)
             {
-                transform.Rotate(Vector3.up, _direction * _rotationRate * Time.deltaTime);
+                transform.Rotate(Vector3.up, _direction * _rotationRate * Time.fixedDeltaTime);
             }
         }
     }
