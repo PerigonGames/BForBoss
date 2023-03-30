@@ -42,9 +42,9 @@ namespace BForBoss
             {
                 RingSystem newSystem = grouping.RingSystemType switch
                 {
-                    RingSystemTypes.Standard => new OrderedRingSystem(grouping.Rings),
-                    RingSystemTypes.DisplayAllAtOnce => new AllAtOnceRingSystem(grouping.Rings),
-                    RingSystemTypes.RandomSelection => new OrderedRingSystem(grouping.Rings, true),
+                    RingSystemTypes.Standard => new RingSystem(grouping.Rings),
+                    RingSystemTypes.DisplayAllAtOnce => new RingSystem(grouping.Rings, allAtOnce: true),
+                    RingSystemTypes.RandomSelection => new RingSystem(grouping.Rings, isRandomized: true),
                     _ => throw new ArgumentOutOfRangeException()
                 };
                 newSystem.OnLaborCompleted += () => Perigon.Utility.Logger.LogString($"Completed {grouping.Rings.Length} ring {grouping.RingSystemType} system", key:"Labor");
