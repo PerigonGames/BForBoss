@@ -6,17 +6,21 @@ using UnityEngine;
 
 namespace BForBoss
 {
-    public abstract class RingSystem : ILabor
+    public class RingSystem : ILabor
     {
         public event Action OnLaborCompleted;
-
+        private RingBehaviour _currentRing;
         private Queue<RingBehaviour> _ringQueue;
-        private List<RingBehaviour> _remainingRings;
         private readonly RingBehaviour[] _allRings;
 
-        protected RingSystem(RingBehaviour[] rings)
+        private bool _isRandomized;
+        private bool _allAtOnce;
+
+        public RingSystem(RingBehaviour[] rings, bool isRandomized = false, bool allAtOnce = false)
         {
             _allRings = rings;
+            _isRandomized = isRandomized;
+            _allAtOnce = allAtOnce;
             SetupRingLists(_allRings);
 
             foreach (var ring in _allRings)
@@ -31,17 +35,38 @@ namespace BForBoss
             {
                 DeactivateRing(ring);
             }
-            
+
+            _currentRing = null;
             SetupRingLists(_allRings);
         }
-        
-        public abstract void Activate();
 
-        protected abstract void SetupRingLists(IList<RingBehaviour> rings);
-
-        protected virtual void RingTriggered(RingBehaviour ring)
+        public void Activate()
         {
+            if (_allAtOnce)
+            {
+                foreach (var ring in _ringQueue)
+                {
+                    ActivateRing(ring);
+                }
+            }
+
+            TrySetupNextRing();
+        }
+
+        private void SetupRingLists(IList<RingBehaviour> rings)
+        {
+            if (_isRandomized)
+            {
+                rings.ShuffleFisherYates();
+            }
+            _ringQueue = new Queue<RingBehaviour>(rings);
+        }
+
+        private void RingTriggered(RingBehaviour ring)
+        {
+            if(_allAtOnce && ring != _currentRing) return;
             DeactivateRing(ring);
+            TrySetupNextRing();
         }
 
         protected void DeactivateRing(RingBehaviour ring)
@@ -54,6 +79,17 @@ namespace BForBoss
         {
             ring.RingActivated += RingTriggered;
             ring.gameObject.SetActive(true);
+        }
+        
+        protected void TrySetupNextRing()
+        {
+            if (_ringQueue.Count == 0)
+            {
+                InvokeLaborCompleted();
+                return;
+            }
+            _currentRing = _ringQueue.Dequeue();
+            if (!_currentRing.gameObject.activeInHierarchy) ActivateRing(_currentRing);
         }
 
         protected void InvokeLaborCompleted()
