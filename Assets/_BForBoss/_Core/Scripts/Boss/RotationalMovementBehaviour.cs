@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Perigon.Entities
+namespace BForBoss
 {
     public enum RotationState
     {
@@ -11,10 +11,9 @@ namespace Perigon.Entities
     public class RotationalMovementBehaviour : MonoBehaviour
     {
         [SerializeField]
-        private float rotationRate = 30f;
+        private float _rotationRate = 30f;
         private int _direction = 0;
-        
-        [Button]
+
         public void StartRotation(RotationState rotation)
         {
             switch (rotation)
@@ -28,17 +27,16 @@ namespace Perigon.Entities
             }
         }
 
-        [Button]
         public void StopRotation()
         {
             _direction = 0;
         }
-        
-        private void Update()
+
+        private void FixedUpdate()
         {
             if (_direction != 0)
             {
-                transform.Rotate(Vector3.up, _direction * rotationRate * Time.deltaTime);
+                transform.Rotate(Vector3.up, _direction * _rotationRate * Time.deltaTime);
             }
         }
     }

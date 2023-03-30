@@ -467,7 +467,7 @@ namespace BForBoss
 
         private void PrintWallRunLogs(string log)
         {
-            Logger.LogString(log, LoggerColor.Black, "wallrunning");
+            Logger.LogString(log, key: "wallrunning");
         }
         #endregion
     }

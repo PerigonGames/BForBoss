@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BForBoss.Labor
 {
-    public class LaborSystem
+    public class LaborSystem : IDisposable
     {
         private Queue<ILabor> _laborsToComplete;
         public ILabor CurrentLabor { get; private set; }
@@ -46,6 +46,14 @@ namespace BForBoss.Labor
 
             CurrentLabor = null;
             IsComplete = true;
+        }
+
+        public void Dispose()
+        {
+            if (CurrentLabor != null)
+            {
+                CurrentLabor.OnLaborCompleted -= OnLaborCompleted;
+            }
         }
     }
 }
