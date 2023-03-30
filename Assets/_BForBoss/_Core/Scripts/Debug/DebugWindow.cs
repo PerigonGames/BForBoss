@@ -18,6 +18,7 @@ namespace BForBoss
         [SerializeField] private FreeRoamCamera _freeRoamCamera = null;
         
         private PlayerLifeCycleBehaviour _playerLifeCycle;
+        private EnergySystemBehaviour _energySystemBehaviour;
         private bool _isPlayerCurrentlyInvincible;
         
         //State Handling
@@ -48,6 +49,7 @@ namespace BForBoss
             
             _freeRoamCamera.Initialize(Camera.main.transform, onExit: OnFreeCameraDebugViewExited);
             _playerLifeCycle = FindObjectOfType<PlayerLifeCycleBehaviour>();
+            _energySystemBehaviour = FindObjectOfType<EnergySystemBehaviour>();
         }
 
         private void Update()
@@ -120,6 +122,12 @@ namespace BForBoss
                 {
                     GUILayout.Space(0.15f * _windowRect.height);
                     _playerLifeCycle.IsInvincible = DrawDebugToggle(_playerLifeCycle.IsInvincible, new GUIContent("Player Invincibility"));
+                    _energySystemBehaviour.UseDebugEnergySystemConfig = DrawDebugToggle(_energySystemBehaviour.UseDebugEnergySystemConfig, new GUIContent("Freeze Energy"));
+
+                    if (GUILayout.Button("Give Max Energy"))
+                    {
+                        _energySystemBehaviour.SetMaxEnergy();
+                    }
                 }
                     
                 GUILayout.FlexibleSpace();

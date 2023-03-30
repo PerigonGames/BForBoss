@@ -9,14 +9,12 @@ namespace Perigon.Weapons
     {
         Transform Value { get; }
     }
-
-    [RequireComponent(typeof(BulletSpawner))]
-    [RequireComponent(typeof(WallHitVFXSpawner))]
+    
     public class EquipmentBehaviour : MonoBehaviour
     {
         [SerializeField] private WeaponBehaviour[] _weaponBehaviours = null;
-        private BulletSpawner _bulletSpawner;
-        private WallHitVFXSpawner _wallHitVFXSpawner;
+        [SerializeField] private BulletSpawner _playerBulletSpawner;
+        [SerializeField] private WallHitVFXSpawner _wallHitVFXSpawner;
         private MeleeWeaponBehaviour _meleeBehaviour = null;
         private IWeaponAnimationProvider _weaponAnimationProvider;
         private PGInputSystem _inputSystem;
@@ -65,7 +63,7 @@ namespace Perigon.Weapons
         {
             for(int i = 0; i < _weaponBehaviours.Length; i++)
             {
-                _weaponBehaviours[i].Initialize(_inputSystem, _bulletSpawner, _wallHitVFXSpawner, _weaponAnimationProvider, crossHairProvider, shootingCases);
+                _weaponBehaviours[i].Initialize(_inputSystem, _playerBulletSpawner, _wallHitVFXSpawner, _weaponAnimationProvider, crossHairProvider, shootingCases);
                 _weaponBehaviours[i].Activate(false);
             }
 
@@ -96,9 +94,15 @@ namespace Perigon.Weapons
 
         private void Awake()
         {
-            _bulletSpawner = GetComponent<BulletSpawner>();
-            _wallHitVFXSpawner = GetComponent<WallHitVFXSpawner>();
             _meleeBehaviour = GetComponent<MeleeWeaponBehaviour>();
+            if (_wallHitVFXSpawner == null)
+            {
+                PanicHelper.Panic(new Exception("Missing WallHitVFXSpawner from EquipmentBehaviour"));
+            }
+            if (_playerBulletSpawner == null)
+            {
+                PanicHelper.Panic(new Exception("Missing BulletSpawner from EquipmentBehaviour for player"));
+            }
             if (_weaponBehaviours.IsNullOrEmpty())
             {
                 PanicHelper.Panic(new Exception("There are currently no WeaponBehaviour within the child of EquipmentBehaviour"));

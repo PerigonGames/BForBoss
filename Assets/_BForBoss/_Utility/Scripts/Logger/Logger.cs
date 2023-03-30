@@ -4,6 +4,7 @@ namespace Perigon.Utility
 {
     public enum LoggerColor
     {
+        Default,
         Black,
         Red,
         Blue,
@@ -13,7 +14,7 @@ namespace Perigon.Utility
     
     public static partial class Logger
     {
-        public static void LogString(string toLog, LoggerColor color = LoggerColor.Black,  string key = "Misc")
+        public static void LogString(string toLog, LoggerColor color = LoggerColor.Default,  string key = "Misc")
         {
 #if !UNITY_EDITOR && DEBUG
             Debug.Log(ColorizeLog(toLog, color));
@@ -31,7 +32,7 @@ namespace Perigon.Utility
 #endif
         }
         
-        public static void LogWarning(string toLog, LoggerColor color = LoggerColor.Black, string key = "Misc")
+        public static void LogWarning(string toLog, LoggerColor color = LoggerColor.Default, string key = "Misc")
         {
 #if !UNITY_EDITOR && DEBUG
             Debug.LogWarning(ColorizeLog(toLog, color));
@@ -40,7 +41,7 @@ namespace Perigon.Utility
 #endif
         }
         
-        public static void LogError(string toLog, LoggerColor color = LoggerColor.Black,  string key = "Misc")
+        public static void LogError(string toLog, LoggerColor color = LoggerColor.Default,  string key = "Misc")
         {
 #if !UNITY_EDITOR && DEBUG
             Debug.LogError(ColorizeLog(toLog, color));
@@ -70,10 +71,11 @@ namespace Perigon.Utility
                 case LoggerColor.Yellow:
                     colorText = "yellow";
                     break;
+                case LoggerColor.Default:
                 default:
-                    colorText = "black";
-                    break;
+                    return log;
             }
+            
 
             return $"<color={colorText}>{log}</color>";
         }
