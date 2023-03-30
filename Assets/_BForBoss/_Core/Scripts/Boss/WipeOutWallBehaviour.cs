@@ -1,12 +1,10 @@
 using System;
 using Perigon.Utility;
-using Perigon.Weapons;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BForBoss
 {
-    public class BossWipeOutWallBehaviour : MonoBehaviour
+    public class WipeOutWallBehaviour : MonoBehaviour
     {
         private enum WipeOutWall
         {
@@ -20,24 +18,15 @@ namespace BForBoss
         [SerializeField] private DeathAreaBehaviour _southPlane;
         [SerializeField] private DeathAreaBehaviour _eastPlane;
         [SerializeField] private DeathAreaBehaviour _westPlane;
-        private IGetPlayerTransform _getPlayerTransform;
-        
-        [Button]
-        public void Initialize(IGetPlayerTransform getPlayerTransform)
-        {
-            _getPlayerTransform = getPlayerTransform;
-        }
 
-        [Button]
-        public void ActivateLongWallClosestToPlayer()
+        public void ActivateLongWallClosestTo(Vector3 position)
         {
-            var wall = FindClosestDeathPlane();
+            var wall = FindClosestWipeOutWallTo(position);
             var parallelWall = MapToParallelDeathArea(wall);
             MapToDeathArea(parallelWall).gameObject.SetActive(true);
             MapToDeathArea(wall).gameObject.SetActive(true);
         }
 
-        [Button]
         public void DeactivateAllShields()
         {
             _northPlane.gameObject.SetActive(false);
@@ -46,21 +35,20 @@ namespace BForBoss
             _westPlane.gameObject.SetActive(false);
         }
 
-        [Button]
-        public void ActivateWallClosestToPlayer()
+        public void ActivateWallClosestToPlayer(Vector3 position)
         {
-            var wall = FindClosestDeathPlane();
+            var wall = FindClosestWipeOutWallTo(position);
             MapToDeathArea(wall).gameObject.SetActive(true);
         }
-        
-        private WipeOutWall FindClosestDeathPlane()
+
+        private WipeOutWall FindClosestWipeOutWallTo(Vector3 position)
         {
             var closestWall = WipeOutWall.North;
             var closestDistance = float.MaxValue;
 
             foreach (WipeOutWall direction in Enum.GetValues(typeof(WipeOutWall)))
             {
-                float distance = Vector3.Distance(_getPlayerTransform.Value.position, MapToDeathArea(direction).transform.position);
+                float distance = Vector3.Distance(position, MapToDeathArea(direction).transform.position);
                 if (distance < closestDistance)
                 {
                     closestDistance = distance;
