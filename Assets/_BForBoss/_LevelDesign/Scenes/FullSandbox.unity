@@ -204,7 +204,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-10982
+  m_Name: pb_Mesh46576
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -930,7 +930,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-10566
+  m_Name: pb_Mesh46150
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1644,7 +1644,7 @@ MonoBehaviour:
   _actionAsset: {fileID: -944628639613478452, guid: 11b5fd57f5ed74ef0a6fcf19057db823, type: 3}
   _spawnLocation: {fileID: 1154405999}
   _ringLaborManager: {fileID: 1853463802}
-  _wipeOutWallBehaviour: {fileID: 526071892}
+  wipeOutWallsManager: {fileID: 526071892}
 --- !u!4 &249789884
 Transform:
   m_ObjectHideFlags: 0
@@ -5775,7 +5775,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-10774
+  m_Name: pb_Mesh46444
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -6312,7 +6312,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8038010192155406783, guid: 8e909bed7ecada04886127e462577d2d, type: 3}
       propertyPath: m_LocalScale.z
-      value: 6.99
+      value: 5.8
       objectReference: {fileID: 0}
     - target: {fileID: 8038010192155406783, guid: 8e909bed7ecada04886127e462577d2d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6324,7 +6324,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8038010192155406783, guid: 8e909bed7ecada04886127e462577d2d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.97
       objectReference: {fileID: 0}
     - target: {fileID: 8038010192155406783, guid: 8e909bed7ecada04886127e462577d2d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6542,7 +6542,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8038010192155406783, guid: 8e909bed7ecada04886127e462577d2d, type: 3}
       propertyPath: m_LocalScale.x
-      value: 8.83
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 8038010192155406783, guid: 8e909bed7ecada04886127e462577d2d, type: 3}
       propertyPath: m_LocalScale.y
@@ -6550,7 +6550,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8038010192155406783, guid: 8e909bed7ecada04886127e462577d2d, type: 3}
       propertyPath: m_LocalScale.z
-      value: 9.96
+      value: 10.39
       objectReference: {fileID: 0}
     - target: {fileID: 8038010192155406783, guid: 8e909bed7ecada04886127e462577d2d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7524,6 +7524,7 @@ GameObject:
   - component: {fileID: 465504516}
   - component: {fileID: 465504515}
   - component: {fileID: 465504514}
+  - component: {fileID: 465504520}
   m_Layer: 0
   m_Name: East_WallOfDeath
   m_TagString: Untagged
@@ -9126,6 +9127,18 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!114 &465504520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 465504512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 265f49f7d582e374bab54d4315863ca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &485610847
 GameObject:
   m_ObjectHideFlags: 0
@@ -9579,10 +9592,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2c8acfdee7aea54585c6c8d579570aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _northPlane: {fileID: 1159403424}
-  _southPlane: {fileID: 1356702192}
-  _eastPlane: {fileID: 465504514}
-  _westPlane: {fileID: 2017347462}
+  _northPlane: {fileID: 1159403425}
+  _southPlane: {fileID: 1356702198}
+  _eastPlane: {fileID: 465504520}
+  _westPlane: {fileID: 2017347468}
+  _activateWallDuration: 0.5
+  _deactivateDuration: 0.5
 --- !u!136 &526071895
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -17171,7 +17186,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh29708
+  m_Name: pb_Mesh46402
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -19176,6 +19191,7 @@ GameObject:
   - component: {fileID: 1159403419}
   - component: {fileID: 1159403418}
   - component: {fileID: 1159403424}
+  - component: {fileID: 1159403425}
   m_Layer: 0
   m_Name: North_WallOfDeath
   m_TagString: Untagged
@@ -20778,6 +20794,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff954574a9a846dc957686c33e2a3ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1159403425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1159403417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 265f49f7d582e374bab54d4315863ca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &1184794854
 Mesh:
   m_ObjectHideFlags: 0
@@ -21511,6 +21539,7 @@ GameObject:
   - component: {fileID: 1356702194}
   - component: {fileID: 1356702193}
   - component: {fileID: 1356702192}
+  - component: {fileID: 1356702198}
   m_Layer: 0
   m_Name: South_WallOfDeath
   m_TagString: Untagged
@@ -23113,6 +23142,18 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!114 &1356702198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1356702190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 265f49f7d582e374bab54d4315863ca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1381421271
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26341,6 +26382,7 @@ GameObject:
   - component: {fileID: 2017347464}
   - component: {fileID: 2017347463}
   - component: {fileID: 2017347462}
+  - component: {fileID: 2017347468}
   m_Layer: 0
   m_Name: West_WallOfDeath
   m_TagString: Untagged
@@ -27943,6 +27985,18 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!114 &2017347468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2017347460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 265f49f7d582e374bab54d4315863ca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2037949816
 GameObject:
   m_ObjectHideFlags: 0

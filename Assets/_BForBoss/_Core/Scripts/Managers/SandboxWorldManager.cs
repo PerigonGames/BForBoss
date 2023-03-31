@@ -1,6 +1,7 @@
 using System;
 using Perigon.Utility;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BForBoss
 {
@@ -8,7 +9,7 @@ namespace BForBoss
     {
         
         [SerializeField] private RingLaborManager _ringLaborManager;
-        [SerializeField] private BossWipeOutWallBehaviour _wipeOutWallBehaviour;
+        [FormerlySerializedAs("wipeOutWallsBehaviour")] [FormerlySerializedAs("_wipeOutWallBehaviour")] [SerializeField] private BossWipeOutWallsManager wipeOutWallsManager;
         
         
         protected override Vector3 SpawnLocation => _spawnLocation.position;
@@ -24,7 +25,7 @@ namespace BForBoss
         {
             base.Start();
             _ringLaborManager.Initialize();
-            _wipeOutWallBehaviour.Initialize(_playerBehaviour.PlayerMovement);
+            wipeOutWallsManager.Initialize(_playerBehaviour.PlayerMovement);
         }
 
         protected override void OnValidate()
