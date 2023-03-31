@@ -12,7 +12,6 @@ namespace BForBoss
         private RotationalMovementBehaviour _rotationalMovementBehaviour;
         private IGetPlayerTransform _getPlayerTransform;
 
-        [Button]
         public void Initialize(IGetPlayerTransform getPlayerTransform)
         {
             _getPlayerTransform = getPlayerTransform;
