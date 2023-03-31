@@ -17,7 +17,6 @@ namespace BForBoss
             _getPlayerTransform = getPlayerTransform;
         }
         
-        [Button]
         public void ActivateClosestLongWallAndRotate()
         {
             var playerPosition = _getPlayerTransform.Value.position;
@@ -26,7 +25,6 @@ namespace BForBoss
             _rotationalMovementBehaviour.StartRotation(rotationState);
         }
 
-        [Button]
         public void ActivateClosestAndRotateWall()
         {
             var playerPosition = _getPlayerTransform.Value.position;
@@ -35,7 +33,6 @@ namespace BForBoss
             _rotationalMovementBehaviour.StartRotation(rotationState);
         }
 
-        [Button]
         public void DeactivateWallAndRotation()
         {
             _wipeOutWallBehaviour.DeactivateAllShields();
