@@ -7,7 +7,7 @@ namespace BForBoss
     public class StepOnButtonBehaviour : MonoBehaviour
     {
         [SerializeField]
-        public UnityEvent _executableEvent;
+        private UnityEvent _executableEvent;
      
         private void OnCollisionEnter(Collision collision)
         {

@@ -8,7 +8,7 @@ namespace BForBoss
     {
         
         [SerializeField] private RingLaborManager _ringLaborManager;
-        [SerializeField] private BossWipeOutWallsManager wipeOutWallsManager;
+        [SerializeField] private BossWipeOutWallsManager _wipeOutWallsManager;
         
         
         protected override Vector3 SpawnLocation => _spawnLocation.position;
@@ -24,7 +24,7 @@ namespace BForBoss
         {
             base.Start();
             _ringLaborManager.Initialize();
-            wipeOutWallsManager.Initialize(_playerBehaviour.PlayerMovement);
+            _wipeOutWallsManager.Initialize(_playerBehaviour.PlayerMovement);
         }
 
         protected override void OnValidate()
