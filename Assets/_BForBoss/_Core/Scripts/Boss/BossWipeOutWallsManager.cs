@@ -1,45 +1,41 @@
 using Perigon.Weapons;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BForBoss
 {
-    [RequireComponent(typeof(WipeOutWallBehaviour))]
+    [RequireComponent(typeof(WipeOutWallsManager))]
     [RequireComponent(typeof(RotationalMovementBehaviour))]
-    public class BossWipeOutWallBehaviour : MonoBehaviour
+    public class BossWipeOutWallsManager : MonoBehaviour
     {
-        private WipeOutWallBehaviour _wipeOutWallBehaviour;
+        private WipeOutWallsManager _wipeOutWallsManager;
         private RotationalMovementBehaviour _rotationalMovementBehaviour;
         private IGetPlayerTransform _getPlayerTransform;
 
-        [Button]
         public void Initialize(IGetPlayerTransform getPlayerTransform)
         {
             _getPlayerTransform = getPlayerTransform;
+            _wipeOutWallsManager.Initialize();
         }
         
-        [Button]
         public void ActivateClosestLongWallAndRotate()
         {
             var playerPosition = _getPlayerTransform.Value.position;
-            _wipeOutWallBehaviour.ActivateLongWallClosestTo(playerPosition);
+            _wipeOutWallsManager.ActivateLongWallClosestTo(playerPosition);
             var rotationState = GetRotationalDirectionFrom(playerPosition);
             _rotationalMovementBehaviour.StartRotation(rotationState);
         }
 
-        [Button]
         public void ActivateClosestAndRotateWall()
         {
             var playerPosition = _getPlayerTransform.Value.position;
-            _wipeOutWallBehaviour.ActivateWallClosestToPlayer(playerPosition);
+            _wipeOutWallsManager.ActivateWallClosestToPlayer(playerPosition);
             var rotationState = GetRotationalDirectionFrom(playerPosition);
             _rotationalMovementBehaviour.StartRotation(rotationState);
         }
 
-        [Button]
         public void DeactivateWallAndRotation()
         {
-            _wipeOutWallBehaviour.DeactivateAllShields();
+            _wipeOutWallsManager.DeactivateAllShields();
             _rotationalMovementBehaviour.StopRotation();
         }
 
@@ -60,7 +56,7 @@ namespace BForBoss
 
         private void Awake()
         {
-            _wipeOutWallBehaviour = GetComponent<WipeOutWallBehaviour>();
+            _wipeOutWallsManager = GetComponent<WipeOutWallsManager>();
             _rotationalMovementBehaviour = GetComponent<RotationalMovementBehaviour>();
         }
     }

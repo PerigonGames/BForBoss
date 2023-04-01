@@ -1,7 +1,6 @@
 using System;
 using Perigon.Utility;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace BForBoss
 {
@@ -9,6 +8,8 @@ namespace BForBoss
     {
         
         [SerializeField] private RingLaborManager _ringLaborManager;
+        [SerializeField] private BossWipeOutWallsManager _wipeOutWallsManager;
+        
         
         protected override Vector3 SpawnLocation => _spawnLocation.position;
         protected override Quaternion SpawnLookDirection => _spawnLocation.rotation;
@@ -23,6 +24,7 @@ namespace BForBoss
         {
             base.Start();
             _ringLaborManager.Initialize();
+            _wipeOutWallsManager.Initialize(_playerBehaviour.PlayerMovement);
         }
 
         protected override void OnValidate()
