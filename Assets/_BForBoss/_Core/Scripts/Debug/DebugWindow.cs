@@ -9,6 +9,7 @@ namespace BForBoss
 {
     public class DebugWindow : MonoBehaviour
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         private const Key KEYCODE_CHARACTER = Key.Backquote;
 
         private const float CANVAS_WIDTH_MULTIPLIER = 0.2f;
@@ -123,7 +124,6 @@ namespace BForBoss
                     GUILayout.Space(0.15f * _windowRect.height);
                     _playerLifeCycle.IsInvincible = DrawDebugToggle(_playerLifeCycle.IsInvincible, new GUIContent("Player Invincibility"));
                     _energySystemBehaviour.UseDebugEnergySystemConfig = DrawDebugToggle(_energySystemBehaviour.UseDebugEnergySystemConfig, new GUIContent("Freeze Energy"));
-
                     if (GUILayout.Button("Give Max Energy"))
                     {
                         _energySystemBehaviour.SetMaxEnergy();
@@ -231,5 +231,6 @@ namespace BForBoss
                 _currentDebugView.MasterRect = _windowRect;
             }
         }
+#endif
     }
 }
