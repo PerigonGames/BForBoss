@@ -11,32 +11,31 @@ namespace BForBoss
         private VisualEffect _bossDebrisVFX;
         
         [SerializeField]
-        private float AnimationSpeed = 1.0f;
+        private float animationSpeed = 1.0f;
         
         private Material bossMat;
-        private float currentTime = 1.0f;
+        private float currentAnimationTime = 1.0f;
         
         void Start()
         {
             bossMat = GetComponent<Renderer>().material;
         }
 
-        // Update is called once per frame
+        
         void Update()
         {
-            currentTime += Time.deltaTime * AnimationSpeed;
-            if (currentTime > 1.0f){
-                currentTime = 1.0f;
+            currentAnimationTime += Time.deltaTime * animationSpeed;
+            if (currentAnimationTime > 1.0f){
+                currentAnimationTime = 1.0f;
             }
             
-            bossMat.SetFloat("_AnimationTime", currentTime);
+            bossMat.SetFloat("_AnimationTime", currentAnimationTime);
         }
         
         
         void IBulletCollision.OnCollided(Vector3 collisionPoint, Vector3 collisionNormal)
         {
-            
-            currentTime = 0.0f;
+            currentAnimationTime = 0.0f;
             
             GameObject debris = Instantiate(bossDebris, transform);
             _bossDebrisVFX = debris.GetComponent<VisualEffect>();
@@ -44,5 +43,6 @@ namespace BForBoss
             _bossDebrisVFX.SetVector3("position", collisionPoint);
             Destroy(debris, 1);
         }
+        
     }
 }
