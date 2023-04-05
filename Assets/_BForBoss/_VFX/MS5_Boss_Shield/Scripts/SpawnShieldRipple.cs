@@ -11,7 +11,7 @@ namespace BForBoss
 
         private VisualEffect _shieldRipplesVFX;
 
-        void IBulletCollision.OnCollided(Vector3 collisionPoint)
+        void IBulletCollision.OnCollided(Vector3 collisionPoint, Vector3 collisionNormal)
         {
             GameObject ripples = Instantiate(shieldRipples, transform);
             _shieldRipplesVFX = ripples.GetComponent<VisualEffect>();

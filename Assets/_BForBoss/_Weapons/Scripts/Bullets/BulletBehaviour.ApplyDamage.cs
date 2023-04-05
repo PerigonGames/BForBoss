@@ -10,7 +10,7 @@ namespace Perigon.Weapons
 
     public interface IBulletCollision
     {
-        void OnCollided(Vector3 collisionPoint);
+        void OnCollided(Vector3 collisionPoint, Vector3 collisionNormal);
     }
     
     public abstract partial class BulletBehaviour
@@ -24,7 +24,7 @@ namespace Perigon.Weapons
             } 
             else if (col.TryGetComponent(out IBulletCollision bulletCollision))
             {
-                bulletCollision.OnCollided(hitPosition);    
+                bulletCollision.OnCollided(hitPosition, hitNormal);    
             }
             else
             {
