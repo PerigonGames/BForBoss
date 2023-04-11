@@ -9,9 +9,9 @@ namespace BForBoss
     {
         public event Action<RingBehaviour> RingActivated;
         
-        [SerializeField] private string _label;
-        
-        private TMPro.TMP_Text[] _labels;
+        [SerializeField] private int _label;
+
+        private TMPro.TMP_Text _labelTMP;
         private PlayerTriggerBehaviour _trigger;
 
         private void Awake()
@@ -36,18 +36,14 @@ namespace BForBoss
 
         private void SetLabel(string label)
         {
-            _label = label;
-            foreach (var tmp in _labels)
-            {
-                tmp.text = _label;
-            }
+            _labelTMP.text = label;
         }
 
         private void OnValidate()
         {
-            if (_labels.IsNullOrEmpty()) _labels = GetComponentsInChildren<TMPro.TMP_Text>();
-            if (string.IsNullOrEmpty(_label) || _labels.IsNullOrEmpty()) return;
-            SetLabel(_label);
+            if (_labelTMP == null)
+                _labelTMP = GetComponentInChildren<TMPro.TMP_Text>();
+            SetLabel(_label.ToString());
         }
     }
 }
