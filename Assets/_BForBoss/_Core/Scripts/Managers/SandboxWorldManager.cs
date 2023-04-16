@@ -9,7 +9,7 @@ namespace BForBoss
         
         [SerializeField] private RingLaborManager _ringLaborManager;
         [SerializeField] private BossWipeOutWallsManager _wipeOutWallsManager;
-        
+        [SerializeField] private DerekMissileLauncherBehaviour _derekMissileLauncherBehaviour;
         
         protected override Vector3 SpawnLocation => _spawnLocation.position;
         protected override Quaternion SpawnLookDirection => _spawnLocation.rotation;
@@ -25,6 +25,7 @@ namespace BForBoss
             base.Start();
             _ringLaborManager.Initialize();
             _wipeOutWallsManager.Initialize(_playerBehaviour.PlayerMovement);
+            _derekMissileLauncherBehaviour.Initialize(_playerBehaviour.PlayerMovement);
         }
 
         protected override void OnValidate()

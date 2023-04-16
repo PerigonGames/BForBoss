@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
 using Perigon.Utility;
 using UnityEngine;
 
 namespace Perigon.Weapons
 {
-    [RequireComponent(typeof(WallHitVFXSpawner))]
     public class BulletSpawner : MonoBehaviour
     {
         [SerializeField] private BulletBehaviour[] _bulletPrefabs;
