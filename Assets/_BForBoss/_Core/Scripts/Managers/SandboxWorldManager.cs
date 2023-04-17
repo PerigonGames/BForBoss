@@ -1,5 +1,6 @@
 using System;
 using Perigon.Utility;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace BForBoss
@@ -9,7 +10,7 @@ namespace BForBoss
         
         [SerializeField] private RingLaborManager _ringLaborManager;
         [SerializeField] private BossWipeOutWallsManager _wipeOutWallsManager;
-        
+        private DerekMissileLauncherBehaviour[] _derekMissileLauncherBehaviours;
         
         protected override Vector3 SpawnLocation => _spawnLocation.position;
         protected override Quaternion SpawnLookDirection => _spawnLocation.rotation;
@@ -25,6 +26,13 @@ namespace BForBoss
             base.Start();
             _ringLaborManager.Initialize();
             _wipeOutWallsManager.Initialize(_playerBehaviour.PlayerMovement);
+            _derekMissileLauncherBehaviours.ForEach(launcher => launcher.Initialize(_playerBehaviour.PlayerMovement));
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _derekMissileLauncherBehaviours = FindObjectsOfType<DerekMissileLauncherBehaviour>();
         }
 
         protected override void OnValidate()
