@@ -130,9 +130,12 @@ namespace BForBoss
 
         private void OnCollisionEnter(Collision collision)
         {
-            var contact = collision.GetContact(0);
-            HitObject(collision.collider, contact.point, contact.normal);
-            Deactivate();
+            if (_isActive)
+            {
+                var contact = collision.GetContact(0);
+                HitObject(collision.collider, contact.point, contact.normal);
+                Deactivate();
+            }
         }
 
         private void OnEnable()
