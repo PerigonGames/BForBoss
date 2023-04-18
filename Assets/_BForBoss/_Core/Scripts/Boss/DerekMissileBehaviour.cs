@@ -10,57 +10,59 @@ namespace BForBoss
     {
         private enum State
         {
-            MoveTowardsApex,
-            MoveTowardsTarget,
+            TowardsApex,
+            HomingTarget,
             AutoPilot
         }
 
-        [Title("Move Towards Highest Point Direction")] 
+        [Title("Move Towards Apex Direction")] 
         [SerializeField, InfoBox("Offset of Height to create a fake visual arc")]
         private float _heightOffsetForInitialLaunch;
         [SerializeField]
-        private float _speedToReachApex = 20;
+        private float _towardsApexSpeed = 20;
         [SerializeField] 
-        private float _rotationalSpeedWhenReachingApex = 10;
+        private float _towardsApexRotationalSpeed = 10;
         [SerializeField]
-        private AnimationCurve _speedCurveToReachApex;
+        private AnimationCurve _towardsApexSpeedCurve;
         [SerializeField, InfoBox("Missile moves towards the DIRECTION of apex, not to a specific target")] 
-        private float _timeTakenToMoveTowardsApex = 2;
-        private float _elapsedTimeToMoveTowardsApex = 0;
+        private float _towardsApexTime = 2;
         
-        [Title("Reaching Target")] 
+        [Title("Homing Towards Target")] 
         [SerializeField]
-        private float _speedToReachTarget = 20;
+        private float _homingTargetSpeed = 20;
         [SerializeField] 
-        private float _rotationalSpeedWhenReachingTarget = 10;
+        private float _homingTargetRotationalSpeed = 10;
         [SerializeField]
-        private AnimationCurve _speedCurveToReachTarget;
-        [SerializeField] 
-        private float _distanceBeforeSettingAutoDrive = 10;
-        private float _elapsedTimeToMoveTowardsTarget;
+        private AnimationCurve _homingTargetSpeedCurve;
+        [SerializeField, InfoBox("Distance between missile/player before state change to autopilot")] 
+        private float _homingTargetDistanceStateChange = 10;
+        [SerializeField, InfoBox("Max time before homing missile state changes to autopilot")] 
+        private float _homingTargetTimeToLive;
 
         [Title("AutoDrive Towards Direction")] 
         [SerializeField]
-        private float _autoDriveSpeed = 30f;
+        private float _autoPilotSpeed = 30f;
         [SerializeField] 
-        private float _timeToLive = 2f;
-        private float _elapsedTimeToLive = 0;
+        private float _autoPilotTimeToLive = 2f;
 
         [Title("Shared Configurations")]
         [SerializeField] 
         private float _timeTakenToReachMaxSpeedCurve = 2;
         
-        private State _state = State.MoveTowardsApex;
+        private State _state = State.TowardsApex;
         private Vector3 _lastDirection;
-        
+        private float _elapsedAutoPilotTimeToLive;
+        private float _elapsedHomingTargetTimeToLive;
+        private float _elapsedTowardsApexTime;
+
         protected override void Update()
         {
             switch (_state)
             {
-                case State.MoveTowardsApex:
+                case State.TowardsApex:
                     MoveTowardsApex();
                     break;
-                case State.MoveTowardsTarget:
+                case State.HomingTarget:
                     MoveTowardsTarget();
                     break;
                 case State.AutoPilot:
@@ -71,21 +73,21 @@ namespace BForBoss
 
         private void MoveTowardsApex()
         {
-            if (_elapsedTimeToMoveTowardsApex < _timeTakenToMoveTowardsApex)
+            if (_elapsedTowardsApexTime < _towardsApexTime)
             {
-                _elapsedTimeToMoveTowardsApex += Time.deltaTime;
+                _elapsedTowardsApexTime += Time.deltaTime;
                 var position = transform.position;
                 var direction = (HomingTarget.position - position);
                 var highDirection = new Vector3(direction.x, _startPosition.y + _heightOffsetForInitialLaunch, direction.z).normalized;
-                var evaluatedSpeed = _speedCurveToReachApex.Evaluate(_elapsedTimeToMoveTowardsApex / _timeTakenToReachMaxSpeedCurve) * _speedToReachApex;
+                var evaluatedSpeed = _towardsApexSpeedCurve.Evaluate(_elapsedTowardsApexTime / _timeTakenToReachMaxSpeedCurve) * _towardsApexSpeed;
                 transform.position = Vector3.MoveTowards(position, position + highDirection, Time.deltaTime * evaluatedSpeed);
                 var rotation = Quaternion.LookRotation(highDirection, Vector3.up);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, Time.deltaTime * _rotationalSpeedWhenReachingApex);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, Time.deltaTime * _towardsApexRotationalSpeed);
             }
             else
             {
                 Logger.LogString($"Missile [{name}] set to TowardsTarget", color: LoggerColor.Green, key: "DerekBoss");
-                _state = State.MoveTowardsTarget;
+                _state = State.HomingTarget;
             }
         }
 
@@ -101,31 +103,35 @@ namespace BForBoss
             
             var position = transform.position;
             var direction = (HomingTarget.position - position).normalized;
-            var speed = _speedCurveToReachTarget.Evaluate(_elapsedTimeToMoveTowardsTarget / _timeTakenToReachMaxSpeedCurve) * _speedToReachTarget;
+            var speed = _homingTargetSpeedCurve.Evaluate(_elapsedHomingTargetTimeToLive / _timeTakenToReachMaxSpeedCurve) * _homingTargetSpeed;
             position = Vector3.MoveTowards(position, position + direction, Time.deltaTime * speed);
             transform.position = position;
             var rotation = Quaternion.LookRotation(direction, Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, Time.deltaTime * _rotationalSpeedWhenReachingTarget);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, Time.deltaTime * _homingTargetRotationalSpeed);
                 
-            _elapsedTimeToMoveTowardsTarget += Time.deltaTime;
+            _elapsedHomingTargetTimeToLive += Time.deltaTime;
         }
 
         private void AutoPilotTowardsDirection()
         {
-            if (_elapsedTimeToLive > _timeToLive)
+            if (_elapsedAutoPilotTimeToLive > _autoPilotTimeToLive)
             {
                 Deactivate();
                 return;
             }
-            _elapsedTimeToLive += Time.deltaTime;
+            _elapsedAutoPilotTimeToLive += Time.deltaTime;
             var position = transform.position;
-            transform.position = Vector3.MoveTowards(position, position + _lastDirection, Time.deltaTime * _autoDriveSpeed);;
+            transform.position = Vector3.MoveTowards(position, position + _lastDirection, Time.deltaTime * _autoPilotSpeed);;
             transform.rotation = Quaternion.LookRotation(_lastDirection, Vector3.up);
         }
 
         private bool ShouldSetToAutoPilot()
         {
-            return Vector3.Distance(transform.position, HomingTarget.position) < _distanceBeforeSettingAutoDrive;
+            _elapsedHomingTargetTimeToLive += Time.deltaTime;
+            var withinPlayerDistance = Vector3.Distance(transform.position, HomingTarget.position) <
+                                       _homingTargetDistanceStateChange;
+            var timeToLiveOver = _elapsedHomingTargetTimeToLive > _homingTargetTimeToLive;
+            return withinPlayerDistance || timeToLiveOver;
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -140,10 +146,10 @@ namespace BForBoss
 
         private void OnEnable()
         {
-            _elapsedTimeToMoveTowardsApex = 0;
-            _elapsedTimeToMoveTowardsTarget = 0;
-            _elapsedTimeToLive = 0;
-            _state = State.MoveTowardsApex;
+            _elapsedTowardsApexTime = 0;
+            _elapsedHomingTargetTimeToLive = 0;
+            _elapsedAutoPilotTimeToLive = 0;
+            _state = State.TowardsApex;
         }
     }
 }

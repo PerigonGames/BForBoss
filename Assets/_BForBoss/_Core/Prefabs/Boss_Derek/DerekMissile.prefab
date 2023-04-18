@@ -63,20 +63,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _properties: {fileID: 11400000, guid: d5fd536275d84c94e838f3bc4568d91d, type: 2}
   _heightOffsetForInitialLaunch: 5
-  _speedToReachApex: 20
-  _rotationalSpeedWhenReachingApex: 100
-  _speedCurveToReachApex:
+  _towardsApexSpeed: 30
+  _towardsApexRotationalSpeed: 100
+  _towardsApexSpeedCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: -2.3544378
-      outSlope: -2.3544378
+      inSlope: -1.6178967
+      outSlope: -1.6178967
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.08447053
+      outWeight: 0.11727204
     - serializedVersion: 3
       time: 1
       value: 0.1
@@ -89,10 +89,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _timeTakenToMoveTowardsApex: 2
-  _speedToReachTarget: 20
-  _rotationalSpeedWhenReachingTarget: 100
-  _speedCurveToReachTarget:
+  _towardsApexTime: 2
+  _homingTargetSpeed: 20
+  _homingTargetRotationalSpeed: 100
+  _homingTargetSpeedCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -116,9 +116,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _distanceBeforeSettingAutoDrive: 10
-  _autoDriveSpeed: 30
-  _timeToLive: 2
+  _homingTargetDistanceStateChange: 10
+  _homingTargetTimeToLive: 3
+  _autoPilotSpeed: 50
+  _autoPilotTimeToLive: 2
   _timeTakenToReachMaxSpeedCurve: 2
 --- !u!54 &-5866552467942055795
 Rigidbody:
