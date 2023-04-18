@@ -11,6 +11,8 @@ namespace Perigon.Weapons
         [SerializeField] protected BulletPropertiesScriptableObject _properties;
         
         private ObjectPooler<BulletBehaviour> _pool = null;
+        
+        public Transform HomingTarget { get; set; }
         protected Vector3 _startPosition;
         protected bool _isActive = false;
         

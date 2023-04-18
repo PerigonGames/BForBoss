@@ -50,15 +50,9 @@ namespace BForBoss
         [SerializeField] 
         private float _timeTakenToReachMaxSpeedCurve = 2;
         
-        private IGetPlayerTransform _playerTarget;
         private State _state = State.MoveTowardsApex;
         private Vector3 _lastDirection;
-
-        public void Initialize(IGetPlayerTransform playerTransform)
-        {
-            _playerTarget = playerTransform;
-        }
-
+        
         protected override void Update()
         {
             switch (_state)
@@ -81,7 +75,7 @@ namespace BForBoss
             {
                 _elapsedTimeToMoveTowardsApex += Time.deltaTime;
                 var position = transform.position;
-                var direction = (_playerTarget.Value.position - position);
+                var direction = (HomingTarget.position - position);
                 var highDirection = new Vector3(direction.x, _startPosition.y + _heightOffsetForInitialLaunch, direction.z).normalized;
                 var evaluatedSpeed = _speedCurveToReachApex.Evaluate(_elapsedTimeToMoveTowardsApex / _timeTakenToReachMaxSpeedCurve) * _speedToReachApex;
                 transform.position = Vector3.MoveTowards(position, position + highDirection, Time.deltaTime * evaluatedSpeed);
@@ -100,13 +94,13 @@ namespace BForBoss
             if (ShouldSetToAutoPilot())
             {
                 Logger.LogString($"Missile [{name}] set to Auto Drive", color: LoggerColor.Green, key: "DerekBoss");
-                _lastDirection = (_playerTarget.Value.position - transform.position).normalized;
+                _lastDirection = (HomingTarget.position - transform.position).normalized;
                 _state = State.AutoPilot;
                 return;
             }
             
             var position = transform.position;
-            var direction = (_playerTarget.Value.position - position).normalized;
+            var direction = (HomingTarget.position - position).normalized;
             var speed = _speedCurveToReachTarget.Evaluate(_elapsedTimeToMoveTowardsTarget / _timeTakenToReachMaxSpeedCurve) * _speedToReachTarget;
             position = Vector3.MoveTowards(position, position + direction, Time.deltaTime * speed);
             transform.position = position;
@@ -131,7 +125,7 @@ namespace BForBoss
 
         private bool ShouldSetToAutoPilot()
         {
-            return Vector3.Distance(transform.position, _playerTarget.Value.position) < _distanceBeforeSettingAutoDrive;
+            return Vector3.Distance(transform.position, HomingTarget.position) < _distanceBeforeSettingAutoDrive;
         }
 
         private void OnCollisionEnter(Collision collision)

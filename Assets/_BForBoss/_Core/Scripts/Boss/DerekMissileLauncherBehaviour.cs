@@ -37,9 +37,8 @@ namespace BForBoss
         public void ShootMissile()
         {
             var bullet = _bulletSpawner.SpawnBullet(BulletTypes.NoPhysics);
-            //TODO - need to refactor bullet spawner, or create new spawner
-            (bullet as DerekMissileBehaviour)?.Initialize(_playerTransform);
             bullet.SetSpawnAndDirection(GetLaunchPosition(),Vector3.up);
+            bullet.HomingTarget = _playerTransform.Value;
         }
 
         private void Awake()
