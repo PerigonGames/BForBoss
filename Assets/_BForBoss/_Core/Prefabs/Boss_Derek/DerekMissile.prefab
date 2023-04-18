@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3214737761833682207}
   - component: {fileID: 5180697717419111610}
   m_Layer: 0
-  m_Name: DerekMissle
+  m_Name: DerekMissile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,6 +60,62 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _properties: {fileID: 11400000, guid: d5fd536275d84c94e838f3bc4568d91d, type: 2}
+  _heightOffsetForInitialLaunch: 5
+  _speedToReachApex: 20
+  _speedCurveToReachApex:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -2.3544378
+      outSlope: -2.3544378
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.08447053
+    - serializedVersion: 3
+      time: 1
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _timeTakenToMoveTowardsApex: 2
+  _speedToReachTarget: 20
+  _speedCurveToReachTarget:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _distanceBeforeSettingAutoDrive: 10
+  _autoDriveSpeed: 30
+  _timeToLive: 2
+  _timeTakenToReachMaxSpeedCurve: 2
 --- !u!1 &6629024976504518661
 GameObject:
   m_ObjectHideFlags: 0

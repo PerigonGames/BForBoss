@@ -11,7 +11,7 @@ namespace Perigon.Weapons
         [SerializeField] protected BulletPropertiesScriptableObject _properties;
         
         private ObjectPooler<BulletBehaviour> _pool = null;
-        private Vector3 _startPosition;
+        protected Vector3 _startPosition;
         protected bool _isActive = false;
         
         public ObjectPooler<BulletBehaviour> Pool
@@ -63,7 +63,7 @@ namespace Perigon.Weapons
             _pool.Reclaim(this);
         }
 
-        protected void Update()
+        protected virtual void Update()
         {
             if(Vector3.Distance(transform.position, _startPosition) > _properties.MaxTravelDistance)
             {
