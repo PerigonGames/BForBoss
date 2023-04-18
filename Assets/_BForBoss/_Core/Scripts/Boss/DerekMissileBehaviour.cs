@@ -20,6 +20,8 @@ namespace BForBoss
         private float _heightOffsetForInitialLaunch;
         [SerializeField]
         private float _speedToReachApex = 20;
+        [SerializeField] 
+        private float _rotationalSpeedWhenReachingApex = 10;
         [SerializeField]
         private AnimationCurve _speedCurveToReachApex;
         [SerializeField, InfoBox("Missile moves towards the DIRECTION of apex, not to a specific target")] 
@@ -29,6 +31,8 @@ namespace BForBoss
         [Title("Reaching Target")] 
         [SerializeField]
         private float _speedToReachTarget = 20;
+        [SerializeField] 
+        private float _rotationalSpeedWhenReachingTarget = 10;
         [SerializeField]
         private AnimationCurve _speedCurveToReachTarget;
         [SerializeField] 
@@ -66,7 +70,7 @@ namespace BForBoss
                     MoveTowardsTarget();
                     break;
                 case State.AutoPilot:
-                    TowardsSetDirection();
+                    AutoPilotTowardsDirection();
                     break;
             }
         }
@@ -82,7 +86,7 @@ namespace BForBoss
                 var evaluatedSpeed = _speedCurveToReachApex.Evaluate(_elapsedTimeToMoveTowardsApex / _timeTakenToReachMaxSpeedCurve) * _speedToReachApex;
                 transform.position = Vector3.MoveTowards(position, position + highDirection, Time.deltaTime * evaluatedSpeed);
                 var rotation = Quaternion.LookRotation(highDirection, Vector3.up);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, Time.deltaTime * _speedToReachApex);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, Time.deltaTime * _rotationalSpeedWhenReachingApex);
             }
             else
             {
@@ -107,12 +111,12 @@ namespace BForBoss
             position = Vector3.MoveTowards(position, position + direction, Time.deltaTime * speed);
             transform.position = position;
             var rotation = Quaternion.LookRotation(direction, Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, Time.deltaTime * _speedToReachTarget);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, Time.deltaTime * _rotationalSpeedWhenReachingTarget);
                 
             _elapsedTimeToMoveTowardsTarget += Time.deltaTime;
         }
 
-        private void TowardsSetDirection()
+        private void AutoPilotTowardsDirection()
         {
             if (_elapsedTimeToLive > _timeToLive)
             {
@@ -135,6 +139,14 @@ namespace BForBoss
             var contact = collision.GetContact(0);
             HitObject(collision.collider, contact.point, contact.normal);
             Deactivate();
+        }
+
+        private void OnEnable()
+        {
+            _elapsedTimeToMoveTowardsApex = 0;
+            _elapsedTimeToMoveTowardsTarget = 0;
+            _elapsedTimeToLive = 0;
+            _state = State.MoveTowardsApex;
         }
     }
 }
