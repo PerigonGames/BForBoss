@@ -7,15 +7,15 @@ namespace Perigon.Weapons
 {
     public abstract partial class BulletBehaviour : MonoBehaviour, IBullet
     {
+        private ObjectPooler<BulletBehaviour> _pool = null;
+
         [InlineEditor]
         [SerializeField] protected BulletPropertiesScriptableObject _properties;
-        
-        private ObjectPooler<BulletBehaviour> _pool = null;
-        
-        public Transform HomingTarget { get; set; }
         protected Vector3 _startPosition;
         protected bool _isActive = false;
-        
+
+        public Transform HomingTarget { get; set; }
+
         public ObjectPooler<BulletBehaviour> Pool
         {
             set
