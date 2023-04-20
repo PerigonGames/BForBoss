@@ -34,7 +34,7 @@ namespace BForBoss
             _laborSystem = new LaborSystem(_ringSystems);
         }
 
-        public void PauseTimer()
+        public void ToggleTimer()
         {
             if(_countdownView.IsRunning)
                 _countdownView.PauseCountdown();

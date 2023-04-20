@@ -26,6 +26,8 @@ namespace BForBoss
         protected override void Start()
         {
             base.Start();
+            _countdownTimer = FindObjectOfType<CountdownViewBehaviour>();
+            
             _ringLaborManager.Initialize(_countdownTimer);
             _wipeOutWallsManager.Initialize(_playerBehaviour.PlayerMovement);
             _derekMissileLauncherBehaviours.ForEach(launcher => launcher.Initialize(_playerBehaviour.PlayerMovement));
@@ -34,7 +36,6 @@ namespace BForBoss
         protected override void Awake()
         {
             base.Awake();
-            _countdownTimer = FindObjectOfType<CountdownViewBehaviour>();
             _derekMissileLauncherBehaviours = FindObjectsOfType<DerekMissileLauncherBehaviour>();
         }
 
