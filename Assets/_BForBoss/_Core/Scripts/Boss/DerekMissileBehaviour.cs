@@ -18,35 +18,35 @@ namespace BForBoss
         [Title("Move Towards Apex Direction")] 
         [SerializeField, InfoBox("Offset of Height to create a fake visual arc")]
         private float _heightOffsetForInitialLaunch;
-        [SerializeField]
+        [SerializeField, Min(1)]
         private float _towardsApexSpeed = 20;
-        [SerializeField] 
+        [SerializeField, Min(1)] 
         private float _towardsApexRotationalSpeed = 10;
         [SerializeField]
         private AnimationCurve _towardsApexSpeedCurve;
-        [SerializeField, InfoBox("Missile moves towards the DIRECTION of apex, not to a specific target")] 
+        [SerializeField, Min(1), InfoBox("Missile moves towards the DIRECTION of apex, not to a specific target")] 
         private float _towardsApexTime = 2;
         
         [Title("Homing Towards Target")] 
-        [SerializeField]
+        [SerializeField, Min(1)]
         private float _homingTargetSpeed = 20;
-        [SerializeField] 
+        [SerializeField, Min(1)] 
         private float _homingTargetRotationalSpeed = 10;
         [SerializeField]
         private AnimationCurve _homingTargetSpeedCurve;
-        [SerializeField, InfoBox("Distance between missile/player before state change to autopilot")] 
+        [SerializeField, Min(1), InfoBox("Distance between missile/player before state change to autopilot")] 
         private float _homingTargetDistanceStateChange = 10;
-        [SerializeField, InfoBox("Max time before homing missile state changes to autopilot")] 
+        [SerializeField, Min(1), InfoBox("Max time before homing missile state changes to autopilot")] 
         private float _homingTargetTimeToLive;
 
         [Title("AutoDrive Towards Direction")] 
-        [SerializeField]
+        [SerializeField, Min(1)]
         private float _autoPilotSpeed = 30f;
-        [SerializeField] 
+        [SerializeField, Min(1)] 
         private float _autoPilotTimeToLive = 2f;
 
         [Title("Shared Configurations")]
-        [SerializeField] 
+        [SerializeField, Min(0.1f)] 
         private float _timeTakenToReachMaxSpeedCurve = 2;
         
         private State _state = State.TowardsApex;
