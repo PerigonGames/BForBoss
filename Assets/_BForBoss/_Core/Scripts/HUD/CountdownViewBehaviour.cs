@@ -12,18 +12,35 @@ namespace BForBoss
         private bool _isRunning;
 
         private float _amountOfTime;
+        
+        private Action OnCountdownCompleted;
+        
+        public bool IsRunning => _isRunning;
 
-        public void StartCountdown(float amountOfTime)
+        public void StartCountdown(float amountOfTime, Action onCountdownCompleted = null)
         {
             _amountOfTime = amountOfTime;
             _time = amountOfTime;
             gameObject.SetActive(true);
             _isRunning = true;
+            OnCountdownCompleted = onCountdownCompleted;
+        }
+        
+        public void StopCountdown()
+        {
+            _isRunning = false;
+            OnCountdownCompleted = null;
+            gameObject.SetActive(false);
         }
 
         public void PauseCountdown()
         {
             _isRunning = false;
+        }
+        
+        public void ResumeCountdown()
+        {
+            _isRunning = true;
         }
 
         public void Reset()
@@ -37,6 +54,8 @@ namespace BForBoss
             _isRunning = false;
             SetTimerLabel(_time);
             gameObject.SetActive(false);
+            OnCountdownCompleted?.Invoke();
+            OnCountdownCompleted = null;
             Reset();
         }
 
