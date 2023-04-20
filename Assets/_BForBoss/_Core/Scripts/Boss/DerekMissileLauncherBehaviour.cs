@@ -37,8 +37,8 @@ namespace BForBoss
         public void ShootMissile()
         {
             var bullet = _bulletSpawner.SpawnBullet(BulletTypes.NoPhysics);
-            var direction = _playerTransform.Value.position - transform.position;
-            bullet.SetSpawnAndDirection(GetLaunchPosition() + Vector3.up * 3, direction.normalized);
+            bullet.SetSpawnAndDirection(GetLaunchPosition(),Vector3.up);
+            bullet.HomingTarget = _playerTransform.Value;
         }
 
         private void Awake()

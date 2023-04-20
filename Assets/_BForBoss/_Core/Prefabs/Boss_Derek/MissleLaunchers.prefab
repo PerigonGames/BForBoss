@@ -158,6 +158,7 @@ GameObject:
   - component: {fileID: 5803797793045545496}
   - component: {fileID: 5803797793045545497}
   - component: {fileID: 5803797793045545494}
+  - component: {fileID: 5384199082426890073}
   m_Layer: 0
   m_Name: MissleLaunchers
   m_TagString: Untagged
@@ -172,7 +173,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5803797793045545499}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 8.909996, y: 40.97, z: -93.15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -216,6 +217,19 @@ MonoBehaviour:
   _launcherLocations:
   - {fileID: 5803797793040670105}
   - {fileID: 5803797792045138122}
+--- !u!114 &5384199082426890073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5803797793045545499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2479f35d5b98d6e45be90bd0e9956671, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _baseWallHitVFXPrefab: {fileID: 5238339088934825502, guid: 8700a6def174e44cd9fb8778871ba067, type: 3}
 --- !u!1 &5803797793125744945
 GameObject:
   m_ObjectHideFlags: 0
