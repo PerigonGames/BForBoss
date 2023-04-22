@@ -1,3 +1,4 @@
+using System.Linq;
 using Perigon.Utility;
 using Perigon.Weapons;
 using Sirenix.OdinInspector;
@@ -6,6 +7,7 @@ using Logger = Perigon.Utility.Logger;
 
 namespace BForBoss
 {
+    [RequireComponent(typeof(Collider))]
     public class DerekMissileBehaviour : BulletBehaviour
     {
         private enum State
@@ -150,6 +152,26 @@ namespace BForBoss
             _elapsedHomingTargetTimeToLive = 0;
             _elapsedAutoPilotTimeToLive = 0;
             _state = State.TowardsApex;
+        }
+
+        private void Start()
+        {
+            //NOTE - *Physics.IgnoreCollision*
+            //Note that this code should be run in the Start() method or later, since the colliders need to be initialized before you can use them. 
+            var missileCollider = GetComponent<Collider>();
+            var deathAreas = FindObjectsOfType<DeathAreaBehaviour>()
+                .Select(area => area.GetComponent<Collider>()).ToArray();
+            foreach (var area in deathAreas)
+            {
+                Physics.IgnoreCollision(missileCollider, area);
+            }
+
+            var bossShield = FindObjectsOfType<DerekShieldBehaviour>()
+                .Select(shield => shield.GetComponent<Collider>()).ToArray();
+            foreach (var shield in bossShield)
+            {
+                Physics.IgnoreCollision(missileCollider, shield);
+            }
         }
     }
 }
