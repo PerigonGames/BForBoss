@@ -159,14 +159,14 @@ namespace BForBoss
             //NOTE - *Physics.IgnoreCollision*
             //Note that this code should be run in the Start() method or later, since the colliders need to be initialized before you can use them. 
             var missileCollider = GetComponent<Collider>();
-            var deathAreas = FindObjectsOfType<DeathAreaBehaviour>()
+            var deathAreas = FindObjectsOfType<DeathAreaBehaviour>(includeInactive: true)
                 .Select(area => area.GetComponent<Collider>()).ToArray();
             foreach (var area in deathAreas)
             {
                 Physics.IgnoreCollision(missileCollider, area);
             }
 
-            var bossShield = FindObjectsOfType<DerekShieldBehaviour>()
+            var bossShield = FindObjectsOfType<DerekShieldBehaviour>(includeInactive: true)
                 .Select(shield => shield.GetComponent<Collider>()).ToArray();
             foreach (var shield in bossShield)
             {
