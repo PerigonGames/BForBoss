@@ -34,10 +34,7 @@ namespace BForBoss
 
         public void ToggleTimer()
         {
-            if(CountdownTimer.Instance.IsRunning)
-                CountdownTimer.Instance.PauseCountdown();
-            else
-                CountdownTimer.Instance.ResumeCountdown();
+            CountdownTimer.Instance.ToggleCountdown();
         }
 
         private void CreateSystems()

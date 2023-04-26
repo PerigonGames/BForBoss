@@ -52,10 +52,15 @@ namespace BForBoss
         {
             _isRunning = false;
         }
-        
+
         public void ResumeCountdown()
         {
             _isRunning = true;
+        }
+        
+        public void ToggleCountdown()
+        {
+            _isRunning = !_isRunning;
         }
         
         public void Tick()
