@@ -11,7 +11,6 @@ namespace Perigon.Utility
 
         public static class Layers
         {
-            public static int TriggerArea => 1 << LayerMask.NameToLayer("TriggerArea");
             public static int Player => LayerMask.NameToLayer("Player");
             public static int PlayerMask => ~(1 << Player);
             public static int  PlayerModel => 1 << LayerMask.NameToLayer("PlayerModel");
