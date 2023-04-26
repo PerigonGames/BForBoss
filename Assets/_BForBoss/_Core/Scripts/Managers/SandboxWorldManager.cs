@@ -10,7 +10,9 @@ namespace BForBoss
         
         [SerializeField] private RingLaborManager _ringLaborManager;
         [SerializeField] private BossWipeOutWallsManager _wipeOutWallsManager;
+
         private DerekMissileLauncherBehaviour[] _derekMissileLauncherBehaviours;
+        private CountdownViewBehaviour _countdownTimer;
         
         protected override Vector3 SpawnLocation => _spawnLocation.position;
         protected override Quaternion SpawnLookDirection => _spawnLocation.rotation;
@@ -24,6 +26,7 @@ namespace BForBoss
         protected override void Start()
         {
             base.Start();
+
             _ringLaborManager.Initialize();
             _wipeOutWallsManager.Initialize(_playerBehaviour.PlayerMovement);
             _derekMissileLauncherBehaviours.ForEach(launcher => launcher.Initialize(_playerBehaviour.PlayerMovement));
