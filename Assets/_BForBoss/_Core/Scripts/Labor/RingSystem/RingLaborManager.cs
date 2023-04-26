@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using BForBoss.Labor;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Debug = UnityEngine.Debug;
 
 namespace BForBoss
 {
     public class RingLaborManager : MonoBehaviour
     {
         [SerializeField] private RingGrouping[] _systemsToBuild;
-
+        
         private LaborSystem _laborSystem;
         private bool _hasCompletedSystem = false;
         private List<RingSystem> _ringSystems;
@@ -38,6 +35,11 @@ namespace BForBoss
             _laborSystem = new LaborSystem(_ringSystems);
         }
 
+        public void ToggleTimer()
+        {
+            CountdownTimer.Instance.ToggleCountdown();
+        }
+
         private void CreateSystems()
         {
             _ringSystems = new List<RingSystem>();
@@ -45,9 +47,9 @@ namespace BForBoss
             {
                 RingSystem newSystem = grouping.RingSystemType switch
                 {
-                    RingSystemTypes.Standard => new RingSystem(grouping.Rings),
-                    RingSystemTypes.DisplayAllAtOnce => new RingSystem(grouping.Rings, allAtOnce: true),
-                    RingSystemTypes.RandomSelection => new RingSystem(grouping.Rings, isRandomized: true),
+                    RingSystemTypes.Standard => new RingSystem(grouping.Rings, time: grouping.Time),
+                    RingSystemTypes.DisplayAllAtOnce => new RingSystem(grouping.Rings,  allAtOnce: true, time: grouping.Time),
+                    RingSystemTypes.RandomSelection => new RingSystem(grouping.Rings, isRandomized: true, time: grouping.Time),
                     _ => throw new ArgumentOutOfRangeException()
                 };
                 newSystem.OnLaborCompleted += () => Perigon.Utility.Logger.LogString($"Completed {grouping.Rings.Length} ring {grouping.RingSystemType} system", key:"Labor");
@@ -69,6 +71,7 @@ namespace BForBoss
         public class RingGrouping
         {
             public RingSystemTypes RingSystemType;
+            public float Time = 5f;
             public RingBehaviour[] Rings;
         }
         

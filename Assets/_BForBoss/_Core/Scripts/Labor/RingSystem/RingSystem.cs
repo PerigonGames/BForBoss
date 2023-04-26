@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using BForBoss.Labor;
 using PerigonGames;
-using UnityEngine;
 
 namespace BForBoss
 {
@@ -13,14 +12,17 @@ namespace BForBoss
         private Queue<RingBehaviour> _ringQueue;
         private readonly RingBehaviour[] _allRings;
 
-        private bool _isRandomized;
-        private bool _allAtOnce;
+        private readonly bool _isRandomized;
+        private readonly bool _allAtOnce;
+        
+        private readonly float _time;
 
-        public RingSystem(RingBehaviour[] rings, bool isRandomized = false, bool allAtOnce = false)
+        public RingSystem(RingBehaviour[] rings, bool isRandomized = false, bool allAtOnce = false, float time = 0f)
         {
             _allRings = rings;
             _isRandomized = isRandomized;
             _allAtOnce = allAtOnce;
+            _time = time;
             SetupRingLists(_allRings);
 
             foreach (var ring in _allRings)
@@ -49,8 +51,12 @@ namespace BForBoss
                     ActivateRing(ring);
                 }
             }
-
             TrySetupNextRing();
+            
+            if (_time > 0f)
+            {
+                CountdownTimer.Instance.StartCountdown(_time, CountdownFinish);
+            }
         }
 
         private void SetupRingLists(IList<RingBehaviour> rings)
@@ -67,6 +73,13 @@ namespace BForBoss
             if(_allAtOnce && ring != _currentRing) return;
             DeactivateRing(ring);
             TrySetupNextRing();
+        }
+
+        private void CountdownFinish()
+        {
+            Perigon.Utility.Logger.LogString("Ran out of time! Resetting the labor", key: "Labor");
+            Reset();
+            Activate();
         }
 
         protected void DeactivateRing(RingBehaviour ring)
@@ -94,6 +107,7 @@ namespace BForBoss
 
         protected void InvokeLaborCompleted()
         {
+            CountdownTimer.Instance.StopCountdown();
             OnLaborCompleted?.Invoke();
         }
     }

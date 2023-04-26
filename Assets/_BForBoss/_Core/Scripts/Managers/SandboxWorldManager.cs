@@ -7,11 +7,13 @@ namespace BForBoss
 {
     public class SandboxWorldManager : BaseWorldManager
     {
-        
+
         [SerializeField] private RingLaborManager _ringLaborManager;
         [SerializeField] private BossWipeOutWallsManager _wipeOutWallsManager;
+
         private DerekMissileLauncherBehaviour[] _derekMissileLauncherBehaviours;
-        
+        private CountdownViewBehaviour _countdownTimer;
+
         protected override Vector3 SpawnLocation => _spawnLocation.position;
         protected override Quaternion SpawnLookDirection => _spawnLocation.rotation;
 
