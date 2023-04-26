@@ -8,73 +8,44 @@ namespace BForBoss
     public class CountdownViewBehaviour : MonoBehaviour
     {
         [SerializeField, Resolve] private TMP_Text _countdownLabel;
-        private float _time;
-        private bool _isRunning;
 
-        private float _amountOfTime;
-        
-        private Action OnCountdownCompleted;
-        
-        public bool IsRunning => _isRunning;
-
-        public void StartCountdown(float amountOfTime, Action onCountdownCompleted = null)
+        public void OnStopCountdown()
         {
-            _amountOfTime = amountOfTime;
-            _time = amountOfTime;
-            gameObject.SetActive(true);
-            _isRunning = true;
-            OnCountdownCompleted = onCountdownCompleted;
-        }
-        
-        public void StopCountdown()
-        {
-            _isRunning = false;
-            OnCountdownCompleted = null;
             gameObject.SetActive(false);
         }
 
         public void PauseCountdown()
         {
-            _isRunning = false;
+            CountdownTimer.Instance.PauseCountdown();
         }
         
         public void ResumeCountdown()
         {
-            _isRunning = true;
+            CountdownTimer.Instance.ResumeCountdown();
         }
 
         public void Reset()
         {
-            _time = _amountOfTime;
-            SetTimerLabel(_amountOfTime);
+            CountdownTimer.Instance.Reset();
+            SetTimerLabel(CountdownTimer.Instance.CurrentTime);
         }
 
-        private void CompleteCountdown()
+        private void OnCompleteCountdown()
         {
-            _isRunning = false;
-            SetTimerLabel(_time);
+            SetTimerLabel(CountdownTimer.Instance.CurrentTime);
             gameObject.SetActive(false);
-            OnCountdownCompleted?.Invoke();
-            OnCountdownCompleted = null;
-            Reset();
+        }
+        
+        private void OnStartCountdown()
+        {
+            SetTimerLabel(CountdownTimer.Instance.CurrentTime);
+            gameObject.SetActive(true);
         }
 
         private void Update()
         {
-            if (!_isRunning)
-            {
-                return;
-            }
-
-            if (_time >= 0.0f)
-            {
-                _time -= Time.deltaTime;
-                SetTimerLabel(_time);
-            }
-            else
-            {
-                CompleteCountdown();
-            }
+            CountdownTimer.Instance.Tick();
+            SetTimerLabel(CountdownTimer.Instance.CurrentTime);
         }
 
         private void SetTimerLabel(float seconds)
@@ -83,7 +54,19 @@ namespace BForBoss
             string str = time .ToString(@"mm\:ss");
             _countdownLabel.text = str;
         }
- 
+
+        private void OnEnable()
+        {
+            CountdownTimer.Instance.OnTimerStarted += OnStartCountdown;
+            CountdownTimer.Instance.OnTimerStopped += OnStopCountdown;
+        }
+        
+        private void OnDisable()
+        {
+            CountdownTimer.Instance.OnTimerStarted += OnStartCountdown;
+            CountdownTimer.Instance.OnTimerStopped += OnStopCountdown;
+        }
+
         private void Awake()
         {
             if (_countdownLabel == null)

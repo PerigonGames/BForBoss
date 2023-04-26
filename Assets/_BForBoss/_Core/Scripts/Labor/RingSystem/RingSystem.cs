@@ -14,13 +14,11 @@ namespace BForBoss
 
         private readonly bool _isRandomized;
         private readonly bool _allAtOnce;
-
-        private readonly CountdownViewBehaviour _countdownView;
+        
         private readonly float _time;
 
-        public RingSystem(RingBehaviour[] rings, CountdownViewBehaviour countdownView, bool isRandomized = false, bool allAtOnce = false, float time = 0f)
+        public RingSystem(RingBehaviour[] rings, bool isRandomized = false, bool allAtOnce = false, float time = 0f)
         {
-            _countdownView = countdownView;
             _allRings = rings;
             _isRandomized = isRandomized;
             _allAtOnce = allAtOnce;
@@ -55,9 +53,9 @@ namespace BForBoss
             }
             TrySetupNextRing();
             
-            if (_countdownView != null && _time > 0f)
+            if (_time > 0f)
             {
-                _countdownView.StartCountdown(_time, CountdownFinish);
+                CountdownTimer.Instance.StartCountdown(_time, CountdownFinish);
             }
         }
 
@@ -109,11 +107,7 @@ namespace BForBoss
 
         protected void InvokeLaborCompleted()
         {
-            if (_countdownView != null)
-            {
-                _countdownView.StopCountdown();
-            }
-
+            CountdownTimer.Instance.StopCountdown();
             OnLaborCompleted?.Invoke();
         }
     }
