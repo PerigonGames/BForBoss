@@ -16,6 +16,8 @@ namespace BForBoss
         private bool _hasCompletedSystem = false;
         private List<RingSystem> _ringSystems;
 
+        private Action<bool> _onLaborCompleted;
+
         public void Reset()
         {
             if(_ringSystems == null) CreateSystems();
@@ -29,8 +31,9 @@ namespace BForBoss
             _laborSystem = new LaborSystem(_ringSystems);
         }
         
-        public void Initialize()
+        public void Initialize(Action<bool> onLaborCompleted)
         {
+            _onLaborCompleted = onLaborCompleted;
             CreateSystems();
             _laborSystem = new LaborSystem(_ringSystems);
         }
