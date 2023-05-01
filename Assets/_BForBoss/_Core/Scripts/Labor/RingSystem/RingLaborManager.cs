@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using BForBoss.Labor;
 using UnityEngine;
 
-namespace BForBoss
+namespace BForBoss.RingSystem
 {
     public class RingLaborManager : MonoBehaviour
     {

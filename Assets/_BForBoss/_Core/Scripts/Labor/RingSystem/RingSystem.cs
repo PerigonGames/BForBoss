@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using BForBoss.Labor;
 using PerigonGames;
 
-namespace BForBoss
+namespace BForBoss.RingSystem
 {
     public class RingSystem : ILabor
     {
