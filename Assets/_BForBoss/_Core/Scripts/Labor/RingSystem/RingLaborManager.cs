@@ -7,8 +7,9 @@ namespace BForBoss
 {
     public class RingLaborManager : MonoBehaviour
     {
+        [SerializeField] private bool _randomize = true;
         [SerializeField] private RingGrouping[] _systemsToBuild;
-        
+
         private LaborSystem _laborSystem;
         private bool _hasCompletedSystem = false;
         private List<RingSystem> _ringSystems;
@@ -23,13 +24,13 @@ namespace BForBoss
             }
 
             _laborSystem?.Dispose();
-            _laborSystem = new LaborSystem(_ringSystems);
+            _laborSystem = new LaborSystem(_ringSystems, _randomize);
         }
         
         public void Initialize()
         {
             CreateSystems();
-            _laborSystem = new LaborSystem(_ringSystems);
+            _laborSystem = new LaborSystem(_ringSystems, _randomize);
         }
 
         public void ToggleTimer()
