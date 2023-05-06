@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace BForBoss
@@ -12,6 +13,13 @@ namespace BForBoss
         [SerializeField]
         private float _rotationRate = 30f;
         private int _direction = 0;
+        
+        private Rigidbody _rigidbody;
+
+        private void Awake()
+        {
+            _rigidbody = GetComponent<Rigidbody>();
+        }
 
         public void StartRotation(RotationState rotation)
         {
@@ -31,11 +39,20 @@ namespace BForBoss
             _direction = 0;
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
-            if (_direction != 0)
+            if (_direction != 0 && _rigidbody == null)
             {
                 transform.Rotate(Vector3.up, _direction * _rotationRate * Time.fixedDeltaTime);
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (_direction != 0 && _rigidbody != null)
+            {
+                var angle = _direction * _rotationRate * Time.fixedDeltaTime;
+                _rigidbody.MoveRotation(_rigidbody.rotation * Quaternion.Euler(0, angle, 0));
             }
         }
     }

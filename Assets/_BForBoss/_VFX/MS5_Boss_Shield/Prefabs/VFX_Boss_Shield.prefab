@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: -8729523894031223317}
   - component: {fileID: 3958777695138357073}
   - component: {fileID: 1450777565238696107}
-  m_Layer: 0
+  - component: {fileID: 2908364681648567484}
+  m_Layer: 12
   m_Name: VFX_Boss_Shield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 6367962280998626771}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1, y: 2, z: -108}
-  m_LocalScale: {x: 20.4756, y: 20.4756, z: 20.4756}
+  m_LocalScale: {x: 8, y: 8, z: 8}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5450237395913622463}
@@ -160,6 +161,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shieldRipples: {fileID: 7593635713815074683, guid: 0930721e9abd3e1489dc70be7c43810c, type: 3}
+--- !u!114 &2908364681648567484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6367962280998626771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4148e3c8e239d431db1861d03736df3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7027103518763075015
 GameObject:
   m_ObjectHideFlags: 0

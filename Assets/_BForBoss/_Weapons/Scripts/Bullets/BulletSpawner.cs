@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Perigon.Weapons
 {
+    [RequireComponent(typeof(WallHitVFXSpawner))]
     public class BulletSpawner : MonoBehaviour
     {
         [SerializeField] private BulletBehaviour[] _bulletPrefabs;
