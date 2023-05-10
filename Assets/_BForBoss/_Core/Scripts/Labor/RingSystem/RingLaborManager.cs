@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using BForBoss.Labor;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
-using UnityEngine;
 
 namespace BForBoss.RingSystem
 {
