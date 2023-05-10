@@ -9,7 +9,6 @@ namespace BForBoss.RingSystem
 {
     public class RingLaborManager : SerializedMonoBehaviour
     {
-        [SerializeField] private bool _randomize = true;
         [OdinSerialize] private RingGrouping[] _systemsToBuild;
 
         private LaborSystem _laborSystem;
@@ -26,13 +25,13 @@ namespace BForBoss.RingSystem
             }
 
             _laborSystem?.Dispose();
-            _laborSystem = new LaborSystem(_ringSystems, _randomize);
+            _laborSystem = new LaborSystem(_ringSystems, false);
         }
         
         public void Initialize()
         {
             CreateSystems();
-            _laborSystem = new LaborSystem(_ringSystems, _randomize);
+            _laborSystem = new LaborSystem(_ringSystems, false);
         }
 
         public void ToggleTimer()
@@ -53,7 +52,7 @@ namespace BForBoss.RingSystem
                     {
                         nestedSystems[i] = BuildFromGrouping(grouping.NestedSystems[i], -1f);
                     }
-                    newSystem = new NestedRingSystem(nestedSystems, _randomize, grouping.Time);
+                    newSystem = new NestedRingSystem(nestedSystems, true, grouping.Time);
                     newSystem.OnLaborCompleted += () => Perigon.Utility.Logger.LogString($"Completed {grouping.NestedSystems.Length} system {grouping.RingSystemType} system", key:"Labor");
                 }
                 else
