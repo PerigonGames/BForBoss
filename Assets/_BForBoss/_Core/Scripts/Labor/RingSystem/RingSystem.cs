@@ -107,7 +107,8 @@ namespace BForBoss.RingSystem
 
         protected void InvokeLaborCompleted()
         {
-            CountdownTimer.Instance.StopCountdown();
+            if(_time > 0f)
+                CountdownTimer.Instance.StopCountdown();
             OnLaborCompleted?.Invoke();
         }
     }

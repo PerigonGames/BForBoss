@@ -7,5 +7,7 @@ namespace BForBoss.Labor
         public event Action OnLaborCompleted;
 
         public void Activate();
+
+        public void Reset();
     }
 }

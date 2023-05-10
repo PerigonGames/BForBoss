@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using BForBoss.Labor;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace BForBoss.RingSystem
 {
-    public class RingLaborManager : MonoBehaviour
+    public class RingLaborManager : SerializedMonoBehaviour
     {
         [SerializeField] private bool _randomize = true;
-        [SerializeField] private RingGrouping[] _systemsToBuild;
+        [OdinSerialize] private RingGrouping[] _systemsToBuild;
 
         private LaborSystem _laborSystem;
         private bool _hasCompletedSystem = false;
-        private List<RingSystem> _ringSystems;
+        private List<ILabor> _ringSystems;
 
         public void Reset()
         {
@@ -40,19 +42,40 @@ namespace BForBoss.RingSystem
 
         private void CreateSystems()
         {
-            _ringSystems = new List<RingSystem>();
+            _ringSystems = new List<ILabor>();
             foreach (var grouping in _systemsToBuild)
             {
-                RingSystem newSystem = grouping.RingSystemType switch
+                ILabor newSystem;
+                if (grouping.RingSystemType == RingSystemTypes.Nested)
                 {
-                    RingSystemTypes.Standard => new RingSystem(grouping.Rings, time: grouping.Time),
-                    RingSystemTypes.DisplayAllAtOnce => new RingSystem(grouping.Rings,  allAtOnce: true, time: grouping.Time),
-                    RingSystemTypes.RandomSelection => new RingSystem(grouping.Rings, isRandomized: true, time: grouping.Time),
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-                newSystem.OnLaborCompleted += () => Perigon.Utility.Logger.LogString($"Completed {grouping.Rings.Length} ring {grouping.RingSystemType} system", key:"Labor");
+                    var nestedSystems = new RingSystem[grouping.NestedSystems.Length];
+                    for(int i = 0; i < grouping.NestedSystems.Length; i++)
+                    {
+                        nestedSystems[i] = BuildFromGrouping(grouping.NestedSystems[i], -1f);
+                    }
+                    newSystem = new NestedRingSystem(nestedSystems, _randomize, grouping.Time);
+                    newSystem.OnLaborCompleted += () => Perigon.Utility.Logger.LogString($"Completed {grouping.NestedSystems.Length} system {grouping.RingSystemType} system", key:"Labor");
+                }
+                else
+                {
+                    newSystem = BuildFromGrouping(grouping);
+                    newSystem.OnLaborCompleted += () => Perigon.Utility.Logger.LogString($"Completed {grouping.Rings.Length} ring {grouping.RingSystemType} system", key:"Labor");
+                }
                 _ringSystems.Add(newSystem);
             }
+        }
+
+        private RingSystem BuildFromGrouping(RingGrouping grouping, float? timeOverride = null)
+        {
+            RingSystem newSystem = grouping.RingSystemType switch
+            {
+                RingSystemTypes.Standard => new RingSystem(grouping.Rings, time: timeOverride.GetValueOrDefault(grouping.Time)),
+                RingSystemTypes.DisplayAllAtOnce => new RingSystem(grouping.Rings,  allAtOnce: true, time: timeOverride.GetValueOrDefault(grouping.Time)),
+                RingSystemTypes.RandomSelection => new RingSystem(grouping.Rings, isRandomized: true, time: timeOverride.GetValueOrDefault(grouping.Time)),
+                    
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            return newSystem;
         }
 
         private void Update()
@@ -70,12 +93,17 @@ namespace BForBoss.RingSystem
         {
             public RingSystemTypes RingSystemType;
             public float Time = 5f;
+            
+            [HideIf("RingSystemType", Value = RingSystemTypes.Nested)]
             public RingBehaviour[] Rings;
+            [ShowIf("RingSystemType", Value = RingSystemTypes.Nested), NonSerialized, OdinSerialize]
+            public RingGrouping[] NestedSystems = null;
+
         }
         
         public enum RingSystemTypes
         {
-            Standard, DisplayAllAtOnce, RandomSelection
+            Standard, DisplayAllAtOnce, RandomSelection, Nested
         }
     }
 }
