@@ -8,6 +8,8 @@ namespace BForBoss
         ClockWise,
         CounterClockWise
     }
+    
+    [RequireComponent(typeof(Rigidbody))]
     public class RotationalMovementBehaviour : MonoBehaviour
     {
         [SerializeField]
@@ -39,17 +41,9 @@ namespace BForBoss
             _direction = 0;
         }
 
-        private void Update()
-        {
-            if (_direction != 0 && _rigidbody == null)
-            {
-                transform.Rotate(Vector3.up, _direction * _rotationRate * Time.fixedDeltaTime);
-            }
-        }
-
         private void FixedUpdate()
         {
-            if (_direction != 0 && _rigidbody != null)
+            if (_direction != 0)
             {
                 var angle = _direction * _rotationRate * Time.fixedDeltaTime;
                 _rigidbody.MoveRotation(_rigidbody.rotation * Quaternion.Euler(0, angle, 0));
