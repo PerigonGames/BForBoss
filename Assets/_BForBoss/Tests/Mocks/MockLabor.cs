@@ -29,5 +29,10 @@ namespace Tests
                 OnLaborCompleted?.Invoke();
             }
         }
+        
+        public void Reset()
+        {
+            IsActivated = false;
+        }
     }
 }

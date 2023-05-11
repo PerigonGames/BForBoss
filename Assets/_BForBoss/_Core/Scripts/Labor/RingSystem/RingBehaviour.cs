@@ -1,9 +1,8 @@
 using System;
 using BForBoss.Utility;
-using PerigonGames;
 using UnityEngine;
 
-namespace BForBoss
+namespace BForBoss.RingSystem
 {
     public class RingBehaviour : MonoBehaviour
     {

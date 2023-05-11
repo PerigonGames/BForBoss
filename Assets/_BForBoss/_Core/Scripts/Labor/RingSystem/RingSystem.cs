@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using BForBoss.Labor;
 using PerigonGames;
 
-namespace BForBoss
+namespace BForBoss.RingSystem
 {
     public class RingSystem : ILabor
     {
@@ -82,19 +82,19 @@ namespace BForBoss
             Activate();
         }
 
-        protected void DeactivateRing(RingBehaviour ring)
+        private void DeactivateRing(RingBehaviour ring)
         {
             ring.gameObject.SetActive(false);
             ring.RingActivated -= RingTriggered;
         }
 
-        protected void ActivateRing(RingBehaviour ring)
+        private void ActivateRing(RingBehaviour ring)
         {
             ring.RingActivated += RingTriggered;
             ring.gameObject.SetActive(true);
         }
         
-        protected void TrySetupNextRing()
+        private void TrySetupNextRing()
         {
             if (_ringQueue.Count == 0)
             {
@@ -105,9 +105,10 @@ namespace BForBoss
             if (!_currentRing.gameObject.activeInHierarchy) ActivateRing(_currentRing);
         }
 
-        protected void InvokeLaborCompleted()
+        private void InvokeLaborCompleted()
         {
-            CountdownTimer.Instance.StopCountdown();
+            if(_time > 0f)
+                CountdownTimer.Instance.StopCountdown();
             OnLaborCompleted?.Invoke();
         }
     }
