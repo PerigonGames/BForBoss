@@ -82,19 +82,19 @@ namespace BForBoss.RingSystem
             Activate();
         }
 
-        protected void DeactivateRing(RingBehaviour ring)
+        private void DeactivateRing(RingBehaviour ring)
         {
             ring.gameObject.SetActive(false);
             ring.RingActivated -= RingTriggered;
         }
 
-        protected void ActivateRing(RingBehaviour ring)
+        private void ActivateRing(RingBehaviour ring)
         {
             ring.RingActivated += RingTriggered;
             ring.gameObject.SetActive(true);
         }
         
-        protected void TrySetupNextRing()
+        private void TrySetupNextRing()
         {
             if (_ringQueue.Count == 0)
             {
@@ -105,7 +105,7 @@ namespace BForBoss.RingSystem
             if (!_currentRing.gameObject.activeInHierarchy) ActivateRing(_currentRing);
         }
 
-        protected void InvokeLaborCompleted()
+        private void InvokeLaborCompleted()
         {
             if(_time > 0f)
                 CountdownTimer.Instance.StopCountdown();

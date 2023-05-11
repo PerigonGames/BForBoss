@@ -51,23 +51,7 @@ namespace BForBoss.RingSystem
             }
         }
 
-        private void SetupSystems(IList<RingSystem> systems)
-        {
-            if (_isRandomized)
-            {
-                systems.ShuffleFisherYates();
-            }
-            _queue = new Queue<RingSystem>(systems);
-        }
-
-        private void CountdownFinish()
-        {
-            Perigon.Utility.Logger.LogString("Ran out of time! Resetting the labor", key: "Labor");
-            Reset();
-            Activate();
-        }
-
-        protected void TrySetupNextSystem()
+        private void TrySetupNextSystem()
         {
             if (_queue.Count == 0)
             {
@@ -85,11 +69,27 @@ namespace BForBoss.RingSystem
             TrySetupNextSystem();
         }
 
-        protected void InvokeLaborCompleted()
+        private void InvokeLaborCompleted()
         {
             if(_time > 0f)
                 CountdownTimer.Instance.StopCountdown();
             OnLaborCompleted?.Invoke();
+        }
+        
+        private void SetupSystems(IList<RingSystem> systems)
+        {
+            if (_isRandomized)
+            {
+                systems.ShuffleFisherYates();
+            }
+            _queue = new Queue<RingSystem>(systems);
+        }
+
+        private void CountdownFinish()
+        {
+            Perigon.Utility.Logger.LogString("Ran out of time! Resetting the labor", key: "Labor");
+            Reset();
+            Activate();
         }
     }
 }
