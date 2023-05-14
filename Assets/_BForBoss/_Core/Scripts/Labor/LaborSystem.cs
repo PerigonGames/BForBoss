@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using PerigonGames;
 
 namespace BForBoss.Labor
 {
@@ -10,9 +12,16 @@ namespace BForBoss.Labor
 
         public bool IsComplete { get; private set; } = false;
 
-        public LaborSystem(IEnumerable<ILabor> labors)
+        public LaborSystem(IEnumerable<ILabor> labors, bool randomize = false)
         {
-            _laborsToComplete = new Queue<ILabor>(labors);
+            if (randomize)
+            {
+                var randomList = labors.ToList();
+                randomList.ShuffleFisherYates();
+                _laborsToComplete = new Queue<ILabor>(randomList);
+            }
+            else
+                _laborsToComplete = new Queue<ILabor>(labors);
             SetNextLaborActive();
         }
 
