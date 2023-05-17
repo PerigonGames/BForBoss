@@ -1,20 +1,17 @@
 using System;
-using System.Collections;
+using BForBoss.RingSystem;
+using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BForBoss
 {
-    public class DerekContextManager : ContextManager
+    [DisallowMultipleComponent]
+    public class DerekContextManager : MonoBehaviour
     {
-        [SerializeField, Tooltip("How long should the system wait before restarting the Labor after an incomplete Labor")]
-        private float _LaborIncompleteTimer = 5.0f;
-        
         private RingLaborManager _ringLaborManager;
         private DerekBossManager _bossManager;
         //private Interactable _TutorialEndButton;
-
-        private WaitForSeconds _LaborIncompleteWaitForSeconds;
         
         public enum Phase
         {
@@ -24,6 +21,15 @@ namespace BForBoss
             FinalPhase, // Health between 0% and 25%
             Death, // Derek is dead
         }
+
+#if UNITY_EDITOR //Debug Setup
+        [Button]
+        public void Debug_FirstPhase()
+        {
+            Initialize(FindObjectOfType<RingLaborManager>(), FindObjectOfType<DerekBossManager>());
+            OnPhaseChanged();
+        }
+#endif
     
         //Put this in Boss Manager
         public enum Vulnerability
@@ -34,76 +40,9 @@ namespace BForBoss
 
         private Phase _currentPhase = Phase.Tutorial;
         private Vulnerability _currentVulnerability = Vulnerability.Invulnerable;
-
-#if UNITY_EDITOR //Debug Buttons for WIP PR
-        
-        private RingLaborManager debug_rlm;
-        private DerekBossManager debug_dbm;
-        private Phase debug_currentPhase = Phase.Tutorial;
-        private Vulnerability debug_currentVulnerability = Vulnerability.Invulnerable;
-        
-        private void Debug_Initialize()
-        {
-            debug_rlm = FindObjectOfType<RingLaborManager>();
-            debug_dbm = FindObjectOfType<DerekBossManager>();
-            
-            Initialize(debug_rlm, debug_dbm);
-        }
-
-        [Button]
-        private void Debug_Reset()
-        {
-            debug_currentPhase = Phase.Tutorial;
-            debug_currentVulnerability = Vulnerability.Invulnerable;
-        }
-
-        [Button]
-        private void Debug_AdvancePhase()
-        {
-            if (debug_rlm == null || debug_dbm == null)
-            {
-                Debug_Initialize();
-            }
-
-            debug_currentPhase++;
-            debug_dbm.UpdatePhase(debug_currentPhase);
-            
-            if (debug_currentPhase == Phase.Death)
-            {
-                Debug_Reset();
-            }
-        }
-
-        [Button]
-        private void Debug_SwitchVulnerability()
-        {
-            if (debug_rlm == null || debug_dbm == null)
-            {
-                Debug_Initialize();
-            }
-
-            switch (debug_currentVulnerability)
-            {
-                case Vulnerability.Invulnerable:
-                    debug_currentVulnerability = Vulnerability.Vulnerable;
-                    break;
-                case Vulnerability.Vulnerable:
-                    debug_currentVulnerability = Vulnerability.Invulnerable;
-                    break;
-            }
-            
-            debug_dbm.UpdateVulnerability(debug_currentVulnerability);
-        }
-#endif
-        
         
         public void Reset()
         {
-            if (_ringLaborManager == null || _bossManager == null)
-            {
-                return;
-            }
-            
             _ringLaborManager.Reset();
             _bossManager.Reset();
             
@@ -115,26 +54,28 @@ namespace BForBoss
             _ringLaborManager = ringLaborManager;
             _bossManager = bossManager;
             
-            //TutorialEndButton.Bind(this, OnPhaseChanged); 
-            _LaborIncompleteWaitForSeconds = new WaitForSeconds(_LaborIncompleteTimer);
+            if (_ringLaborManager == null)
+            {
+                PanicHelper.Panic(new Exception("_ringLaborManager is null"));
+            }
+            
+            if (_bossManager == null)
+            {
+                PanicHelper.Panic(new Exception("_bossManager is null"));
+            }
+            
+            //TutorialEndButton.Bind(this, OnPhaseChanged);
         }
         
-        private void OnLaborCompleted(bool wasSuccessful)
+        private void OnLaborCompleted()
         {
             if (_currentPhase == Phase.Tutorial || _currentVulnerability != Vulnerability.Invulnerable)
             {
                 Perigon.Utility.Logger.LogError("Labor should not have have been active during the tutorial phase, or when the boss is not invulnerable. Exiting Encounter");
                 return;
             }
-
-            if (wasSuccessful)
-            {
-                _bossManager.UpdateVulnerability(Vulnerability.Vulnerable);
-            }
-            else
-            {
-                StartCoroutine(ResetLaborTimer());
-            }
+            
+            _bossManager.UpdateVulnerability(Vulnerability.Vulnerable);
         }
 
         private void OnPhaseChanged()
@@ -144,6 +85,7 @@ namespace BForBoss
                 case Phase.Tutorial:
                     //TutorialEndButton.UnBind();
                     _currentPhase = Phase.FirstPhase;
+                    _ringLaborManager.Initialize(OnLaborCompleted);
                     break;
                 case Phase.FirstPhase:
                     _currentPhase = Phase.SecondPhase;
@@ -157,19 +99,9 @@ namespace BForBoss
                     break;
             }
 
-            _ringLaborManager.Initialize(OnLaborCompleted);
+            _ringLaborManager.Reset();
             _bossManager.UpdatePhase(_currentPhase);
             _bossManager.UpdateVulnerability(Vulnerability.Invulnerable);
-        }
-
-        private IEnumerator ResetLaborTimer()
-        {
-            yield return _LaborIncompleteWaitForSeconds;
-
-            if (_ringLaborManager != null)
-            {
-                _ringLaborManager.Reset();
-            }
         }
     }
 }

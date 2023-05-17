@@ -14,7 +14,7 @@ namespace BForBoss.RingSystem
         private bool _hasCompletedSystem = false;
         private List<ILabor> _ringSystems;
 
-        private Action<bool> _onLaborCompleted;
+        private Action _onLaborCompleted;
 
         public void Reset()
         {
@@ -27,9 +27,10 @@ namespace BForBoss.RingSystem
 
             _laborSystem?.Dispose();
             _laborSystem = new LaborSystem(_ringSystems, false);
+            _hasCompletedSystem = false;
         }
         
-        public void Initialize(Action<bool> onLaborCompleted)
+        public void Initialize(Action onLaborCompleted)
         {
             _onLaborCompleted = onLaborCompleted;
             CreateSystems();
@@ -81,11 +82,17 @@ namespace BForBoss.RingSystem
 
         private void Update()
         {
-            if(_laborSystem == null) return;
+            if (_laborSystem == null)
+            {
+                return;
+            }
+            
             if (!_hasCompletedSystem && _laborSystem.IsComplete)
             {
                 Perigon.Utility.Logger.LogString("All labors completed", key: "Labor");
                 _hasCompletedSystem = true;
+
+                _onLaborCompleted?.Invoke();
             }
         }
 

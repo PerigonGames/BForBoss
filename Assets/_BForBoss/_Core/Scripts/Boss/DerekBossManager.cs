@@ -3,13 +3,14 @@ using UnityEngine;
 
 namespace BForBoss
 {
-    public class DerekBossManager : BossManager
+    [DisallowMultipleComponent]
+    public class DerekBossManager : MonoBehaviour
     {
         private Action _onPhaseComplete;
         
-        public void Initialize(Action OnPhaseComplete)
+        public void Initialize(Action onPhaseComplete)
         {
-            _onPhaseComplete = _onPhaseComplete;
+            _onPhaseComplete = onPhaseComplete;
         }
         
         public void Reset()
