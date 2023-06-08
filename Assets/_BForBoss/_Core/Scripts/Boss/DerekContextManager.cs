@@ -1,7 +1,6 @@
 using System;
 using BForBoss.RingSystem;
 using Perigon.Utility;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BForBoss
@@ -9,10 +8,10 @@ namespace BForBoss
     [DisallowMultipleComponent]
     public class DerekContextManager : MonoBehaviour
     {
+        [SerializeField] private ShootAtInteractiveButtonBehaviour _endTutorialButton;
         private RingLaborManager _ringLaborManager;
         private DerekBossManager _bossManager;
-        //private Interactable _TutorialEndButton;
-        
+
         public enum Phase
         {
             Tutorial, // Battle hasn't begun just yet
@@ -21,15 +20,6 @@ namespace BForBoss
             FinalPhase, // Health between 0% and 25%
             Death, // Derek is dead
         }
-
-#if UNITY_EDITOR //Debug Setup
-        [Button]
-        public void Debug_FirstPhase()
-        {
-            Initialize(FindObjectOfType<RingLaborManager>(), FindObjectOfType<DerekBossManager>());
-            OnPhaseChanged();
-        }
-#endif
     
         //Put this in Boss Manager
         public enum Vulnerability
@@ -45,14 +35,18 @@ namespace BForBoss
         {
             _ringLaborManager.Reset();
             _bossManager.Reset();
-            
-            //TutorialEndButton.Bind(this, BeginEncounter); 
+            _endTutorialButton.Reset();
         }
 
         public void Initialize(RingLaborManager ringLaborManager, DerekBossManager bossManager)
         {
             _ringLaborManager = ringLaborManager;
             _bossManager = bossManager;
+            
+            if (_endTutorialButton == null)
+            {
+                PanicHelper.Panic(new Exception("_endTutorialButton is null"));
+            }
             
             if (_ringLaborManager == null)
             {
@@ -64,14 +58,20 @@ namespace BForBoss
                 PanicHelper.Panic(new Exception("_bossManager is null"));
             }
             
-            //TutorialEndButton.Bind(this, OnPhaseChanged);
+            _endTutorialButton.Initialize(OnEndTutorialButtonTriggered);
+        }
+
+        private void OnEndTutorialButtonTriggered()
+        {
+            Perigon.Utility.Logger.LogString("Tutorial Phase has ended", LoggerColor.Yellow, "derekboss");
+            OnPhaseChanged();
         }
         
         private void OnLaborCompleted()
         {
             if (_currentPhase == Phase.Tutorial || _currentVulnerability != Vulnerability.Invulnerable)
             {
-                Perigon.Utility.Logger.LogError("Labor should not have have been active during the tutorial phase, or when the boss is not invulnerable. Exiting Encounter");
+                Perigon.Utility.Logger.LogError("Labor should not have have been active during the tutorial phase, or when the boss is not invulnerable. Exiting Encounter", LoggerColor.Red, "derekboss");
                 return;
             }
             
@@ -83,7 +83,6 @@ namespace BForBoss
             switch (_currentPhase)
             {
                 case Phase.Tutorial:
-                    //TutorialEndButton.UnBind();
                     _currentPhase = Phase.FirstPhase;
                     _ringLaborManager.Initialize(OnLaborCompleted);
                     break;
@@ -102,6 +101,12 @@ namespace BForBoss
             _ringLaborManager.Reset();
             _bossManager.UpdatePhase(_currentPhase);
             _bossManager.UpdateVulnerability(Vulnerability.Invulnerable);
+        }
+
+        //Todo: In production, Initialization of ContextManager will be done by WorldManager (BFB-516)
+        private void Awake()
+        {
+            Initialize(FindObjectOfType<RingLaborManager>(), FindObjectOfType<DerekBossManager>());
         }
     }
 }
