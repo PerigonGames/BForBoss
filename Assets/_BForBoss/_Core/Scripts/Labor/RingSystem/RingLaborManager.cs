@@ -25,23 +25,16 @@ namespace BForBoss.RingSystem
                 system.Reset();
             }
 
-            if (CountdownTimer.Instance.IsRunning) CountdownTimer.Instance.ToggleCountdown();
-
             _laborSystem?.Dispose();
             _laborSystem = new LaborSystem(_ringSystems, false);
             _hasCompletedSystem = false;
         }
         
-        public void Initialize()
+        public void Initialize(Action onLaborCompleted)
         {
+            _onLaborCompleted = onLaborCompleted;
             CreateSystems();
             _laborSystem = new LaborSystem(_ringSystems, false);
-        }
-
-        public void ActivateSystem(Action onLaborComplete)
-        {
-            _onLaborCompleted = onLaborComplete;
-            _laborSystem?.Start();
         }
 
         public void ToggleTimer()
@@ -63,12 +56,12 @@ namespace BForBoss.RingSystem
                         nestedSystems[i] = BuildFromGrouping(grouping.NestedSystems[i], -1f);
                     }
                     newSystem = new NestedRingSystem(nestedSystems, true, grouping.Time);
-                    newSystem.OnLaborCompleted += (success) => Perigon.Utility.Logger.LogString($"{(success ? "Completed" : "Failed")} {grouping.NestedSystems.Length} system {grouping.RingSystemType} system", key:"Labor");
+                    newSystem.OnLaborCompleted += () => Perigon.Utility.Logger.LogString($"Completed {grouping.NestedSystems.Length} system {grouping.RingSystemType} system", key:"Labor");
                 }
                 else
                 {
                     newSystem = BuildFromGrouping(grouping);
-                    newSystem.OnLaborCompleted += (success) => Perigon.Utility.Logger.LogString($"{(success ? "Completed" : "Failed")} {grouping.Rings.Length} ring {grouping.RingSystemType} system", key:"Labor");
+                    newSystem.OnLaborCompleted += () => Perigon.Utility.Logger.LogString($"Completed {grouping.Rings.Length} ring {grouping.RingSystemType} system", key:"Labor");
                 }
                 _ringSystems.Add(newSystem);
             }

@@ -6,7 +6,7 @@ namespace BForBoss.RingSystem
 {
     public class RingBehaviour : MonoBehaviour
     {
-        public Action<RingBehaviour> RingActivated;
+        public event Action<RingBehaviour> RingActivated;
         
         [SerializeField] private int _label;
 
@@ -33,7 +33,7 @@ namespace BForBoss.RingSystem
             RingActivated?.Invoke(this);
         }
 
-        public void SetLabel(string label)
+        private void SetLabel(string label)
         {
             _labelTMP.text = label;
         }

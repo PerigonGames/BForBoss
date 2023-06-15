@@ -84,7 +84,7 @@ namespace BForBoss
             {
                 case Phase.Tutorial:
                     _currentPhase = Phase.FirstPhase;
-                    _ringLaborManager.ActivateSystem(OnLaborCompleted);
+                    _ringLaborManager.Initialize(OnLaborCompleted);
                     break;
                 case Phase.FirstPhase:
                     _currentPhase = Phase.SecondPhase;
@@ -97,7 +97,8 @@ namespace BForBoss
                 default:
                     break;
             }
-            
+
+            _ringLaborManager.Reset();
             _bossManager.UpdatePhase(_currentPhase);
             _bossManager.UpdateVulnerability(Vulnerability.Invulnerable);
         }

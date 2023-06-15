@@ -7,7 +7,7 @@ namespace BForBoss.RingSystem
 {
     public class RingSystem : ILabor
     {
-        public event Action<bool> OnLaborCompleted;
+        public event Action OnLaborCompleted;
         private RingBehaviour _currentRing;
         private Queue<RingBehaviour> _ringQueue;
         private readonly RingBehaviour[] _allRings;
@@ -17,16 +17,18 @@ namespace BForBoss.RingSystem
         
         private readonly float _time;
 
-        private int _ringIndex = 1;
-
         public RingSystem(RingBehaviour[] rings, bool isRandomized = false, bool allAtOnce = false, float time = 0f)
         {
             _allRings = rings;
             _isRandomized = isRandomized;
             _allAtOnce = allAtOnce;
             _time = time;
-            
-            Reset();
+            SetupRingLists(_allRings);
+
+            foreach (var ring in _allRings)
+            {
+                ring.gameObject.SetActive(false);
+            }
         }
 
         public void Reset()
@@ -38,7 +40,6 @@ namespace BForBoss.RingSystem
 
             _currentRing = null;
             SetupRingLists(_allRings);
-            _ringIndex = 1;
         }
 
         public void Activate()
@@ -78,19 +79,18 @@ namespace BForBoss.RingSystem
         {
             Perigon.Utility.Logger.LogString("Ran out of time! Resetting the labor", key: "Labor");
             Reset();
-            OnLaborCompleted?.Invoke(false);
+            Activate();
         }
 
         private void DeactivateRing(RingBehaviour ring)
         {
             ring.gameObject.SetActive(false);
-            ring.RingActivated = null;
+            ring.RingActivated -= RingTriggered;
         }
 
         private void ActivateRing(RingBehaviour ring)
         {
-            ring.RingActivated = RingTriggered;
-            ring.SetLabel(_ringIndex++.ToString());
+            ring.RingActivated += RingTriggered;
             ring.gameObject.SetActive(true);
         }
         
@@ -109,7 +109,7 @@ namespace BForBoss.RingSystem
         {
             if(_time > 0f)
                 CountdownTimer.Instance.StopCountdown();
-            OnLaborCompleted?.Invoke(true);
+            OnLaborCompleted?.Invoke();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Tests
     {
         public bool IsActivated { get; private set; }
         
-        public event Action<bool> OnLaborCompleted;
+        public event Action OnLaborCompleted;
         
         public MockLabor()
         {
@@ -26,7 +26,7 @@ namespace Tests
         {
             if (IsActivated)
             {
-                OnLaborCompleted?.Invoke(true);
+                OnLaborCompleted?.Invoke();
             }
         }
         

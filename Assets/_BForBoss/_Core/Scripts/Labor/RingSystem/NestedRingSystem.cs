@@ -7,7 +7,7 @@ namespace BForBoss.RingSystem
 {
     public class NestedRingSystem : ILabor
     {
-        public event Action<bool> OnLaborCompleted;
+        public event Action OnLaborCompleted;
         private RingSystem _currentSystem;
         private Queue<RingSystem> _queue;
         private readonly RingSystem[] _allSystems;
@@ -55,7 +55,7 @@ namespace BForBoss.RingSystem
         {
             if (_queue.Count == 0)
             {
-                InvokeLaborCompleted(true);
+                InvokeLaborCompleted();
                 return;
             }
             _currentSystem = _queue.Dequeue();
@@ -63,20 +63,17 @@ namespace BForBoss.RingSystem
             _currentSystem.OnLaborCompleted += OnSystemCompleted;
         }
 
-        private void OnSystemCompleted(bool success)
+        private void OnSystemCompleted()
         {
             _currentSystem.OnLaborCompleted -= OnSystemCompleted;
-            if(success)
-                TrySetupNextSystem();
-            else 
-                InvokeLaborCompleted(false);
+            TrySetupNextSystem();
         }
 
-        private void InvokeLaborCompleted(bool success)
+        private void InvokeLaborCompleted()
         {
             if(_time > 0f)
                 CountdownTimer.Instance.StopCountdown();
-            OnLaborCompleted?.Invoke(success);
+            OnLaborCompleted?.Invoke();
         }
         
         private void SetupSystems(IList<RingSystem> systems)
@@ -92,7 +89,7 @@ namespace BForBoss.RingSystem
         {
             Perigon.Utility.Logger.LogString("Ran out of time! Resetting the labor", key: "Labor");
             Reset();
-            OnLaborCompleted?.Invoke(false);
+            Activate();
         }
     }
 }
