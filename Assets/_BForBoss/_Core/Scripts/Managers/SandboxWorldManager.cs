@@ -27,7 +27,7 @@ namespace BForBoss
         protected override void Start()
         {
             base.Start();
-            _ringLaborManager.Initialize(null);
+            _ringLaborManager.Initialize();
             _wipeOutWallsManager.Initialize(_playerBehaviour.PlayerMovement);
             _derekMissileLauncherBehaviours.ForEach(launcher => launcher.Initialize(_playerBehaviour.PlayerMovement));
         }

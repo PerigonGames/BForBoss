@@ -11,8 +11,9 @@ namespace BForBoss.Labor
         public ILabor CurrentLabor { get; private set; }
 
         public bool IsComplete { get; private set; } = false;
+        public bool IsPaused { get; private set; } = false;
 
-        public LaborSystem(IEnumerable<ILabor> labors, bool randomize = false)
+        public LaborSystem(IEnumerable<ILabor> labors, bool randomize = false, bool autoStart = false)
         {
             if (randomize)
             {
@@ -22,7 +23,27 @@ namespace BForBoss.Labor
             }
             else
                 _laborsToComplete = new Queue<ILabor>(labors);
-            SetNextLaborActive();
+            if(autoStart)
+                    SetNextLaborActive();
+            else IsPaused = true;
+        }
+
+        public void Start()
+        {
+            if(IsComplete) return;
+
+            if (CurrentLabor == null)
+                SetNextLaborActive();
+            else if(IsPaused)
+                CurrentLabor.Activate();
+        }
+        
+        public void Dispose()
+        {
+            if (CurrentLabor != null)
+            {
+                CurrentLabor.OnLaborCompleted -= OnLaborCompleted;
+            }
         }
 
         private void SetNextLaborActive()
@@ -35,15 +56,23 @@ namespace BForBoss.Labor
             CurrentLabor = _laborsToComplete.Dequeue();
             CurrentLabor.OnLaborCompleted += OnLaborCompleted;
             CurrentLabor.Activate();
-
+            IsPaused = false;
         }
 
-        private void OnLaborCompleted()
+        private void OnLaborCompleted(bool success)
         {
-            if(_laborsToComplete.Count > 0)
-                SetNextLaborActive();
+            if (success)
+            {
+                if (_laborsToComplete.Count > 0)
+                    SetNextLaborActive();
+                else
+                    OnQueueCompleted();
+            }
             else
-                OnQueueCompleted();
+            {
+                CurrentLabor.Reset();
+                IsPaused = true;
+            }
         }
 
         private void OnQueueCompleted()
@@ -55,14 +84,6 @@ namespace BForBoss.Labor
 
             CurrentLabor = null;
             IsComplete = true;
-        }
-
-        public void Dispose()
-        {
-            if (CurrentLabor != null)
-            {
-                CurrentLabor.OnLaborCompleted -= OnLaborCompleted;
-            }
         }
     }
 }
