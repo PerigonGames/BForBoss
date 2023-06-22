@@ -5,6 +5,9 @@ namespace BForBoss
     [RequireComponent(typeof(Collider))]
     public class DerekShieldBehaviour : MonoBehaviour
     {
-        
+        public void ToggleShield(bool isActive)
+        {
+            gameObject.SetActive(isActive);
+        }
     }
 }

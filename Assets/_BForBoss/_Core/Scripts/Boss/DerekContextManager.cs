@@ -9,8 +9,8 @@ namespace BForBoss
     public class DerekContextManager : MonoBehaviour
     {
         [SerializeField] private ShootAtInteractiveButtonBehaviour _endTutorialButton;
+        [SerializeField] private DerekBossManager _bossManager;
         private RingLaborManager _ringLaborManager;
-        private DerekBossManager _bossManager;
 
         public enum Phase
         {
@@ -33,31 +33,22 @@ namespace BForBoss
         
         public void Reset()
         {
-            _ringLaborManager.Reset();
+            //_ringLaborManager.Reset();
             _bossManager.Reset();
             _endTutorialButton.Reset();
         }
 
-        public void Initialize(RingLaborManager ringLaborManager, DerekBossManager bossManager)
+        public void Initialize(RingLaborManager ringLaborManager, PlayerMovementBehaviour playerMovementBehaviour)
         {
             _ringLaborManager = ringLaborManager;
-            _bossManager = bossManager;
-            
-            if (_endTutorialButton == null)
-            {
-                PanicHelper.Panic(new Exception("_endTutorialButton is null"));
-            }
-            
+
             if (_ringLaborManager == null)
             {
                 PanicHelper.Panic(new Exception("_ringLaborManager is null"));
+                return;
             }
             
-            if (_bossManager == null)
-            {
-                PanicHelper.Panic(new Exception("_bossManager is null"));
-            }
-            
+            _bossManager.Initialize(playerMovementBehaviour);
             _endTutorialButton.Initialize(OnEndTutorialButtonTriggered);
         }
 
@@ -92,6 +83,9 @@ namespace BForBoss
                 case Phase.SecondPhase:
                     _currentPhase = Phase.FinalPhase;
                     break;
+                case Phase.FinalPhase:
+                    _currentPhase = Phase.Death;
+                    break;
                 case Phase.Death:
                     return;
                 default:
@@ -102,10 +96,17 @@ namespace BForBoss
             _bossManager.UpdateVulnerability(Vulnerability.Invulnerable);
         }
 
-        //Todo: In production, Initialization of ContextManager will be done by WorldManager (BFB-516)
-        private void Awake()
+        private void OnValidate()
         {
-            Initialize(FindObjectOfType<RingLaborManager>(), FindObjectOfType<DerekBossManager>());
+            if (_bossManager == null)
+            {
+                PanicHelper.Panic(new Exception($"{nameof(_bossManager)} is null from Derek Context Manager"));
+            }
+
+            if (_endTutorialButton == null)
+            {
+                PanicHelper.Panic(new Exception($"{nameof(_endTutorialButton)} is null from Derek Context Manager"));
+            }
         }
     }
 }
