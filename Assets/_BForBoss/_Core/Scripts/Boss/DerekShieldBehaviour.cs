@@ -9,5 +9,10 @@ namespace BForBoss
         {
             gameObject.SetActive(isActive);
         }
+
+        public bool IsActive()
+        {
+            return gameObject.activeSelf;
+        }
     }
 }

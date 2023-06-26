@@ -20,8 +20,7 @@ namespace BForBoss
             FinalPhase, // Health between 0% and 25%
             Death, // Derek is dead
         }
-    
-        //Put this in Boss Manager
+        
         public enum Vulnerability
         {
             Invulnerable, //Shields are up, impervious to damage
@@ -33,7 +32,6 @@ namespace BForBoss
         
         public void Reset()
         {
-            //_ringLaborManager.Reset();
             _bossManager.Reset();
             _endTutorialButton.Reset();
         }
@@ -48,14 +46,14 @@ namespace BForBoss
                 return;
             }
             
-            _bossManager.Initialize(playerMovementBehaviour);
+            _bossManager.Initialize(playerMovementBehaviour, HandleVulnerabilityExpiring);
             _endTutorialButton.Initialize(OnEndTutorialButtonTriggered);
         }
 
         private void OnEndTutorialButtonTriggered()
         {
             Perigon.Utility.Logger.LogString("Tutorial Phase has ended", LoggerColor.Yellow, "derekboss");
-            OnPhaseChanged();
+            HandleVulnerabilityExpiring(true);
         }
         
         private void OnLaborCompleted()
@@ -66,34 +64,45 @@ namespace BForBoss
                 return;
             }
             
-            _bossManager.UpdateVulnerability(Vulnerability.Vulnerable);
+            _ringLaborManager.Reset();
+            _currentVulnerability = Vulnerability.Vulnerable;
+            _bossManager.UpdateVulnerability(_currentVulnerability);
         }
 
-        private void OnPhaseChanged()
+        private void HandleVulnerabilityExpiring(bool wasPhaseCompleted)
         {
-            switch (_currentPhase)
+            if (wasPhaseCompleted)
             {
-                case Phase.Tutorial:
-                    _currentPhase = Phase.FirstPhase;
-                    _ringLaborManager.ActivateSystem(OnLaborCompleted);
-                    break;
-                case Phase.FirstPhase:
-                    _currentPhase = Phase.SecondPhase;
-                    break;
-                case Phase.SecondPhase:
-                    _currentPhase = Phase.FinalPhase;
-                    break;
-                case Phase.FinalPhase:
-                    _currentPhase = Phase.Death;
-                    break;
-                case Phase.Death:
-                    return;
-                default:
-                    break;
+                switch (_currentPhase)
+                {
+                    case Phase.Tutorial:
+                        _currentPhase = Phase.FirstPhase;
+                        break;
+                    case Phase.FirstPhase:
+                        _currentPhase = Phase.SecondPhase;
+                        break;
+                    case Phase.SecondPhase:
+                        _currentPhase = Phase.FinalPhase;
+                        break;
+                    case Phase.FinalPhase:
+                        _currentPhase = Phase.Death;
+                        HandleDeath();
+                        return;
+                    default:
+                        return;
+                }
+                
+                _bossManager.UpdatePhase(_currentPhase);
             }
             
-            _bossManager.UpdatePhase(_currentPhase);
-            _bossManager.UpdateVulnerability(Vulnerability.Invulnerable);
+            _ringLaborManager.ActivateSystem(OnLaborCompleted);
+            _currentVulnerability = Vulnerability.Invulnerable;
+            _bossManager.UpdateVulnerability(_currentVulnerability);
+        }
+
+        private void HandleDeath()
+        {
+            Perigon.Utility.Logger.LogString("Player wins -> Start Defeat animation and then open thank you for playing Text box", LoggerColor.Green, "derekboss");
         }
 
         private void OnValidate()
