@@ -1,6 +1,7 @@
 using System;
 using BForBoss.RingSystem;
 using Perigon.Utility;
+using Perigon.Weapons;
 using UnityEngine;
 
 namespace BForBoss
@@ -36,7 +37,7 @@ namespace BForBoss
             _endTutorialButton.Reset();
         }
 
-        public void Initialize(RingLaborManager ringLaborManager, PlayerMovementBehaviour playerMovementBehaviour)
+        public void Initialize(RingLaborManager ringLaborManager, IGetPlayerTransform playerMovementBehaviour)
         {
             _ringLaborManager = ringLaborManager;
 
@@ -105,7 +106,7 @@ namespace BForBoss
             Perigon.Utility.Logger.LogString("Player wins -> Start Defeat animation and then open thank you for playing Text box", LoggerColor.Green, "derekboss");
         }
 
-        private void OnValidate()
+        private void Awake()
         {
             if (_bossManager == null)
             {

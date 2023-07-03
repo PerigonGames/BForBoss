@@ -15,14 +15,14 @@ namespace BForBoss
         [SerializeField, Tooltip("Temporary timer to space out Missile shots for testing purposes"), Min(0.0f)] private float _timeBetweenMissileShots = 5.0f;
         [SerializeField, Tooltip("Temporary timer to track how long Derek has been in its vulnerable state"), Min(0.0f)] private float _vulnerabilityDuration = 10.0f; 
         
-
+        //Todo: Temporary variables used to simulate receiving and responding to damage. Will Remove once DerekHealthBehavior has been implemented
         private Action<bool> _onVulnerabilityExpired;
-        private bool _isVulnerable = false;
+        private DerekContextManager.Vulnerability _vulnerability = DerekContextManager.Vulnerability.Invulnerable;
         private float _vulnerabilityTimer;
         
         public void Reset()
         {
-            _isVulnerable = false;
+            _vulnerability = DerekContextManager.Vulnerability.Invulnerable;
             _wipeoutWallsManager.Reset();
             foreach (DerekMissileLauncherBehaviour missileLauncher in _missileLauncherBehaviours)
             {
@@ -31,16 +31,11 @@ namespace BForBoss
             _shieldBehaviour.ToggleShield(false);
         }
 
-        public void Initialize(PlayerMovementBehaviour playerMovementBehaviour, Action<bool> onVulnerabilityExpired)
+        public void Initialize(IGetPlayerTransform playerMovementBehaviour, Action<bool> onVulnerabilityExpired)
         {
             _wipeoutWallsManager.Initialize(playerMovementBehaviour);
             foreach (DerekMissileLauncherBehaviour missileLauncher in _missileLauncherBehaviours)
             {
-                if (missileLauncher == null)
-                {
-                    continue;
-                }
-                
                 missileLauncher.Initialize(playerMovementBehaviour);
             }
 
@@ -83,7 +78,7 @@ namespace BForBoss
                 //Find Closest Death Wall and activate - 
                 //Start Movement with new given rotation (i.e. clockwise/anticlockwise)
                 case DerekContextManager.Vulnerability.Invulnerable:
-                    _isVulnerable = false;
+                    
                     _shieldBehaviour.ToggleShield(true);
                     foreach (DerekMissileLauncherBehaviour missileLauncher in _missileLauncherBehaviours)
                     {
@@ -96,7 +91,6 @@ namespace BForBoss
                 //Lower Shields
                 //Ensure Derek is susceptible to damage
                 case DerekContextManager.Vulnerability.Vulnerable:
-                    _isVulnerable = true;
                     _vulnerabilityTimer = _vulnerabilityDuration;
                     foreach (DerekMissileLauncherBehaviour missileLauncher in _missileLauncherBehaviours)
                     {
@@ -106,6 +100,8 @@ namespace BForBoss
                     _shieldBehaviour.ToggleShield(false);
                     break;
             }
+            
+            _vulnerability = vulnerability;
         }
         
         //Temporary Damage Receiving Functionality - Will be removed in BFB-516 with Derek Health Behaviour component
@@ -120,7 +116,7 @@ namespace BForBoss
             _onVulnerabilityExpired?.Invoke(true);
         }
 
-        private void OnValidate()
+        private void Awake()
         {
             if (_shieldBehaviour == null)
             {
@@ -132,15 +128,24 @@ namespace BForBoss
                 PanicHelper.Panic(new Exception($"{nameof(_missileLauncherBehaviours)} is null on Derek Boss Manager"));
             }
 
+            for (int i = 0; i < _missileLauncherBehaviours.Length; i++)
+            {
+                if (_missileLauncherBehaviours[i] == null)
+                {
+                    PanicHelper.Panic(new Exception($"Element number {i} of {nameof(_missileLauncherBehaviours)} is null on Derek Boss Manager"));
+                }
+            }
+
             if (_wipeoutWallsManager == null)
             {
                 PanicHelper.Panic(new Exception($"{nameof(_wipeoutWallsManager)} is null on Derek Boss Manager"));
             }
         }
 
+        //TODO: Remove temp damage receiving component once DerekHealthBehaviour is implemented
         private void Update()
         {
-            if (!_isVulnerable)
+            if (_vulnerability != DerekContextManager.Vulnerability.Vulnerable)
             {
                 return;
             }
