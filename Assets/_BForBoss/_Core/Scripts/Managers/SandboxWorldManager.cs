@@ -41,10 +41,7 @@ namespace BForBoss
         protected override void OnValidate()
         {
             base.OnValidate();
-            if (_ringLaborManager == null)
-            {
-                PanicHelper.Panic(new Exception("_ringLaborManager is missing from Sandbox World Manager"));
-            }
+            this.PanicIfNullObject(_ringLaborManager, nameof(_ringLaborManager));
         }
     }
 }

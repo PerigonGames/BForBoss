@@ -88,21 +88,10 @@ namespace BForBoss
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
-
-            if (_mainBody == null)
-            {
-                PanicHelper.Panic(new Exception("_mainBody missing from FloatingEnemyVisualEffectsBehaviour"));
-            }
             
-            if (_spawnEffect == null)
-            {
-                PanicHelper.Panic(new Exception("_spawnEffect missing from FloatingEnemyVisualEffectsBehaviour"));
-            }
-
-            if (_explosionEffect == null)
-            {
-                PanicHelper.Panic(new Exception("_explosionEffect missing from FloatingEnemyVisualEffectsBehaviour"));
-            }
+            this.PanicIfNullObject(_mainBody, nameof(_mainBody));
+            this.PanicIfNullObject(_spawnEffect, nameof(_spawnEffect));
+            this.PanicIfNullObject(_explosionEffect, nameof(_explosionEffect));
 
             _explosionEffect.OnEffectStop += OnExplosionEffectStopped;
         }

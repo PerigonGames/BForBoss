@@ -69,26 +69,11 @@ namespace BForBoss
         protected override void OnValidate()
         {
             base.OnValidate();
-
-            if (_enemyContainer == null)
-            {
-                PanicHelper.Panic(new Exception("Enemy Container missing from WaveSandboxWorldManager"));
-            }
-
-            if (_enemySpawnersManager == null)
-            {
-                PanicHelper.Panic(new Exception("Enemy Spawner Manager missing from the world manager"));
-            }
-
-            if (_waveView == null)
-            {
-                PanicHelper.Panic(new Exception("Wave View UI missing from the world Manager"));
-            }
-
-            if (_timerView == null)
-            {
-                PanicHelper.Panic(new Exception("TimerViewUI is missing from the worldManager"));
-            }
+            
+            this.PanicIfNullObject(_enemyContainer, nameof(_enemyContainer));
+            this.PanicIfNullObject(_enemySpawnersManager, nameof(_enemySpawnersManager));
+            this.PanicIfNullObject(_waveView, nameof(_waveView));
+            this.PanicIfNullObject(_timerView, nameof(_timerView));
         }
 
         protected override void HandleStatePause()

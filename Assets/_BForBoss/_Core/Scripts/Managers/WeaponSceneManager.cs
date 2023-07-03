@@ -45,15 +45,8 @@ namespace BForBoss
 
         private void OnValidate()
         {
-            if (_weaponAnimationController == null)
-            {
-                PanicHelper.Panic(new Exception("Weapons Manager missing from World Manager"));
-            }
-            
-            if (_equipmentBehaviour == null)
-            {
-                PanicHelper.Panic(new Exception("Equipment Behaviour missing from World Manager"));
-            }
+            this.PanicIfNullObject(_weaponAnimationController, nameof(_weaponAnimationController));
+            this.PanicIfNullObject(_equipmentBehaviour, nameof(_equipmentBehaviour));
         }
 
         private void OnDestroy()

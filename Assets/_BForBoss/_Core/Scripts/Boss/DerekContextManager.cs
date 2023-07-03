@@ -43,7 +43,7 @@ namespace BForBoss
 
             if (_ringLaborManager == null)
             {
-                PanicHelper.Panic(new Exception("_ringLaborManager is null"));
+                this.PanicIfNullObject(_ringLaborManager, nameof(_ringLaborManager));
                 return;
             }
             
@@ -108,15 +108,8 @@ namespace BForBoss
 
         private void Awake()
         {
-            if (_bossManager == null)
-            {
-                PanicHelper.Panic(new Exception($"{nameof(_bossManager)} is null from Derek Context Manager"));
-            }
-
-            if (_endTutorialButton == null)
-            {
-                PanicHelper.Panic(new Exception($"{nameof(_endTutorialButton)} is null from Derek Context Manager"));
-            }
+            this.PanicIfNullObject(_bossManager, nameof(_bossManager));
+            this.PanicIfNullObject(_endTutorialButton, nameof(_endTutorialButton));
         }
     }
 }

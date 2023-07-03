@@ -21,10 +21,7 @@ namespace BForBoss
         
         public void Initialize()
         {
-            if (_animator == null)
-            {
-                PanicHelper.Panic(new Exception("Animator missing from Floating Enemy Animation Behaviour"));
-            }
+            this.PanicIfNullObject(_animator, nameof(_animator));
         }
 
         public void SetMovementAnimation()

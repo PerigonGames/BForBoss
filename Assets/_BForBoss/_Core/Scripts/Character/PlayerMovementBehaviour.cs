@@ -82,20 +82,11 @@ namespace BForBoss
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();
             _wallRunBehaviour = GetComponent<PlayerWallRunBehaviour>();
             _slideBehaviour = GetComponent<PlayerSlideBehaviour>();
-            if (_dashBehaviour == null)
-            {
-                PanicHelper.Panic(new Exception("Missing DashBehaviour from PLayerMovement"));
-            }
+
+            this.PanicIfNullObject(_dashBehaviour, nameof(_dashBehaviour));
+            this.PanicIfNullObject(_wallRunBehaviour, nameof(_wallRunBehaviour));
+            this.PanicIfNullObject(_slideBehaviour, nameof(_slideBehaviour));
             
-            if (_wallRunBehaviour == null)
-            {
-                PanicHelper.Panic(new Exception("Missing WallRunBehaviour from PLayerMovement"));
-            }
-            
-            if (_slideBehaviour == null)
-            {
-                PanicHelper.Panic(new Exception("Missing SlideBehaviour from PLayerMovement"));
-            }
             base.OnAwake();
         }
 

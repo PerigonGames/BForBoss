@@ -25,10 +25,7 @@ namespace BForBoss
 
         private void Awake()
         {
-            if (_playerHealthViewBehaviour == null)
-            {
-                PanicHelper.Panic(new Exception($"{nameof(_playerHealthViewBehaviour)} missing from HUDManager"));
-            }
+            this.PanicIfNullObject(_playerHealthViewBehaviour, nameof(_playerHealthViewBehaviour));
         }
 
         private void OnDestroy()

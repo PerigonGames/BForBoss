@@ -118,16 +118,9 @@ namespace BForBoss
 
         private void Awake()
         {
-            if (_shieldBehaviour == null)
-            {
-                PanicHelper.Panic(new Exception($"{nameof(_shieldBehaviour)} is null on Derek Boss Manager"));
-            }
-
-            if (_missileLauncherBehaviours == null)
-            {
-                PanicHelper.Panic(new Exception($"{nameof(_missileLauncherBehaviours)} is null on Derek Boss Manager"));
-            }
-
+            this.PanicIfNullObject(_shieldBehaviour, nameof(_shieldBehaviour));
+            this.PanicIfNullOrEmptyList(_missileLauncherBehaviours, nameof(_missileLauncherBehaviours));
+            
             for (int i = 0; i < _missileLauncherBehaviours.Length; i++)
             {
                 if (_missileLauncherBehaviours[i] == null)
@@ -135,11 +128,8 @@ namespace BForBoss
                     PanicHelper.Panic(new Exception($"Element number {i} of {nameof(_missileLauncherBehaviours)} is null on Derek Boss Manager"));
                 }
             }
-
-            if (_wipeoutWallsManager == null)
-            {
-                PanicHelper.Panic(new Exception($"{nameof(_wipeoutWallsManager)} is null on Derek Boss Manager"));
-            }
+            
+            this.PanicIfNullObject(_wipeoutWallsManager, nameof(_wipeoutWallsManager));
         }
 
         //TODO: Remove temp damage receiving component once DerekHealthBehaviour is implemented
