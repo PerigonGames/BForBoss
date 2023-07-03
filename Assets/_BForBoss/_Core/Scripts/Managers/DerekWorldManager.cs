@@ -1,18 +1,14 @@
 using System;
 using BForBoss.RingSystem;
 using Perigon.Utility;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace BForBoss
 {
-    public class SandboxWorldManager : BaseWorldManager
+    public class DerekWorldManager : BaseWorldManager
     {
-
         [SerializeField] private RingLaborManager _ringLaborManager;
-        [SerializeField] private BossWipeOutWallsManager _wipeOutWallsManager;
-
-        private DerekMissileLauncherBehaviour[] _derekMissileLauncherBehaviours;
+        [SerializeField] private DerekContextManager _derekContextManager;
         private CountdownViewBehaviour _countdownTimer;
 
         protected override Vector3 SpawnLocation => _spawnLocation.position;
@@ -22,20 +18,14 @@ namespace BForBoss
         {
             base.Reset();
             _ringLaborManager.Reset();
+            _derekContextManager.Reset();
         }
 
         protected override void Start()
         {
             base.Start();
             _ringLaborManager.Initialize();
-            _wipeOutWallsManager.Initialize(_playerBehaviour.PlayerMovement);
-            _derekMissileLauncherBehaviours.ForEach(launcher => launcher.Initialize(_playerBehaviour.PlayerMovement));
-        }
-
-        protected override void Awake()
-        {
-            base.Awake();
-            _derekMissileLauncherBehaviours = FindObjectsOfType<DerekMissileLauncherBehaviour>();
+            _derekContextManager.Initialize(_ringLaborManager, _playerBehaviour.PlayerMovement);
         }
 
         protected override void OnValidate()
@@ -44,6 +34,11 @@ namespace BForBoss
             if (_ringLaborManager == null)
             {
                 PanicHelper.Panic(new Exception("_ringLaborManager is missing from Sandbox World Manager"));
+            }
+
+            if (_derekContextManager == null)
+            {
+                PanicHelper.Panic(new Exception($"{nameof(_derekContextManager)} is missing from Sandbox World Manager"));
             }
         }
     }

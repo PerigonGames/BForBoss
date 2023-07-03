@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace BForBoss
@@ -18,11 +17,11 @@ namespace BForBoss
         
         private Rigidbody _rigidbody;
 
-        private void Awake()
+        public void Reset()
         {
-            _rigidbody = GetComponent<Rigidbody>();
+            _rigidbody.rotation = Quaternion.Euler(0,0,0);
         }
-
+        
         public void StartRotation(RotationState rotation)
         {
             switch (rotation)
@@ -39,6 +38,11 @@ namespace BForBoss
         public void StopRotation()
         {
             _direction = 0;
+        }
+        
+        private void Awake()
+        {
+            _rigidbody = GetComponent<Rigidbody>();
         }
 
         private void FixedUpdate()
