@@ -13,13 +13,13 @@ namespace BForBoss
         [SerializeField, Resolve] private BossWipeOutWallsManager _wipeoutWallsManager;
         [SerializeField] private DerekMissileLauncherBehaviour[] _missileLauncherBehaviours;
         [SerializeField, Tooltip("Temporary timer to space out Missile shots for testing purposes"), Min(0.0f)] private float _timeBetweenMissileShots = 5.0f;
-        [SerializeField, Tooltip("Temporary timer to track how long Derek has been in its vulnerable state"), Min(0.0f)] private float _vulnerabilityDuration = 10.0f; 
-        
+        [SerializeField, Tooltip("Temporary timer to track how long Derek has been in its vulnerable state"), Min(0.0f)] private float _vulnerabilityDuration = 10.0f;
+
         //Todo: Temporary variables used to simulate receiving and responding to damage. Will Remove once DerekHealthBehavior has been implemented
         private Action<bool> _onVulnerabilityExpired;
         private DerekContextManager.Vulnerability _vulnerability = DerekContextManager.Vulnerability.Invulnerable;
         private float _vulnerabilityTimer;
-        
+
         public void Reset()
         {
             _vulnerability = DerekContextManager.Vulnerability.Invulnerable;
@@ -41,7 +41,7 @@ namespace BForBoss
 
             _onVulnerabilityExpired = onVulnerabilityExpired;
         }
-        
+
         public void UpdatePhase(DerekContextManager.Phase phase)
         {
             switch (phase)
@@ -75,10 +75,10 @@ namespace BForBoss
             {
                 //Raise Shields
                 //Start Missile Launching
-                //Find Closest Death Wall and activate - 
+                //Find Closest Death Wall and activate -
                 //Start Movement with new given rotation (i.e. clockwise/anticlockwise)
                 case DerekContextManager.Vulnerability.Invulnerable:
-                    
+
                     _shieldBehaviour.ToggleShield(true);
                     foreach (DerekMissileLauncherBehaviour missileLauncher in _missileLauncherBehaviours)
                     {
@@ -100,10 +100,10 @@ namespace BForBoss
                     _shieldBehaviour.ToggleShield(false);
                     break;
             }
-            
+
             _vulnerability = vulnerability;
         }
-        
+
         //Temporary Damage Receiving Functionality - Will be removed in BFB-516 with Derek Health Behaviour component
         public void OnCollided(Vector3 collisionPoint, Vector3 collisionNormal)
         {
@@ -112,7 +112,7 @@ namespace BForBoss
                 Perigon.Utility.Logger.LogWarning("Boss was shot even with shields up, which shouldn't be possible, ignoring damage", LoggerColor.Yellow, "derekboss");
                 return;
             }
-            
+
             _onVulnerabilityExpired?.Invoke(true);
         }
 
@@ -120,7 +120,7 @@ namespace BForBoss
         {
             this.PanicIfNullObject(_shieldBehaviour, nameof(_shieldBehaviour));
             this.PanicIfNullOrEmptyList(_missileLauncherBehaviours, nameof(_missileLauncherBehaviours));
-            
+
             for (int i = 0; i < _missileLauncherBehaviours.Length; i++)
             {
                 if (_missileLauncherBehaviours[i] == null)
