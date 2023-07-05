@@ -76,15 +76,7 @@ namespace BForBoss.RingSystem
 
         private RingSystem BuildFromGrouping(RingGrouping grouping, float? timeOverride = null)
         {
-            RingSystem newSystem = grouping.RingSystemType switch
-            {
-                RingSystemTypes.Standard => new RingSystem(grouping.Rings, time: timeOverride.GetValueOrDefault(grouping.Time)),
-                RingSystemTypes.DisplayAllAtOnce => new RingSystem(grouping.Rings,  allAtOnce: true, time: timeOverride.GetValueOrDefault(grouping.Time)),
-                RingSystemTypes.RandomSelection => new RingSystem(grouping.Rings, isRandomized: true, time: timeOverride.GetValueOrDefault(grouping.Time)),
-                    
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            return newSystem;
+            return new RingSystem(grouping.Rings, time: timeOverride.GetValueOrDefault(grouping.Time));
         }
 
         private void Update()
@@ -118,7 +110,7 @@ namespace BForBoss.RingSystem
         
         public enum RingSystemTypes
         {
-            Standard, DisplayAllAtOnce, RandomSelection, Nested
+            Standard, Nested
         }
     }
 }
