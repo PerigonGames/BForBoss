@@ -11,10 +11,17 @@ namespace BForBoss
         private RotationalMovementBehaviour _rotationalMovementBehaviour;
         private IGetPlayerTransform _getPlayerTransform;
 
+        public void Reset()
+        {
+            _wipeOutWallsManager.DeactivateAllShields();
+            _rotationalMovementBehaviour.Reset();
+        }
+        
         public void Initialize(IGetPlayerTransform getPlayerTransform)
         {
             _getPlayerTransform = getPlayerTransform;
             _wipeOutWallsManager.Initialize();
+            _wipeOutWallsManager.DeactivateAllShields();
         }
         
         public void ActivateClosestLongWallAndRotate()

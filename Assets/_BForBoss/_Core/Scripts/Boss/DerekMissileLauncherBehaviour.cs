@@ -12,6 +12,45 @@ namespace BForBoss
         private BulletSpawner _bulletSpawner;
         private IGetPlayerTransform _playerTransform;
 
+        private bool _canShootMissiles = false;
+        private float _intervalBetweenShots;
+        private float _shootTimer;
+
+        public void Reset()
+        {
+            _canShootMissiles = false;
+        }
+        
+        public void Initialize(IGetPlayerTransform playerTransform)
+        {
+            _playerTransform = playerTransform;
+        }
+        
+        public void ShootMissile()
+        {
+            var bullet = _bulletSpawner.SpawnBullet(BulletTypes.NoPhysics);
+            bullet.SetSpawnAndDirection(GetLaunchPosition(),Vector3.up);
+            bullet.HomingTarget = _playerTransform.Value;
+        }
+
+        public void StartShooting(float intervalBetweenShots)
+        {
+            if (intervalBetweenShots <= 0.0f)
+            {
+                Perigon.Utility.Logger.LogWarning("Trying to shoot missiles with non-existent interval times, disregarding", LoggerColor.Default, "derekboss");
+                return;
+            }
+
+            _intervalBetweenShots = intervalBetweenShots;
+            _shootTimer = _intervalBetweenShots;
+            _canShootMissiles = true;
+        }
+
+        public void StopShooting()
+        {
+            _canShootMissiles = false;
+        }
+        
         private Vector3 GetLaunchPosition()
         {
             var minDistance = float.MaxValue;
@@ -29,18 +68,6 @@ namespace BForBoss
             return closestLauncher.position;
         }
 
-        public void Initialize(IGetPlayerTransform playerTransform)
-        {
-            _playerTransform = playerTransform;
-        }
-        
-        public void ShootMissile()
-        {
-            var bullet = _bulletSpawner.SpawnBullet(BulletTypes.NoPhysics);
-            bullet.SetSpawnAndDirection(GetLaunchPosition(),Vector3.up);
-            bullet.HomingTarget = _playerTransform.Value;
-        }
-
         private void Awake()
         {
             _bulletSpawner = GetComponent<BulletSpawner>();
@@ -48,6 +75,23 @@ namespace BForBoss
             {
                 PanicHelper.Panic(new Exception("LauncherLocations missing from DerekMissileLauncher"));
             }
+        }
+
+        private void Update()
+        {
+            if (!_canShootMissiles)
+            {
+                return;
+            }
+            
+            if (_shootTimer > 0.0f)
+            {
+                _shootTimer -= Time.deltaTime;
+                return;
+            }
+            
+            ShootMissile();
+            _shootTimer = _intervalBetweenShots;
         }
     }
 }
