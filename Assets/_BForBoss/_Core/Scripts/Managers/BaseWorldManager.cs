@@ -132,15 +132,8 @@ namespace BForBoss
 
         protected virtual void OnValidate()
         {
-            if (_playerBehaviour == null)
-            {
-                PanicHelper.Panic(new Exception("_playerBehaviour is missing from World Manager"));
-            }
-
-            if (_energySystemBehaviour == null)
-            {
-                PanicHelper.Panic(new Exception("_energySystemBehaviour is missing from World Manager"));
-            }
+            this.PanicIfNullObject(_playerBehaviour, nameof(_playerBehaviour));
+            this.PanicIfNullObject(_energySystemBehaviour, nameof(_energySystemBehaviour));
         }
         
         private void OnAdditiveSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)

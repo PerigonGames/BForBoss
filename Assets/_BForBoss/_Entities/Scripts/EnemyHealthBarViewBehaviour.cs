@@ -24,10 +24,7 @@ namespace Perigon.Entities
         
         private void Awake()
         {
-            if (_healthBarImage == null)
-            {
-                PanicHelper.Panic(new Exception("HealthBarImage missing from HealthBarViewBehaviour"));
-            }
+            this.PanicIfNullObject(_healthBarImage, nameof(_healthBarImage));
         }
     }
 }

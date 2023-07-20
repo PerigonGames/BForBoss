@@ -88,20 +88,9 @@ namespace BForBoss
 
         private void Awake()
         {
-            if (_settingsViewBehaviour == null)
-            {
-                PanicHelper.Panic(new Exception("_settingsViewBehaviour missing from UserInterfaceManager"));
-            }
-            
-            if (_pauseViewBehaviour == null)
-            {
-                PanicHelper.Panic(new Exception("_pauseViewBehaviour missing from UserInterfaceManager"));
-            }
-
-            if (_endGameViewBehaviour == null)
-            {
-                PanicHelper.Panic(new Exception("EndGameViewBehaviour missing from UserInterfaceManager"));
-            }
+            this.PanicIfNullObject(_settingsViewBehaviour, nameof(_settingsViewBehaviour));
+            this.PanicIfNullObject(_pauseViewBehaviour, nameof(_pauseViewBehaviour));
+            this.PanicIfNullObject(_endGameViewBehaviour, nameof(_endGameViewBehaviour));
         }
 
         private void OnDestroy()

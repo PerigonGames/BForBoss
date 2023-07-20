@@ -120,10 +120,7 @@ namespace BForBoss
 
         private void Awake()
         {
-            if (_shootingFromPosition == null)
-            {
-                PanicHelper.Panic(new Exception("Shooting from transform missing from Floating TargetBehaviour"));
-            }
+            this.PanicIfNullObject(_shootingFromPosition, nameof(_shootingFromPosition));
         }
     }
 }

@@ -95,18 +95,10 @@ namespace Perigon.Weapons
         private void Awake()
         {
             _meleeBehaviour = GetComponent<MeleeWeaponBehaviour>();
-            if (_wallHitVFXSpawner == null)
-            {
-                PanicHelper.Panic(new Exception("Missing WallHitVFXSpawner from EquipmentBehaviour"));
-            }
-            if (_playerBulletSpawner == null)
-            {
-                PanicHelper.Panic(new Exception("Missing BulletSpawner from EquipmentBehaviour for player"));
-            }
-            if (_weaponBehaviours.IsNullOrEmpty())
-            {
-                PanicHelper.Panic(new Exception("There are currently no WeaponBehaviour within the child of EquipmentBehaviour"));
-            }
+            
+            this.PanicIfNullObject(_wallHitVFXSpawner, nameof(_wallHitVFXSpawner));
+            this.PanicIfNullObject(_playerBulletSpawner, nameof(_playerBulletSpawner));
+            this.PanicIfNullOrEmptyList(_weaponBehaviours, nameof(_weaponBehaviours));
         }
         #region Input
 

@@ -21,7 +21,7 @@ namespace BForBoss
             FinalPhase, // Health between 0% and 25%
             Death, // Derek is dead
         }
-        
+
         public enum Vulnerability
         {
             Invulnerable, //Shields are up, impervious to damage
@@ -30,7 +30,7 @@ namespace BForBoss
 
         private Phase _currentPhase = Phase.Tutorial;
         private Vulnerability _currentVulnerability = Vulnerability.Invulnerable;
-        
+
         public void Reset()
         {
             _bossManager.Reset();
@@ -41,12 +41,8 @@ namespace BForBoss
         {
             _ringLaborManager = ringLaborManager;
 
-            if (_ringLaborManager == null)
-            {
-                PanicHelper.Panic(new Exception("_ringLaborManager is null"));
-                return;
-            }
-            
+            this.PanicIfNullObject(_ringLaborManager, nameof(_ringLaborManager));
+
             _bossManager.Initialize(playerMovementBehaviour, HandleVulnerabilityExpiring);
             _endTutorialButton.Initialize(OnEndTutorialButtonTriggered);
         }
@@ -56,7 +52,7 @@ namespace BForBoss
             Perigon.Utility.Logger.LogString("Tutorial Phase has ended", LoggerColor.Yellow, "derekboss");
             HandleVulnerabilityExpiring(true);
         }
-        
+
         private void OnLaborCompleted()
         {
             if (_currentPhase == Phase.Tutorial || _currentVulnerability != Vulnerability.Invulnerable)
@@ -64,7 +60,7 @@ namespace BForBoss
                 Perigon.Utility.Logger.LogError("Labor should not have have been active during the tutorial phase, or when the boss is not invulnerable. Exiting Encounter", LoggerColor.Red, "derekboss");
                 return;
             }
-            
+
             _ringLaborManager.Reset();
             _currentVulnerability = Vulnerability.Vulnerable;
             _bossManager.UpdateVulnerability(_currentVulnerability);
@@ -92,10 +88,10 @@ namespace BForBoss
                     default:
                         return;
                 }
-                
+
                 _bossManager.UpdatePhase(_currentPhase);
             }
-            
+
             _ringLaborManager.ActivateSystem(OnLaborCompleted);
             _currentVulnerability = Vulnerability.Invulnerable;
             _bossManager.UpdateVulnerability(_currentVulnerability);
@@ -108,15 +104,8 @@ namespace BForBoss
 
         private void Awake()
         {
-            if (_bossManager == null)
-            {
-                PanicHelper.Panic(new Exception($"{nameof(_bossManager)} is null from Derek Context Manager"));
-            }
-
-            if (_endTutorialButton == null)
-            {
-                PanicHelper.Panic(new Exception($"{nameof(_endTutorialButton)} is null from Derek Context Manager"));
-            }
+            this.PanicIfNullObject(_bossManager, nameof(_bossManager));
+            this.PanicIfNullObject(_endTutorialButton, nameof(_endTutorialButton));
         }
     }
 }

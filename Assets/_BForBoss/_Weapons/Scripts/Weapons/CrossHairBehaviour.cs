@@ -89,14 +89,8 @@ namespace Perigon.Weapons
         
         private void Awake()
         {
-            if (_crossHairRectTransform == null)
-            {
-                PanicHelper.Panic(new Exception("_crossHairRectTransform missing from CrossHairBehaviour"));
-            }
-            if (_hitMarker == null)
-            {
-                PanicHelper.Panic(new Exception("Crosshair behaviour missing hit marker"));
-            }
+            this.PanicIfNullObject(_crossHairRectTransform, nameof(_crossHairRectTransform));
+            this.PanicIfNullObject(_hitMarker, nameof(_hitMarker));
         }
     }
 }

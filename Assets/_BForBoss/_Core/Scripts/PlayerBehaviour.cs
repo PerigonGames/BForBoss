@@ -55,10 +55,8 @@ namespace BForBoss
             _playerMovement = GetComponent<PlayerMovementBehaviour>();
             _playerLifeCycleBehaviour = GetComponent<PlayerLifeCycleBehaviour>();
             _playerSlowMotion = GetComponent<PlayerSlowMotionBehaviour>();
-            if (_playerSlowMotion == null)
-            {
-                PanicHelper.Panic(new Exception("Player Slow Motion is missing from Player Behaviour"));
-            }
+            
+            this.PanicIfNullObject(_playerSlowMotion, nameof(_playerSlowMotion));
         }
 
         private void HandleOnStateChanged(State state)

@@ -49,16 +49,9 @@ namespace BForBoss
             
             _gameplaySettingsView = GetComponentInChildren<GameplaySettingsViewBehaviour>(true);
             _audioSettingsView = GetComponentInChildren<AudioSettingsViewBehaviour>(true);
-
-            if (_gameplaySettingsView == null)
-            {
-                PanicHelper.Panic(new Exception("Gameplay Settings View Missing from SettingsViewBehaviour"));
-            }
             
-            if (_audioSettingsView == null)
-            {
-                PanicHelper.Panic(new Exception("Audio Settings View Missing from SettingsViewBehaviour"));
-            }
+            this.PanicIfNullObject(_gameplaySettingsView, nameof(_gameplaySettingsView));
+            this.PanicIfNullObject(_audioSettingsView, nameof(_audioSettingsView));
         }
 
         private void OnDestroy()

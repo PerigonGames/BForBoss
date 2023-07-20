@@ -30,10 +30,7 @@ namespace BForBoss
 
         private void Awake()
         {
-            if (_fillImage == null)
-            {
-                PanicHelper.Panic(new Exception("Missing Image from EnergySystemViewBehaviour"));
-            }
+            this.PanicIfNullObject(_fillImage, nameof(_fillImage));
         }
 
         private void OnDestroy()

@@ -71,10 +71,7 @@ namespace BForBoss
         private void Awake()
         {
             _bulletSpawner = GetComponent<BulletSpawner>();
-            if (_launcherLocations.IsNullOrEmpty())
-            {
-                PanicHelper.Panic(new Exception("LauncherLocations missing from DerekMissileLauncher"));
-            }
+            this.PanicIfNullOrEmptyList(_launcherLocations, nameof(_launcherLocations));
         }
 
         private void Update()

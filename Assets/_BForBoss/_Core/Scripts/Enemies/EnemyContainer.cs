@@ -45,10 +45,7 @@ namespace BForBoss
         private void Awake()
         {
             _bulletSpawner = GetComponent<BulletSpawner>();
-            if (_enemyBehaviour == null)
-            {
-                PanicHelper.Panic(new Exception("Missing EnemyBehaviour prefab from EnemyContainer"));
-            }
+            this.PanicIfNullObject(_enemyBehaviour, nameof(_enemyBehaviour));
             _enemyPool = new ObjectPool<EnemyBehaviour>(
                 CreateEnemy, 
                 OnTakenFromPool, 

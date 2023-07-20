@@ -29,10 +29,7 @@ namespace BForBoss
 
         private void Awake()
         {
-            if (_patrolPosition.IsNullOrEmpty())
-            {
-                PanicHelper.Panic(new Exception("List of patrol position is empty or null for Patrol Behaviour"));
-            }
+            this.PanicIfNullOrEmptyList(_patrolPosition, nameof(_patrolPosition));
             _patrol = new Patrol(_patrolPosition.Select(x => x.transform.position).ToArray(), _speed, _waitTimeOnArrival);    
             transform.position = _patrolPosition[0].transform.position;
         }
