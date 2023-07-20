@@ -9,9 +9,19 @@ namespace BForBoss
     {
         private CarouselPanelView[] _carouselPanels;
 
+        public void Show()
+        {
+            ApplyToAllPanels(index =>
+            {
+                _carouselPanels[index].gameObject.SetActive(false);
+            });
+            gameObject.SetActive(true);
+            _carouselPanels[0].gameObject.SetActive(true);
+        }
+
         private void Awake()
         {
-            _carouselPanels = gameObject.GetComponentsInChildren<CarouselPanelView>();
+            _carouselPanels = gameObject.GetComponentsInChildren<CarouselPanelView>(includeInactive: true);
             if (_carouselPanels.IsNullOrEmpty())
             {
                 PanicHelper.Panic(new Exception("Carousel Panels missing from CarouselView"));
@@ -22,13 +32,10 @@ namespace BForBoss
         {
             ApplyToAllPanels(index =>
             {
-                _carouselPanels[index].Initialize(index: index);
-            });
-            ApplyToAllPanels(index =>
-            {
                 _carouselPanels[index].gameObject.SetActive(false);
             });
             SetupPanels();
+            SetupButtons();
         }
 
         private void SetupPanels()
@@ -51,6 +58,27 @@ namespace BForBoss
                     _carouselPanels[i].SetState(isBackShown:true, isContinueShown: false);
                 }
             }
+        }
+
+        private void SetupButtons()
+        {
+            ApplyToAllPanels(index =>
+            {
+                _carouselPanels[index].BackButtonAction = () =>
+                {
+                    _carouselPanels[index].gameObject.SetActive(false);
+                    _carouselPanels[Math.Max(0, index - 1)].gameObject.SetActive(true);
+                };
+            });
+            
+            ApplyToAllPanels(index =>
+            {
+                _carouselPanels[index].ContinueButtonAction = () =>
+                {
+                    _carouselPanels[index].gameObject.SetActive(false);
+                    _carouselPanels[Math.Min(_carouselPanels.Length - 1, index + 1)].gameObject.SetActive(true);
+                };
+            });
         }
 
         private void ApplyToAllPanels(Action<int> lambda)

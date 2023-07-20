@@ -11,12 +11,9 @@ namespace BForBoss
         [SerializeField] private Button _continueButton;
         [SerializeField] private Button _exitButton;
 
-        public int Index { get; private set; }
-
-        public void Initialize(int index)
-        {
-            Index = index;
-        }
+        public Action BackButtonAction;
+        public Action ContinueButtonAction;
+        
 
         public void SetState(bool isBackShown, bool isContinueShown)
         {
@@ -30,7 +27,7 @@ namespace BForBoss
                 _backButton.gameObject.SetActive(false);
             }
         }
-        
+
         private void Awake()
         {
             if (_backButton == null)
@@ -48,6 +45,16 @@ namespace BForBoss
                 //TODO - add exit button
                 //PanicHelper.Panic(new Exception("Exit Button missing from carousel panel view"));
             }
+            
+            _backButton.onClick.AddListener(() =>
+            {
+                BackButtonAction?.Invoke();
+            });
+            
+            _continueButton.onClick.AddListener(() =>
+            {
+                ContinueButtonAction?.Invoke();
+            });
         }
     }
 }

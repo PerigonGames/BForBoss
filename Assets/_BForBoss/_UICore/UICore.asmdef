@@ -1,12 +1,13 @@
 {
-    "name": "UserInterface",
-    "rootNamespace": "Perigon.UserInterface",
+    "name": "UICore",
+    "rootNamespace": "",
     "references": [
-        "GUID:6055be8ebefd69e48b49212b09b47b2f",
-        "GUID:b415fcadef204ad4e81c959b085bc506",
         "GUID:5d0fd1ba0cb83834384f6640f7ad45f5"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "WindowsStandalone32",
+        "WindowsStandalone64"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
