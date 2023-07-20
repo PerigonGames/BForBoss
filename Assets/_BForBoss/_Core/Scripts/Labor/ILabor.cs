@@ -4,7 +4,7 @@ namespace BForBoss.Labor
 {
     public interface ILabor
     {
-        public event Action OnLaborCompleted;
+        public event Action<bool> OnLaborCompleted;
 
         public void Activate();
 

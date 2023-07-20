@@ -12,5 +12,10 @@ namespace Perigon.Utility
             color.a = alpha;
             r.color = color;
         }
+        
+        public static float ClampToRange(this Vector2 range, float value)
+        {
+            return Mathf.Clamp(value, range.x, range.y);
+        }
     }
 }
