@@ -3,7 +3,7 @@ using Perigon.Utility;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BForBoss
+namespace UICore
 {
     public class CarouselPanelView : MonoBehaviour
     {

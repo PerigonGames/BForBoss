@@ -3,7 +3,7 @@ using Perigon.Utility;
 using PerigonGames;
 using UnityEngine;
 
-namespace BForBoss
+namespace UICore
 {
     public class CarouselView : MonoBehaviour
     {

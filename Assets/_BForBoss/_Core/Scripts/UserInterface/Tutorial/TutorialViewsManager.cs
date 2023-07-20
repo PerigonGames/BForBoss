@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
+using UICore;
 using UnityEngine;
 
 namespace BForBoss
