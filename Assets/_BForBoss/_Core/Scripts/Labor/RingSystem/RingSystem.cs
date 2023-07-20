@@ -12,18 +12,13 @@ namespace BForBoss.RingSystem
         private Queue<RingBehaviour> _ringQueue;
         private readonly RingBehaviour[] _allRings;
 
-        private readonly bool _isRandomized;
-        private readonly bool _allAtOnce;
-        
         private readonly float _time;
 
         private int _ringIndex = 1;
 
-        public RingSystem(RingBehaviour[] rings, bool isRandomized = false, bool allAtOnce = false, float time = 0f)
+        public RingSystem(RingBehaviour[] rings, float time = 0f)
         {
             _allRings = rings;
-            _isRandomized = isRandomized;
-            _allAtOnce = allAtOnce;
             _time = time;
             
             Reset();
@@ -43,13 +38,6 @@ namespace BForBoss.RingSystem
 
         public void Activate()
         {
-            if (_allAtOnce)
-            {
-                foreach (var ring in _ringQueue)
-                {
-                    ActivateRing(ring);
-                }
-            }
             TrySetupNextRing();
             
             if (_time > 0f)
@@ -60,16 +48,11 @@ namespace BForBoss.RingSystem
 
         private void SetupRingLists(IList<RingBehaviour> rings)
         {
-            if (_isRandomized)
-            {
-                rings.ShuffleFisherYates();
-            }
             _ringQueue = new Queue<RingBehaviour>(rings);
         }
 
         private void RingTriggered(RingBehaviour ring)
         {
-            if(_allAtOnce && ring != _currentRing) return;
             DeactivateRing(ring);
             TrySetupNextRing();
         }
