@@ -30,7 +30,7 @@ namespace Perigon.Entities
         {
             if (_healthBar == null)
             {
-                PanicHelper.Panic(new Exception("_healthBar missing from PlayerHealthViewBehaviour"));
+                this.PanicIfNullObject(_healthBar, nameof(_healthBar));
             }
         }
     }

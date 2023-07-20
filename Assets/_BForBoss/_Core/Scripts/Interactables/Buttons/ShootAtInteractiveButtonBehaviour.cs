@@ -17,10 +17,7 @@ namespace BForBoss
             _onButtonShot = onButtonShot;
             _canBeInteractedWith = true;
             
-            if (_labelGO == null)
-            {
-                PanicHelper.Panic(new Exception($"{nameof(_labelGO)} is null"));
-            }
+            this.PanicIfNullObject(_labelGO, nameof(_labelGO));
         }
 
         public void Reset()

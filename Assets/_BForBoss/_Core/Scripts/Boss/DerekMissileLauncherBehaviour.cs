@@ -71,10 +71,24 @@ namespace BForBoss
         private void Awake()
         {
             _bulletSpawner = GetComponent<BulletSpawner>();
-            if (_launcherLocations.IsNullOrEmpty())
+            this.PanicIfNullOrEmptyList(_launcherLocations, nameof(_launcherLocations));
+        }
+
+        private void Update()
+        {
+            if (!_canShootMissiles)
             {
-                PanicHelper.Panic(new Exception("LauncherLocations missing from DerekMissileLauncher"));
+                return;
             }
+            
+            if (_shootTimer > 0.0f)
+            {
+                _shootTimer -= Time.deltaTime;
+                return;
+            }
+            
+            ShootMissile();
+            _shootTimer = _intervalBetweenShots;
         }
 
         private void Update()

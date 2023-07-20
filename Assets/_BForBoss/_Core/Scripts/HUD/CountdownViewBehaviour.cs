@@ -69,10 +69,7 @@ namespace BForBoss
 
         private void Awake()
         {
-            if (_countdownLabel == null)
-            {
-                PanicHelper.Panic(new Exception($"{nameof(_countdownLabel)} has not been set"));
-            }
+            this.PanicIfNullObject(_countdownLabel, nameof(_countdownLabel));
         }
     }
 }
