@@ -34,10 +34,7 @@ namespace UICore
         private void Awake()
         {
             _carouselPanels = gameObject.GetComponentsInChildren<CarouselPanelView>(includeInactive: true);
-            if (_carouselPanels.IsNullOrEmpty())
-            {
-                PanicHelper.Panic(new Exception("Carousel Panels missing from CarouselView"));
-            }
+            this.PanicIfNullOrEmptyList(_carouselPanels, nameof(_carouselPanels));
         }
 
         private void SetupPanels()

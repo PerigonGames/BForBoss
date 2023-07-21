@@ -31,21 +31,10 @@ namespace UICore
 
         private void Awake()
         {
-            if (_backButton == null)
-            {
-                PanicHelper.Panic(new Exception("Back Button missing from carousel panel view"));
-            }
+            this.PanicIfNullObject(_backButton, nameof(_backButton));
+            this.PanicIfNullObject(_continueButton, nameof(_continueButton));
+            this.PanicIfNullObject(_exitButton, nameof(_exitButton));
 
-            if (_continueButton == null)
-            {
-                PanicHelper.Panic(new Exception("Continue Button missing from carousel panel view"));
-            }
-
-            if (_exitButton == null)
-            {
-                PanicHelper.Panic(new Exception("Exit Button missing from carousel panel view"));
-            }
-            
             _backButton.onClick.AddListener(() =>
             {
                 BackButtonAction?.Invoke();
@@ -60,6 +49,13 @@ namespace UICore
             {
                 ExitButtonAction?.Invoke();
             });
+        }
+
+        private void OnDestroy()
+        {
+            _backButton.onClick.RemoveAllListeners();
+            _continueButton.onClick.RemoveAllListeners();
+            _exitButton.onClick.RemoveAllListeners();
         }
     }
 }

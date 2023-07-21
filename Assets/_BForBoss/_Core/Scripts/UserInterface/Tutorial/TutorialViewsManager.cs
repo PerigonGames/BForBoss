@@ -21,17 +21,6 @@ namespace BForBoss
 
         private readonly Dictionary<TutorialState, bool> _shownTutorials = new Dictionary<TutorialState, bool>();
 
-        private void Awake()
-        {
-            Instance = this;
-        }
-
-        private void Start()
-        {
-            SetupTutorials();
-            _energyTutorialView.Initialize();
-            _basicTutorialView.Initialize();
-        }
 
         private IStateManager StateManager => BForBoss.StateManager.Instance;
 
@@ -49,6 +38,18 @@ namespace BForBoss
             }
         }
 
+        private void Awake()
+        {
+            Instance = this;
+        }
+
+        private void Start()
+        {
+            SetupTutorials();
+            _energyTutorialView.Initialize();
+            _basicTutorialView.Initialize();
+        }
+        
         private void SetupTutorials()
         {
             void ResumeGame()
