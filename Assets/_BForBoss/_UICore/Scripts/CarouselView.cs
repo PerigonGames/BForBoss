@@ -7,6 +7,8 @@ namespace UICore
 {
     public class CarouselView : MonoBehaviour
     {
+        public Action OnExitAction;
+        
         private CarouselPanelView[] _carouselPanels;
 
         public void Show()
@@ -77,6 +79,16 @@ namespace UICore
                 {
                     _carouselPanels[index].gameObject.SetActive(false);
                     _carouselPanels[Math.Min(_carouselPanels.Length - 1, index + 1)].gameObject.SetActive(true);
+                };
+            });
+            
+            ApplyToAllPanels(index =>
+            {
+                _carouselPanels[index].ExitButtonAction = () =>
+                {
+                    _carouselPanels[index].gameObject.SetActive(false);
+                    gameObject.SetActive(false);
+                    OnExitAction?.Invoke();
                 };
             });
         }

@@ -13,6 +13,7 @@ namespace UICore
 
         public Action BackButtonAction;
         public Action ContinueButtonAction;
+        public Action ExitButtonAction;
         
 
         public void SetState(bool isBackShown, bool isContinueShown)
@@ -42,8 +43,7 @@ namespace UICore
 
             if (_exitButton == null)
             {
-                //TODO - add exit button
-                //PanicHelper.Panic(new Exception("Exit Button missing from carousel panel view"));
+                PanicHelper.Panic(new Exception("Exit Button missing from carousel panel view"));
             }
             
             _backButton.onClick.AddListener(() =>
@@ -54,6 +54,11 @@ namespace UICore
             _continueButton.onClick.AddListener(() =>
             {
                 ContinueButtonAction?.Invoke();
+            });
+            
+            _exitButton.onClick.AddListener(() =>
+            {
+                ExitButtonAction?.Invoke();
             });
         }
     }

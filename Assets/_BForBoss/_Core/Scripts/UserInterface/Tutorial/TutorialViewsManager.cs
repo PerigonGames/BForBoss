@@ -25,11 +25,11 @@ namespace BForBoss
         private void Awake()
         {
             Instance = this;
+            SetupTutorials();
         }
 
         private IStateManager StateManager => BForBoss.StateManager.Instance;
 
-        [Button]
         public void Show(TutorialState state)
         {
             if (StateManager == null)
@@ -42,6 +42,17 @@ namespace BForBoss
                 StateManager.SetState(State.Tutorial);
                 MapToView(state).Show();
             }
+        }
+
+        private void SetupTutorials()
+        {
+            void ResumeGame()
+            {
+                StateManager.SetState(State.Play);
+            }
+
+            _energyTutorialView.OnExitAction = ResumeGame;
+            _basicTutorialView.OnExitAction = ResumeGame;
         }
 
         private CarouselView MapToView(TutorialState state)
