@@ -20,6 +20,16 @@ namespace UICore
             gameObject.SetActive(true);
             _carouselPanels[0].gameObject.SetActive(true);
         }
+        
+        public void Initialize()
+        {
+            ApplyToAllPanels(index =>
+            {
+                _carouselPanels[index].gameObject.SetActive(false);
+            });
+            SetupPanels();
+            SetupButtons();
+        }
 
         private void Awake()
         {
@@ -28,16 +38,6 @@ namespace UICore
             {
                 PanicHelper.Panic(new Exception("Carousel Panels missing from CarouselView"));
             }
-        }
-
-        private void Start()
-        {
-            ApplyToAllPanels(index =>
-            {
-                _carouselPanels[index].gameObject.SetActive(false);
-            });
-            SetupPanels();
-            SetupButtons();
         }
 
         private void SetupPanels()

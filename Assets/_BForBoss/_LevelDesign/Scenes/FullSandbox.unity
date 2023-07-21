@@ -10306,7 +10306,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _executableEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 827619256}
+        m_TargetAssemblyTypeName: BForBoss.TutorialViewsManager, Core
+        m_MethodName: DebugShow
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!65 &467523702
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -28946,7 +28958,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4928126352691293314, guid: fa9ea2813a856024a921f10b11586e3c, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4928126352691293315, guid: fa9ea2813a856024a921f10b11586e3c, type: 3}
       propertyPath: m_Pivot.x
@@ -29030,6 +29042,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4928126352691293315, guid: fa9ea2813a856024a921f10b11586e3c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8255744793394099377, guid: fa9ea2813a856024a921f10b11586e3c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8255744793827937623, guid: fa9ea2813a856024a921f10b11586e3c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8255744795017098893, guid: fa9ea2813a856024a921f10b11586e3c, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8720746516898930310, guid: fa9ea2813a856024a921f10b11586e3c, type: 3}
@@ -31920,7 +31944,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _executableEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 827619256}
+        m_TargetAssemblyTypeName: BForBoss.TutorialViewsManager, Core
+        m_MethodName: DebugShow
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!65 &1814196834
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -37135,7 +37171,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4928126352691293314, guid: fa9ea2813a856024a921f10b11586e3c, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4928126352691293315, guid: fa9ea2813a856024a921f10b11586e3c, type: 3}
       propertyPath: m_Pivot.x
@@ -37219,6 +37255,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4928126352691293315, guid: fa9ea2813a856024a921f10b11586e3c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8255744793394099377, guid: fa9ea2813a856024a921f10b11586e3c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8255744793827937623, guid: fa9ea2813a856024a921f10b11586e3c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8255744795017098893, guid: fa9ea2813a856024a921f10b11586e3c, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

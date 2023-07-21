@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Perigon.Utility;
-using Sirenix.OdinInspector;
 using UICore;
 using UnityEngine;
 
@@ -25,7 +24,13 @@ namespace BForBoss
         private void Awake()
         {
             Instance = this;
+        }
+
+        private void Start()
+        {
             SetupTutorials();
+            _energyTutorialView.Initialize();
+            _basicTutorialView.Initialize();
         }
 
         private IStateManager StateManager => BForBoss.StateManager.Instance;
