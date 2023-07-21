@@ -20,8 +20,7 @@ namespace BForBoss
         [SerializeField] private CarouselView _basicTutorialView;
 
         private readonly Dictionary<TutorialState, bool> _shownTutorials = new Dictionary<TutorialState, bool>();
-
-
+        
         private IStateManager StateManager => BForBoss.StateManager.Instance;
 
         public void Show(TutorialState state)
