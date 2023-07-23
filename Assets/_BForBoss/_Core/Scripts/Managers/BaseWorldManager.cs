@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using Perigon.Entities;
 using Perigon.Utility;
@@ -180,6 +179,11 @@ namespace BForBoss
                     HandleStatePlay();
                     break;
                 }
+                case State.Tutorial:
+                {
+                    HandleStateTutorial();
+                    break;
+                }
                 case State.Debug:
                 case State.Pause:
                 {
@@ -207,6 +211,12 @@ namespace BForBoss
         {
             Time.timeScale = 1.0f;
             _inputSystem.SetToPlayerControls();
+        }
+
+        protected virtual void HandleStateTutorial()
+        {
+            Time.timeScale = 0.0f;
+            _inputSystem.SetToUIControls();
         }
 
         protected virtual void HandleStatePause()

@@ -6,6 +6,7 @@ namespace BForBoss
     {
         Debug,
         PreGame,
+        Tutorial,
         Play,
         Pause,
         Death,
