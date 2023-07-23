@@ -1,6 +1,6 @@
-using System;
 using BForBoss.RingSystem;
 using Perigon.Utility;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -42,6 +42,12 @@ namespace BForBoss
         {
             base.OnValidate();
             this.PanicIfNullObject(_ringLaborManager, nameof(_ringLaborManager));
+        }
+
+        [Button]
+        public void SetGameOver()
+        {
+            StateManager.Instance.SetState(State.EndGame);
         }
     }
 }
