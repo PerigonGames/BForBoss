@@ -1,4 +1,3 @@
-using System;
 using Perigon.Entities;
 using Perigon.Utility;
 using UnityEngine;
@@ -12,12 +11,14 @@ namespace BForBoss
             None,
             PauseView,
             SettingsView,
+            TutorialView,
             EndGameView
         }
         
         [SerializeField] private SettingsViewBehaviour _settingsViewBehaviour;
         [SerializeField] private PauseViewBehaviour _pauseViewBehaviour;
         [SerializeField] private EndGameViewBehaviour _endGameViewBehaviour;
+        [SerializeField] private TutorialCanvas _tutorialCanvas;
         
         private UserInterfaceState UIState
         {
@@ -30,7 +31,7 @@ namespace BForBoss
 
         private UserInterfaceState _state = UserInterfaceState.None;
         
-        public void Initialize(ILifeCycle playerLifeCycle)
+        public void Initialize()
         {
             StateManager.Instance.OnStateChanged += HandleOnStateChangedForUserInterface;
             var resetGameUseCase = new ResetGameUseCase(StateManager.Instance);
@@ -38,9 +39,20 @@ namespace BForBoss
             {
                 UIState = UserInterfaceState.PauseView;
             });
-            _pauseViewBehaviour.Initialize(resetGameUseCase, onSettingsPressed: () =>
+            _tutorialCanvas.Initialize(onBackPressed: () =>
+            {
+                UIState = UserInterfaceState.PauseView;
+            });
+            
+            _pauseViewBehaviour.Initialize(
+                resetGameUseCase, 
+                onSettingsPressed: () =>
             {
                 UIState = UserInterfaceState.SettingsView;
+            }, 
+                onTutorialPressed: () =>
+            {
+                UIState = UserInterfaceState.TutorialView;
             });
             _endGameViewBehaviour.Initialize(resetGameUseCase);
         }
@@ -69,19 +81,27 @@ namespace BForBoss
                     _settingsViewBehaviour.gameObject.SetActive(false);
                     _pauseViewBehaviour.gameObject.SetActive(false);
                     _endGameViewBehaviour.gameObject.SetActive(false);
+                    _tutorialCanvas.gameObject.SetActive(false);
                     break;
                 case UserInterfaceState.PauseView:
                     _settingsViewBehaviour.gameObject.SetActive(false);
                     _pauseViewBehaviour.gameObject.SetActive(true);
+                    _tutorialCanvas.gameObject.SetActive(false);
                     break;
                 case UserInterfaceState.SettingsView:
                     _settingsViewBehaviour.gameObject.SetActive(true);
                     _pauseViewBehaviour.gameObject.SetActive(false);
                     break;
+                case UserInterfaceState.TutorialView:
+                    _settingsViewBehaviour.gameObject.SetActive(false);
+                    _pauseViewBehaviour.gameObject.SetActive(false);
+                    _tutorialCanvas.gameObject.SetActive(true);
+                    break;
                 case UserInterfaceState.EndGameView:
                     _settingsViewBehaviour.gameObject.SetActive(false);
                     _pauseViewBehaviour.gameObject.SetActive(false);
                     _endGameViewBehaviour.gameObject.SetActive(true);
+                    _tutorialCanvas.gameObject.SetActive(false);
                     break;
             }
         }
@@ -91,6 +111,7 @@ namespace BForBoss
             this.PanicIfNullObject(_settingsViewBehaviour, nameof(_settingsViewBehaviour));
             this.PanicIfNullObject(_pauseViewBehaviour, nameof(_pauseViewBehaviour));
             this.PanicIfNullObject(_endGameViewBehaviour, nameof(_endGameViewBehaviour));
+            this.PanicIfNullObject(_tutorialCanvas, nameof(_tutorialCanvas));
         }
 
         private void OnDestroy()
