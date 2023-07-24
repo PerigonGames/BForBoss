@@ -49,22 +49,18 @@ namespace BForBoss
         {
             _basicButton.onClick.AddListener(() =>
             {
-                //_basicTutorial.gameObject.SetActive(true);
                 _basicTutorial.Show();
             });
             _energyButton.onClick.AddListener(() =>
             {
-                //_energyTutorial.gameObject.SetActive(true);
                 _energyTutorial.Show();
             });
             _wallRunButton.onClick.AddListener(() =>
             {
-                //_wallRunTutorial.gameObject.SetActive(true);
                 _wallRunTutorial.Show();
             });
             _bossButton.onClick.AddListener(() =>
             {
-                //_bossTutorial.gameObject.SetActive(true);
                 _bossTutorial.Show();
             });
             _backButton.onClick.AddListener(() =>
