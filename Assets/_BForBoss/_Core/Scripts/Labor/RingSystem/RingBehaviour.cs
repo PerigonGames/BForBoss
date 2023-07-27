@@ -15,6 +15,7 @@ namespace BForBoss.RingSystem
 
         private void Awake()
         {
+            _labelTMP = GetComponentInChildren<TMPro.TMP_Text>();
             _trigger = GetComponentInChildren<PlayerTriggerBehaviour>();
         }
 
