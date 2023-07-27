@@ -42,8 +42,8 @@ namespace BForBoss
 
         private EnergySystemConfigurationData _energySystemConfigurationData;
 
-        private readonly Queue<(EnergyAccruementType, float)> _accruedEnergyTypeQueue = new();
-        private readonly Queue<(EnergyExpenseType, float)> _expendEnergyTypeQueue = new();
+        private readonly Queue<(EnergyAccruementType, float)> _accruedEnergyTypeQueue = new Queue<(EnergyAccruementType, float)>();
+        private readonly Queue<(EnergyExpenseType, float)> _expendEnergyTypeQueue = new Queue<(EnergyExpenseType, float)>();
 
         private float _elapsedTime;
 
@@ -86,15 +86,8 @@ namespace BForBoss
 
         private void Awake()
         {
-            if (_energySystemConfiguration == null)
-            {
-                PanicHelper.Panic(new Exception("Energy system configuration scriptable object missing from EnergySystemBehaviour"));
-            }
-
-            if (_energy == null)
-            {
-                PanicHelper.Panic(new Exception("Energy scriptable object missing from EnergySystemBehaviour"));
-            }
+            this.PanicIfNullObject(_energySystemConfiguration, nameof(_energySystemConfiguration));
+            this.PanicIfNullObject(_energy, nameof(_energy));
         }
 
         private void Start()

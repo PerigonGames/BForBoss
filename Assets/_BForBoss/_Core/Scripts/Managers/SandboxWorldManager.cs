@@ -1,6 +1,6 @@
-using System;
 using BForBoss.RingSystem;
 using Perigon.Utility;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -41,10 +41,13 @@ namespace BForBoss
         protected override void OnValidate()
         {
             base.OnValidate();
-            if (_ringLaborManager == null)
-            {
-                PanicHelper.Panic(new Exception("_ringLaborManager is missing from Sandbox World Manager"));
-            }
+            this.PanicIfNullObject(_ringLaborManager, nameof(_ringLaborManager));
+        }
+
+        [Button]
+        public void SetGameOver()
+        {
+            StateManager.Instance.SetState(State.EndGame);
         }
     }
 }
