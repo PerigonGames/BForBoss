@@ -12,15 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 792bf67cbbbfa2248ad15d0cbcb62baa, type: 3}
   m_Name: DefaultWallRunData
   m_EditorClassIdentifier: 
-  _speedMultiplier: 1
+  _speedMultiplier: 1.3
   _maxWallRunAcceleration: 20
-  _wallGravityDownForce: 0
-  _gravityTimerDuration: 1
-  _wallResetTimer: 2
-  _wallBounciness: 6
-  _jumpHeightMultiplier: 1
-  _jumpForwardVelocityMultiplier: 0.75
-  _maxCameraAngleRoll: 30
-  _cameraRotateDuration: 1
-  _lookAlongWallRotationSpeed: 3
-  _minLookAlongWallStabilizationAngle: 5
+  _wallGravityDownForce: 30
+  _gravityTimerDuration: 0
+  _wallBounciness: 10
+  _jumpHeightMultiplier: 0.7
+  _jumpForwardVelocityMultiplier: 1
