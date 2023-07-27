@@ -17,7 +17,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: 3001
   stringTagMap:
     MotionVector: User
     RenderType: Transparent
@@ -57,9 +57,9 @@ Material:
     - _AlphaSrcBlend: 1
     - _AlphaToMask: 0
     - _AlphaToMaskInspectorValue: 0
-    - _BaseOpacity: 0.12
+    - _BaseOpacity: 0.06
     - _BlendMode: 0
-    - _BrightnessStrength: 1
+    - _BrightnessStrength: 0.48
     - _ConservativeDepthOffsetEnable: 0
     - _CullMode: 0
     - _CullModeForward: 0
@@ -69,13 +69,13 @@ Material:
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 2
     - _DstBlend: 10
-    - _EdgeWidth: 6.28
+    - _EdgeWidth: 0.57
     - _EnableBlendModePreserveSpecularLighting: 0
     - _EnableFogOnTransparent: 1
     - _Float: -0.16
     - _OpaqueCullMode: 2
-    - _PulseAmplitude: 0.8
-    - _PulseSpeed: 9.9
+    - _PulseAmplitude: 3.47
+    - _PulseSpeed: 1
     - _RenderQueueType: 4
     - _SrcBlend: 1
     - _StencilRef: 0
@@ -93,7 +93,7 @@ Material:
     - _TransparentCullMode: 2
     - _TransparentDepthPostpassEnable: 0
     - _TransparentDepthPrepassEnable: 0
-    - _TransparentSortPriority: 0
+    - _TransparentSortPriority: 1
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 0
     - _UseShadowThreshold: 0
@@ -102,7 +102,7 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 0
     m_Colors:
-    - _ColorMain: {r: 15.999998, g: 1.9429238, b: 0, a: 0}
+    - _ColorMain: {r: 12.494317, g: 3.2704554, b: 1.9448704, a: 0}
     - _ColorSecondary: {r: 17.060724, g: 5.7516026, b: 4.748032, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
