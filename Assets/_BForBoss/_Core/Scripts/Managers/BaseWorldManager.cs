@@ -140,7 +140,7 @@ namespace BForBoss
             switch (scene.name)
             {
                 case ADDITIVE_USER_INTERFACE_SCENE_NAME:
-                    UserInterfaceManager.Initialize(_playerLifeCycle);
+                    UserInterfaceManager.Initialize();
                     break;
                 case ADDITIVE_WEAPON_SCENE_NAME:
                     WeaponSceneManager.Initialize(_playerBehaviour, _inputSystem, _energySystemBehaviour);
