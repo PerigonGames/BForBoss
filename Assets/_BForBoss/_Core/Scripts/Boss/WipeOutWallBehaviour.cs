@@ -18,12 +18,15 @@ namespace BForBoss
 
         public void Activate()
         {
+            gameObject.SetActive(true);
             transform.DOScale(_originalSize, _activationDuration);
         }
 
         public void Deactivate()
         {
-            transform.DOScaleZ(0, _deactivateDuration);
+            transform
+                .DOScaleZ(0, _deactivateDuration)
+                .OnComplete(() => gameObject.SetActive(false));
         }
         
         private void Awake()
