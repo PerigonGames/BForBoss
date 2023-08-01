@@ -6,7 +6,7 @@ using UnityEngine;
 namespace BForBoss
 {
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(Collider))]
+    [RequireComponent(typeof(Rigidbody))]
     public class DerekBossManager : MonoBehaviour, IBulletCollision
     {
         [SerializeField, Resolve] private DerekShieldBehaviour _shieldBehaviour;
