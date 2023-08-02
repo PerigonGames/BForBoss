@@ -26,6 +26,10 @@ namespace Perigon.Weapons
             {
                 bulletCollision.OnCollided(hitPosition, hitNormal);    
             }
+            else if (col.attachedRigidbody != null && col.attachedRigidbody.TryGetComponent(out IBulletCollision bulletRbCollision))
+            {
+                bulletRbCollision.OnCollided(hitPosition, hitNormal);  
+            }
             else
             {
                 OnBulletHitWall?.Invoke(hitPosition, hitNormal);

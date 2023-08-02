@@ -138,6 +138,7 @@ namespace BForBoss
 
         private void OnCollisionEnter(Collision collision)
         {
+            if (Mask.Contains(collision.gameObject.layer)) return;
             if (_isActive)
             {
                 var contact = collision.GetContact(0);
