@@ -42,24 +42,24 @@ namespace BForBoss
             _onVulnerabilityExpired = onVulnerabilityExpired;
         }
 
-        public void UpdatePhase(DerekContextManager.Phase phase)
+        public void UpdatePhase(DerekContextManager.Phase phase, DerekPhaseDataSO phaseData)
         {
             switch (phase)
             {
                 case DerekContextManager.Phase.Tutorial:
                 case DerekContextManager.Phase.Death:
                     break;
-                case DerekContextManager.Phase.FirstPhase:
+                case DerekContextManager.Phase.FirstPhase when phaseData != null:
                     //_healthBarViewBehavior.SetPhaseBoundary(0.75f, _onPhaseComplete.Invoke());
                     //_derekMissileBehavior.UpdateParameters(AdjustedParameters[])
                     Perigon.Utility.Logger.LogString("Phase 1: Will transition at 75% health", LoggerColor.Green, "derekboss");
                     break;
-                case DerekContextManager.Phase.SecondPhase:
+                case DerekContextManager.Phase.SecondPhase when phaseData != null:
                     //_healthBarViewBehavior.SetPhaseBoundary(0.25f, _onPhaseComplete.Invoke());
                     //_derekMissileBehavior.UpdateParameters(AdjustedParameters[])
                     Perigon.Utility.Logger.LogString("Phase 2: Will transition at 25% health", LoggerColor.Green, "derekboss");
                     break;
-                case DerekContextManager.Phase.FinalPhase:
+                case DerekContextManager.Phase.FinalPhase when phaseData != null:
                     //_healthBarViewBehavior.SetPhaseBoundary(0f, _onPhaseComplete.Invoke());
                     //_derekMissileBehavior.UpdateParameters(AdjustedParameters[])
                     Perigon.Utility.Logger.LogString("Phase 3: Will transition at 0% health", LoggerColor.Green, "derekboss");

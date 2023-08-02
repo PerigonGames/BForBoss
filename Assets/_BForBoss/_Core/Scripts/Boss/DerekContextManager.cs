@@ -1,4 +1,3 @@
-using System;
 using BForBoss.RingSystem;
 using Perigon.Utility;
 using Perigon.Weapons;
@@ -11,7 +10,16 @@ namespace BForBoss
     {
         [SerializeField] private ShootAtInteractiveButtonBehaviour _endTutorialButton;
         [SerializeField] private DerekBossManager _bossManager;
+        
+        //Phase Information
+        [Header("Derek Phase Data")]
+        [SerializeField] private DerekPhaseDataSO _firstPhaseData;
+        [SerializeField] private DerekPhaseDataSO _secondPhaseData;
+        [SerializeField] private DerekPhaseDataSO _finalPhaseData;
+
+
         private RingLaborManager _ringLaborManager;
+        private DerekPhaseDataSO _currentPhaseDataSO = null;
 
         public enum Phase
         {
@@ -42,6 +50,9 @@ namespace BForBoss
             _ringLaborManager = ringLaborManager;
 
             this.PanicIfNullObject(_ringLaborManager, nameof(_ringLaborManager));
+            this.PanicIfNullObject(_firstPhaseData, nameof(_firstPhaseData));
+            this.PanicIfNullObject(_secondPhaseData, nameof(_secondPhaseData));
+            this.PanicIfNullObject(_finalPhaseData, nameof(_finalPhaseData));
 
             _bossManager.Initialize(playerMovementBehaviour, HandleVulnerabilityExpiring);
             _endTutorialButton.Initialize(OnEndTutorialButtonTriggered);
@@ -74,12 +85,15 @@ namespace BForBoss
                 {
                     case Phase.Tutorial:
                         _currentPhase = Phase.FirstPhase;
+                        _currentPhaseDataSO = _firstPhaseData;
                         break;
                     case Phase.FirstPhase:
                         _currentPhase = Phase.SecondPhase;
+                        _currentPhaseDataSO = _secondPhaseData;
                         break;
                     case Phase.SecondPhase:
                         _currentPhase = Phase.FinalPhase;
+                        _currentPhaseDataSO = _finalPhaseData;
                         break;
                     case Phase.FinalPhase:
                         _currentPhase = Phase.Death;
@@ -89,7 +103,7 @@ namespace BForBoss
                         return;
                 }
 
-                _bossManager.UpdatePhase(_currentPhase);
+                _bossManager.UpdatePhase(_currentPhase, _currentPhaseDataSO);
             }
 
             _ringLaborManager.ActivateSystem(OnLaborCompleted);
