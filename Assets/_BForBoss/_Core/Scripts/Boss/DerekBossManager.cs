@@ -6,9 +6,15 @@ using UnityEngine;
 namespace BForBoss
 {
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(Collider))]
+    [RequireComponent(typeof(Rigidbody))]
     public class DerekBossManager : MonoBehaviour, IBulletCollision
     {
+        private const string POWER_UP = "Power Up";
+        private const string POWER_DOWN = "Power Down";
+
+        private static readonly int POWER_UP_KEY = Animator.StringToHash(POWER_UP);
+        private static readonly int POWER_DOWN_KEY = Animator.StringToHash(POWER_DOWN);
+        
         [SerializeField, Resolve] private DerekShieldBehaviour _shieldBehaviour;
         [SerializeField, Resolve] private BossWipeOutWallsManager _wipeoutWallsManager;
         [SerializeField] private DerekMissileLauncherBehaviour[] _missileLauncherBehaviours;
@@ -19,6 +25,7 @@ namespace BForBoss
         private Action<bool> _onVulnerabilityExpired;
         private DerekContextManager.Vulnerability _vulnerability = DerekContextManager.Vulnerability.Invulnerable;
         private float _vulnerabilityTimer;
+        private Animator _animator;
 
         public void Reset()
         {
@@ -38,7 +45,6 @@ namespace BForBoss
             {
                 missileLauncher.Initialize(playerMovementBehaviour);
             }
-
             _onVulnerabilityExpired = onVulnerabilityExpired;
         }
 
@@ -85,6 +91,7 @@ namespace BForBoss
                         missileLauncher.StartShooting(_timeBetweenMissileShots);
                     }
                     _wipeoutWallsManager.ActivateClosestLongWallAndRotate();
+                    _animator.SetTrigger(POWER_UP_KEY);
                     break;
                 //End Missile Behavior
                 //Deactivate all DeathWalls
@@ -98,6 +105,7 @@ namespace BForBoss
                     }
                     _wipeoutWallsManager.DeactivateWallAndRotation();
                     _shieldBehaviour.ToggleShield(false);
+                    _animator.SetTrigger(POWER_DOWN_KEY);
                     break;
             }
 
@@ -118,6 +126,7 @@ namespace BForBoss
 
         private void Awake()
         {
+            _animator = GetComponentInChildren<Animator>();
             this.PanicIfNullObject(_shieldBehaviour, nameof(_shieldBehaviour));
             this.PanicIfNullOrEmptyList(_missileLauncherBehaviours, nameof(_missileLauncherBehaviours));
 
