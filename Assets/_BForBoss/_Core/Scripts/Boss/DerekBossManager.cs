@@ -138,6 +138,7 @@ namespace BForBoss
             _animator = GetComponentInChildren<Animator>();
             this.PanicIfNullObject(_shieldBehaviour, nameof(_shieldBehaviour));
             this.PanicIfNullOrEmptyList(_missileLauncherBehaviours, nameof(_missileLauncherBehaviours));
+            this.PanicIfNullObject(_derekHealthView, nameof(_derekHealthView));
 
             for (int i = 0; i < _missileLauncherBehaviours.Length; i++)
             {
