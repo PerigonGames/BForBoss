@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using BForBoss.Labor;
-using PerigonGames;
 
 namespace BForBoss.RingSystem
 {
@@ -20,8 +19,6 @@ namespace BForBoss.RingSystem
         {
             _allRings = rings;
             _time = time;
-            
-            Reset();
         }
 
         public void Reset()
@@ -32,7 +29,7 @@ namespace BForBoss.RingSystem
             }
 
             _currentRing = null;
-            SetupRingLists(_allRings);
+            _ringQueue = new Queue<RingBehaviour>(_allRings);
             _ringIndex = 1;
         }
 
@@ -42,13 +39,8 @@ namespace BForBoss.RingSystem
             
             if (_time > 0f)
             {
-                CountdownTimer.Instance.StartCountdown(_time, CountdownFinish);
+                CountdownTimer.Instance.StartCountdown(_time, onCountdownCompleted: CountdownFinish);
             }
-        }
-
-        private void SetupRingLists(IList<RingBehaviour> rings)
-        {
-            _ringQueue = new Queue<RingBehaviour>(rings);
         }
 
         private void RingTriggered(RingBehaviour ring)
@@ -85,7 +77,10 @@ namespace BForBoss.RingSystem
                 return;
             }
             _currentRing = _ringQueue.Dequeue();
-            if (!_currentRing.gameObject.activeInHierarchy) ActivateRing(_currentRing);
+            if (!_currentRing.gameObject.activeInHierarchy)
+            {
+                ActivateRing(_currentRing);
+            }
         }
 
         private void InvokeLaborCompleted()

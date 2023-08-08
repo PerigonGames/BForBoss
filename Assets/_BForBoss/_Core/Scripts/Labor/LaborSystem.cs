@@ -1,20 +1,26 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using Perigon.Utility;
 using PerigonGames;
 
 namespace BForBoss.Labor
 {
-    public class LaborSystem : IDisposable
-    {
+    public class LaborSystem
+    {        
+        private readonly float PenaltyDelayedStart;
+
         private Queue<ILabor> _laborsToComplete;
         public ILabor CurrentLabor { get; private set; }
 
-        public bool IsComplete { get; private set; } = false;
-        public bool IsPaused { get; private set; } = false;
+        public bool IsComplete { get; private set; }
+        private bool _laborFailed;
 
-        public LaborSystem(IEnumerable<ILabor> labors, bool randomize = false, bool autoStart = false)
+        public LaborSystem(
+            List<ILabor> labors, 
+            float penaltyDelayedStart = 0, 
+            bool randomize = false)
         {
+            PenaltyDelayedStart = penaltyDelayedStart;
             if (randomize)
             {
                 var randomList = labors.ToList();
@@ -22,27 +28,27 @@ namespace BForBoss.Labor
                 _laborsToComplete = new Queue<ILabor>(randomList);
             }
             else
+            {
                 _laborsToComplete = new Queue<ILabor>(labors);
-            if(autoStart)
-                    SetNextLaborActive();
-            else IsPaused = true;
+            }
+
+            _laborFailed = true;
         }
 
-        public void Start()
+        public void Activate()
         {
-            if(IsComplete) return;
+            if (IsComplete)
+            {
+                return;
+            }
 
             if (CurrentLabor == null)
-                SetNextLaborActive();
-            else if(IsPaused)
-                CurrentLabor.Activate();
-        }
-        
-        public void Dispose()
-        {
-            if (CurrentLabor != null)
             {
-                CurrentLabor.OnLaborCompleted -= OnLaborCompleted;
+                SetNextLaborActive();
+            }
+            else if (_laborFailed)
+            {
+                CurrentLabor.Activate();
             }
         }
 
@@ -56,7 +62,8 @@ namespace BForBoss.Labor
             CurrentLabor = _laborsToComplete.Dequeue();
             CurrentLabor.OnLaborCompleted += OnLaborCompleted;
             CurrentLabor.Activate();
-            IsPaused = false;
+            _laborFailed = false;
+            Logger.LogString("Group Ring Completed, next group started", key: "Labor");
         }
 
         private void OnLaborCompleted(bool success)
@@ -71,7 +78,7 @@ namespace BForBoss.Labor
             else
             {
                 CurrentLabor.Reset();
-                IsPaused = true;
+                _laborFailed = true;
             }
         }
 

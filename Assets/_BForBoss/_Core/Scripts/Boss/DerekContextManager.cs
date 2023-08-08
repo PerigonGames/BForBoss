@@ -40,6 +40,7 @@ namespace BForBoss
         public void Initialize(RingLaborManager ringLaborManager, IGetPlayerTransform playerMovementBehaviour)
         {
             _ringLaborManager = ringLaborManager;
+            _ringLaborManager.OnLaborCompleted = OnLaborCompleted;
 
             this.PanicIfNullObject(_ringLaborManager, nameof(_ringLaborManager));
 
@@ -92,7 +93,7 @@ namespace BForBoss
                 _bossManager.UpdatePhase(_currentPhase);
             }
 
-            _ringLaborManager.ActivateSystem(OnLaborCompleted);
+            _ringLaborManager.ActivateSystem();
             _currentVulnerability = Vulnerability.Invulnerable;
             _bossManager.UpdateVulnerability(_currentVulnerability);
         }
