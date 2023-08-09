@@ -6,13 +6,24 @@ namespace BForBoss.RingSystem
 {
     public class RingBehaviour : MonoBehaviour
     {
-        public Action<RingBehaviour> RingActivated;
+        public Action<RingBehaviour> OnRingTriggered;
         
         [SerializeField] private int _label;
+        [SerializeField] private GameObject _ringView;
 
         private TMPro.TMP_Text _labelTMP;
         private PlayerTriggerBehaviour _trigger;
 
+        public void Activate()
+        {
+            _ringView.gameObject.SetActive(true);
+        }
+
+        public void Deactivate()
+        {
+            _ringView.gameObject.SetActive(false);
+        }
+        
         private void Awake()
         {
             _labelTMP = GetComponentInChildren<TMPro.TMP_Text>();
@@ -31,7 +42,7 @@ namespace BForBoss.RingSystem
 
         private void OnPlayerEnteredTrigger()
         {
-            RingActivated?.Invoke(this);
+            OnRingTriggered?.Invoke(this);
         }
 
         public void SetLabel(string label)

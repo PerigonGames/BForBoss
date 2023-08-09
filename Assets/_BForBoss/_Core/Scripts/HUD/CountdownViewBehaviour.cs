@@ -14,26 +14,10 @@ namespace BForBoss
             gameObject.SetActive(false);
         }
 
-        public void PauseCountdown()
-        {
-            CountdownTimer.Instance.PauseCountdown();
-        }
-        
-        public void ResumeCountdown()
-        {
-            CountdownTimer.Instance.ResumeCountdown();
-        }
-
         public void Reset()
         {
             CountdownTimer.Instance.Reset();
             SetTimerLabel(CountdownTimer.Instance.CurrentTime);
-        }
-
-        private void OnCompleteCountdown()
-        {
-            SetTimerLabel(CountdownTimer.Instance.CurrentTime);
-            gameObject.SetActive(false);
         }
         
         private void OnStartCountdown()

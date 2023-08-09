@@ -7,16 +7,16 @@ namespace BForBoss.RingSystem
     public class GroupedRingSystem : ILabor
     {
         public event Action<bool> OnLaborCompleted;
+        
+        private readonly RingBehaviour[] _allRings;
+        private readonly float _timeToCompleteSystem;
         private RingBehaviour _currentRing;
         private Queue<RingBehaviour> _ringQueue;
-        private readonly RingBehaviour[] _allRings;
-
-        private readonly float _time;
         
-        public GroupedRingSystem(RingBehaviour[] rings, float time = 0f)
+        public GroupedRingSystem(RingBehaviour[] rings, float timeToCompleteSystem = 0f)
         {
             _allRings = rings;
-            _time = time;
+            _timeToCompleteSystem = timeToCompleteSystem;
             SetupRings();
         }
 
@@ -24,7 +24,7 @@ namespace BForBoss.RingSystem
         {
             for (var i = 0; i < _allRings.Length; i++)
             {
-                _allRings[i].RingActivated = RingTriggered;
+                _allRings[i].OnRingTriggered = RingTriggered;
                 _allRings[i].SetLabel((i + 1).ToString());
             }
         }
@@ -33,7 +33,7 @@ namespace BForBoss.RingSystem
         {
             foreach (var ring in _allRings)
             {
-                DeactivateRing(ring);
+                ring.Deactivate();
             }
 
             _currentRing = null;
@@ -44,15 +44,15 @@ namespace BForBoss.RingSystem
         {
             TrySetupNextRing();
             
-            if (_time > 0f)
+            if (_timeToCompleteSystem > 0f)
             {
-                CountdownTimer.Instance.StartCountdown(_time, onCountdownCompleted: CountdownFinish);
+                CountdownTimer.Instance.StartCountdown(_timeToCompleteSystem, onCountdownCompleted: CountdownFinish);
             }
         }
 
         private void RingTriggered(RingBehaviour ring)
         {
-            DeactivateRing(ring);
+            ring.Deactivate();
             TrySetupNextRing();
         }
 
@@ -63,16 +63,6 @@ namespace BForBoss.RingSystem
             OnLaborCompleted?.Invoke(false);
         }
 
-        private void DeactivateRing(RingBehaviour ring)
-        {
-            ring.gameObject.SetActive(false);
-        }
-
-        private void ActivateRing(RingBehaviour ring)
-        {
-            ring.gameObject.SetActive(true);
-        }
-        
         private void TrySetupNextRing()
         {
             if (_ringQueue.Count == 0)
@@ -81,15 +71,12 @@ namespace BForBoss.RingSystem
                 return;
             }
             _currentRing = _ringQueue.Dequeue();
-            if (!_currentRing.gameObject.activeInHierarchy)
-            {
-                ActivateRing(_currentRing);
-            }
+            _currentRing.Activate();
         }
 
         private void InvokeLaborCompleted()
         {
-            if(_time > 0f)
+            if(_timeToCompleteSystem > 0f)
                 CountdownTimer.Instance.StopCountdown();
             OnLaborCompleted?.Invoke(true);
         }

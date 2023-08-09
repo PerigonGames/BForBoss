@@ -67,7 +67,7 @@ namespace BForBoss.Labor
             CurrentLabor.OnLaborCompleted += OnLaborCompleted;
             CurrentLabor.Activate();
             _laborFailed = false;
-            Logger.LogString("Group Ring Completed, next group started", key: "Labor");
+            Logger.LogString("Group Ring started", key: "Labor");
         }
 
         private void OnLaborCompleted(bool success)
@@ -82,7 +82,8 @@ namespace BForBoss.Labor
             else
             {
                 CurrentLabor.Reset();
-                _laborFailed = true;
+                CurrentLabor.Activate();
+                //_laborFailed = true;
             }
         }
 

@@ -57,7 +57,7 @@ namespace BForBoss.RingSystem
             foreach (var grouping in _systemsToBuild)
             {
                 this.PanicIfNullOrEmptyList(grouping.Rings, "Ring list");
-                ILabor newSystem = new GroupedRingSystem(grouping.Rings, time: grouping.Time);
+                ILabor newSystem = new GroupedRingSystem(grouping.Rings, timeToCompleteSystem: grouping.Time);
                 newSystem.OnLaborCompleted += (success) => Logger.LogString($"{(success ? "Completed" : "Failed")} {grouping.Rings.Length} ring Standard system", key:"Labor");
                 _listOfRingSystems.Add(newSystem);
             }
