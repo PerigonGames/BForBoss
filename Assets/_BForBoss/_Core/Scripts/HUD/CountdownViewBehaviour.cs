@@ -9,27 +9,25 @@ namespace BForBoss
     {
         [SerializeField, Resolve] private TMP_Text _countdownLabel;
 
-        public void OnStopCountdown()
+        private void OnStopCountdown()
         {
-            gameObject.SetActive(false);
+            _countdownLabel.text = string.Empty;
         }
 
         public void Reset()
         {
             CountdownTimer.Instance.Reset();
-            SetTimerLabel(CountdownTimer.Instance.CurrentTime);
+            _countdownLabel.text = string.Empty;
         }
         
         private void OnStartCountdown()
         {
-            SetTimerLabel(CountdownTimer.Instance.CurrentTime);
-            gameObject.SetActive(true);
+            _countdownLabel.text = string.Empty;
         }
-
+        
         private void Update()
         {
             CountdownTimer.Instance.Tick();
-            SetTimerLabel(CountdownTimer.Instance.CurrentTime);
         }
 
         private void SetTimerLabel(float seconds)
@@ -43,12 +41,14 @@ namespace BForBoss
         {
             CountdownTimer.Instance.OnTimerStarted += OnStartCountdown;
             CountdownTimer.Instance.OnTimerStopped += OnStopCountdown;
+            CountdownTimer.Instance.OnTimeUpdated += SetTimerLabel;
         }
         
         private void OnDisable()
         {
-            CountdownTimer.Instance.OnTimerStarted += OnStartCountdown;
-            CountdownTimer.Instance.OnTimerStopped += OnStopCountdown;
+            CountdownTimer.Instance.OnTimerStarted -= OnStartCountdown;
+            CountdownTimer.Instance.OnTimerStopped -= OnStopCountdown;
+            CountdownTimer.Instance.OnTimeUpdated -= SetTimerLabel;
         }
 
         private void Awake()

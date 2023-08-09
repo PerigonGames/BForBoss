@@ -15,25 +15,37 @@ namespace BForBoss
         }
         
         public bool IsRunning => _isRunning;
-        public float CurrentTime => _time;
 
         private static CountdownTimer _instance = null;
         
-        private float _time;
+        private float _timer;
         private bool _isRunning;
+        private float _delayedTimer;
 
         private float _amountOfTime;
 
-        public event Action OnTimerTick;
         public event Action OnTimerStarted;
         public event Action OnTimerStopped;
-        
+
+        private float Timer
+        {
+            get => _timer;
+            set
+            {
+                _timer = value;
+                OnTimeUpdated?.Invoke(value);
+            }
+        }
+
+        public event Action<float> OnTimeUpdated;
+
         private Action OnCountdownCompleted;
 
-        public void StartCountdown(float amountOfTime, Action onCountdownCompleted = null)
+        public void StartCountdown(float amountOfTime, Action onCountdownCompleted = null, float delayedStartTime = 0)
         {
+            _delayedTimer = delayedStartTime;
             _amountOfTime = amountOfTime;
-            _time = amountOfTime;
+            _timer = amountOfTime;
             _isRunning = true;
             OnCountdownCompleted = onCountdownCompleted;
             OnTimerStarted?.Invoke();
@@ -44,16 +56,6 @@ namespace BForBoss
             _isRunning = false;
             OnCountdownCompleted = null;
             OnTimerStopped?.Invoke();
-        }
-
-        public void PauseCountdown()
-        {
-            _isRunning = false;
-        }
-
-        public void ResumeCountdown()
-        {
-            _isRunning = true;
         }
         
         public void ToggleCountdown()
@@ -68,10 +70,15 @@ namespace BForBoss
                 return;
             }
 
-            if (_time >= 0.0f)
+            if (_delayedTimer > 0)
             {
-                _time -= Time.deltaTime;
-                OnTimerTick?.Invoke();
+                _delayedTimer -= Time.deltaTime;
+                return;
+            }
+
+            if (Timer >= 0.0f)
+            {
+                Timer -= Time.deltaTime;
             }
             else
             {
@@ -81,7 +88,7 @@ namespace BForBoss
 
         public void Reset()
         {
-            _time = _amountOfTime;
+            _timer = _amountOfTime;
         }
 
         private void CompleteCountdown()

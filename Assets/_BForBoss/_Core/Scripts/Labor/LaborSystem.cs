@@ -1,30 +1,25 @@
 using System.Collections.Generic;
 using System.Linq;
-using Perigon.Utility;
 using PerigonGames;
+using UnityEngine;
+using Logger = Perigon.Utility.Logger;
 
 namespace BForBoss.Labor
 {
     public class LaborSystem
     {        
         //TODO
-        // Make sure when failing, resets same Grouped Ring
         // Make sure when reset, it stops timer
         // make sure to have delay when reset same grouped ring
-        private readonly float PenaltyDelayedStart;
-
         private Queue<ILabor> _laborsToComplete;
         public ILabor CurrentLabor { get; private set; }
 
         public bool IsComplete { get; private set; }
-        private bool _laborFailed;
 
         public LaborSystem(
             IEnumerable<ILabor> labors, 
-            float penaltyDelayedStart = 0, 
             bool randomize = false)
         {
-            PenaltyDelayedStart = penaltyDelayedStart;
             if (randomize)
             {
                 var randomList = labors.ToList();
@@ -35,24 +30,19 @@ namespace BForBoss.Labor
             {
                 _laborsToComplete = new Queue<ILabor>(labors);
             }
-
-            _laborFailed = true;
         }
 
         public void Activate()
         {
             if (IsComplete)
             {
+                Logger.LogWarning("Labour System is called to be activated, even when it's completed");
                 return;
             }
 
             if (CurrentLabor == null)
             {
                 SetNextLaborActive();
-            }
-            else if (_laborFailed)
-            {
-                CurrentLabor.Activate();
             }
         }
 
@@ -66,7 +56,6 @@ namespace BForBoss.Labor
             CurrentLabor = _laborsToComplete.Dequeue();
             CurrentLabor.OnLaborCompleted += OnLaborCompleted;
             CurrentLabor.Activate();
-            _laborFailed = false;
             Logger.LogString("Group Ring started", key: "Labor");
         }
 
@@ -83,7 +72,6 @@ namespace BForBoss.Labor
             {
                 CurrentLabor.Reset();
                 CurrentLabor.Activate();
-                //_laborFailed = true;
             }
         }
 
