@@ -4,7 +4,7 @@ using BForBoss.Labor;
 
 namespace BForBoss.RingSystem
 {
-    public class RingSystem : ILabor
+    public class GroupedRingSystem : ILabor
     {
         public event Action<bool> OnLaborCompleted;
         private RingBehaviour _currentRing;
@@ -12,13 +12,21 @@ namespace BForBoss.RingSystem
         private readonly RingBehaviour[] _allRings;
 
         private readonly float _time;
-
-        private int _ringIndex = 1;
-
-        public RingSystem(RingBehaviour[] rings, float time = 0f)
+        
+        public GroupedRingSystem(RingBehaviour[] rings, float time = 0f)
         {
             _allRings = rings;
             _time = time;
+            SetupRings();
+        }
+
+        private void SetupRings()
+        {
+            for (var i = 0; i < _allRings.Length; i++)
+            {
+                _allRings[i].RingActivated = RingTriggered;
+                _allRings[i].SetLabel((i + 1).ToString());
+            }
         }
 
         public void Reset()
@@ -30,7 +38,6 @@ namespace BForBoss.RingSystem
 
             _currentRing = null;
             _ringQueue = new Queue<RingBehaviour>(_allRings);
-            _ringIndex = 1;
         }
 
         public void Activate()
@@ -59,13 +66,10 @@ namespace BForBoss.RingSystem
         private void DeactivateRing(RingBehaviour ring)
         {
             ring.gameObject.SetActive(false);
-            ring.RingActivated = null;
         }
 
         private void ActivateRing(RingBehaviour ring)
         {
-            ring.RingActivated = RingTriggered;
-            ring.SetLabel(_ringIndex++.ToString());
             ring.gameObject.SetActive(true);
         }
         

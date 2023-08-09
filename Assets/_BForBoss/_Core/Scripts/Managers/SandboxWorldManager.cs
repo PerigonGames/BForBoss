@@ -30,6 +30,7 @@ namespace BForBoss
             _ringLaborManager.Initialize();
             _wipeOutWallsManager.Initialize(_playerBehaviour.PlayerMovement);
             _derekMissileLauncherBehaviours.ForEach(launcher => launcher.Initialize(_playerBehaviour.PlayerMovement));
+            _stateManager.SetState(State.PreGame);
         }
 
         protected override void Awake()

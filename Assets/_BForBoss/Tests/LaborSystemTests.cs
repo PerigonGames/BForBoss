@@ -18,7 +18,7 @@ namespace Tests.Labors
             var array = new ILabor[] {mock1, mock2, mock3, mock4};
 
             // When
-            var system = new LaborSystem(array, autoStart: true);
+            var system = new LaborSystem(array);
             
             // Then
             Assert.IsTrue(mock1.IsActivated);
@@ -37,7 +37,7 @@ namespace Tests.Labors
             var array = new ILabor[] {mock1, mock2, mock3, mock4};
 
             // When
-            var system = new LaborSystem(array, autoStart: true);
+            var system = new LaborSystem(array);
             mock1.CompleteLabor();
             
             // Then
@@ -56,7 +56,7 @@ namespace Tests.Labors
             var array = new ILabor[] {mock1, mock2, mock3, mock4};
 
             // When
-            var system = new LaborSystem(array, autoStart: true);
+            var system = new LaborSystem(array);
             mock1.CompleteLabor();
             mock2.CompleteLabor();
             mock3.CompleteLabor();
@@ -78,7 +78,7 @@ namespace Tests.Labors
             var array = new ILabor[] {mock1, mock2, mock3, mock4};
 
             // When
-            var system = new LaborSystem(array, autoStart: true);
+            var system = new LaborSystem(array);
             mock1.CompleteLabor();
             mock3.CompleteLabor();
             mock4.CompleteLabor();

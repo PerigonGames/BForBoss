@@ -7,6 +7,10 @@ namespace BForBoss.Labor
 {
     public class LaborSystem
     {        
+        //TODO
+        // Make sure when failing, resets same Grouped Ring
+        // Make sure when reset, it stops timer
+        // make sure to have delay when reset same grouped ring
         private readonly float PenaltyDelayedStart;
 
         private Queue<ILabor> _laborsToComplete;
@@ -16,7 +20,7 @@ namespace BForBoss.Labor
         private bool _laborFailed;
 
         public LaborSystem(
-            List<ILabor> labors, 
+            IEnumerable<ILabor> labors, 
             float penaltyDelayedStart = 0, 
             bool randomize = false)
         {

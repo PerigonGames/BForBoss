@@ -4,12 +4,11 @@ using BForBoss.Labor;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
-using UnityEngine;
 using Logger = Perigon.Utility.Logger;
 
 namespace BForBoss.RingSystem
 {
-    public class RingLaborManager : MonoBehaviour
+    public class RingLaborManager : SerializedMonoBehaviour
     {
         [OdinSerialize] private RingGrouping[] _systemsToBuild;
 
@@ -58,7 +57,7 @@ namespace BForBoss.RingSystem
             foreach (var grouping in _systemsToBuild)
             {
                 this.PanicIfNullOrEmptyList(grouping.Rings, "Ring list");
-                ILabor newSystem = new RingSystem(grouping.Rings, time: grouping.Time);
+                ILabor newSystem = new GroupedRingSystem(grouping.Rings, time: grouping.Time);
                 newSystem.OnLaborCompleted += (success) => Logger.LogString($"{(success ? "Completed" : "Failed")} {grouping.Rings.Length} ring Standard system", key:"Labor");
                 _listOfRingSystems.Add(newSystem);
             }
@@ -73,12 +72,12 @@ namespace BForBoss.RingSystem
                 OnLaborCompleted?.Invoke();
             }
         }
-
-        [Serializable]
-        public class RingGrouping
-        {
-            public float Time = 5f;
-            public RingBehaviour[] Rings;
-        }
+    }
+    
+    [Serializable]
+    public class RingGrouping
+    {
+        public float Time = 5f;
+        public RingBehaviour[] Rings;
     }
 }
