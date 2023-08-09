@@ -76,9 +76,10 @@ namespace Tests.Labors
             var mock3 = new MockLabor();
             var mock4 = new MockLabor();
             var array = new ILabor[] {mock1, mock2, mock3, mock4};
-
-            // When
             var system = new LaborSystem(array);
+            
+            // When
+            system.Activate();
             mock1.CompleteLabor();
             mock3.CompleteLabor();
             mock4.CompleteLabor();
