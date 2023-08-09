@@ -1,4 +1,3 @@
-using System;
 using BForBoss.RingSystem;
 using Perigon.Utility;
 using UnityEngine;

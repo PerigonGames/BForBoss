@@ -15,7 +15,11 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -26,7 +30,124 @@ MonoBehaviour:
       Data: 0|BForBoss.RingSystem.RingLaborManager+RingGrouping[], Core
     - Name: 
       Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|BForBoss.RingSystem.RingLaborManager+RingGrouping, Core
+    - Name: RingSystemType
+      Entry: 3
+      Data: 1
+    - Name: Time
+      Entry: 4
+      Data: 100
+    - Name: Rings
+      Entry: 7
+      Data: 2|BForBoss.RingSystem.RingBehaviour[], Core
+    - Name: 
+      Entry: 12
+      Data: 5
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: NestedSystems
+      Entry: 7
+      Data: 3|BForBoss.RingSystem.RingLaborManager+RingGrouping[], Core
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 4|BForBoss.RingSystem.RingLaborManager+RingGrouping, Core
+    - Name: RingSystemType
+      Entry: 3
       Data: 0
+    - Name: Time
+      Entry: 4
+      Data: 5
+    - Name: Rings
+      Entry: 7
+      Data: 5|BForBoss.RingSystem.RingBehaviour[], Core
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: NestedSystems
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 6|BForBoss.RingSystem.RingLaborManager+RingGrouping, Core
+    - Name: RingSystemType
+      Entry: 3
+      Data: 0
+    - Name: Time
+      Entry: 4
+      Data: 5
+    - Name: Rings
+      Entry: 7
+      Data: 7|BForBoss.RingSystem.RingBehaviour[], Core
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 10
+      Data: 2
+    - Name: 
+      Entry: 10
+      Data: 3
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: NestedSystems
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -37,4 +158,4 @@ MonoBehaviour:
   _vulnerabilityDuration: 5
   _rotationRate: 50
   _intervalBetweenShots: 2
-  _missileSpeed: 20
+  _missileSpeedMultiplier: 60
