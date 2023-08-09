@@ -232,7 +232,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh29366
+  m_Name: pb_Mesh-50926
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1729,6 +1729,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _endTutorialButton: {fileID: 575480701}
   _bossManager: {fileID: 730369066}
+  _firstPhaseData: {fileID: 11400000, guid: 0912f91036cf5754da0c0cfb69adba84, type: 2}
+  _secondPhaseData: {fileID: 11400000, guid: 0b0234d4998caae4b82296a115c55391, type: 2}
+  _finalPhaseData: {fileID: 11400000, guid: c8a21024e30f9204f98ac20d5a2e6b94, type: 2}
 --- !u!4 &787198327
 Transform:
   m_ObjectHideFlags: 0
@@ -1750,7 +1753,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh29426
+  m_Name: pb_Mesh-50966
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2810,7 +2813,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh29562
+  m_Name: pb_Mesh-50986
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3346,6 +3349,17 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!114 &1762668301 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 281993280497631056, guid: a0e92b2cf49b1ee469fbf07a4c576184, type: 3}
+  m_PrefabInstance: {fileID: 281993281193325432}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 148a9bb4b765a2b42bdac2418b81a984, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1867533352
 GameObject:
   m_ObjectHideFlags: 0
@@ -3449,7 +3463,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh29510
+  m_Name: pb_Mesh-50946
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4121,6 +4135,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 281993280497631058, guid: a0e92b2cf49b1ee469fbf07a4c576184, type: 3}
+      propertyPath: _rotationalMovementBehaviour
+      value: 
+      objectReference: {fileID: 1762668301}
     - target: {fileID: 281993280497631060, guid: a0e92b2cf49b1ee469fbf07a4c576184, type: 3}
       propertyPath: m_RootOrder
       value: 17
@@ -4179,7 +4197,7 @@ PrefabInstance:
       objectReference: {fileID: 116101962}
     - target: {fileID: 281993280611624003, guid: a0e92b2cf49b1ee469fbf07a4c576184, type: 3}
       propertyPath: m_VersionIndex
-      value: 2299
+      value: 2302
       objectReference: {fileID: 0}
     - target: {fileID: 281993281763094570, guid: a0e92b2cf49b1ee469fbf07a4c576184, type: 3}
       propertyPath: m_Mesh
@@ -4187,7 +4205,7 @@ PrefabInstance:
       objectReference: {fileID: 1932348438}
     - target: {fileID: 281993281763094570, guid: a0e92b2cf49b1ee469fbf07a4c576184, type: 3}
       propertyPath: m_VersionIndex
-      value: 2299
+      value: 2302
       objectReference: {fileID: 0}
     - target: {fileID: 281993281763094583, guid: a0e92b2cf49b1ee469fbf07a4c576184, type: 3}
       propertyPath: m_Mesh
@@ -4203,7 +4221,7 @@ PrefabInstance:
       objectReference: {fileID: 1578210264}
     - target: {fileID: 281993281954134904, guid: a0e92b2cf49b1ee469fbf07a4c576184, type: 3}
       propertyPath: m_VersionIndex
-      value: 2302
+      value: 2305
       objectReference: {fileID: 0}
     - target: {fileID: 281993282230251913, guid: a0e92b2cf49b1ee469fbf07a4c576184, type: 3}
       propertyPath: m_Mesh
@@ -4215,7 +4233,7 @@ PrefabInstance:
       objectReference: {fileID: 812477316}
     - target: {fileID: 281993282230251916, guid: a0e92b2cf49b1ee469fbf07a4c576184, type: 3}
       propertyPath: m_VersionIndex
-      value: 2305
+      value: 2308
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0e92b2cf49b1ee469fbf07a4c576184, type: 3}

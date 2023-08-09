@@ -15,6 +15,7 @@ namespace Perigon.Weapons
         protected bool _isActive = false;
 
         public Transform HomingTarget { get; set; }
+        public float SpeedMultiplier { get; set; } = 1.0f;
 
         public ObjectPooler<BulletBehaviour> Pool
         {

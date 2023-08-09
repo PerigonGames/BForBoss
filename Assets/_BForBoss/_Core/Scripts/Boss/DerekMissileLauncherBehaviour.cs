@@ -18,6 +18,8 @@ namespace BForBoss
         private float _intervalBetweenShots;
         private float _shootTimer;
 
+        private float _missileSpeedMultiplier;
+
         public void Reset()
         {
             _canShootMissiles = false;
@@ -33,10 +35,16 @@ namespace BForBoss
                 _launcherVFX[i] = _launcherLocations[i].gameObject.GetComponentInChildren<TimedVFXEffect>();
             }
         }
-        
+
+        public void UpdateMissileSettings(float missileSpeedMultiplier)
+        {
+            _missileSpeedMultiplier = missileSpeedMultiplier;
+        }
+
         public void ShootMissile()
         {
             var bullet = _bulletSpawner.SpawnBullet(BulletTypes.NoPhysics);
+            bullet.SpeedMultiplier = _missileSpeedMultiplier;
             var closestLauncherIndex = GetClosestLaunchTransformIndex(); 
             bullet.SetSpawnAndDirection(_launcherLocations[closestLauncherIndex].position,Vector3.up);
             if (_launcherVFX[closestLauncherIndex] != null)

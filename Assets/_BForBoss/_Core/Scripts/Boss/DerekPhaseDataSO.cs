@@ -10,19 +10,19 @@ namespace BForBoss
     {
         //Health
         [Header("Health")]
-        [SerializeField /*,PropertyRange(0, "_healthThresholdMaximum")*/ ,MinValue(0.0f), MaxValue(1.0f), Tooltip("The percentage of health where Derek will increment its phase")] 
+        [SerializeField /*,PropertyRange(0, "_healthThresholdMaximum")*/ ,MinValueAttribute(0.0f), MaxValueAttribute(1.0f), Tooltip("The percentage of health where Derek will increment its phase")] 
         private float _healthThreshold;
-        [SerializeField, MinValue(0.0f), Tooltip("How long should Derek's vulnerability last this phase")] private float _vulnerabilityTimer = 1.0f;
+        [SerializeField, MinValueAttribute(0.0f), Tooltip("How long should Derek's vulnerability last this phase")] private float _vulnerabilityDuration = 1.0f;
         
         //Movement
         [Header("Movement")]
-        [SerializeField, Tooltip("How fast should Derek Rotate")] private float _rotationRate;
+        [SerializeField, Tooltip("How fast should Derek Rotate"), MinValueAttribute(0.0f)] private float _rotationRate;
         
         //Missile Information
         [Header("Missiles")]
-        [SerializeField, Min(0.1f), Tooltip("How long should Derek wait before firing its next shot")] private float _intervalBetweenShots;
+        [SerializeField, MinValueAttribute(0.1f), Tooltip("How long should Derek wait before firing its next shot")] private float _intervalBetweenShots;
         //private DerekMissileBehaviour.MovementProfile _missileMovementProfile;
-        [SerializeField, Min(1.0f), Tooltip("The Speed of the missile after it has reached its apex and begins trailing the player")] private float _missileSpeed;
+        [SerializeField, MinValueAttribute(0.1f), Tooltip("Multiplier set on the Autopilot speed of the missile")] private float _missileSpeedMultiplier;
         
         //Labor Information
         [Header("Labors")]
@@ -36,12 +36,12 @@ namespace BForBoss
 
 
         public float HealthThreshold => _healthThreshold;
-        public float VulnerabilityTimer => _vulnerabilityTimer;
+        public float VulnerabilityDuration => _vulnerabilityDuration;
         
         public float RotationRate => _rotationRate;
         
         public float IntervalBetweenShots => _intervalBetweenShots;
-        public float MissileSpeed => _missileSpeed;
+        public float MissileSpeedMultiplier => _missileSpeedMultiplier;
 
         public RingLaborManager.RingGrouping[] RingLaborSystems => _ringLaborSystems;
     }

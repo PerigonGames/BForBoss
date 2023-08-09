@@ -22,9 +22,19 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes:
     - Name: _ringLaborSystems
-      Entry: 6
+      Entry: 7
+      Data: 0|BForBoss.RingSystem.RingLaborManager+RingGrouping[], Core
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
       Data: 
-  _healthThreshold: 0
-  _rotationRate: 0
-  _intervalBetweenShots: 0
-  _missileSpeed: 0
+    - Name: 
+      Entry: 8
+      Data: 
+  _healthThreshold: 0.25
+  _vulnerabilityDuration: 10
+  _rotationRate: 30
+  _intervalBetweenShots: 3
+  _missileSpeed: 10

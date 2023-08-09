@@ -17,6 +17,7 @@ namespace BForBoss
         
         [SerializeField, Resolve] private DerekShieldBehaviour _shieldBehaviour;
         [SerializeField, Resolve] private BossWipeOutWallsManager _wipeoutWallsManager;
+        [SerializeField, Resolve] private RotationalMovementBehaviour _rotationalMovementBehaviour;
         [SerializeField] private DerekMissileLauncherBehaviour[] _missileLauncherBehaviours;
         [SerializeField, Tooltip("Temporary timer to space out Missile shots for testing purposes"), Min(0.0f)] private float _timeBetweenMissileShots = 5.0f;
         [SerializeField, Tooltip("Temporary timer to track how long Derek has been in its vulnerable state"), Min(0.0f)] private float _vulnerabilityDuration = 10.0f;
@@ -54,24 +55,38 @@ namespace BForBoss
             {
                 case DerekContextManager.Phase.Tutorial:
                 case DerekContextManager.Phase.Death:
-                    break;
-                case DerekContextManager.Phase.FirstPhase when phaseData != null:
+                    return;
+                case DerekContextManager.Phase.FirstPhase:
                     //_healthBarViewBehavior.SetPhaseBoundary(0.75f, _onPhaseComplete.Invoke());
                     //_derekMissileBehavior.UpdateParameters(AdjustedParameters[])
-                    Perigon.Utility.Logger.LogString("Phase 1: Will transition at 75% health", LoggerColor.Green, "derekboss");
+                    Perigon.Utility.Logger.LogString($"Phase 1: Will transition at {phaseData.HealthThreshold * 100}% health", LoggerColor.Green, "derekboss");
                     break;
-                case DerekContextManager.Phase.SecondPhase when phaseData != null:
+                case DerekContextManager.Phase.SecondPhase:
                     //_healthBarViewBehavior.SetPhaseBoundary(0.25f, _onPhaseComplete.Invoke());
                     //_derekMissileBehavior.UpdateParameters(AdjustedParameters[])
-                    Perigon.Utility.Logger.LogString("Phase 2: Will transition at 25% health", LoggerColor.Green, "derekboss");
+                    Perigon.Utility.Logger.LogString($"Phase 2: Will transition at {phaseData.HealthThreshold * 100}% health", LoggerColor.Green, "derekboss");
                     break;
-                case DerekContextManager.Phase.FinalPhase when phaseData != null:
+                case DerekContextManager.Phase.FinalPhase:
                     //_healthBarViewBehavior.SetPhaseBoundary(0f, _onPhaseComplete.Invoke());
                     //_derekMissileBehavior.UpdateParameters(AdjustedParameters[])
-                    Perigon.Utility.Logger.LogString("Phase 3: Will transition at 0% health", LoggerColor.Green, "derekboss");
+                    Perigon.Utility.Logger.LogString($"Phase 3: Will transition at {phaseData.HealthThreshold * 100}% health", LoggerColor.Green, "derekboss");
                     break;
                 default:
                     return;
+            }
+
+            if (phaseData == null)
+            {
+                Perigon.Utility.Logger.LogError("Phase Data should not be invalid", LoggerColor.Red, "derekboss");
+                return;
+            }
+            
+            _rotationalMovementBehaviour.SetRotationRate(phaseData.RotationRate);
+            _vulnerabilityDuration = phaseData.VulnerabilityDuration;
+            _timeBetweenMissileShots = phaseData.IntervalBetweenShots;
+            foreach (DerekMissileLauncherBehaviour missileLauncher in _missileLauncherBehaviours)
+            {
+                missileLauncher.UpdateMissileSettings(phaseData.MissileSpeedMultiplier);
             }
         }
 
@@ -139,6 +154,7 @@ namespace BForBoss
             }
             
             this.PanicIfNullObject(_wipeoutWallsManager, nameof(_wipeoutWallsManager));
+            this.PanicIfNullObject(_rotationalMovementBehaviour, nameof(_rotationalMovementBehaviour));
         }
 
         //TODO: Remove temp damage receiving component once DerekHealthBehaviour is implemented
