@@ -47,7 +47,6 @@ namespace BForBoss
         public void StopCountdown()
         {
             _isRunning = false;
-            OnCountdownCompleted = null;
             OnTimeReset?.Invoke();
         }
 
@@ -86,10 +85,8 @@ namespace BForBoss
         private void CompleteCountdown()
         {
             _isRunning = false;
-            OnTimeReset?.Invoke();
             OnCountdownCompleted?.Invoke();
-            OnCountdownCompleted = null;
-            Reset();
+            OnTimeReset?.Invoke();
         }
     }
 }

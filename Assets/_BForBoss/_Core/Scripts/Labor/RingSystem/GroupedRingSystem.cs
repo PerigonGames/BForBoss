@@ -56,8 +56,8 @@ namespace BForBoss.RingSystem
         public void Activate()
         {
             var delayedTime = _didFailRingSystem ? _penaltyDelayedStartTime : 0;
-            TrySetupNextRing();
             CountdownTimer.Instance.StartCountdown(_timeToCompleteSystem, onCountdownCompleted: CountdownFinish, delayedStartTime: delayedTime);
+            TrySetupNextRing();
         }
 
         private void RingTriggered(RingBehaviour ring)
