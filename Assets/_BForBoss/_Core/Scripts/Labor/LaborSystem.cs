@@ -1,16 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using PerigonGames;
-using UnityEngine;
 using Logger = Perigon.Utility.Logger;
 
 namespace BForBoss.Labor
 {
     public class LaborSystem
     {        
-        //TODO
-        // Make sure when reset, it stops timer
-        // make sure to have delay when reset same grouped ring
         private Queue<ILabor> _laborsToComplete;
         public ILabor CurrentLabor { get; private set; }
 

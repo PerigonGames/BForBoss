@@ -13,7 +13,7 @@ namespace BForBoss
         [SerializeField] private BossWipeOutWallsManager _wipeOutWallsManager;
 
         private DerekMissileLauncherBehaviour[] _derekMissileLauncherBehaviours;
-        private CountdownViewBehaviour _countdownTimer;
+        private CountdownViewBehaviour _countdownTimerView;
 
         protected override Vector3 SpawnLocation => _spawnLocation.position;
         protected override Quaternion SpawnLookDirection => _spawnLocation.rotation;

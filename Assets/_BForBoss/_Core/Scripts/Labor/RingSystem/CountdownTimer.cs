@@ -19,7 +19,6 @@ namespace BForBoss
         private float _timer;
         private bool _isRunning;
         private float _delayedTimer;
-        private float _amountOfTime;
 
 
         private float Timer
@@ -40,7 +39,6 @@ namespace BForBoss
         public void StartCountdown(float amountOfTime, Action onCountdownCompleted = null, float delayedStartTime = 0)
         {
             _delayedTimer = delayedStartTime;
-            _amountOfTime = amountOfTime;
             _timer = amountOfTime;
             _isRunning = true;
             OnCountdownCompleted = onCountdownCompleted;
@@ -78,7 +76,10 @@ namespace BForBoss
 
         public void Reset()
         {
-            _timer = _amountOfTime;
+            _timer = 0;
+            _isRunning = false;
+            _delayedTimer = 0;
+            
             OnTimeReset?.Invoke();
         }
 

@@ -24,14 +24,13 @@ namespace BForBoss.RingSystem
 
         public void Reset()
         {
-            //TODO - Reset whole game vs on death
             foreach (var system in _listOfRingSystems)
             {
                 system.Reset();
             }
 
             CountdownTimer.Instance.Reset();
-            
+            _laborSystem = new LaborSystem(_listOfRingSystems, randomize: true);
             _hasCompletedSystem = false;
         }
         
