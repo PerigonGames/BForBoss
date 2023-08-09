@@ -19,7 +19,8 @@ namespace Tests.Labors
 
             // When
             var system = new LaborSystem(array);
-            
+            system.Activate();
+
             // Then
             Assert.IsTrue(mock1.IsActivated);
             Assert.IsFalse(mock2.IsActivated);
@@ -38,6 +39,7 @@ namespace Tests.Labors
 
             // When
             var system = new LaborSystem(array);
+            system.Activate();
             mock1.CompleteLabor();
             
             // Then
@@ -57,6 +59,7 @@ namespace Tests.Labors
 
             // When
             var system = new LaborSystem(array);
+            system.Activate();
             mock1.CompleteLabor();
             mock2.CompleteLabor();
             mock3.CompleteLabor();
