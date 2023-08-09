@@ -1,6 +1,4 @@
-using BForBoss.RingSystem;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using UnityEngine;
 
 namespace BForBoss
@@ -24,17 +22,6 @@ namespace BForBoss
         //private DerekMissileBehaviour.MovementProfile _missileMovementProfile;
         [SerializeField, MinValueAttribute(0.1f), Tooltip("Multiplier set on the Autopilot speed of the missile")] private float _missileSpeedMultiplier;
         
-        //Labor Information
-        [Header("Labors")]
-        [OdinSerialize, Tooltip("The Labors to initialize for this phase")] private RingLaborManager.RingGrouping[] _ringLaborSystems;
-
-        // private float _healthThresholdMaximum = 1.0f;
-        // public void SetHealthThresholdMaximum(float newThresholdMaximum)
-        // {
-        //     _healthPercentageThreshold = newThresholdMaximum;
-        // }
-
-
         public float HealthThreshold => _healthThreshold;
         public float VulnerabilityDuration => _vulnerabilityDuration;
         
@@ -42,7 +29,5 @@ namespace BForBoss
         
         public float IntervalBetweenShots => _intervalBetweenShots;
         public float MissileSpeedMultiplier => _missileSpeedMultiplier;
-
-        public RingLaborManager.RingGrouping[] RingLaborSystems => _ringLaborSystems;
     }
 }
