@@ -14,18 +14,13 @@ namespace BForBoss
             }
         }
         
-        public bool IsRunning => _isRunning;
-
         private static CountdownTimer _instance = null;
         
         private float _timer;
         private bool _isRunning;
         private float _delayedTimer;
-
         private float _amountOfTime;
 
-        public event Action OnTimerStarted;
-        public event Action OnTimerStopped;
 
         private float Timer
         {
@@ -38,6 +33,7 @@ namespace BForBoss
         }
 
         public event Action<float> OnTimeUpdated;
+        public event Action OnTimeReset;
 
         private Action OnCountdownCompleted;
 
@@ -48,21 +44,15 @@ namespace BForBoss
             _timer = amountOfTime;
             _isRunning = true;
             OnCountdownCompleted = onCountdownCompleted;
-            OnTimerStarted?.Invoke();
         }
         
         public void StopCountdown()
         {
             _isRunning = false;
             OnCountdownCompleted = null;
-            OnTimerStopped?.Invoke();
+            OnTimeReset?.Invoke();
         }
-        
-        public void ToggleCountdown()
-        {
-            _isRunning = !_isRunning;
-        }
-        
+
         public void Tick()
         {
             if (!_isRunning)
@@ -89,12 +79,13 @@ namespace BForBoss
         public void Reset()
         {
             _timer = _amountOfTime;
+            OnTimeReset?.Invoke();
         }
 
         private void CompleteCountdown()
         {
             _isRunning = false;
-            OnTimerStopped?.Invoke();
+            OnTimeReset?.Invoke();
             OnCountdownCompleted?.Invoke();
             OnCountdownCompleted = null;
             Reset();

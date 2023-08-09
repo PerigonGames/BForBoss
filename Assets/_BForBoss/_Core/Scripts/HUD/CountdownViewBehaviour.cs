@@ -8,19 +8,8 @@ namespace BForBoss
     public class CountdownViewBehaviour : MonoBehaviour
     {
         [SerializeField, Resolve] private TMP_Text _countdownLabel;
-
-        private void OnStopCountdown()
-        {
-            _countdownLabel.text = string.Empty;
-        }
-
-        public void Reset()
-        {
-            CountdownTimer.Instance.Reset();
-            _countdownLabel.text = string.Empty;
-        }
         
-        private void OnStartCountdown()
+        public void Reset()
         {
             _countdownLabel.text = string.Empty;
         }
@@ -39,16 +28,14 @@ namespace BForBoss
 
         private void OnEnable()
         {
-            CountdownTimer.Instance.OnTimerStarted += OnStartCountdown;
-            CountdownTimer.Instance.OnTimerStopped += OnStopCountdown;
             CountdownTimer.Instance.OnTimeUpdated += SetTimerLabel;
+            CountdownTimer.Instance.OnTimeReset += Reset;
         }
         
         private void OnDisable()
         {
-            CountdownTimer.Instance.OnTimerStarted -= OnStartCountdown;
-            CountdownTimer.Instance.OnTimerStopped -= OnStopCountdown;
             CountdownTimer.Instance.OnTimeUpdated -= SetTimerLabel;
+            CountdownTimer.Instance.OnTimeReset -= Reset;
         }
 
         private void Awake()

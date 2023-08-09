@@ -30,10 +30,7 @@ namespace BForBoss.RingSystem
                 system.Reset();
             }
 
-            if (CountdownTimer.Instance.IsRunning)
-            {
-                CountdownTimer.Instance.ToggleCountdown();
-            }
+            CountdownTimer.Instance.Reset();
             
             _hasCompletedSystem = false;
         }
@@ -48,12 +45,7 @@ namespace BForBoss.RingSystem
         {
             _laborSystem?.Activate();
         }
-
-        public void ToggleTimer()
-        {
-            CountdownTimer.Instance.ToggleCountdown();
-        }
-
+        
         private void CreateSystems()
         {
             _listOfRingSystems = new List<ILabor>();
