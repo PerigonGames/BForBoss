@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using BForBoss.Labor;
 using Perigon.Utility;
-using PerigonGames;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 
@@ -38,6 +37,12 @@ namespace BForBoss.RingSystem
         {
             CreateSystems();
             _laborSystem = new LaborSystem(_ringSystems, false);
+        }
+
+        public void Initialize(RingGrouping[] ringSystemsToBuild)
+        {
+            _systemsToBuild = ringSystemsToBuild;
+            Initialize();
         }
 
         public void ActivateSystem(Action onLaborComplete)

@@ -21,7 +21,12 @@ namespace BForBoss
         {
             _rigidbody.rotation = Quaternion.Euler(0,0,0);
         }
-        
+
+        public void SetRotationRate(float newRotationRate)
+        {
+            _rotationRate = newRotationRate;
+        }
+
         public void StartRotation(RotationState rotation)
         {
             switch (rotation)
