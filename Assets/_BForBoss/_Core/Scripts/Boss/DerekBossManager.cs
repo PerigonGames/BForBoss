@@ -1,6 +1,7 @@
 using System;
 using Perigon.Utility;
 using Perigon.Weapons;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BForBoss
@@ -14,15 +15,19 @@ namespace BForBoss
 
         private static readonly int POWER_UP_KEY = Animator.StringToHash(POWER_UP);
         private static readonly int POWER_DOWN_KEY = Animator.StringToHash(POWER_DOWN);
-        
+
         [SerializeField, Resolve] private DerekShieldBehaviour _shieldBehaviour;
         [SerializeField, Resolve] private BossWipeOutWallsManager _wipeoutWallsManager;
         [SerializeField, Resolve] private RotationalMovementBehaviour _rotationalMovementBehaviour;
         [SerializeField] private DerekMissileLauncherBehaviour[] _missileLauncherBehaviours;
         private float _vulnerabilityDuration = 10.0f;
+        [Title("Health")]
+        [SerializeField, Resolve] private DerekHealthView _derekHealthView;
+        [SerializeField] private float _healthAmount;
 
         //Todo: Temporary variables used to simulate receiving and responding to damage. Will Remove once DerekHealthBehavior has been implemented
         private Action<bool> _onVulnerabilityExpired;
+        private float _currentHealth = 0;
         private DerekContextManager.Vulnerability _vulnerability = DerekContextManager.Vulnerability.Invulnerable;
         private float _vulnerabilityTimer;
         private Animator _animator;
@@ -36,6 +41,7 @@ namespace BForBoss
                 missileLauncher.Reset();
             }
             _shieldBehaviour.ToggleShield(false);
+            _currentHealth = _healthAmount;
         }
 
         public void Initialize(IGetPlayerTransform playerMovementBehaviour, Action<bool> onVulnerabilityExpired)
@@ -46,6 +52,7 @@ namespace BForBoss
                 missileLauncher.Initialize(playerMovementBehaviour);
             }
             _onVulnerabilityExpired = onVulnerabilityExpired;
+            _currentHealth = _healthAmount;
         }
 
         public void UpdatePhase(DerekContextManager.Phase phase, DerekPhaseDataSO phaseData)
@@ -75,7 +82,7 @@ namespace BForBoss
                 Perigon.Utility.Logger.LogError("Phase Data should not be invalid", LoggerColor.Red, "derekboss");
                 return;
             }
-            
+
             _rotationalMovementBehaviour.SetRotationRate(phaseData.RotationRate);
             _vulnerabilityDuration = phaseData.VulnerabilityDuration;
             foreach (DerekMissileLauncherBehaviour missileLauncher in _missileLauncherBehaviours)
@@ -130,6 +137,8 @@ namespace BForBoss
                 return;
             }
 
+            _currentHealth--;
+            _derekHealthView.SetState(new DerekHealthViewState(_currentHealth / _healthAmount, _vulnerability == DerekContextManager.Vulnerability.Invulnerable));
             _onVulnerabilityExpired?.Invoke(true);
         }
 
