@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using BForBoss.Labor;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using UnityEngine;
 using Logger = Perigon.Utility.Logger;
 
@@ -11,9 +10,8 @@ namespace BForBoss.RingSystem
 {
     public class RingLaborManager : SerializedMonoBehaviour
     {
-        [SerializeField, InfoBox("When player fails, delayed time before starting the round of rings again")] 
+        [SerializeField, InfoBox("When player fails, delayed time before starting the round of rings again")]
         private float penaltyDelayedStartTime = 3f;
-        [OdinSerialize] private RingGrouping[] _systemsToBuild;
 
         private LaborSystem _laborSystem;
         private List<ILabor> _listOfRingSystems;
@@ -33,10 +31,10 @@ namespace BForBoss.RingSystem
             _laborSystem = new LaborSystem(_listOfRingSystems, randomize: true);
             _hasCompletedSystem = false;
         }
-        
-        public void Initialize()
+
+        public void Initialize(RingGrouping[] ringSystemsToBuild)
         {
-            CreateSystems();
+            CreateSystems(ringSystemsToBuild);
             _laborSystem = new LaborSystem(_listOfRingSystems, randomize: true);
         }
 
@@ -44,11 +42,11 @@ namespace BForBoss.RingSystem
         {
             _laborSystem?.Activate();
         }
-        
-        private void CreateSystems()
+
+        private void CreateSystems(RingGrouping[] ringSystemsToBuild)
         {
             _listOfRingSystems = new List<ILabor>();
-            foreach (var grouping in _systemsToBuild)
+            foreach (var grouping in ringSystemsToBuild)
             {
                 this.PanicIfNullOrEmptyList(grouping.Rings, "Ring list");
                 ILabor newSystem = new GroupedRingSystem(grouping.Rings, timeToCompleteSystem: grouping.Time, penaltyDelayedStartTime: penaltyDelayedStartTime);
@@ -59,7 +57,7 @@ namespace BForBoss.RingSystem
 
         private void Update()
         {
-            if (!_hasCompletedSystem && (_laborSystem?.IsComplete ?? false)) 
+            if (!_hasCompletedSystem && (_laborSystem?.IsComplete ?? false))
             {
                 Logger.LogString("All labors completed", key: "Labor");
                 _hasCompletedSystem = true;
@@ -67,7 +65,7 @@ namespace BForBoss.RingSystem
             }
         }
     }
-    
+
     [Serializable]
     public class RingGrouping
     {

@@ -2,16 +2,30 @@ using System;
 using BForBoss.RingSystem;
 using Perigon.Utility;
 using Perigon.Weapons;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace BForBoss
 {
     [DisallowMultipleComponent]
-    public class DerekContextManager : MonoBehaviour
+    public class DerekContextManager : SerializedMonoBehaviour
     {
         [SerializeField] private ShootAtInteractiveButtonBehaviour _endTutorialButton;
         [SerializeField] private DerekBossManager _bossManager;
-        private RingLaborManager _ringLaborManager;
+        [SerializeField] private RingLaborManager _ringLaborManager;
+
+        //Phase Information
+        [Header("Derek Phase Data")]
+        [SerializeField] private DerekPhaseDataSO _firstPhaseData;
+        [SerializeField] private DerekPhaseDataSO _secondPhaseData;
+        [SerializeField] private DerekPhaseDataSO _finalPhaseData;
+
+        //RingLabors configurations
+        [Header("Ring Configurations")]
+        [OdinSerialize] private RingGrouping[][] _ringConfigurations = new RingGrouping[3][];
+
+        private DerekPhaseDataSO _currentPhaseDataSO = null;
 
         public enum Phase
         {
@@ -33,16 +47,18 @@ namespace BForBoss
 
         public void Reset()
         {
+            _ringLaborManager.Reset();
             _bossManager.Reset();
             _endTutorialButton.Reset();
         }
 
-        public void Initialize(RingLaborManager ringLaborManager, IGetPlayerTransform playerMovementBehaviour)
+        public void Initialize(IGetPlayerTransform playerMovementBehaviour)
         {
-            _ringLaborManager = ringLaborManager;
             _ringLaborManager.OnLaborCompleted = OnLaborCompleted;
-
             this.PanicIfNullObject(_ringLaborManager, nameof(_ringLaborManager));
+            this.PanicIfNullObject(_firstPhaseData, nameof(_firstPhaseData));
+            this.PanicIfNullObject(_secondPhaseData, nameof(_secondPhaseData));
+            this.PanicIfNullObject(_finalPhaseData, nameof(_finalPhaseData));
 
             _bossManager.Initialize(playerMovementBehaviour, HandleVulnerabilityExpiring);
             _endTutorialButton.Initialize(OnEndTutorialButtonTriggered);
@@ -75,12 +91,18 @@ namespace BForBoss
                 {
                     case Phase.Tutorial:
                         _currentPhase = Phase.FirstPhase;
+                        _currentPhaseDataSO = _firstPhaseData;
+                        _ringLaborManager.Initialize(_ringConfigurations[0]);
                         break;
                     case Phase.FirstPhase:
                         _currentPhase = Phase.SecondPhase;
+                        _currentPhaseDataSO = _secondPhaseData;
+                        _ringLaborManager.Initialize(_ringConfigurations[1]);
                         break;
                     case Phase.SecondPhase:
                         _currentPhase = Phase.FinalPhase;
+                        _currentPhaseDataSO = _finalPhaseData;
+                        _ringLaborManager.Initialize(_ringConfigurations[2]);
                         break;
                     case Phase.FinalPhase:
                         _currentPhase = Phase.Death;
@@ -90,7 +112,7 @@ namespace BForBoss
                         return;
                 }
 
-                _bossManager.UpdatePhase(_currentPhase);
+                _bossManager.UpdatePhase(_currentPhase, _currentPhaseDataSO);
             }
 
             _ringLaborManager.ActivateSystem();
@@ -105,8 +127,15 @@ namespace BForBoss
 
         private void Awake()
         {
+            this.PanicIfNullObject(_ringLaborManager, nameof(_ringLaborManager));
             this.PanicIfNullObject(_bossManager, nameof(_bossManager));
             this.PanicIfNullObject(_endTutorialButton, nameof(_endTutorialButton));
+            this.PanicIfNullOrEmptyList(_ringConfigurations, nameof(_ringConfigurations));
+
+            if (_ringConfigurations.Length < 3)
+            {
+                PanicHelper.Panic(new Exception("Expected at least 3 ring configurations"));
+            }
         }
     }
 }

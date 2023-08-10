@@ -15,8 +15,10 @@ namespace BForBoss
         private IGetPlayerTransform _playerTransform;
 
         private bool _canShootMissiles = false;
-        private float _intervalBetweenShots;
         private float _shootTimer;
+
+        private float _missileSpeedMultiplier = 1.0f;
+        private float _intervalBetweenShots = 2.0f;
 
         public void Reset()
         {
@@ -33,10 +35,17 @@ namespace BForBoss
                 _launcherVFX[i] = _launcherLocations[i].gameObject.GetComponentInChildren<TimedVFXEffect>();
             }
         }
-        
+
+        public void UpdateMissileSettings(float missileSpeedMultiplier, float intervalBetweenShots)
+        {
+            _missileSpeedMultiplier = missileSpeedMultiplier;
+            _intervalBetweenShots = intervalBetweenShots;
+        }
+
         public void ShootMissile()
         {
             var bullet = _bulletSpawner.SpawnBullet(BulletTypes.NoPhysics);
+            bullet.SpeedMultiplier = _missileSpeedMultiplier;
             var closestLauncherIndex = GetClosestLaunchTransformIndex(); 
             bullet.SetSpawnAndDirection(_launcherLocations[closestLauncherIndex].position,Vector3.up);
             if (_launcherVFX[closestLauncherIndex] != null)
@@ -46,15 +55,8 @@ namespace BForBoss
             bullet.HomingTarget = _playerTransform.Value;
         }
 
-        public void StartShooting(float intervalBetweenShots)
+        public void StartShooting()
         {
-            if (intervalBetweenShots <= 0.0f)
-            {
-                Perigon.Utility.Logger.LogWarning("Trying to shoot missiles with non-existent interval times, disregarding", LoggerColor.Default, "derekboss");
-                return;
-            }
-
-            _intervalBetweenShots = intervalBetweenShots;
             _shootTimer = _intervalBetweenShots;
             _canShootMissiles = true;
         }

@@ -57,10 +57,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _shieldBehaviour: {fileID: 3149495127931806396}
   _wipeoutWallsManager: {fileID: 281993280497631071}
+  _rotationalMovementBehaviour: {fileID: 281993280497631056}
   _missileLauncherBehaviours:
   - {fileID: 6008624556580243053}
-  _timeBetweenMissileShots: 5
-  _vulnerabilityDuration: 10
+  _derekHealthView: {fileID: 0}
+  _healthAmount: 10
 --- !u!114 &281993280497631057
 MonoBehaviour:
   m_ObjectHideFlags: 0
