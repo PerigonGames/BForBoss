@@ -38,12 +38,6 @@ namespace BForBoss
 
         public void UpdateMissileSettings(float missileSpeedMultiplier, float intervalBetweenShots)
         {
-            if (intervalBetweenShots <= 0.0f || missileSpeedMultiplier <= 0.0f)
-            {
-                Perigon.Utility.Logger.LogWarning("Trying to set missile information with invalid values, disregarding", LoggerColor.Yellow, "derekboss");
-                return;
-            }
-            
             _missileSpeedMultiplier = missileSpeedMultiplier;
             _intervalBetweenShots = intervalBetweenShots;
         }
