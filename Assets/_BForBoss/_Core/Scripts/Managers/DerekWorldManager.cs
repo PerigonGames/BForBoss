@@ -1,5 +1,3 @@
-using System;
-using BForBoss.RingSystem;
 using Perigon.Utility;
 using UnityEngine;
 
@@ -7,7 +5,6 @@ namespace BForBoss
 {
     public class DerekWorldManager : BaseWorldManager
     {
-        [SerializeField] private RingLaborManager _ringLaborManager;
         [SerializeField] private DerekContextManager _derekContextManager;
         private CountdownViewBehaviour _countdownTimer;
 
@@ -17,21 +14,18 @@ namespace BForBoss
         protected override void Reset()
         {
             base.Reset();
-            _ringLaborManager.Reset();
             _derekContextManager.Reset();
         }
 
         protected override void Start()
         {
             base.Start();
-            _ringLaborManager.Initialize();
-            _derekContextManager.Initialize(_ringLaborManager, _playerBehaviour.PlayerMovement);
+            _derekContextManager.Initialize(_playerBehaviour.PlayerMovement);
         }
 
         protected override void OnValidate()
         {
             base.OnValidate();
-            this.PanicIfNullObject(_ringLaborManager, nameof(_ringLaborManager));
             this.PanicIfNullObject(_derekContextManager, nameof(_derekContextManager));
         }
     }

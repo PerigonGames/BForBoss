@@ -7,6 +7,7 @@ namespace Perigon.Weapons
     {
         void SetSpawnAndDirection(Vector3 location, Vector3 normalizedDirection);
         Transform HomingTarget { set; }
+        float SpeedMultiplier { set; }
         Action<Vector3, Vector3> OnBulletHitWall { set; }
         event Action<IBullet, bool> OnBulletHitEntity;
         event Action<IBullet> OnBulletDeactivate;
