@@ -24,18 +24,6 @@ namespace BForBoss
         
         private IStateManager StateManager => BForBoss.StateManager.Instance;
 
-        [Button]
-        public void ShowBoss()
-        {
-            Show(TutorialState.Boss);
-        }
-        
-        [Button]
-        public void ShowEnergy()
-        {
-            Show(TutorialState.Energy);
-        }
-        
         public void Show(TutorialState state)
         {
             if (StateManager == null)
