@@ -3,6 +3,7 @@ using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UICore;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace BForBoss
@@ -10,16 +11,14 @@ namespace BForBoss
     public class TutorialCanvas : MonoBehaviour
     {
         [Title("Buttons")] 
-        [SerializeField] private Button _backButton;
-        [SerializeField] private Button _basicButton;
-        [SerializeField] private Button _energyButton;
-        [SerializeField] private Button _wallRunButton;
-        [SerializeField] private Button _bossButton;
+        [Resolve][SerializeField] private Button _backButton;
+        [Resolve][SerializeField] private Button _controlsButton;
+        [Resolve][SerializeField] private Button _energyButton;
+        [Resolve][SerializeField] private Button _bossButton;
 
         [Title("Tutorial Panels")]
-        [Resolve] [SerializeField] private CarouselView _basicTutorial;
+        [Resolve] [SerializeField] private CarouselView _controlsTutorial;
         [Resolve] [SerializeField] private CarouselView _energyTutorial;
-        [Resolve] [SerializeField] private CarouselView _wallRunTutorial;
         [Resolve] [SerializeField] private CarouselView _bossTutorial;
         private Action OnBackPressed;
         
@@ -27,9 +26,8 @@ namespace BForBoss
         {
             OnBackPressed = onBackPressed;
             this.PanicIfNullObject(_backButton, nameof(_backButton));
-            this.PanicIfNullObject(_basicButton, nameof(_basicButton));
+            this.PanicIfNullObject(_controlsButton, nameof(_controlsButton));
             this.PanicIfNullObject(_energyButton, nameof(_energyButton));
-            this.PanicIfNullObject(_wallRunButton, nameof(_wallRunButton));
             this.PanicIfNullObject(_bossButton, nameof(_bossButton));
             
             ForEachTutorialCarouselView(delegate(CarouselView view)
@@ -47,17 +45,13 @@ namespace BForBoss
 
         private void BindButtons()
         {
-            _basicButton.onClick.AddListener(() =>
+            _controlsButton.onClick.AddListener(() =>
             {
-                _basicTutorial.Show();
+                _controlsTutorial.Show();
             });
             _energyButton.onClick.AddListener(() =>
             {
                 _energyTutorial.Show();
-            });
-            _wallRunButton.onClick.AddListener(() =>
-            {
-                _wallRunTutorial.Show();
             });
             _bossButton.onClick.AddListener(() =>
             {
@@ -71,7 +65,7 @@ namespace BForBoss
 
         private void ForEachTutorialCarouselView(Action<CarouselView> action)
         {
-            var views = new CarouselView[] {_basicTutorial, _energyTutorial, _wallRunTutorial, _bossTutorial};
+            var views = new[] {_controlsTutorial, _energyTutorial, _bossTutorial};
             foreach (var view in views)
             {
                 action?.Invoke(view);
