@@ -16,7 +16,6 @@ namespace BForBoss
         [Resolve][SerializeField] private Button _energyButton;
         [Resolve][SerializeField] private Button _bossButton;
 
-        [FormerlySerializedAs("_basicTutorial")]
         [Title("Tutorial Panels")]
         [Resolve] [SerializeField] private CarouselView _controlsTutorial;
         [Resolve] [SerializeField] private CarouselView _energyTutorial;
