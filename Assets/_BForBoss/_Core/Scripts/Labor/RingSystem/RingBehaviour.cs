@@ -9,10 +9,22 @@ namespace BForBoss.RingSystem
         public Action<RingBehaviour> RingActivated;
         
         [SerializeField] private int _label;
+        [SerializeField] private Renderer _renderer;
 
         private TMPro.TMP_Text _labelTMP;
         private PlayerTriggerBehaviour _trigger;
 
+        public void SetLabel(string label)
+        {
+            _labelTMP.text = label;
+        }
+
+        public void SetColor(Color color)
+        {
+            if (_renderer == null) return;
+            _renderer.material.color = color;
+        }
+        
         private void Awake()
         {
             _labelTMP = GetComponentInChildren<TMPro.TMP_Text>();
@@ -32,11 +44,6 @@ namespace BForBoss.RingSystem
         private void OnPlayerEnteredTrigger()
         {
             RingActivated?.Invoke(this);
-        }
-
-        public void SetLabel(string label)
-        {
-            _labelTMP.text = label;
         }
 
         private void OnValidate()
