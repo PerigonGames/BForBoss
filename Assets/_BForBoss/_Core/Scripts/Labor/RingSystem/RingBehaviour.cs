@@ -1,5 +1,6 @@
 using System;
 using BForBoss.Utility;
+using Perigon.Utility;
 using UnityEngine;
 
 namespace BForBoss.RingSystem
@@ -21,7 +22,6 @@ namespace BForBoss.RingSystem
 
         public void SetColor(Color color)
         {
-            if (_renderer == null) return;
             _renderer.material.color = color;
         }
         
@@ -29,6 +29,7 @@ namespace BForBoss.RingSystem
         {
             _labelTMP = GetComponentInChildren<TMPro.TMP_Text>();
             _trigger = GetComponentInChildren<PlayerTriggerBehaviour>();
+            this.PanicIfNullObject(_renderer, "Renderer");
         }
 
         private void OnEnable()
