@@ -105,7 +105,7 @@ namespace BForBoss
             
             var position = transform.position;
             var direction = (HomingTarget.position - position).normalized;
-            var speed = _homingTargetSpeedCurve.Evaluate(_elapsedHomingTargetTimeToLive / _timeTakenToReachMaxSpeedCurve) * _homingTargetSpeed;
+            var speed = _homingTargetSpeedCurve.Evaluate(_elapsedHomingTargetTimeToLive / _timeTakenToReachMaxSpeedCurve) * (_homingTargetSpeed * SpeedMultiplier);
             position = Vector3.MoveTowards(position, position + direction, Time.deltaTime * speed);
             transform.position = position;
             var rotation = Quaternion.LookRotation(direction, Vector3.up);
@@ -123,7 +123,7 @@ namespace BForBoss
             }
             _elapsedAutoPilotTimeToLive += Time.deltaTime;
             var position = transform.position;
-            transform.position = Vector3.MoveTowards(position, position + _lastDirection, Time.deltaTime * _autoPilotSpeed);;
+            transform.position = Vector3.MoveTowards(position, position + _lastDirection, Time.deltaTime * (_autoPilotSpeed * SpeedMultiplier));;
             transform.rotation = Quaternion.LookRotation(_lastDirection, Vector3.up);
         }
 
@@ -138,6 +138,7 @@ namespace BForBoss
 
         private void OnCollisionEnter(Collision collision)
         {
+            if (Mask.Contains(collision.gameObject.layer)) return;
             if (_isActive)
             {
                 var contact = collision.GetContact(0);

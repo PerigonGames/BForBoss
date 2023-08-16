@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Perigon.Utility;
+using Sirenix.OdinInspector;
 using UICore;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace BForBoss
 {
     public enum TutorialState
     {
-        Basic,
+        Boss,
         Energy
     }
     
@@ -17,7 +18,7 @@ namespace BForBoss
         public static TutorialViewsManager Instance;
 
         [SerializeField] private CarouselView _energyTutorialView;
-        [SerializeField] private CarouselView _basicTutorialView;
+        [SerializeField] private CarouselView _bossTutorialView;
 
         private readonly Dictionary<TutorialState, bool> _shownTutorials = new Dictionary<TutorialState, bool>();
         
@@ -46,7 +47,7 @@ namespace BForBoss
         {
             SetupTutorials();
             _energyTutorialView.Initialize();
-            _basicTutorialView.Initialize();
+            _bossTutorialView.Initialize();
         }
         
         private void SetupTutorials()
@@ -57,15 +58,15 @@ namespace BForBoss
             }
 
             _energyTutorialView.OnExitAction = ResumeGame;
-            _basicTutorialView.OnExitAction = ResumeGame;
+            _bossTutorialView.OnExitAction = ResumeGame;
         }
 
         private CarouselView MapToView(TutorialState state)
         {
             switch (state)
             {
-                case TutorialState.Basic:
-                    return _basicTutorialView;
+                case TutorialState.Boss:
+                    return _bossTutorialView;
                 case TutorialState.Energy:
                     return _energyTutorialView;
             }

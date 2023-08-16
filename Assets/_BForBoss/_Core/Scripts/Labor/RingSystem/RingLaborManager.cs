@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BForBoss.Labor;
+using Perigon.Utility;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 
@@ -38,6 +39,12 @@ namespace BForBoss.RingSystem
             _laborSystem = new LaborSystem(_ringSystems, false);
         }
 
+        public void Initialize(RingGrouping[] ringSystemsToBuild)
+        {
+            _systemsToBuild = ringSystemsToBuild;
+            Initialize();
+        }
+
         public void ActivateSystem(Action onLaborComplete)
         {
             _onLaborCompleted = onLaborComplete;
@@ -57,18 +64,20 @@ namespace BForBoss.RingSystem
                 ILabor newSystem;
                 if (grouping.RingSystemType == RingSystemTypes.Nested)
                 {
+                    this.PanicIfNullOrEmptyList(grouping.NestedSystems, "NestedSystem list");
                     var nestedSystems = new RingSystem[grouping.NestedSystems.Length];
                     for(int i = 0; i < grouping.NestedSystems.Length; i++)
                     {
                         nestedSystems[i] = BuildFromGrouping(grouping.NestedSystems[i], -1f);
                     }
                     newSystem = new NestedRingSystem(nestedSystems, true, grouping.Time);
-                    newSystem.OnLaborCompleted += (success) => Perigon.Utility.Logger.LogString($"{(success ? "Completed" : "Failed")} {grouping.NestedSystems.Length} system {grouping.RingSystemType} system", key:"Labor");
+                    newSystem.OnLaborCompleted += (success) => Logger.LogString($"{(success ? "Completed" : "Failed")} {grouping.NestedSystems.Length} system {grouping.RingSystemType} system", key:"Labor");
                 }
                 else
                 {
+                    this.PanicIfNullOrEmptyList(grouping.Rings, "Ring list");
                     newSystem = BuildFromGrouping(grouping);
-                    newSystem.OnLaborCompleted += (success) => Perigon.Utility.Logger.LogString($"{(success ? "Completed" : "Failed")} {grouping.Rings.Length} ring {grouping.RingSystemType} system", key:"Labor");
+                    newSystem.OnLaborCompleted += (success) => Logger.LogString($"{(success ? "Completed" : "Failed")} {grouping.Rings.Length} ring {grouping.RingSystemType} system", key:"Labor");
                 }
                 _ringSystems.Add(newSystem);
             }
@@ -88,7 +97,7 @@ namespace BForBoss.RingSystem
             
             if (!_hasCompletedSystem && _laborSystem.IsComplete)
             {
-                Perigon.Utility.Logger.LogString("All labors completed", key: "Labor");
+                Logger.LogString("All labors completed", key: "Labor");
                 _hasCompletedSystem = true;
 
                 _onLaborCompleted?.Invoke();

@@ -1,24 +1,36 @@
 using System;
 using Perigon.Utility;
 using Perigon.Weapons;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BForBoss
 {
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(Collider))]
+    [RequireComponent(typeof(Rigidbody))]
     public class DerekBossManager : MonoBehaviour, IBulletCollision
     {
+        private const string POWER_UP = "Power Up";
+        private const string POWER_DOWN = "Power Down";
+
+        private static readonly int POWER_UP_KEY = Animator.StringToHash(POWER_UP);
+        private static readonly int POWER_DOWN_KEY = Animator.StringToHash(POWER_DOWN);
+
         [SerializeField, Resolve] private DerekShieldBehaviour _shieldBehaviour;
         [SerializeField, Resolve] private BossWipeOutWallsManager _wipeoutWallsManager;
+        [SerializeField, Resolve] private RotationalMovementBehaviour _rotationalMovementBehaviour;
         [SerializeField] private DerekMissileLauncherBehaviour[] _missileLauncherBehaviours;
-        [SerializeField, Tooltip("Temporary timer to space out Missile shots for testing purposes"), Min(0.0f)] private float _timeBetweenMissileShots = 5.0f;
-        [SerializeField, Tooltip("Temporary timer to track how long Derek has been in its vulnerable state"), Min(0.0f)] private float _vulnerabilityDuration = 10.0f;
+        private float _vulnerabilityDuration = 10.0f;
+        [Title("Health")]
+        [SerializeField, Resolve] private DerekHealthView _derekHealthView;
+        [SerializeField] private float _healthAmount;
 
         //Todo: Temporary variables used to simulate receiving and responding to damage. Will Remove once DerekHealthBehavior has been implemented
         private Action<bool> _onVulnerabilityExpired;
+        private float _currentHealth = 0;
         private DerekContextManager.Vulnerability _vulnerability = DerekContextManager.Vulnerability.Invulnerable;
         private float _vulnerabilityTimer;
+        private Animator _animator;
 
         public void Reset()
         {
@@ -29,6 +41,7 @@ namespace BForBoss
                 missileLauncher.Reset();
             }
             _shieldBehaviour.ToggleShield(false);
+            _currentHealth = _healthAmount;
         }
 
         public void Initialize(IGetPlayerTransform playerMovementBehaviour, Action<bool> onVulnerabilityExpired)
@@ -38,34 +51,43 @@ namespace BForBoss
             {
                 missileLauncher.Initialize(playerMovementBehaviour);
             }
-
             _onVulnerabilityExpired = onVulnerabilityExpired;
+            _currentHealth = _healthAmount;
         }
 
-        public void UpdatePhase(DerekContextManager.Phase phase)
+        public void UpdatePhase(DerekContextManager.Phase phase, DerekPhaseDataSO phaseData)
         {
             switch (phase)
             {
-                case DerekContextManager.Phase.Tutorial:
-                case DerekContextManager.Phase.Death:
-                    break;
                 case DerekContextManager.Phase.FirstPhase:
                     //_healthBarViewBehavior.SetPhaseBoundary(0.75f, _onPhaseComplete.Invoke());
-                    //_derekMissileBehavior.UpdateParameters(AdjustedParameters[])
-                    Perigon.Utility.Logger.LogString("Phase 1: Will transition at 75% health", LoggerColor.Green, "derekboss");
+                    Perigon.Utility.Logger.LogString($"Phase 1: Will transition at {phaseData.HealthThreshold * 100}% health", LoggerColor.Green, "derekboss");
                     break;
                 case DerekContextManager.Phase.SecondPhase:
                     //_healthBarViewBehavior.SetPhaseBoundary(0.25f, _onPhaseComplete.Invoke());
-                    //_derekMissileBehavior.UpdateParameters(AdjustedParameters[])
-                    Perigon.Utility.Logger.LogString("Phase 2: Will transition at 25% health", LoggerColor.Green, "derekboss");
+                    Perigon.Utility.Logger.LogString($"Phase 2: Will transition at {phaseData.HealthThreshold * 100}% health", LoggerColor.Green, "derekboss");
                     break;
                 case DerekContextManager.Phase.FinalPhase:
                     //_healthBarViewBehavior.SetPhaseBoundary(0f, _onPhaseComplete.Invoke());
-                    //_derekMissileBehavior.UpdateParameters(AdjustedParameters[])
-                    Perigon.Utility.Logger.LogString("Phase 3: Will transition at 0% health", LoggerColor.Green, "derekboss");
+                    Perigon.Utility.Logger.LogString($"Phase 3: Will transition at {phaseData.HealthThreshold * 100}% health", LoggerColor.Green, "derekboss");
                     break;
+                case DerekContextManager.Phase.Tutorial:
+                case DerekContextManager.Phase.Death:
                 default:
                     return;
+            }
+
+            if (phaseData == null)
+            {
+                Perigon.Utility.Logger.LogError("Phase Data should not be invalid", LoggerColor.Red, "derekboss");
+                return;
+            }
+
+            _rotationalMovementBehaviour.SetRotationRate(phaseData.RotationRate);
+            _vulnerabilityDuration = phaseData.VulnerabilityDuration;
+            foreach (DerekMissileLauncherBehaviour missileLauncher in _missileLauncherBehaviours)
+            {
+                missileLauncher.UpdateMissileSettings(phaseData.MissileSpeedMultiplier , phaseData.IntervalBetweenShots);
             }
         }
 
@@ -82,9 +104,10 @@ namespace BForBoss
                     _shieldBehaviour.ToggleShield(true);
                     foreach (DerekMissileLauncherBehaviour missileLauncher in _missileLauncherBehaviours)
                     {
-                        missileLauncher.StartShooting(_timeBetweenMissileShots);
+                        missileLauncher.StartShooting();
                     }
                     _wipeoutWallsManager.ActivateClosestLongWallAndRotate();
+                    _animator.SetTrigger(POWER_UP_KEY);
                     break;
                 //End Missile Behavior
                 //Deactivate all DeathWalls
@@ -98,6 +121,7 @@ namespace BForBoss
                     }
                     _wipeoutWallsManager.DeactivateWallAndRotation();
                     _shieldBehaviour.ToggleShield(false);
+                    _animator.SetTrigger(POWER_DOWN_KEY);
                     break;
             }
 
@@ -113,23 +137,18 @@ namespace BForBoss
                 return;
             }
 
+            _currentHealth--;
+            _derekHealthView.SetState(new DerekHealthViewState(_currentHealth / _healthAmount, _vulnerability == DerekContextManager.Vulnerability.Invulnerable));
             _onVulnerabilityExpired?.Invoke(true);
         }
 
         private void Awake()
         {
+            _animator = GetComponentInChildren<Animator>();
             this.PanicIfNullObject(_shieldBehaviour, nameof(_shieldBehaviour));
             this.PanicIfNullOrEmptyList(_missileLauncherBehaviours, nameof(_missileLauncherBehaviours));
-
-            for (int i = 0; i < _missileLauncherBehaviours.Length; i++)
-            {
-                if (_missileLauncherBehaviours[i] == null)
-                {
-                    PanicHelper.Panic(new Exception($"Element number {i} of {nameof(_missileLauncherBehaviours)} is null on Derek Boss Manager"));
-                }
-            }
-            
             this.PanicIfNullObject(_wipeoutWallsManager, nameof(_wipeoutWallsManager));
+            this.PanicIfNullObject(_rotationalMovementBehaviour, nameof(_rotationalMovementBehaviour));
         }
 
         //TODO: Remove temp damage receiving component once DerekHealthBehaviour is implemented

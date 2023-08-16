@@ -30,22 +30,17 @@ namespace BForBoss
 
         private Color MapHealthToColor(float health)
         {
-            if (health <= 1.0)
+            if (health > 0.66)
             {
                 return Color.green;
             }
 
-            if (health <= 0.66f)
+            if (health > 0.33f)
             {
                 return Color.yellow;
             }
 
-            if (health <= 0.33f)
-            {
-                return Color.red;
-            }
-
-            return Color.white;
+            return Color.red;
         }
     }
 }
