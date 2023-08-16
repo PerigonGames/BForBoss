@@ -4,6 +4,8 @@ using BForBoss.Labor;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using UnityEngine;
+using Logger = Perigon.Utility.Logger;
 
 namespace BForBoss.RingSystem
 {
@@ -68,7 +70,7 @@ namespace BForBoss.RingSystem
                     var nestedSystems = new RingSystem[grouping.NestedSystems.Length];
                     for(int i = 0; i < grouping.NestedSystems.Length; i++)
                     {
-                        nestedSystems[i] = BuildFromGrouping(grouping.NestedSystems[i], -1f);
+                        nestedSystems[i] = BuildFromGrouping(grouping.NestedSystems[i], -1f, grouping.Color);
                     }
                     newSystem = new NestedRingSystem(nestedSystems, true, grouping.Time);
                     newSystem.OnLaborCompleted += (success) => Logger.LogString($"{(success ? "Completed" : "Failed")} {grouping.NestedSystems.Length} system {grouping.RingSystemType} system", key:"Labor");
@@ -83,9 +85,9 @@ namespace BForBoss.RingSystem
             }
         }
 
-        private RingSystem BuildFromGrouping(RingGrouping grouping, float? timeOverride = null)
+        private RingSystem BuildFromGrouping(RingGrouping grouping, float? timeOverride = null, Color? colorOverride = null)
         {
-            return new RingSystem(grouping.Rings, time: timeOverride.GetValueOrDefault(grouping.Time));
+            return new RingSystem(grouping.Rings, colorOverride.GetValueOrDefault(grouping.Color), time: timeOverride.GetValueOrDefault(grouping.Time));
         }
 
         private void Update()
@@ -109,6 +111,7 @@ namespace BForBoss.RingSystem
         {
             public RingSystemTypes RingSystemType;
             public float Time = 5f;
+            public Color Color = Color.blue;
             
             [HideIf("RingSystemType", Value = RingSystemTypes.Nested)]
             public RingBehaviour[] Rings;
