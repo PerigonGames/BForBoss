@@ -15,9 +15,9 @@ namespace BForBoss.RingSystem
         [SerializeField] private int _label;
         [SerializeField] private GameObject _ringView;
         [SerializeField] private Renderer _renderer;
-
         private TMPro.TMP_Text _labelTMP;
         private PlayerTriggerBehaviour _trigger;
+        
         private float _penaltyDelayedStartTime;
 
         public void Initialize(float penaltyDelayedStartTime)
@@ -59,7 +59,11 @@ namespace BForBoss.RingSystem
         {
             _labelTMP = GetComponentInChildren<TMPro.TMP_Text>();
             _trigger = GetComponentInChildren<PlayerTriggerBehaviour>();
+            _labelTMP = GetComponentInChildren<TMPro.TMP_Text>();
             this.PanicIfNullObject(_renderer, "Renderer");
+            this.PanicIfNullObject(_trigger, "PlayerTriggerBehaviour");
+            this.PanicIfNullObject(_labelTMP, "TMP_Text");
+            SetLabel(_label.ToString());
         }
 
         private void OnEnable()
@@ -75,13 +79,6 @@ namespace BForBoss.RingSystem
         private void OnPlayerEnteredTrigger()
         {
             OnRingTriggered?.Invoke(this);
-        }
-
-        private void OnValidate()
-        {
-            if (_labelTMP == null)
-                _labelTMP = GetComponentInChildren<TMPro.TMP_Text>();
-            SetLabel(_label.ToString());
         }
     }
 }

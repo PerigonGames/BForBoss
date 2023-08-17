@@ -1,9 +1,7 @@
-using System;
 using BForBoss.RingSystem;
 using Perigon.Utility;
 using Perigon.Weapons;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using UnityEngine;
 
 namespace BForBoss
@@ -16,15 +14,22 @@ namespace BForBoss
         [SerializeField] private RingLaborManager _ringLaborManager;
 
         //Phase Information
-        [Header("Derek Phase Data")]
-        [SerializeField] private DerekPhaseDataSO _firstPhaseData;
-        [SerializeField] private DerekPhaseDataSO _secondPhaseData;
-        [SerializeField] private DerekPhaseDataSO _finalPhaseData;
+        [Title("Derek Phase Data")]
+        [SerializeField, InlineEditor] private DerekPhaseDataSO _firstPhaseData;
+        [SerializeField, InlineEditor] private DerekPhaseDataSO _secondPhaseData;
+        [SerializeField, InlineEditor] private DerekPhaseDataSO _finalPhaseData;
 
         //RingLabors configurations
-        [Header("Ring Configurations")]
-        [OdinSerialize] private RingGrouping[][] _ringConfigurations = new RingGrouping[3][];
-
+        [Title("Ring Configurations")] 
+        [SerializeField]
+        private RingGrouping _ringConfigurationsTutorial;
+        [Header("Phase 1")]
+        [SerializeField]
+        private RingGrouping _ringConfigurationsFirstPhase;
+        [Header("Phase 2")]
+        [SerializeField]
+        private RingGrouping _ringConfigurationsSecondPhase;
+        
         private DerekPhaseDataSO _currentPhaseDataSO = null;
 
         public enum Phase
@@ -92,17 +97,17 @@ namespace BForBoss
                     case Phase.Tutorial:
                         _currentPhase = Phase.FirstPhase;
                         _currentPhaseDataSO = _firstPhaseData;
-                        _ringLaborManager.Initialize(_ringConfigurations[0]);
+                        _ringLaborManager.SetRings(_ringConfigurationsTutorial);
                         break;
                     case Phase.FirstPhase:
                         _currentPhase = Phase.SecondPhase;
                         _currentPhaseDataSO = _secondPhaseData;
-                        _ringLaborManager.Initialize(_ringConfigurations[1]);
+                        _ringLaborManager.SetRings(_ringConfigurationsFirstPhase);
                         break;
                     case Phase.SecondPhase:
                         _currentPhase = Phase.FinalPhase;
                         _currentPhaseDataSO = _finalPhaseData;
-                        _ringLaborManager.Initialize(_ringConfigurations[2]);
+                        _ringLaborManager.SetRings(_ringConfigurationsSecondPhase);
                         break;
                     case Phase.FinalPhase:
                         _currentPhase = Phase.Death;
@@ -130,12 +135,9 @@ namespace BForBoss
             this.PanicIfNullObject(_ringLaborManager, nameof(_ringLaborManager));
             this.PanicIfNullObject(_bossManager, nameof(_bossManager));
             this.PanicIfNullObject(_endTutorialButton, nameof(_endTutorialButton));
-            this.PanicIfNullOrEmptyList(_ringConfigurations, nameof(_ringConfigurations));
-
-            if (_ringConfigurations.Length < 3)
-            {
-                PanicHelper.Panic(new Exception("Expected at least 3 ring configurations"));
-            }
+            this.PanicIfNullObject(_ringConfigurationsTutorial, nameof(_ringConfigurationsTutorial));
+            this.PanicIfNullObject(_ringConfigurationsFirstPhase, nameof(_ringConfigurationsFirstPhase));
+            this.PanicIfNullObject(_ringConfigurationsSecondPhase, nameof(_ringConfigurationsSecondPhase));
         }
     }
 }

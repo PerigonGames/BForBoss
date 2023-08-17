@@ -8,10 +8,10 @@ namespace BForBoss
 {
     public class SandboxWorldManager : BaseWorldManager
     {
-
         [SerializeField] private RingLaborManager _ringLaborManager;
         [SerializeField] private BossWipeOutWallsManager _wipeOutWallsManager;
-
+        [SerializeField] private RingGrouping _ringGroupings;
+        
         private DerekMissileLauncherBehaviour[] _derekMissileLauncherBehaviours;
         private CountdownViewBehaviour _countdownTimerView;
 
@@ -27,7 +27,7 @@ namespace BForBoss
         protected override void Start()
         {
             base.Start();
-            _ringLaborManager.Initialize();
+            _ringLaborManager.SetRings(_ringGroupings);
             _wipeOutWallsManager.Initialize(_playerBehaviour.PlayerMovement);
             _derekMissileLauncherBehaviours.ForEach(launcher => launcher.Initialize(_playerBehaviour.PlayerMovement));
             _stateManager.SetState(State.PreGame);
@@ -37,6 +37,7 @@ namespace BForBoss
         {
             base.Awake();
             _derekMissileLauncherBehaviours = FindObjectsOfType<DerekMissileLauncherBehaviour>();
+            this.PanicIfNullObject(_ringGroupings, nameof(_ringGroupings));
         }
 
         protected override void OnValidate()

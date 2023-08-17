@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using BForBoss.Labor;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Logger = Perigon.Utility.Logger;
 
 namespace BForBoss.RingSystem
@@ -33,9 +33,9 @@ namespace BForBoss.RingSystem
             _hasCompletedSystem = false;
         }
 
-        public void Initialize(RingGrouping[] ringSystemsToBuild)
+        public void SetRings(RingGrouping ringSystemsToBuild)
         {
-            CreateSystems(ringSystemsToBuild);
+            //CreateSystems(ringSystemsToBuild);
             _laborSystem = new LaborSystem(_listOfRingSystems, randomize: true);
         }
 
@@ -50,12 +50,16 @@ namespace BForBoss.RingSystem
             foreach (var grouping in ringSystemsToBuild)
             {
                 this.PanicIfNullOrEmptyList(grouping.Rings, "Ring list");
-                ILabor newSystem = new GroupedRingSystem(grouping.Rings,  colorOverride.GetValueOrDefault(grouping.Color), timeToCompleteSystem: grouping.Time, penaltyDelayedStartTime: penaltyDelayedStartTime);
+                ILabor newSystem = new GroupedRingSystem(
+                    rings: grouping.Rings,
+                    color: grouping.RingColor,
+                    timeToCompleteSystem: grouping.TimeToComplete,
+                    penaltyDelayedStartTime: penaltyDelayedStartTime);
                 newSystem.OnLaborCompleted += (success) => Logger.LogString($"{(success ? "Completed" : "Failed")} {grouping.Rings.Length} ring Standard system", key:"Labor");
                 _listOfRingSystems.Add(newSystem);
             }
         }
-        
+
         private void Update()
         {
             if (!_hasCompletedSystem && (_laborSystem?.IsComplete ?? false))
@@ -70,8 +74,8 @@ namespace BForBoss.RingSystem
     [Serializable]
     public class RingGrouping
     {
-        public float Time = 5f;
+        public float TimeToComplete = 5f;
         public RingBehaviour[] Rings;
-        public Color Color = Color.blue;
+        public Color RingColor;
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using BForBoss.Labor;
 using Perigon.Utility;
+using UnityEngine;
 
 namespace BForBoss.RingSystem
 {
@@ -19,26 +19,29 @@ namespace BForBoss.RingSystem
         
         public GroupedRingSystem(
             RingBehaviour[] rings,
+            Color color,
             float timeToCompleteSystem,
             float penaltyDelayedStartTime)
         {
             _allRings = rings;
             _timeToCompleteSystem = timeToCompleteSystem;
+            _penaltyDelayedStartTime = penaltyDelayedStartTime;
+
             if (timeToCompleteSystem <= 0)
             {
                 PanicHelper.Panic(new Exception("Time To Complete System is <= 0, which should not be possible. Make sure time to complete system is > 0"));
             }
-            _penaltyDelayedStartTime = penaltyDelayedStartTime;
-            SetupRings();
+            SetupRings(color: color);
         }
 
-        private void SetupRings()
+        private void SetupRings(Color color)
         {
             for (var i = 0; i < _allRings.Length; i++)
             {
+                _allRings[i].Initialize(_penaltyDelayedStartTime);
                 _allRings[i].OnRingTriggered = RingTriggered;
                 _allRings[i].SetLabel((i + 1).ToString());
-                _allRings[i].Initialize(_penaltyDelayedStartTime);
+                _allRings[i].SetColor(color);
             }
         }
 
