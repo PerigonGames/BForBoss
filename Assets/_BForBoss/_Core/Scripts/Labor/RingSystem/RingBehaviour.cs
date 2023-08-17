@@ -64,6 +64,7 @@ namespace BForBoss.RingSystem
             this.PanicIfNullObject(_trigger, "PlayerTriggerBehaviour");
             this.PanicIfNullObject(_labelTMP, "TMP_Text");
             SetLabel(_label.ToString());
+            _ringView.SetActive(false);
         }
 
         private void OnEnable()

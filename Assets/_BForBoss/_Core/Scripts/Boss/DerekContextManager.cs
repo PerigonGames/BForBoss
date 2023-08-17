@@ -3,11 +3,12 @@ using Perigon.Utility;
 using Perigon.Weapons;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Logger = Perigon.Utility.Logger;
 
 namespace BForBoss
 {
     [DisallowMultipleComponent]
-    public class DerekContextManager : SerializedMonoBehaviour
+    public class DerekContextManager : MonoBehaviour
     {
         [SerializeField] private ShootAtInteractiveButtonBehaviour _endTutorialButton;
         [SerializeField] private DerekBossManager _bossManager;
@@ -60,11 +61,7 @@ namespace BForBoss
         public void Initialize(IGetPlayerTransform playerMovementBehaviour)
         {
             _ringLaborManager.OnLaborCompleted = OnLaborCompleted;
-            this.PanicIfNullObject(_ringLaborManager, nameof(_ringLaborManager));
-            this.PanicIfNullObject(_firstPhaseData, nameof(_firstPhaseData));
-            this.PanicIfNullObject(_secondPhaseData, nameof(_secondPhaseData));
-            this.PanicIfNullObject(_finalPhaseData, nameof(_finalPhaseData));
-
+            _ringLaborManager.Initialize();
             _bossManager.Initialize(playerMovementBehaviour, HandleVulnerabilityExpiring);
             _endTutorialButton.Initialize(OnEndTutorialButtonTriggered);
         }
@@ -97,6 +94,7 @@ namespace BForBoss
                     case Phase.Tutorial:
                         _currentPhase = Phase.FirstPhase;
                         _currentPhaseDataSO = _firstPhaseData;
+                        Logger.LogString("Set Tutorial Ring system", key:"Labor");
                         _ringLaborManager.SetRings(_ringConfigurationsTutorial);
                         break;
                     case Phase.FirstPhase:
@@ -107,7 +105,7 @@ namespace BForBoss
                     case Phase.SecondPhase:
                         _currentPhase = Phase.FinalPhase;
                         _currentPhaseDataSO = _finalPhaseData;
-                        _ringLaborManager.SetRings(_ringConfigurationsSecondPhase);
+                        _ringLaborManager.SetRings(_ringConfigurationsSecondPhase);                        
                         break;
                     case Phase.FinalPhase:
                         _currentPhase = Phase.Death;
@@ -132,12 +130,25 @@ namespace BForBoss
 
         private void Awake()
         {
+            // Managers
             this.PanicIfNullObject(_ringLaborManager, nameof(_ringLaborManager));
             this.PanicIfNullObject(_bossManager, nameof(_bossManager));
-            this.PanicIfNullObject(_endTutorialButton, nameof(_endTutorialButton));
+            
+            // Data
+            this.PanicIfNullObject(_firstPhaseData, nameof(_firstPhaseData));
+            this.PanicIfNullObject(_secondPhaseData, nameof(_secondPhaseData));
+            this.PanicIfNullObject(_finalPhaseData, nameof(_finalPhaseData));
+            
             this.PanicIfNullObject(_ringConfigurationsTutorial, nameof(_ringConfigurationsTutorial));
             this.PanicIfNullObject(_ringConfigurationsFirstPhase, nameof(_ringConfigurationsFirstPhase));
             this.PanicIfNullObject(_ringConfigurationsSecondPhase, nameof(_ringConfigurationsSecondPhase));
+            
+            this.PanicIfNullOrEmptyList(_ringConfigurationsTutorial.GroupOfRings, nameof(_ringConfigurationsTutorial));
+            this.PanicIfNullOrEmptyList(_ringConfigurationsFirstPhase.GroupOfRings, nameof(_ringConfigurationsTutorial));
+            this.PanicIfNullOrEmptyList(_ringConfigurationsSecondPhase.GroupOfRings, nameof(_ringConfigurationsTutorial));
+            
+            // Misc
+            this.PanicIfNullObject(_endTutorialButton, nameof(_endTutorialButton));
         }
     }
 }

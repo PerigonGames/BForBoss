@@ -13,6 +13,7 @@ namespace BForBoss.RingSystem
         private readonly RingBehaviour[] _allRings;
         private readonly float _timeToCompleteSystem;
         private readonly float _penaltyDelayedStartTime;
+        
         private RingBehaviour _currentRing;
         private Queue<RingBehaviour> _ringQueue;
         private bool _didFailRingSystem;
@@ -43,6 +44,7 @@ namespace BForBoss.RingSystem
                 _allRings[i].SetLabel((i + 1).ToString());
                 _allRings[i].SetColor(color);
             }
+            _ringQueue = new Queue<RingBehaviour>(_allRings);
         }
 
         public void Reset()
@@ -58,6 +60,7 @@ namespace BForBoss.RingSystem
 
         public void Activate()
         {
+            Debug.Log("Activated");
             var delayedTime = _didFailRingSystem ? _penaltyDelayedStartTime : 0;
             CountdownTimer.Instance.StartCountdown(_timeToCompleteSystem, onCountdownCompleted: CountdownFinish, delayedStartTime: delayedTime);
             TrySetupNextRing();
