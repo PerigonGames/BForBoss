@@ -11,7 +11,9 @@ namespace BForBoss.RingSystem
 {
     public class RingLaborManager : MonoBehaviour
     {
-        [SerializeField, InfoBox("When player fails, delayed time before starting the round of rings again")]
+        [SerializeField,
+         InfoBox("When player fails, delayed time before starting the round of rings again"),
+        MinValue(0f)]
         private float penaltyDelayedStartTime = 3f;
 
         private ILabor _ringSystem;
