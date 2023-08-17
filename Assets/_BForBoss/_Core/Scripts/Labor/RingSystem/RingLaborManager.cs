@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BForBoss.Labor;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 using Logger = Perigon.Utility.Logger;
 
@@ -49,12 +50,12 @@ namespace BForBoss.RingSystem
             foreach (var grouping in ringSystemsToBuild)
             {
                 this.PanicIfNullOrEmptyList(grouping.Rings, "Ring list");
-                ILabor newSystem = new GroupedRingSystem(grouping.Rings, timeToCompleteSystem: grouping.Time, penaltyDelayedStartTime: penaltyDelayedStartTime);
+                ILabor newSystem = new GroupedRingSystem(grouping.Rings,  colorOverride.GetValueOrDefault(grouping.Color), timeToCompleteSystem: grouping.Time, penaltyDelayedStartTime: penaltyDelayedStartTime);
                 newSystem.OnLaborCompleted += (success) => Logger.LogString($"{(success ? "Completed" : "Failed")} {grouping.Rings.Length} ring Standard system", key:"Labor");
                 _listOfRingSystems.Add(newSystem);
             }
         }
-
+        
         private void Update()
         {
             if (!_hasCompletedSystem && (_laborSystem?.IsComplete ?? false))
@@ -71,5 +72,6 @@ namespace BForBoss.RingSystem
     {
         public float Time = 5f;
         public RingBehaviour[] Rings;
+        public Color Color = Color.blue;
     }
 }

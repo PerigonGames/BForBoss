@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using BForBoss.Utility;
+using Perigon.Utility;
 using UnityEngine;
 using Logger = Perigon.Utility.Logger;
 
@@ -10,9 +11,10 @@ namespace BForBoss.RingSystem
     {
         public Action<RingBehaviour> OnRingTriggered;
         public bool IsDelayedStart { get; set; }
-        
+
         [SerializeField] private int _label;
         [SerializeField] private GameObject _ringView;
+        [SerializeField] private Renderer _renderer;
 
         private TMPro.TMP_Text _labelTMP;
         private PlayerTriggerBehaviour _trigger;
@@ -29,7 +31,7 @@ namespace BForBoss.RingSystem
         }
 
         public void Deactivate()
-        {
+        { 
             _ringView.gameObject.SetActive(false);
         }
 
@@ -41,19 +43,30 @@ namespace BForBoss.RingSystem
                 yield return new WaitForSeconds(_penaltyDelayedStartTime);
             }
             _ringView.gameObject.SetActive(true);
+          }
+
+        public void SetLabel(string label)
+        {
+            _labelTMP.text = label;
         }
-        
+
+        public void SetColor(Color color)
+        {
+            _renderer.material.color = color;
+        }
+
         private void Awake()
         {
             _labelTMP = GetComponentInChildren<TMPro.TMP_Text>();
             _trigger = GetComponentInChildren<PlayerTriggerBehaviour>();
+            this.PanicIfNullObject(_renderer, "Renderer");
         }
 
         private void OnEnable()
         {
             _trigger.PlayerEnteredTrigger += OnPlayerEnteredTrigger;
         }
-        
+
         private void OnDisable()
         {
             _trigger.PlayerEnteredTrigger -= OnPlayerEnteredTrigger;
@@ -62,11 +75,6 @@ namespace BForBoss.RingSystem
         private void OnPlayerEnteredTrigger()
         {
             OnRingTriggered?.Invoke(this);
-        }
-
-        public void SetLabel(string label)
-        {
-            _labelTMP.text = label;
         }
 
         private void OnValidate()
