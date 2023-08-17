@@ -53,6 +53,7 @@ namespace BForBoss.RingSystem
 
         public void ActivateSystem()
         {
+            Debug.Log("Activate System");
             _ringSystem?.Activate();
         }
 

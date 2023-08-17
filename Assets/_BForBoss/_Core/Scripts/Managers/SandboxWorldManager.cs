@@ -27,6 +27,7 @@ namespace BForBoss
         protected override void Start()
         {
             base.Start();
+            _ringLaborManager.Initialize();
             _ringLaborManager.SetRings(_ringGroupings);
             _wipeOutWallsManager.Initialize(_playerBehaviour.PlayerMovement);
             _derekMissileLauncherBehaviours.ForEach(launcher => launcher.Initialize(_playerBehaviour.PlayerMovement));
@@ -50,6 +51,13 @@ namespace BForBoss
         public void SetGameOver()
         {
             StateManager.Instance.SetState(State.EndGame);
+        }
+
+        public void RandomizeRingGroupToActivate()
+        {
+            _ringLaborManager.Reset();
+            _ringLaborManager.SetRings(_ringGroupings);
+            _ringLaborManager.ActivateSystem();
         }
     }
 }
