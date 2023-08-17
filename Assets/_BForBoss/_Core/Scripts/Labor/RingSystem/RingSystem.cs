@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using BForBoss.Labor;
 using PerigonGames;
+using UnityEngine;
 
 namespace BForBoss.RingSystem
 {
@@ -15,11 +16,13 @@ namespace BForBoss.RingSystem
         private readonly float _time;
 
         private int _ringIndex = 1;
+        private Color _systemColor;
 
-        public RingSystem(RingBehaviour[] rings, float time = 0f)
+        public RingSystem(RingBehaviour[] rings, Color color, float time = 0f)
         {
             _allRings = rings;
             _time = time;
+            _systemColor = color;
             
             Reset();
         }
@@ -74,6 +77,7 @@ namespace BForBoss.RingSystem
         {
             ring.RingActivated = RingTriggered;
             ring.SetLabel(_ringIndex++.ToString());
+            ring.SetColor(_systemColor);
             ring.gameObject.SetActive(true);
         }
         

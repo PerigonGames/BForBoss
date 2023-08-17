@@ -1,5 +1,6 @@
 using System;
 using BForBoss.Utility;
+using Perigon.Utility;
 using UnityEngine;
 
 namespace BForBoss.RingSystem
@@ -9,14 +10,26 @@ namespace BForBoss.RingSystem
         public Action<RingBehaviour> RingActivated;
         
         [SerializeField] private int _label;
+        [SerializeField] private Renderer _renderer;
 
         private TMPro.TMP_Text _labelTMP;
         private PlayerTriggerBehaviour _trigger;
 
+        public void SetLabel(string label)
+        {
+            _labelTMP.text = label;
+        }
+
+        public void SetColor(Color color)
+        {
+            _renderer.material.color = color;
+        }
+        
         private void Awake()
         {
             _labelTMP = GetComponentInChildren<TMPro.TMP_Text>();
             _trigger = GetComponentInChildren<PlayerTriggerBehaviour>();
+            this.PanicIfNullObject(_renderer, "Renderer");
         }
 
         private void OnEnable()
@@ -32,11 +45,6 @@ namespace BForBoss.RingSystem
         private void OnPlayerEnteredTrigger()
         {
             RingActivated?.Invoke(this);
-        }
-
-        public void SetLabel(string label)
-        {
-            _labelTMP.text = label;
         }
 
         private void OnValidate()
