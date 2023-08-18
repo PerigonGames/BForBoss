@@ -119,7 +119,6 @@ namespace BForBoss
         {
             _playerBehaviour.Initialize(_inputSystem, _playerLifeCycle, _energySystemBehaviour);            
             _environmentManager.Initialize();
-            _stateManager.SetState(State.PreGame);
         }
         
         protected virtual void OnDestroy()
