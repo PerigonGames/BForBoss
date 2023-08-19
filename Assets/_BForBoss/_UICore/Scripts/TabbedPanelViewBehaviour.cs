@@ -1,6 +1,7 @@
 using System;
 using PerigonGames;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Perigon.UserInterface
 {
@@ -67,7 +68,7 @@ namespace Perigon.UserInterface
     [Serializable]
     public struct TabbedContent
     {
-        public TabButtonBehaviour Tab;
+        public Button Tab;
         public GameObject Content;
     }
 }
