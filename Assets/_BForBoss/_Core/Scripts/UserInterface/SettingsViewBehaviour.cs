@@ -30,11 +30,6 @@ namespace BForBoss
 
         private void Awake()
         {
-            if (_settingsSensitivityView == null)
-            {
-                Debug.LogWarning("MouseAndKeyboardInputSettingsView is missing from SettingsViewBehaviour");
-            }
-
             _backButton.onClick.AddListener(() =>
             {
                 OnBackPressed();
