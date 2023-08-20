@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace BForBoss
 {
-    public class GameplaySettingsViewBehaviour : MonoBehaviour
+    public class TelemetricsViewBehaviour : MonoBehaviour
     {
         [SerializeField] private Toggle _showFPSToggle = null;
         [SerializeField] private Toggle _showRAMToggle = null;
