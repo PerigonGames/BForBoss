@@ -8,44 +8,15 @@ namespace BForBoss
     public class CountdownViewBehaviour : MonoBehaviour
     {
         [SerializeField, Resolve] private TMP_Text _countdownLabel;
-
-        public void OnStopCountdown()
-        {
-            gameObject.SetActive(false);
-        }
-
-        public void PauseCountdown()
-        {
-            CountdownTimer.Instance.PauseCountdown();
-        }
         
-        public void ResumeCountdown()
-        {
-            CountdownTimer.Instance.ResumeCountdown();
-        }
-
         public void Reset()
         {
-            CountdownTimer.Instance.Reset();
-            SetTimerLabel(CountdownTimer.Instance.CurrentTime);
-        }
-
-        private void OnCompleteCountdown()
-        {
-            SetTimerLabel(CountdownTimer.Instance.CurrentTime);
-            gameObject.SetActive(false);
+            _countdownLabel.text = string.Empty;
         }
         
-        private void OnStartCountdown()
-        {
-            SetTimerLabel(CountdownTimer.Instance.CurrentTime);
-            gameObject.SetActive(true);
-        }
-
         private void Update()
         {
             CountdownTimer.Instance.Tick();
-            SetTimerLabel(CountdownTimer.Instance.CurrentTime);
         }
 
         private void SetTimerLabel(float seconds)
@@ -57,14 +28,14 @@ namespace BForBoss
 
         private void OnEnable()
         {
-            CountdownTimer.Instance.OnTimerStarted += OnStartCountdown;
-            CountdownTimer.Instance.OnTimerStopped += OnStopCountdown;
+            CountdownTimer.Instance.OnTimeUpdated += SetTimerLabel;
+            CountdownTimer.Instance.OnTimeReset += Reset;
         }
         
         private void OnDisable()
         {
-            CountdownTimer.Instance.OnTimerStarted += OnStartCountdown;
-            CountdownTimer.Instance.OnTimerStopped += OnStopCountdown;
+            CountdownTimer.Instance.OnTimeUpdated -= SetTimerLabel;
+            CountdownTimer.Instance.OnTimeReset -= Reset;
         }
 
         private void Awake()

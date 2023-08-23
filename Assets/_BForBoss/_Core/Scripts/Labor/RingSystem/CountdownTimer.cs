@@ -14,53 +14,42 @@ namespace BForBoss
             }
         }
         
-        public bool IsRunning => _isRunning;
-        public float CurrentTime => _time;
-
         private static CountdownTimer _instance = null;
         
-        private float _time;
+        private float _timer;
         private bool _isRunning;
+        private float _delayedTimer;
 
-        private float _amountOfTime;
 
-        public event Action OnTimerTick;
-        public event Action OnTimerStarted;
-        public event Action OnTimerStopped;
-        
+        private float Timer
+        {
+            get => _timer;
+            set
+            {
+                _timer = value;
+                OnTimeUpdated?.Invoke(value);
+            }
+        }
+
+        public event Action<float> OnTimeUpdated;
+        public event Action OnTimeReset;
+
         private Action OnCountdownCompleted;
 
-        public void StartCountdown(float amountOfTime, Action onCountdownCompleted = null)
+        public void StartCountdown(float amountOfTime, Action onCountdownCompleted = null, float delayedStartTime = 0)
         {
-            _amountOfTime = amountOfTime;
-            _time = amountOfTime;
+            _delayedTimer = delayedStartTime;
+            _timer = amountOfTime;
             _isRunning = true;
             OnCountdownCompleted = onCountdownCompleted;
-            OnTimerStarted?.Invoke();
         }
         
         public void StopCountdown()
         {
             _isRunning = false;
-            OnCountdownCompleted = null;
-            OnTimerStopped?.Invoke();
+            OnTimeReset?.Invoke();
         }
 
-        public void PauseCountdown()
-        {
-            _isRunning = false;
-        }
-
-        public void ResumeCountdown()
-        {
-            _isRunning = true;
-        }
-        
-        public void ToggleCountdown()
-        {
-            _isRunning = !_isRunning;
-        }
-        
         public void Tick()
         {
             if (!_isRunning)
@@ -68,10 +57,15 @@ namespace BForBoss
                 return;
             }
 
-            if (_time >= 0.0f)
+            if (_delayedTimer > 0)
             {
-                _time -= Time.deltaTime;
-                OnTimerTick?.Invoke();
+                _delayedTimer -= Time.deltaTime;
+                return;
+            }
+
+            if (Timer >= 0.0f)
+            {
+                Timer -= Time.deltaTime;
             }
             else
             {
@@ -81,16 +75,18 @@ namespace BForBoss
 
         public void Reset()
         {
-            _time = _amountOfTime;
+            _timer = 0;
+            _isRunning = false;
+            _delayedTimer = 0;
+            
+            OnTimeReset?.Invoke();
         }
 
         private void CompleteCountdown()
         {
             _isRunning = false;
-            OnTimerStopped?.Invoke();
             OnCountdownCompleted?.Invoke();
-            OnCountdownCompleted = null;
-            Reset();
+            OnTimeReset?.Invoke();
         }
     }
 }

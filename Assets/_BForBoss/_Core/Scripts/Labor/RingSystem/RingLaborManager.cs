@@ -2,127 +2,97 @@
 using System.Collections.Generic;
 using BForBoss.Labor;
 using Perigon.Utility;
+using PerigonGames;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using UnityEngine;
 using Logger = Perigon.Utility.Logger;
 
 namespace BForBoss.RingSystem
 {
-    public class RingLaborManager : SerializedMonoBehaviour
+    public class RingLaborManager : MonoBehaviour
     {
-        [OdinSerialize] private RingGrouping[] _systemsToBuild;
+        [SerializeField,
+         InfoBox("When player fails, delayed time before starting the round of rings again"),
+        MinValue(0f)]
+        private float penaltyDelayedStartTime = 3f;
 
-        private LaborSystem _laborSystem;
-        private bool _hasCompletedSystem = false;
-        private List<ILabor> _ringSystems;
+        private ILabor _ringSystem;
+        private IRandomUtility _randomUtility;
 
-        private Action _onLaborCompleted;
+        [HideInEditorMode]
+        public Action OnLaborCompleted;
 
         public void Reset()
         {
-            if(_ringSystems == null) CreateSystems();
-            
-            foreach (var system in _ringSystems)
+            _ringSystem?.Reset();
+            CountdownTimer.Instance.Reset();
+        }
+
+        public void Initialize(IRandomUtility randomUtility = null)
+        {
+            _randomUtility = randomUtility ?? new RandomUtility();
+        }
+
+        public void SetRings(RingGrouping ringSystemsToBuild)
+        {
+            _ringSystem = BuildLabor(ringSystemsToBuild);
+            _ringSystem.OnLaborCompleted += RingSystemOnOnLaborCompleted;
+        }
+
+        private void RingSystemOnOnLaborCompleted(bool didSucceed)
+        {
+            if (didSucceed)
             {
-                system.Reset();
+                Logger.LogString("Labor Completed", key: "Labor");
+                OnLaborCompleted?.Invoke();
             }
-
-            if (CountdownTimer.Instance.IsRunning) CountdownTimer.Instance.ToggleCountdown();
-
-            _laborSystem?.Dispose();
-            _laborSystem = new LaborSystem(_ringSystems, false);
-            _hasCompletedSystem = false;
-        }
-        
-        public void Initialize()
-        {
-            CreateSystems();
-            _laborSystem = new LaborSystem(_ringSystems, false);
-        }
-
-        public void Initialize(RingGrouping[] ringSystemsToBuild)
-        {
-            _systemsToBuild = ringSystemsToBuild;
-            Initialize();
-        }
-
-        public void ActivateSystem(Action onLaborComplete)
-        {
-            _onLaborCompleted = onLaborComplete;
-            _laborSystem?.Start();
-        }
-
-        public void ToggleTimer()
-        {
-            CountdownTimer.Instance.ToggleCountdown();
-        }
-
-        private void CreateSystems()
-        {
-            _ringSystems = new List<ILabor>();
-            foreach (var grouping in _systemsToBuild)
+            else
             {
-                ILabor newSystem;
-                if (grouping.RingSystemType == RingSystemTypes.Nested)
+                Logger.LogString("Labor Failed, Retrying", key: "Labor");
+                _ringSystem.Activate();
+            }
+        }
+
+        public void ActivateSystem()
+        {
+            Debug.Log("Activate System");
+            _ringSystem?.Activate();
+        }
+
+        private ILabor BuildLabor(RingGrouping grouping)
+        {
+            if (_randomUtility.NextTryGetElement(grouping.GroupOfRings, out var groupOfRings))
+            {
+                foreach (var ringBehaviour in groupOfRings.Rings)
                 {
-                    this.PanicIfNullOrEmptyList(grouping.NestedSystems, "NestedSystem list");
-                    var nestedSystems = new RingSystem[grouping.NestedSystems.Length];
-                    for(int i = 0; i < grouping.NestedSystems.Length; i++)
-                    {
-                        nestedSystems[i] = BuildFromGrouping(grouping.NestedSystems[i], -1f, grouping.Color);
-                    }
-                    newSystem = new NestedRingSystem(nestedSystems, true, grouping.Time);
-                    newSystem.OnLaborCompleted += (success) => Logger.LogString($"{(success ? "Completed" : "Failed")} {grouping.NestedSystems.Length} system {grouping.RingSystemType} system", key:"Labor");
+                    ringBehaviour.Deactivate();
                 }
-                else
-                {
-                    this.PanicIfNullOrEmptyList(grouping.Rings, "Ring list");
-                    newSystem = BuildFromGrouping(grouping);
-                    newSystem.OnLaborCompleted += (success) => Logger.LogString($"{(success ? "Completed" : "Failed")} {grouping.Rings.Length} ring {grouping.RingSystemType} system", key:"Labor");
-                }
-                _ringSystems.Add(newSystem);
+                var ringSystem = new GroupedRingSystem(
+                    rings: groupOfRings.Rings,
+                    color: grouping.RingColor,
+                    timeToCompleteSystem: grouping.TimeToComplete,
+                    penaltyDelayedStartTime: penaltyDelayedStartTime);
+                ringSystem.OnLaborCompleted += (success) => Logger.LogString($"{(success ? "Completed" : "Failed")} {groupOfRings.Rings.Length} ring system", key:"Labor");
+                return ringSystem;
             }
-        }
 
-        private RingSystem BuildFromGrouping(RingGrouping grouping, float? timeOverride = null, Color? colorOverride = null)
-        {
-            return new RingSystem(grouping.Rings, colorOverride.GetValueOrDefault(grouping.Color), time: timeOverride.GetValueOrDefault(grouping.Time));
+            PanicHelper.Panic(new Exception("Unable to get random element from grouping rings"));
+            return null;
         }
+    }
 
-        private void Update()
-        {
-            if (_laborSystem == null)
-            {
-                return;
-            }
-            
-            if (!_hasCompletedSystem && _laborSystem.IsComplete)
-            {
-                Logger.LogString("All labors completed", key: "Labor");
-                _hasCompletedSystem = true;
-
-                _onLaborCompleted?.Invoke();
-            }
-        }
-
-        [System.Serializable]
-        public class RingGrouping
-        {
-            public RingSystemTypes RingSystemType;
-            public float Time = 5f;
-            public Color Color = Color.blue;
-            
-            [HideIf("RingSystemType", Value = RingSystemTypes.Nested)]
-            public RingBehaviour[] Rings;
-            [ShowIf("RingSystemType", Value = RingSystemTypes.Nested), NonSerialized, OdinSerialize]
-            public RingGrouping[] NestedSystems = null;
-
-        }
-        
-        public enum RingSystemTypes
-        {
-            Standard, Nested
-        }
+    [Serializable]
+    public class RingGrouping
+    {
+        public float TimeToComplete = 5f;
+        [ListDrawerSettings(ShowPaging = false)]
+        public List<GroupedRingsWrapper> GroupOfRings = new List<GroupedRingsWrapper>();
+        public Color RingColor;
+    }
+    
+    [Serializable]
+    public class GroupedRingsWrapper
+    {
+        public RingBehaviour[] Rings;
     }
 }

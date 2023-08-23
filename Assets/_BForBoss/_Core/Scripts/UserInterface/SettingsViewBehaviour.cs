@@ -12,46 +12,32 @@ namespace BForBoss
         [Title("Buttons")]
         [Resolve][SerializeField] private Button _backButton = null;
         
-        [Title("Panel")]
-        [SerializeField] private InputSettingsViewBehaviour _mouseKeyboardInputSettingsView = null;
-        [SerializeField] private InputSettingsViewBehaviour _controllerInputSettingsView = null;
-        private GameplaySettingsViewBehaviour _gameplaySettingsView = null;
-        private AudioSettingsViewBehaviour _audioSettingsView = null;
+        [Title("Views")]
+        [Resolve][SerializeField] private InputSettingsViewBehaviour _settingsSensitivityView = null;
+        [Resolve][SerializeField] private TelemetricsViewBehaviour _settingsTelemetryView = null;
+        [Resolve][SerializeField] private AudioSettingsViewBehaviour _settingsAudioView = null;
         
         private Action OnBackPressed;
 
         public void Initialize(Action onBackPressed)
         {
             base.Initialize();
-            _mouseKeyboardInputSettingsView.Initialize(new MouseKeyboardInputSettingsViewModel());
-            _controllerInputSettingsView.Initialize(new ControllerInputSettingsViewModel());
-            _gameplaySettingsView.Initialize();
-            _audioSettingsView.Initialize();
+            _settingsSensitivityView.Initialize(new MouseKeyboardInputSettingsViewModel());
+            _settingsTelemetryView.Initialize();
+            _settingsAudioView.Initialize();
             OnBackPressed = onBackPressed;
         }
 
         private void Awake()
         {
-            if (_mouseKeyboardInputSettingsView == null)
-            {
-                Debug.LogWarning("MouseAndKeyboardInputSettingsView is missing from SettingsViewBehaviour");
-            }
-            
-            if (_controllerInputSettingsView == null)
-            {
-                Debug.LogWarning("ControllerInputSettingsView is missing from SettingsViewBehaviour");
-            }
-            
             _backButton.onClick.AddListener(() =>
             {
                 OnBackPressed();
             });
-            
-            _gameplaySettingsView = GetComponentInChildren<GameplaySettingsViewBehaviour>(true);
-            _audioSettingsView = GetComponentInChildren<AudioSettingsViewBehaviour>(true);
-            
-            this.PanicIfNullObject(_gameplaySettingsView, nameof(_gameplaySettingsView));
-            this.PanicIfNullObject(_audioSettingsView, nameof(_audioSettingsView));
+
+            this.PanicIfNullObject(_settingsSensitivityView, nameof(_settingsSensitivityView));
+            this.PanicIfNullObject(_settingsTelemetryView, nameof(_settingsTelemetryView));
+            this.PanicIfNullObject(_settingsAudioView, nameof(_settingsAudioView));
         }
 
         private void OnDestroy()
