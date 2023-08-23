@@ -154,6 +154,7 @@ namespace BForBoss
             this.PanicIfNullOrEmptyList(_missileLauncherBehaviours, nameof(_missileLauncherBehaviours));
             this.PanicIfNullObject(_wipeoutWallsManager, nameof(_wipeoutWallsManager));
             this.PanicIfNullObject(_rotationalMovementBehaviour, nameof(_rotationalMovementBehaviour));
+            this.PanicIfNullObject(_animator, nameof(_animator));
         }
 
         //TODO: Remove temp damage receiving component once DerekHealthBehaviour is implemented
