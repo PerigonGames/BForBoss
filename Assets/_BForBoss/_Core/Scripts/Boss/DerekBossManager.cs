@@ -45,6 +45,8 @@ namespace BForBoss
             _currentHealth = _healthAmount;
             _derekHealthView.SetState(new DerekHealthViewState(_currentHealth / _healthAmount, _vulnerability == DerekContextManager.Vulnerability.Invulnerable));
             _vulnerabilityTimer = 0;
+            _animator.ResetTrigger(POWER_DOWN_KEY);
+            _animator.ResetTrigger(POWER_UP_KEY);
         }
 
         public void Initialize(IGetPlayerTransform playerMovementBehaviour, Action<bool> onVulnerabilityExpired)
