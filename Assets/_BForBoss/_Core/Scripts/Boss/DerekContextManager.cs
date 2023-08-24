@@ -54,6 +54,8 @@ namespace BForBoss
         public void Reset()
         {
             _ringLaborManager.Reset();
+            _currentPhase = Phase.Tutorial;
+            _currentVulnerability = Vulnerability.Invulnerable;
             _bossManager.Reset();
             _endTutorialButton.Reset();
         }

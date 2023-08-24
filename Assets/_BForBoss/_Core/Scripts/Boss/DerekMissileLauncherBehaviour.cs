@@ -23,6 +23,7 @@ namespace BForBoss
         public void Reset()
         {
             _canShootMissiles = false;
+            _bulletSpawner.Reset();
         }
         
         public void Initialize(IGetPlayerTransform playerTransform)
