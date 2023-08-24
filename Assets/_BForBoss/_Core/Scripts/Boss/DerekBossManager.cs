@@ -1,14 +1,13 @@
 using System;
 using Perigon.Utility;
 using Perigon.Weapons;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BForBoss
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Rigidbody))]
-    public class DerekBossManager : MonoBehaviour, IBulletCollision
+    public class DerekBossManager : MonoBehaviour
     {
         private const string POWER_UP = "Power Up";
         private const string POWER_DOWN = "Power Down";
@@ -16,18 +15,14 @@ namespace BForBoss
         private static readonly int POWER_UP_KEY = Animator.StringToHash(POWER_UP);
         private static readonly int POWER_DOWN_KEY = Animator.StringToHash(POWER_DOWN);
 
+        [SerializeField, Resolve] private DerekHealthBehaviour _healthBehaviour;
         [SerializeField, Resolve] private DerekShieldBehaviour _shieldBehaviour;
         [SerializeField, Resolve] private BossWipeOutWallsManager _wipeoutWallsManager;
         [SerializeField, Resolve] private RotationalMovementBehaviour _rotationalMovementBehaviour;
         [SerializeField] private DerekMissileLauncherBehaviour[] _missileLauncherBehaviours;
         private float _vulnerabilityDuration = 10.0f;
-        [Title("Health")]
-        [SerializeField, Resolve] private DerekHealthView _derekHealthView;
-        [SerializeField] private float _healthAmount;
-
-        //Todo: Temporary variables used to simulate receiving and responding to damage. Will Remove once DerekHealthBehavior has been implemented
+        
         private Action<bool> _onVulnerabilityExpired;
-        private float _currentHealth = 0;
         private DerekContextManager.Vulnerability _vulnerability = DerekContextManager.Vulnerability.Invulnerable;
         private float _vulnerabilityTimer;
         private Animator _animator;
@@ -42,8 +37,7 @@ namespace BForBoss
                 missileLauncher.Reset();
             }
             _shieldBehaviour.ToggleShield(false);
-            _currentHealth = _healthAmount;
-            _derekHealthView.SetState(new DerekHealthViewState(_currentHealth / _healthAmount, _vulnerability == DerekContextManager.Vulnerability.Invulnerable));
+            _healthBehaviour.Reset();
             _vulnerabilityTimer = 0;
         }
 
@@ -55,8 +49,7 @@ namespace BForBoss
                 missileLauncher.Initialize(playerMovementBehaviour);
             }
             _onVulnerabilityExpired = onVulnerabilityExpired;
-            _currentHealth = _healthAmount;
-            _derekHealthView.SetState(new DerekHealthViewState(_currentHealth / _healthAmount, _vulnerability == DerekContextManager.Vulnerability.Invulnerable));
+            _healthBehaviour.Initialize(() => _onVulnerabilityExpired?.Invoke(true));
         }
 
         public void UpdatePhase(DerekContextManager.Phase phase, DerekPhaseDataSO phaseData)
@@ -64,15 +57,12 @@ namespace BForBoss
             switch (phase)
             {
                 case DerekContextManager.Phase.FirstPhase:
-                    //_healthBarViewBehavior.SetPhaseBoundary(0.75f, _onPhaseComplete.Invoke());
                     Perigon.Utility.Logger.LogString($"Phase 1: Will transition at {phaseData.HealthThreshold * 100}% health", LoggerColor.Green, "derekboss");
                     break;
                 case DerekContextManager.Phase.SecondPhase:
-                    //_healthBarViewBehavior.SetPhaseBoundary(0.25f, _onPhaseComplete.Invoke());
                     Perigon.Utility.Logger.LogString($"Phase 2: Will transition at {phaseData.HealthThreshold * 100}% health", LoggerColor.Green, "derekboss");
                     break;
                 case DerekContextManager.Phase.FinalPhase:
-                    //_healthBarViewBehavior.SetPhaseBoundary(0f, _onPhaseComplete.Invoke());
                     Perigon.Utility.Logger.LogString($"Phase 3: Will transition at {phaseData.HealthThreshold * 100}% health", LoggerColor.Green, "derekboss");
                     break;
                 case DerekContextManager.Phase.Tutorial:
@@ -86,7 +76,8 @@ namespace BForBoss
                 Perigon.Utility.Logger.LogError("Phase Data should not be invalid", LoggerColor.Red, "derekboss");
                 return;
             }
-
+            
+            _healthBehaviour.SetThreshold(phaseData.HealthThreshold, phaseData.HealthBarColor);
             _rotationalMovementBehaviour.SetRotationRate(phaseData.RotationRate);
             _vulnerabilityDuration = phaseData.VulnerabilityDuration;
             foreach (DerekMissileLauncherBehaviour missileLauncher in _missileLauncherBehaviours)
@@ -130,21 +121,7 @@ namespace BForBoss
             }
 
             _vulnerability = vulnerability;
-            _derekHealthView.SetState(new DerekHealthViewState(_currentHealth / _healthAmount, _vulnerability == DerekContextManager.Vulnerability.Invulnerable));
-        }
-
-        //Temporary Damage Receiving Functionality - Will be removed in BFB-516 with Derek Health Behaviour component
-        public void OnCollided(Vector3 collisionPoint, Vector3 collisionNormal)
-        {
-            if (_shieldBehaviour.IsActive())
-            {
-                Perigon.Utility.Logger.LogWarning("Boss was shot even with shields up, which shouldn't be possible, ignoring damage", LoggerColor.Yellow, "derekboss");
-                return;
-            }
-
-            _currentHealth--;
-            _derekHealthView.SetState(new DerekHealthViewState(_currentHealth / _healthAmount, false));
-            _onVulnerabilityExpired?.Invoke(true);
+            _healthBehaviour.CanReceiveDamage = _vulnerability == DerekContextManager.Vulnerability.Vulnerable;
         }
 
         private void Awake()
@@ -155,9 +132,9 @@ namespace BForBoss
             this.PanicIfNullObject(_wipeoutWallsManager, nameof(_wipeoutWallsManager));
             this.PanicIfNullObject(_rotationalMovementBehaviour, nameof(_rotationalMovementBehaviour));
             this.PanicIfNullObject(_animator, nameof(_animator));
+            this.PanicIfNullObject(_healthBehaviour, nameof(_healthBehaviour));
         }
-
-        //TODO: Remove temp damage receiving component once DerekHealthBehaviour is implemented
+        
         private void Update()
         {
             if (_vulnerability != DerekContextManager.Vulnerability.Vulnerable)
