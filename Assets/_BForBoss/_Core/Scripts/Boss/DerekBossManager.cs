@@ -21,7 +21,7 @@ namespace BForBoss
         [SerializeField, Resolve] private RotationalMovementBehaviour _rotationalMovementBehaviour;
         [SerializeField] private DerekMissileLauncherBehaviour[] _missileLauncherBehaviours;
         private float _vulnerabilityDuration = 10.0f;
-        
+
         private Action<bool> _onVulnerabilityExpired;
         private DerekContextManager.Vulnerability _vulnerability = DerekContextManager.Vulnerability.Invulnerable;
         private float _vulnerabilityTimer;
@@ -39,6 +39,8 @@ namespace BForBoss
             _shieldBehaviour.ToggleShield(false);
             _healthBehaviour.Reset();
             _vulnerabilityTimer = 0;
+            _animator.ResetTrigger(POWER_DOWN_KEY);
+            _animator.ResetTrigger(POWER_UP_KEY);
         }
 
         public void Initialize(IGetPlayerTransform playerMovementBehaviour, Action<bool> onVulnerabilityExpired)
@@ -76,7 +78,7 @@ namespace BForBoss
                 Perigon.Utility.Logger.LogError("Phase Data should not be invalid", LoggerColor.Red, "derekboss");
                 return;
             }
-            
+
             _healthBehaviour.SetThreshold(phaseData.HealthThreshold, phaseData.HealthBarColor);
             _rotationalMovementBehaviour.SetRotationRate(phaseData.RotationRate);
             _vulnerabilityDuration = phaseData.VulnerabilityDuration;
@@ -134,7 +136,7 @@ namespace BForBoss
             this.PanicIfNullObject(_animator, nameof(_animator));
             this.PanicIfNullObject(_healthBehaviour, nameof(_healthBehaviour));
         }
-        
+
         private void Update()
         {
             if (_vulnerability != DerekContextManager.Vulnerability.Vulnerable)
