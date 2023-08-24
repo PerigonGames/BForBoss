@@ -44,17 +44,19 @@ namespace BForBoss
 
         private void SetViews()
         {
-            _showFPSToggle.isOn = true;
+            _showPCSpecsToggle.gameObject.SetActive(false);
+            _showRAMToggle.gameObject.SetActive(false);
+            _showFPSToggle.gameObject.SetActive(true);
+            
+            _showFPSToggle.isOn = false;
             _showPCSpecsToggle.isOn = false;
             _showRAMToggle.isOn = false;
         }
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
         private void ShowSettingsForDevelopment()
         {
             _showPCSpecsToggle.gameObject.SetActive(true);
             _showRAMToggle.gameObject.SetActive(true);
         }
-#endif
     }
     
     public class GameplaySettingsViewModel
