@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,7 +21,13 @@ namespace BForBoss
     {
         [SerializeField] private Image _invincibleView;
         [SerializeField] private Image _dynamicView;
-
+        [ColorPalette]
+        [SerializeField] private Color _firstPhaseColor = Color.green;
+        [ColorPalette]
+        [SerializeField] private Color _secondPhaseColor = Color.yellow;
+        [ColorPalette]
+        [SerializeField] private Color _thirdPhaseColor = Color.red;
+        
         public void SetState(DerekHealthViewState state)
         {
             _invincibleView.gameObject.SetActive(state.IsInvulnerable);
@@ -32,15 +39,15 @@ namespace BForBoss
         {
             if (health > 0.66)
             {
-                return Color.green;
+                return _firstPhaseColor;
             }
 
             if (health > 0.33f)
             {
-                return Color.yellow;
+                return _secondPhaseColor;
             }
 
-            return Color.red;
+            return _thirdPhaseColor;
         }
     }
 }
