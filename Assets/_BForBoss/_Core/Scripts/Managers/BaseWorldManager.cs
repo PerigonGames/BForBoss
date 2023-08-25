@@ -232,6 +232,8 @@ namespace BForBoss
 
         protected virtual void HandleOnEndGame()
         {
+            Time.timeScale = 0.0f;
+            _inputSystem.SetToUIControls();
         }
     }
 }
