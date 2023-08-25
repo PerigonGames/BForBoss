@@ -23,7 +23,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 728363443939965187}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -31,7 +31,7 @@ Transform:
   - {fileID: 7578295569140770113}
   - {fileID: 7578295569575999760}
   - {fileID: 956536685149994451}
-  m_Father: {fileID: 7578295569769490459}
+  m_Father: {fileID: 5663112398167530608}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &820653930136967501
@@ -206,6 +206,39 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 245731601651957575}
   m_maskType: 0
+--- !u!1 &3027823088025107282
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5663112398167530608}
+  m_Layer: 0
+  m_Name: RingView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5663112398167530608
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3027823088025107282}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7466624707433726090}
+  - {fileID: 1238271130383091663}
+  m_Father: {fileID: 7578295569769490459}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7272441738224968768
 GameObject:
   m_ObjectHideFlags: 0
@@ -232,12 +265,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7272441738224968768}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 5, y: 1000, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7578295569769490459}
+  m_Father: {fileID: 5663112398167530608}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5606396601935723612
@@ -14181,8 +14214,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7466624707433726090}
-  - {fileID: 1238271130383091663}
+  - {fileID: 5663112398167530608}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -14199,7 +14231,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _label: 1
-  _ringView: {fileID: 728363443939965187}
+  _ringView: {fileID: 3027823088025107282}
   _renderer: {fileID: 7578295569575999765}
 --- !u!114 &8830915001825032509
 MonoBehaviour:
