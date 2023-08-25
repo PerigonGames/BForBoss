@@ -10,6 +10,8 @@ namespace BForBoss
         [Header("Health")]
         [SerializeField ,MinValueAttribute(0.0f), MaxValueAttribute(1.0f), Tooltip("The percentage of health where Derek will increment its phase")] 
         private float _healthThreshold;
+        [SerializeField, ColorPalette, Tooltip("The color of the healthbar during this phase")]
+        private Color _healthBarColor;
         [SerializeField, MinValueAttribute(0.0f), Tooltip("How long should Derek's vulnerability last this phase")] private float _vulnerabilityDuration = 1.0f;
         
         //Movement
@@ -22,6 +24,7 @@ namespace BForBoss
         [SerializeField, MinValueAttribute(0.1f), Tooltip("Multiplier set on the Autopilot speed of the missile")] private float _missileSpeedMultiplier;
         
         public float HealthThreshold => _healthThreshold;
+        public Color HealthBarColor => _healthBarColor;
         public float VulnerabilityDuration => _vulnerabilityDuration;
         
         public float RotationRate => _rotationRate;

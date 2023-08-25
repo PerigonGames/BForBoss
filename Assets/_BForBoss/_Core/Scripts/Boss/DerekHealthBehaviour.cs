@@ -1,4 +1,5 @@
 using System;
+using Perigon.Utility;
 using Perigon.Weapons;
 using UnityEngine;
 
@@ -6,65 +7,78 @@ namespace BForBoss
 {
     public class DerekHealthBehaviour : MonoBehaviour, IBulletCollision
     {
-        [SerializeField] private int _maxHealth = 12;
+        [SerializeField] private int _maxHealth = 20;
         [SerializeField] private int _damagePerShot = 1;
+
+        [SerializeField] private DerekHealthView _healthView;
+        private DerekHealthViewState _healthViewState;
 
         private int _elapsedHealth;
         private float _threshold;
-        private DerekContextManager.Vulnerability _vulnerabilityState = DerekContextManager.Vulnerability.Invulnerable;
-        
-        private event Action<DerekHealthViewState> OnStateChanged;
+
+        private bool _isVulnerable = false;
         private event Action OnThresholdHit;
 
-        public DerekContextManager.Vulnerability VulnerabilityState
+        public bool IsVulnerable
         {
-            get => _vulnerabilityState;
+            get => _isVulnerable;
             set
             {
-                _vulnerabilityState = value;
-                OnStateChanged?.Invoke(MapToState());
-            } 
+                _isVulnerable = value;
+                _healthViewState = _healthViewState.Apply(HealthPercentage, !_isVulnerable);
+                _healthView.SetState(_healthViewState);
+            }
         }
 
-        public void Initialize(
-            Action onThresholdHit, 
-            Action<DerekHealthViewState> onStateChanged)
+        private float HealthPercentage => (float)_elapsedHealth / _maxHealth;
+
+        public void Initialize(Action onThresholdHit)
         {
             OnThresholdHit = onThresholdHit;
-            OnStateChanged = onStateChanged;
-        }
-        
-        private void Awake()
-        {
-            _elapsedHealth = _maxHealth;
         }
 
-        private float HealthPercentage => _elapsedHealth / _maxHealth;
+        public void Reset()
+        {
+            _elapsedHealth = _maxHealth;
+            IsVulnerable = false;
+        }
+
+        private void Awake()
+        {
+            this.PanicIfNullObject(_healthView, nameof(_healthView));
+
+            if (_maxHealth <= 0)
+            {
+                PanicHelper.Panic(new Exception($"{nameof(_maxHealth)} needs to be a positive number, instead it is set to {_maxHealth}"));
+            }
+
+            _elapsedHealth = _maxHealth;
+            _healthViewState = new DerekHealthViewState();
+        }
 
         public void OnCollided(Vector3 collisionPoint, Vector3 collisionNormal)
         {
-            if (VulnerabilityState == DerekContextManager.Vulnerability.Invulnerable)
+            if (!IsVulnerable)
             {
                 return;
             }
+
             _elapsedHealth -= _damagePerShot;
+            _healthViewState = _healthViewState.Apply(HealthPercentage, !IsVulnerable);
+            _healthView.SetState(_healthViewState);
+            
             if (HealthPercentage <= _threshold)
             {
                 OnThresholdHit?.Invoke();
             }
-            OnStateChanged?.Invoke(MapToState());
         }
 
-        public void SetNextThreshold(float healthPercentage)
+        public void SetThreshold(float threshold, Color healthBarColor)
         {
-            _threshold = healthPercentage;
-        }
-
-        private DerekHealthViewState MapToState()
-        {
-            return new DerekHealthViewState(
-                healthPercentage: HealthPercentage,
-                isInvulnerable: VulnerabilityState == DerekContextManager.Vulnerability.Invulnerable);
+            threshold = Math.Clamp(threshold, 0.0f, 1.0f);
+            _threshold = threshold;
+            _healthViewState = _healthViewState.Apply(null, null, healthBarColor);
+            _healthView.SetState(_healthViewState);
         }
     }
 }

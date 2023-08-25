@@ -5,15 +5,24 @@ namespace BForBoss
 {
     public struct DerekHealthViewState
     {
-        public float HealthPercentage;
-        public bool IsInvulnerable;
+        public readonly float HealthPercentage;
+        public readonly bool IsInvulnerable;
+        public readonly Color HealthBarColor;
 
         public DerekHealthViewState(
             float healthPercentage, 
-            bool isInvulnerable)
+            bool isInvulnerable,
+            Color healthBarColor)
         {
             HealthPercentage = healthPercentage;
             IsInvulnerable = isInvulnerable;
+            HealthBarColor = healthBarColor;
+        }
+
+        public DerekHealthViewState Apply(float? healthPercentage = null, bool? isInvulnerable = null, Color? healthBarColor = null)
+        {
+            return new DerekHealthViewState(healthPercentage ?? HealthPercentage
+                , isInvulnerable ?? IsInvulnerable, healthBarColor ?? HealthBarColor);
         }
     }
     public class DerekHealthView : MonoBehaviour
@@ -25,22 +34,7 @@ namespace BForBoss
         {
             _invincibleView.gameObject.SetActive(state.IsInvulnerable);
             _dynamicView.fillAmount = state.HealthPercentage;
-            _dynamicView.color = MapHealthToColor(state.HealthPercentage);
-        }
-
-        private Color MapHealthToColor(float health)
-        {
-            if (health > 0.66)
-            {
-                return Color.green;
-            }
-
-            if (health > 0.33f)
-            {
-                return Color.yellow;
-            }
-
-            return Color.red;
+            _dynamicView.color = state.HealthBarColor;
         }
     }
 }
