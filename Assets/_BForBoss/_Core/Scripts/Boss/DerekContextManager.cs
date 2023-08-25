@@ -1,4 +1,6 @@
+using System;
 using BForBoss.RingSystem;
+using DG.Tweening;
 using Perigon.Utility;
 using Perigon.Weapons;
 using Sirenix.OdinInspector;
@@ -10,10 +12,14 @@ namespace BForBoss
     [DisallowMultipleComponent]
     public class DerekContextManager : MonoBehaviour
     {
-        [SerializeField] private ShootAtInteractiveButtonBehaviour _endTutorialButton;
         [SerializeField] private DerekBossManager _bossManager;
         [SerializeField] private RingLaborManager _ringLaborManager;
 
+        [Header("Environment")]
+        [SerializeField] private ShootAtInteractiveButtonBehaviour _endTutorialButton;
+        [SerializeField] private Transform _floorTransform;
+        [SerializeField, MinValue(0.0f), Tooltip("Time it takes for the floor to scale during phases")] private float _floorScaleTweenDuration = 6.0f;
+        
         //Phase Information
         [Title("Derek Phase Data")]
         [SerializeField, InlineEditor] private DerekPhaseDataSO _firstPhaseData;
@@ -22,14 +28,16 @@ namespace BForBoss
 
         //RingLabors configurations
         [Title("Ring Configurations")] 
-        [SerializeField]
-        private RingGrouping _ringConfigurationsTutorial;
+        
         [Header("Phase 1")]
         [SerializeField]
         private RingGrouping _ringConfigurationsFirstPhase;
         [Header("Phase 2")]
         [SerializeField]
         private RingGrouping _ringConfigurationsSecondPhase;
+        [Header("Phase 3")]
+        [SerializeField]
+        private RingGrouping _ringConfigurationsFinalPhase;
         
         private DerekPhaseDataSO _currentPhaseDataSO = null;
 
@@ -53,6 +61,7 @@ namespace BForBoss
 
         public void Reset()
         {
+            _floorTransform.localScale = Vector3.one;
             _ringLaborManager.Reset();
             _currentPhase = Phase.Tutorial;
             _currentVulnerability = Vulnerability.Invulnerable;
@@ -70,7 +79,7 @@ namespace BForBoss
 
         private void OnEndTutorialButtonTriggered()
         {
-            Perigon.Utility.Logger.LogString("Tutorial Phase has ended", LoggerColor.Yellow, "derekboss");
+            Logger.LogString("Tutorial Phase has ended", LoggerColor.Yellow, "derekboss");
             HandleVulnerabilityExpiring(true);
         }
 
@@ -96,18 +105,18 @@ namespace BForBoss
                     case Phase.Tutorial:
                         _currentPhase = Phase.FirstPhase;
                         _currentPhaseDataSO = _firstPhaseData;
-                        Logger.LogString("Set Tutorial Ring system", key:"Labor");
-                        _ringLaborManager.SetRings(_ringConfigurationsTutorial);
+                        Logger.LogString("Set First Phase Ring system", key:"Labor");
+                        _ringLaborManager.SetRings(_ringConfigurationsFirstPhase);
                         break;
                     case Phase.FirstPhase:
                         _currentPhase = Phase.SecondPhase;
                         _currentPhaseDataSO = _secondPhaseData;
-                        _ringLaborManager.SetRings(_ringConfigurationsFirstPhase);
+                        _ringLaborManager.SetRings(_ringConfigurationsSecondPhase);
                         break;
                     case Phase.SecondPhase:
                         _currentPhase = Phase.FinalPhase;
                         _currentPhaseDataSO = _finalPhaseData;
-                        _ringLaborManager.SetRings(_ringConfigurationsSecondPhase);                        
+                        _ringLaborManager.SetRings(_ringConfigurationsFinalPhase);                        
                         break;
                     case Phase.FinalPhase:
                         _currentPhase = Phase.Death;
@@ -120,6 +129,9 @@ namespace BForBoss
                 _bossManager.UpdatePhase(_currentPhase, _currentPhaseDataSO);
             }
 
+            float floorScale = _currentPhaseDataSO.FloorSizeScale;
+            DOTween.To(() => _floorTransform.localScale, floorScaleVector => _floorTransform.localScale = floorScaleVector, new Vector3(floorScale, 1, floorScale), _floorScaleTweenDuration);
+            
             _ringLaborManager.ActivateSystem();
             _currentVulnerability = Vulnerability.Invulnerable;
             _bossManager.UpdateVulnerability(_currentVulnerability);
@@ -127,7 +139,7 @@ namespace BForBoss
 
         public void HandleDeath()
         {
-            Perigon.Utility.Logger.LogString("Player wins -> Start Defeat animation and then open thank you for playing Text box", LoggerColor.Green, "derekboss");
+            Logger.LogString("Player wins -> Start Defeat animation and then open thank you for playing Text box", LoggerColor.Green, "derekboss");
             StateManager.Instance.SetState(State.EndGame);
         }
 
@@ -137,18 +149,23 @@ namespace BForBoss
             this.PanicIfNullObject(_ringLaborManager, nameof(_ringLaborManager));
             this.PanicIfNullObject(_bossManager, nameof(_bossManager));
             
+            if (_floorTransform.gameObject == null)
+            {
+                PanicHelper.Panic(new Exception("Floor object has not been set"));
+            }
+
             // Data
             this.PanicIfNullObject(_firstPhaseData, nameof(_firstPhaseData));
             this.PanicIfNullObject(_secondPhaseData, nameof(_secondPhaseData));
             this.PanicIfNullObject(_finalPhaseData, nameof(_finalPhaseData));
             
-            this.PanicIfNullObject(_ringConfigurationsTutorial, nameof(_ringConfigurationsTutorial));
             this.PanicIfNullObject(_ringConfigurationsFirstPhase, nameof(_ringConfigurationsFirstPhase));
             this.PanicIfNullObject(_ringConfigurationsSecondPhase, nameof(_ringConfigurationsSecondPhase));
+            this.PanicIfNullObject(_ringConfigurationsFinalPhase, nameof(_ringConfigurationsFinalPhase));
             
-            this.PanicIfNullOrEmptyList(_ringConfigurationsTutorial.GroupOfRings, nameof(_ringConfigurationsTutorial));
-            this.PanicIfNullOrEmptyList(_ringConfigurationsFirstPhase.GroupOfRings, nameof(_ringConfigurationsTutorial));
-            this.PanicIfNullOrEmptyList(_ringConfigurationsSecondPhase.GroupOfRings, nameof(_ringConfigurationsTutorial));
+            this.PanicIfNullOrEmptyList(_ringConfigurationsFirstPhase.GroupOfRings, nameof(_ringConfigurationsFirstPhase));
+            this.PanicIfNullOrEmptyList(_ringConfigurationsSecondPhase.GroupOfRings, nameof(_ringConfigurationsFirstPhase));
+            this.PanicIfNullOrEmptyList(_ringConfigurationsFinalPhase.GroupOfRings, nameof(_ringConfigurationsFirstPhase));
             
             // Misc
             this.PanicIfNullObject(_endTutorialButton, nameof(_endTutorialButton));
