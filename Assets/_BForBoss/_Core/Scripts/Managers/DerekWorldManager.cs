@@ -21,6 +21,7 @@ namespace BForBoss
         {
             base.Start();
             _derekContextManager.Initialize(_playerBehaviour.PlayerMovement);
+            StateManager.Instance.SetState(State.PreGame);
         }
 
         protected override void OnValidate()

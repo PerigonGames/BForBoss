@@ -8,12 +8,12 @@ namespace BForBoss
 {
     public class SandboxWorldManager : BaseWorldManager
     {
-
         [SerializeField] private RingLaborManager _ringLaborManager;
         [SerializeField] private BossWipeOutWallsManager _wipeOutWallsManager;
-
+        [SerializeField] private RingGrouping _ringGroupings;
+        
         private DerekMissileLauncherBehaviour[] _derekMissileLauncherBehaviours;
-        private CountdownViewBehaviour _countdownTimer;
+        private CountdownViewBehaviour _countdownTimerView;
 
         protected override Vector3 SpawnLocation => _spawnLocation.position;
         protected override Quaternion SpawnLookDirection => _spawnLocation.rotation;
@@ -28,14 +28,17 @@ namespace BForBoss
         {
             base.Start();
             _ringLaborManager.Initialize();
+            _ringLaborManager.SetRings(_ringGroupings);
             _wipeOutWallsManager.Initialize(_playerBehaviour.PlayerMovement);
             _derekMissileLauncherBehaviours.ForEach(launcher => launcher.Initialize(_playerBehaviour.PlayerMovement));
+            _stateManager.SetState(State.PreGame);
         }
 
         protected override void Awake()
         {
             base.Awake();
             _derekMissileLauncherBehaviours = FindObjectsOfType<DerekMissileLauncherBehaviour>();
+            this.PanicIfNullObject(_ringGroupings, nameof(_ringGroupings));
         }
 
         protected override void OnValidate()
@@ -48,6 +51,13 @@ namespace BForBoss
         public void SetGameOver()
         {
             StateManager.Instance.SetState(State.EndGame);
+        }
+
+        public void RandomizeRingGroupToActivate()
+        {
+            _ringLaborManager.Reset();
+            _ringLaborManager.SetRings(_ringGroupings);
+            _ringLaborManager.ActivateSystem();
         }
     }
 }

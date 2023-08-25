@@ -36,12 +36,17 @@ namespace BForBoss
         {
             _vulnerability = DerekContextManager.Vulnerability.Invulnerable;
             _wipeoutWallsManager.Reset();
+            _animator.SetTrigger(POWER_DOWN_KEY);
             foreach (DerekMissileLauncherBehaviour missileLauncher in _missileLauncherBehaviours)
             {
                 missileLauncher.Reset();
             }
             _shieldBehaviour.ToggleShield(false);
             _currentHealth = _healthAmount;
+            _derekHealthView.SetState(new DerekHealthViewState(_currentHealth / _healthAmount, _vulnerability == DerekContextManager.Vulnerability.Invulnerable));
+            _vulnerabilityTimer = 0;
+            _animator.ResetTrigger(POWER_DOWN_KEY);
+            _animator.ResetTrigger(POWER_UP_KEY);
         }
 
         public void Initialize(IGetPlayerTransform playerMovementBehaviour, Action<bool> onVulnerabilityExpired)
@@ -53,6 +58,7 @@ namespace BForBoss
             }
             _onVulnerabilityExpired = onVulnerabilityExpired;
             _currentHealth = _healthAmount;
+            _derekHealthView.SetState(new DerekHealthViewState(_currentHealth / _healthAmount, _vulnerability == DerekContextManager.Vulnerability.Invulnerable));
         }
 
         public void UpdatePhase(DerekContextManager.Phase phase, DerekPhaseDataSO phaseData)
@@ -126,6 +132,7 @@ namespace BForBoss
             }
 
             _vulnerability = vulnerability;
+            _derekHealthView.SetState(new DerekHealthViewState(_currentHealth / _healthAmount, _vulnerability == DerekContextManager.Vulnerability.Invulnerable));
         }
 
         //Temporary Damage Receiving Functionality - Will be removed in BFB-516 with Derek Health Behaviour component
@@ -138,7 +145,7 @@ namespace BForBoss
             }
 
             _currentHealth--;
-            _derekHealthView.SetState(new DerekHealthViewState(_currentHealth / _healthAmount, _vulnerability == DerekContextManager.Vulnerability.Invulnerable));
+            _derekHealthView.SetState(new DerekHealthViewState(_currentHealth / _healthAmount, false));
             _onVulnerabilityExpired?.Invoke(true);
         }
 
@@ -149,6 +156,7 @@ namespace BForBoss
             this.PanicIfNullOrEmptyList(_missileLauncherBehaviours, nameof(_missileLauncherBehaviours));
             this.PanicIfNullObject(_wipeoutWallsManager, nameof(_wipeoutWallsManager));
             this.PanicIfNullObject(_rotationalMovementBehaviour, nameof(_rotationalMovementBehaviour));
+            this.PanicIfNullObject(_animator, nameof(_animator));
         }
 
         //TODO: Remove temp damage receiving component once DerekHealthBehaviour is implemented

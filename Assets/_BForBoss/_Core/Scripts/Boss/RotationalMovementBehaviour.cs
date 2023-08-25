@@ -11,14 +11,14 @@ namespace BForBoss
     [RequireComponent(typeof(Rigidbody))]
     public class RotationalMovementBehaviour : MonoBehaviour
     {
-        [SerializeField]
-        private float _rotationRate = 30f;
+        [SerializeField] private float _rotationRate = 30f;
         private int _direction = 0;
         
         private Rigidbody _rigidbody;
 
         public void Reset()
         {
+            StopRotation();
             _rigidbody.rotation = Quaternion.Euler(0,0,0);
         }
 

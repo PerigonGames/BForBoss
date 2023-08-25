@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace BForBoss
 {
-    public class GameplaySettingsViewBehaviour : MonoBehaviour
+    public class TelemetricsViewBehaviour : MonoBehaviour
     {
         [SerializeField] private Toggle _showFPSToggle = null;
         [SerializeField] private Toggle _showRAMToggle = null;
@@ -16,9 +16,6 @@ namespace BForBoss
             _viewModel = new GameplaySettingsViewModel();
             SetViews();
             BindModel();
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-            ShowSettingsForDevelopment();
-#endif
         }
 
         private void BindModel()
@@ -43,18 +40,11 @@ namespace BForBoss
         }
 
         private void SetViews()
-        {
-            _showFPSToggle.isOn = true;
+        {   
+            _showFPSToggle.isOn = false;
             _showPCSpecsToggle.isOn = false;
             _showRAMToggle.isOn = false;
         }
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-        private void ShowSettingsForDevelopment()
-        {
-            _showPCSpecsToggle.gameObject.SetActive(true);
-            _showRAMToggle.gameObject.SetActive(true);
-        }
-#endif
     }
     
     public class GameplaySettingsViewModel

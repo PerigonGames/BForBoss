@@ -1,3 +1,4 @@
+using Perigon.Utility;
 using Perigon.Weapons;
 using UnityEngine;
 
@@ -65,6 +66,9 @@ namespace BForBoss
         {
             _wipeOutWallsManager = GetComponent<WipeOutWallsManager>();
             _rotationalMovementBehaviour = GetComponent<RotationalMovementBehaviour>();
+            
+            this.PanicIfNullObject(_wipeOutWallsManager, nameof(_wipeOutWallsManager));
+            this.PanicIfNullObject(_rotationalMovementBehaviour, nameof(_rotationalMovementBehaviour));
         }
     }
 }
