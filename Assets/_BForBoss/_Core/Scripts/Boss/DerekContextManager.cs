@@ -27,7 +27,7 @@ namespace BForBoss
         [SerializeField, InlineEditor] private DerekPhaseDataSO _finalPhaseData;
 
         //RingLabors configurations
-        [Title("Ring Configurations")] 
+        [Header("Ring Configurations")] 
         
         [Header("Phase 1")]
         [SerializeField]
@@ -40,6 +40,7 @@ namespace BForBoss
         private RingGrouping _ringConfigurationsFinalPhase;
         
         private DerekPhaseDataSO _currentPhaseDataSO = null;
+        private Vector3 _originalFloorScale;
 
         public enum Phase
         {
@@ -61,7 +62,7 @@ namespace BForBoss
 
         public void Reset()
         {
-            _floorTransform.localScale = Vector3.one;
+            _floorTransform.localScale = _originalFloorScale;
             _ringLaborManager.Reset();
             _currentPhase = Phase.Tutorial;
             _currentVulnerability = Vulnerability.Invulnerable;
@@ -130,7 +131,9 @@ namespace BForBoss
             }
 
             float floorScale = _currentPhaseDataSO.FloorSizeScale;
-            DOTween.To(() => _floorTransform.localScale, floorScaleVector => _floorTransform.localScale = floorScaleVector, new Vector3(floorScale, 1, floorScale), _floorScaleTweenDuration);
+            DOTween.To(() => _floorTransform.localScale, floorScaleVector => _floorTransform.localScale = floorScaleVector, 
+                new Vector3(floorScale * _originalFloorScale.x, _originalFloorScale.y, floorScale * _originalFloorScale.z),
+                _floorScaleTweenDuration);
             
             _ringLaborManager.ActivateSystem();
             _currentVulnerability = Vulnerability.Invulnerable;
@@ -153,6 +156,7 @@ namespace BForBoss
             {
                 PanicHelper.Panic(new Exception("Floor object has not been set"));
             }
+            _originalFloorScale = _floorTransform.localScale;
 
             // Data
             this.PanicIfNullObject(_firstPhaseData, nameof(_firstPhaseData));
