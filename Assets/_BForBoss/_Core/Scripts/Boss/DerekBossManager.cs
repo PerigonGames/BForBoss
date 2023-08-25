@@ -123,7 +123,7 @@ namespace BForBoss
             }
 
             _vulnerability = vulnerability;
-            _healthBehaviour.CanReceiveDamage = _vulnerability == DerekContextManager.Vulnerability.Vulnerable;
+            _healthBehaviour.IsVulnerable = _vulnerability == DerekContextManager.Vulnerability.Vulnerable;
         }
 
         private void Awake()

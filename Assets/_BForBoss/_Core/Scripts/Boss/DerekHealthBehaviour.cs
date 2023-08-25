@@ -11,23 +11,22 @@ namespace BForBoss
         [SerializeField] private int _damagePerShot = 1;
 
         [SerializeField] private DerekHealthView _healthView;
+        private DerekHealthViewState _healthViewState;
 
         private int _elapsedHealth;
         private float _threshold;
-        private DerekContextManager.Vulnerability _vulnerabilityState = DerekContextManager.Vulnerability.Invulnerable;
 
-        private bool _canReceiveDamage = false;
-
-        private event Action<DerekHealthViewState> OnStateChanged;
+        private bool _isVulnerable = false;
         private event Action OnThresholdHit;
 
-        public bool CanReceiveDamage
+        public bool IsVulnerable
         {
-            get => _canReceiveDamage;
+            get => _isVulnerable;
             set
             {
-                _canReceiveDamage = value;
-                _healthView.SetState(new DerekHealthViewState(HealthPercentage, !_canReceiveDamage));
+                _isVulnerable = value;
+                _healthViewState = _healthViewState.Apply(HealthPercentage, !_isVulnerable);
+                _healthView.SetState(_healthViewState);
             }
         }
 
@@ -41,7 +40,7 @@ namespace BForBoss
         public void Reset()
         {
             _elapsedHealth = _maxHealth;
-            CanReceiveDamage = false;
+            IsVulnerable = false;
         }
 
         private void Awake()
@@ -54,17 +53,19 @@ namespace BForBoss
             }
 
             _elapsedHealth = _maxHealth;
+            _healthViewState = new DerekHealthViewState();
         }
 
         public void OnCollided(Vector3 collisionPoint, Vector3 collisionNormal)
         {
-            if (!CanReceiveDamage)
+            if (!IsVulnerable)
             {
                 return;
             }
 
             _elapsedHealth -= _damagePerShot;
-            _healthView.SetState(new DerekHealthViewState(HealthPercentage, !CanReceiveDamage));
+            _healthViewState = _healthViewState.Apply(HealthPercentage, !IsVulnerable);
+            _healthView.SetState(_healthViewState);
             
             if (HealthPercentage <= _threshold)
             {
@@ -72,16 +73,12 @@ namespace BForBoss
             }
         }
 
-        public void SetThreshold(float healthPercentage, Color healthBarColor)
+        public void SetThreshold(float threshold, Color healthBarColor)
         {
-            if (healthPercentage < 0.0f || healthPercentage > 1.0f)
-            {
-                Perigon.Utility.Logger.LogWarning("Percentage is not between 0 and 1, clamping", LoggerColor.Yellow, "derekboss");
-                healthPercentage = Math.Clamp(healthPercentage, 0.0f, 1.0f);
-            }
-            
-            _threshold = healthPercentage;
-            _healthView.SetHealthBarColor(healthBarColor);
+            threshold = Math.Clamp(threshold, 0.0f, 1.0f);
+            _threshold = threshold;
+            _healthViewState = _healthViewState.Apply(null, null, healthBarColor);
+            _healthView.SetState(_healthViewState);
         }
     }
 }
