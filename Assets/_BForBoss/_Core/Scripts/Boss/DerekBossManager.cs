@@ -103,7 +103,7 @@ namespace BForBoss
                     {
                         missileLauncher.StartShooting();
                     }
-                    _wipeoutWallsManager.ActivateClosestLongWallAndRotate();
+                    _wipeoutWallsManager.ActivateClosestAndRotateWall();
                     _animator.SetTrigger(POWER_UP_KEY);
                     break;
                 //End Missile Behavior
