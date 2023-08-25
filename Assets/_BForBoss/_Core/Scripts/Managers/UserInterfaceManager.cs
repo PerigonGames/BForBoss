@@ -1,4 +1,3 @@
-using Perigon.Entities;
 using Perigon.Utility;
 using UnityEngine;
 
@@ -64,6 +63,7 @@ namespace BForBoss
                 case State.Pause:
                     UIState = UserInterfaceState.PauseView;
                     break;
+                case State.Death:
                 case State.EndGame:
                     UIState = UserInterfaceState.EndGameView;
                     break;

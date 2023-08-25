@@ -125,9 +125,10 @@ namespace BForBoss
             _bossManager.UpdateVulnerability(_currentVulnerability);
         }
 
-        private void HandleDeath()
+        public void HandleDeath()
         {
             Perigon.Utility.Logger.LogString("Player wins -> Start Defeat animation and then open thank you for playing Text box", LoggerColor.Green, "derekboss");
+            StateManager.Instance.SetState(State.EndGame);
         }
 
         private void Awake()
