@@ -98,6 +98,7 @@ namespace BForBoss
             }
             VisualEffectsManager.Instance.Reset();
             _stateManager.SetState(State.Play);
+            HUDManager?.Reset();
         }
 
         protected virtual void Awake()
