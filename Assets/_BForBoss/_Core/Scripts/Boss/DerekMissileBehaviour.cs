@@ -8,7 +8,7 @@ using Logger = Perigon.Utility.Logger;
 namespace BForBoss
 {
     [RequireComponent(typeof(Collider))]
-    public class DerekMissileBehaviour : BulletBehaviour
+    public class DerekMissileBehaviour : BulletBehaviour, IIncomingAttacker
     {
         private enum State
         {
@@ -57,6 +57,13 @@ namespace BForBoss
         private float _elapsedHomingTargetTimeToLive;
         private float _elapsedTowardsApexTime;
 
+
+        
+        #region IIndicator
+        public IndicatorBehaviour Indicator { get; set; }
+        public Vector3 Position => transform.position;
+        public bool IsActive => _isActive;
+        #endregion
         protected override void Update()
         {
             switch (_state)
