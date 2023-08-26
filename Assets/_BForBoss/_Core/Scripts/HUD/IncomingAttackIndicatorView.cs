@@ -3,6 +3,13 @@ using UnityEngine;
 
 namespace BForBoss
 {
+    public interface IIncomingAttacker
+    {
+        IndicatorBehaviour Indicator { get; set; }
+        Vector3 Position { get; }
+        bool IsActive { get; }
+    }
+    
     [RequireComponent(typeof(IndicatorObjectPool))]
     public class IncomingAttackIndicatorView : MonoBehaviour
     {
@@ -15,7 +22,6 @@ namespace BForBoss
         private Vector3 _screenCentre;
         private Vector3 _screenBounds;
 
-        //Tightly Coupled, Replace with something more generic in the future
         private IIncomingAttacker[] IncomingAttacks => FindObjectsOfType<DerekMissileBehaviour>(includeInactive: true);
         
         private void Awake()

@@ -4,13 +4,6 @@ using UnityEngine.Pool;
 
 namespace BForBoss
 {
-    public interface IIncomingAttacker
-    {
-        IndicatorBehaviour Indicator { get; set; }
-        Vector3 Position { get; }
-        bool IsActive { get; }
-    }
-    
     public class IndicatorBehaviour : MonoBehaviour
     {
         private const float MinSize = 0.5f;
