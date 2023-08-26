@@ -14,12 +14,12 @@ namespace BForBoss
 
         public void SetSizeBasedOnDistance(float distance)
         {
-            var mappedValue = MapFloat(distance);
+            var mappedValue = MapDistanceToScale(distance);
             var scale = Math.Clamp(mappedValue, MinSize, MaxSize);
             transform.localScale = new Vector3(scale, scale, scale);
         }
         
-        private float MapFloat(float input)
+        private float MapDistanceToScale(float input)
         {
             if (input is >= 0 and <= DistanceToStartScaling)
             {
