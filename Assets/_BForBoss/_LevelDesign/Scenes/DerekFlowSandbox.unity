@@ -1784,7 +1784,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8038010192155406783, guid: 8e909bed7ecada04886127e462577d2d, type: 3}
       propertyPath: m_LocalScale.x
-      value: 50
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 8038010192155406783, guid: 8e909bed7ecada04886127e462577d2d, type: 3}
       propertyPath: m_LocalScale.y
@@ -1792,11 +1792,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8038010192155406783, guid: 8e909bed7ecada04886127e462577d2d, type: 3}
       propertyPath: m_LocalScale.z
-      value: 20
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 8038010192155406783, guid: 8e909bed7ecada04886127e462577d2d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -115
+      value: -70.3
       objectReference: {fileID: 0}
     - target: {fileID: 8038010192155406783, guid: 8e909bed7ecada04886127e462577d2d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1804,7 +1804,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8038010192155406783, guid: 8e909bed7ecada04886127e462577d2d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -55
+      value: -74.5
       objectReference: {fileID: 0}
     - target: {fileID: 8038010192155406783, guid: 8e909bed7ecada04886127e462577d2d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1891,22 +1891,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d900f19c2e993d24a877c05e0c7a69ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _endTutorialButton: {fileID: 575480701}
   _bossManager: {fileID: 730369066}
   _ringLaborManager: {fileID: 1386954919}
+  _endTutorialButton: {fileID: 575480701}
+  _floorTransform: {fileID: 1153959254}
+  _floorScaleTweenDuration: 6
   _firstPhaseData: {fileID: 11400000, guid: 0912f91036cf5754da0c0cfb69adba84, type: 2}
   _secondPhaseData: {fileID: 11400000, guid: 0b0234d4998caae4b82296a115c55391, type: 2}
   _finalPhaseData: {fileID: 11400000, guid: c8a21024e30f9204f98ac20d5a2e6b94, type: 2}
-  _ringConfigurationsTutorial:
-    TimeToComplete: 15
-    GroupOfRings:
-    - Rings:
-      - {fileID: 1165508692}
-      - {fileID: 414869636}
-    - Rings:
-      - {fileID: 773150892}
-      - {fileID: 2140514098}
-    RingColor: {r: 0.24279505, g: 0.754717, b: 0.17443931, a: 0}
   _ringConfigurationsFirstPhase:
     TimeToComplete: 15
     GroupOfRings:
@@ -1933,6 +1925,20 @@ MonoBehaviour:
       - {fileID: 414869636}
       - {fileID: 1165508692}
     RingColor: {r: 1, g: 0, b: 0.9449339, a: 0}
+  _ringConfigurationsFinalPhase:
+    TimeToComplete: 15
+    GroupOfRings:
+    - Rings:
+      - {fileID: 773150892}
+      - {fileID: 2140514098}
+      - {fileID: 1580725701}
+      - {fileID: 414869636}
+    - Rings:
+      - {fileID: 2140514098}
+      - {fileID: 1580725701}
+      - {fileID: 414869636}
+      - {fileID: 1165508692}
+    RingColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!4 &787198327
 Transform:
   m_ObjectHideFlags: 0
@@ -2112,6 +2118,11 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!4 &1153959254 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8038010192155406783, guid: 8e909bed7ecada04886127e462577d2d, type: 3}
+  m_PrefabInstance: {fileID: 671225812}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1165508691
 PrefabInstance:
   m_ObjectHideFlags: 0

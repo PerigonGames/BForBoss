@@ -13,6 +13,10 @@ namespace BForBoss
         [SerializeField, ColorPalette, Tooltip("The color of the healthbar during this phase")]
         private Color _healthBarColor;
         [SerializeField, MinValueAttribute(0.0f), Tooltip("How long should Derek's vulnerability last this phase")] private float _vulnerabilityDuration = 1.0f;
+
+        [Header("Environment")]
+        [SerializeField, MinValueAttribute(0.0f), MaxValueAttribute(1.0f), Tooltip("The Scale (x and z) of the Floor")]
+        private float _floorSizeScale = 1.0f;
         
         //Movement
         [Header("Movement")]
@@ -26,6 +30,8 @@ namespace BForBoss
         public float HealthThreshold => _healthThreshold;
         public Color HealthBarColor => _healthBarColor;
         public float VulnerabilityDuration => _vulnerabilityDuration;
+
+        public float FloorSizeScale => _floorSizeScale;
         
         public float RotationRate => _rotationRate;
         
