@@ -1,8 +1,6 @@
-using System;
 using Perigon.Utility;
 using Perigon.VFX;
 using Perigon.Weapons;
-using PerigonGames;
 using UnityEngine;
 
 namespace BForBoss
