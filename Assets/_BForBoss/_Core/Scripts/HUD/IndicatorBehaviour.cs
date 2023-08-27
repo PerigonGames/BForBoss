@@ -10,7 +10,7 @@ namespace BForBoss
         private float _minScaleSize = 1f;
         [SerializeField]
         private float _maxScaleSize = 3f;
-        [SerializeField]
+        [SerializeField, Min(0.1f)]
         private float _distanceToStartScaling = 30f;
         
         private IObjectPool<IndicatorBehaviour> _objectPool;
