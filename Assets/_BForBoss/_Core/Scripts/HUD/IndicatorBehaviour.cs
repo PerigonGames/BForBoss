@@ -6,32 +6,35 @@ namespace BForBoss
 {
     public class IndicatorBehaviour : MonoBehaviour
     {
-        private const float MinSize = 0.5f;
-        private const float MaxSize = 3f;
-        private const float DistanceToStartScaling = 30;
+        [SerializeField]
+        private float _minScaleSize = 1f;
+        [SerializeField]
+        private float _maxScaleSize = 3f;
+        [SerializeField, Min(0.1f)]
+        private float _distanceToStartScaling = 30f;
         
         private IObjectPool<IndicatorBehaviour> _objectPool;
 
         public void SetSizeBasedOnDistance(float distance)
         {
             var mappedValue = MapDistanceToScale(distance);
-            var scale = Math.Clamp(mappedValue, MinSize, MaxSize);
+            var scale = Math.Clamp(mappedValue, _minScaleSize, _maxScaleSize);
             transform.localScale = new Vector3(scale, scale, scale);
         }
         
         private float MapDistanceToScale(float input)
         {
-            if (input is >= 0 and <= DistanceToStartScaling)
+            if (input >= 0 && input <= _distanceToStartScaling)
             {
-                return MaxSize - (input / DistanceToStartScaling) * (MaxSize - MinSize);
+                return _maxScaleSize - (input / _distanceToStartScaling) * (_maxScaleSize - _minScaleSize);
             }
 
-            if (input > DistanceToStartScaling)
+            if (input > _distanceToStartScaling)
             {
-                return MinSize;
+                return _minScaleSize;
             }
 
-            return MaxSize;
+            return _maxScaleSize;
         }
         
         public void Initialize(IObjectPool<IndicatorBehaviour> pool)

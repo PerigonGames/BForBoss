@@ -1,3 +1,4 @@
+using System;
 using PixelPlay.OffScreenIndicator;
 using UnityEngine;
 
@@ -23,7 +24,15 @@ namespace BForBoss
         private Vector3 _screenBounds;
 
         private IIncomingAttacker[] IncomingAttacks => FindObjectsOfType<DerekMissileBehaviour>(includeInactive: true);
-        
+
+        public void Reset()
+        {
+            foreach (var attacker in IncomingAttacks)
+            {
+                ClearInactiveAttackerIndicator(attacker);
+            }
+        }
+
         private void Awake()
         {
             _indicatorPool = GetComponent<IndicatorObjectPool>();
