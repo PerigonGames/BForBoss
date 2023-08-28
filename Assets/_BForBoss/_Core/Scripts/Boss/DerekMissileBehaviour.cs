@@ -1,4 +1,5 @@
 using System.Linq;
+using ECM2.Characters;
 using Perigon.Utility;
 using Perigon.Weapons;
 using Sirenix.OdinInspector;
@@ -50,6 +51,9 @@ namespace BForBoss
         [Title("Shared Configurations")]
         [SerializeField, Min(0.1f)] 
         private float _timeTakenToReachMaxSpeedCurve = 2;
+
+        [Title("Missile Properties")] [SerializeField, Min(0.0f)]
+        private float _knockbackMultiplier = 70f;
         
         private State _state = State.TowardsApex;
         private Vector3 _lastDirection;
@@ -150,6 +154,13 @@ namespace BForBoss
             {
                 var contact = collision.GetContact(0);
                 HitObject(collision.collider, contact.point, contact.normal);
+
+                if (collision.collider.TryGetComponent(out FirstPersonCharacter FPC))
+                {
+                    Vector3 normalizedDirection = (collision.collider.transform.position - transform.position).normalized;
+                    FPC.AddForce((_knockbackMultiplier * normalizedDirection), ForceMode.Impulse);
+                }
+
                 Deactivate();
             }
         }
