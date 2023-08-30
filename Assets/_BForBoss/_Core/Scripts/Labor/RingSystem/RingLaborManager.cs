@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BForBoss.Labor;
+using FMODUnity;
 using Perigon.Utility;
 using PerigonGames;
 using Sirenix.OdinInspector;
@@ -15,6 +16,9 @@ namespace BForBoss.RingSystem
          InfoBox("When player fails, delayed time before starting the round of rings again"),
         MinValue(0f)]
         private float penaltyDelayedStartTime = 3f;
+
+        [SerializeField] private EventReference _laborCompleteAudio;
+        [SerializeField] private EventReference _laborFailedAudio;
 
         private ILabor _ringSystem;
         private IRandomUtility _randomUtility;
@@ -51,6 +55,7 @@ namespace BForBoss.RingSystem
                 Logger.LogString("Labor Failed, Retrying", key: "Labor");
                 _ringSystem.Activate();
             }
+            RuntimeManager.PlayOneShot(didSucceed ? _laborCompleteAudio : _laborFailedAudio);
         }
 
         public void ActivateSystem()
