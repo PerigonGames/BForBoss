@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1566104679115472533}
   - component: {fileID: -5866552467942055795}
   - component: {fileID: 3189325094791985413}
+  - component: {fileID: 7362677996728494508}
   m_Layer: 9
   m_Name: DerekMissile
   m_TagString: Untagged
@@ -139,6 +140,43 @@ MonoBehaviour:
   _autoPilotTimeToLive: 2
   _timeTakenToReachMaxSpeedCurve: 2
   _knockbackMultiplier: 100
+  _missileExplodeAudio:
+    Guid:
+      Data1: -1744803380
+      Data2: 1098210083
+      Data3: 577127821
+      Data4: 304008934
+    Path: event:/AudioEvents/Missile/Missile_Explosion
+--- !u!114 &7362677996728494508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5351700357533757108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -1492277665
+      Data2: 1087398615
+      Data3: 1048314523
+      Data4: -923462386
+    Path: event:/AudioEvents/Missile/Missile_Thruster
+  Event: 
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1001 &1929829829435956271
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -161,6 +161,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shieldRipples: {fileID: 7593635713815074683, guid: 0930721e9abd3e1489dc70be7c43810c, type: 3}
+  _rippleSFX:
+    Guid:
+      Data1: -1224574635
+      Data2: 1140936323
+      Data3: -314664288
+      Data4: 751876553
+    Path: event:/AudioEvents/Enemy/Derek/Derek_ShieldHit
 --- !u!114 &2908364681648567484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,6 +180,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4148e3c8e239d431db1861d03736df3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _yLaunchComponent: 0.7
+  _launchMagnitudeMultiplier: 1.5
+  _launchMagnitudeRange: {x: 10, y: 30}
+  _shieldHitAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!1 &7027103518763075015
 GameObject:
   m_ObjectHideFlags: 0

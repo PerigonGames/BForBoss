@@ -1,5 +1,6 @@
 using System.Linq;
 using ECM2.Characters;
+using FMODUnity;
 using Perigon.Utility;
 using Perigon.Weapons;
 using Sirenix.OdinInspector;
@@ -54,6 +55,9 @@ namespace BForBoss
 
         [Title("Missile Properties")] [SerializeField, Min(0.0f)]
         private float _knockbackMultiplier = 70f;
+        
+        [Title("Audio")]
+        [SerializeField] private EventReference _missileExplodeAudio;
         
         private State _state = State.TowardsApex;
         private Vector3 _lastDirection;
@@ -161,6 +165,7 @@ namespace BForBoss
                     FPC.AddForce((_knockbackMultiplier * normalizedDirection), ForceMode.Impulse);
                 }
 
+                RuntimeManager.PlayOneShot(_missileExplodeAudio, contact.point);
                 Deactivate();
             }
         }

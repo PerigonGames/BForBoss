@@ -1,4 +1,5 @@
 using System;
+using FMODUnity;
 using Perigon.Utility;
 using Perigon.Weapons;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace BForBoss
     {
         [SerializeField] private int _maxHealth = 20;
         [SerializeField] private int _damagePerShot = 1;
+        [SerializeField] private EventReference _hitAudio;
 
         [SerializeField] private DerekHealthView _healthView;
         private DerekHealthViewState _healthViewState;
@@ -63,6 +65,7 @@ namespace BForBoss
                 return;
             }
 
+            if(!_hitAudio.IsNull) RuntimeManager.PlayOneShot(_hitAudio, collisionPoint);
             _elapsedHealth -= _damagePerShot;
             _healthViewState = _healthViewState.Apply(HealthPercentage, !IsVulnerable);
             _healthView.SetState(_healthViewState);
