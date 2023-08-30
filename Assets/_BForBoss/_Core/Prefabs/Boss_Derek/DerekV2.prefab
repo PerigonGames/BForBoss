@@ -62,6 +62,20 @@ MonoBehaviour:
   _rotationalMovementBehaviour: {fileID: 281993280497631056}
   _missileLauncherBehaviours:
   - {fileID: 6008624556580243053}
+  _powerUpAudio:
+    Guid:
+      Data1: -1503628395
+      Data2: 1134340316
+      Data3: -854709875
+      Data4: -2074444801
+    Path: event:/AudioEvents/Enemy/Derek/Derek_Activate
+  _powerDownAudio:
+    Guid:
+      Data1: 858214540
+      Data2: 1160800754
+      Data3: 1290860186
+      Data4: -2052743092
+    Path: event:/AudioEvents/Enemy/Derek/Derek_Deactivate
 --- !u!114 &281993280497631057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,6 +149,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxHealth: 20
   _damagePerShot: 1
+  _hitAudio:
+    Guid:
+      Data1: 1683211424
+      Data2: 1316413481
+      Data3: 693624487
+      Data4: -876405253
+    Path: event:/AudioEvents/Enemy/Derek/Derek_Hit
   _healthView: {fileID: 0}
 --- !u!1 &281993280523253466
 GameObject:
@@ -1725,7 +1746,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2314
+  m_VersionIndex: 2326
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -3371,7 +3392,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2314
+  m_VersionIndex: 2326
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -5017,7 +5038,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2317
+  m_VersionIndex: 2329
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -6663,7 +6684,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2320
+  m_VersionIndex: 2332
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -7076,6 +7097,26 @@ PrefabInstance:
     - target: {fileID: 1227206927591809553, guid: 3c39f9e8013a1da40b6198a8d83b50a4, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908364681648567484, guid: 3c39f9e8013a1da40b6198a8d83b50a4, type: 3}
+      propertyPath: _shieldHitAudio.Path
+      value: event:/AudioEvents/Enemy/Derek/Derek_ShieldHit
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908364681648567484, guid: 3c39f9e8013a1da40b6198a8d83b50a4, type: 3}
+      propertyPath: _shieldHitAudio.Guid.Data1
+      value: -1224574635
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908364681648567484, guid: 3c39f9e8013a1da40b6198a8d83b50a4, type: 3}
+      propertyPath: _shieldHitAudio.Guid.Data2
+      value: 1140936323
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908364681648567484, guid: 3c39f9e8013a1da40b6198a8d83b50a4, type: 3}
+      propertyPath: _shieldHitAudio.Guid.Data3
+      value: -314664288
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908364681648567484, guid: 3c39f9e8013a1da40b6198a8d83b50a4, type: 3}
+      propertyPath: _shieldHitAudio.Guid.Data4
+      value: 751876553
       objectReference: {fileID: 0}
     - target: {fileID: 6367962280998626771, guid: 3c39f9e8013a1da40b6198a8d83b50a4, type: 3}
       propertyPath: m_Name

@@ -1,4 +1,5 @@
 using System;
+using FMODUnity;
 using Perigon.Utility;
 using Perigon.Weapons;
 using UnityEngine;
@@ -20,6 +21,11 @@ namespace BForBoss
         [SerializeField, Resolve] private BossWipeOutWallsManager _wipeoutWallsManager;
         [SerializeField, Resolve] private RotationalMovementBehaviour _rotationalMovementBehaviour;
         [SerializeField] private DerekMissileLauncherBehaviour[] _missileLauncherBehaviours;
+
+        [Header("Audio")] 
+        [SerializeField] private EventReference _powerUpAudio;
+        [SerializeField] private EventReference _powerDownAudio;
+        
         private float _vulnerabilityDuration = 10.0f;
 
         private Action<bool> _onVulnerabilityExpired;
@@ -105,6 +111,7 @@ namespace BForBoss
                     }
                     _wipeoutWallsManager.ActivateClosestLongWallAndRotate();
                     _animator.SetTrigger(POWER_UP_KEY);
+                    RuntimeManager.PlayOneShot(_powerUpAudio, transform.position);
                     break;
                 //End Missile Behavior
                 //Deactivate all DeathWalls
@@ -119,6 +126,7 @@ namespace BForBoss
                     _wipeoutWallsManager.DeactivateWallAndRotation();
                     _shieldBehaviour.ToggleShield(false);
                     _animator.SetTrigger(POWER_DOWN_KEY);
+                    RuntimeManager.PlayOneShot(_powerDownAudio, transform.position);
                     break;
             }
 
