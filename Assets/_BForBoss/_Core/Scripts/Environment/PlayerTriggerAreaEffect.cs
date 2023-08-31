@@ -1,3 +1,4 @@
+using FMODUnity;
 using Perigon.Entities;
 using Perigon.Utility;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace BForBoss
     public class PlayerTriggerAreaEffect : MonoBehaviour
     {
         [SerializeField] private PlayerTriggerAreaMutation playerTriggerAreaMutation;
+        [SerializeField] private EventReference _eventReference;
 
         private PlayerLifeCycleBehaviour _playerLifeCycle;
         private PlayerMovementBehaviour _playerMovementBehaviour;
@@ -33,7 +35,7 @@ namespace BForBoss
                 return;
             }
             
-            PerformOneTimePlayerStatChange();
+            PerformOneTimePlayerStatChange(other.transform.position);
             PerformRepeatedPlayerStatChange();
         }
 
@@ -77,8 +79,10 @@ namespace BForBoss
             }
         }
 
-        private void PerformOneTimePlayerStatChange()
+        private void PerformOneTimePlayerStatChange(Vector3 contactPoint)
         {
+            if(!_eventReference.IsNull)
+                RuntimeManager.PlayOneShot(_eventReference, contactPoint);
             _playerMovementBehaviour.ModifyPlayerSpeed(playerTriggerAreaMutation.speedMultiplier);
         }
 
