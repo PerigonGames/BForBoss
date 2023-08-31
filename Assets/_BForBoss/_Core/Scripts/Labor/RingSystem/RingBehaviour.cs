@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using BForBoss.Utility;
+using FMODUnity;
 using Perigon.Utility;
 using UnityEngine;
 using Logger = Perigon.Utility.Logger;
@@ -15,6 +16,9 @@ namespace BForBoss.RingSystem
         [SerializeField] private int _label;
         [SerializeField] private GameObject _ringView;
         [SerializeField] private Renderer _renderer;
+
+        private StudioEventEmitter _ringAudio;
+        
         private TMPro.TMP_Text _labelTMP;
         private PlayerTriggerBehaviour _trigger;
         
@@ -60,6 +64,7 @@ namespace BForBoss.RingSystem
             _labelTMP = GetComponentInChildren<TMPro.TMP_Text>();
             _trigger = GetComponentInChildren<PlayerTriggerBehaviour>();
             _labelTMP = GetComponentInChildren<TMPro.TMP_Text>();
+            _ringAudio = GetComponent<StudioEventEmitter>();
             this.PanicIfNullObject(_renderer, "Renderer");
             this.PanicIfNullObject(_trigger, "PlayerTriggerBehaviour");
             this.PanicIfNullObject(_labelTMP, "TMP_Text");
@@ -80,6 +85,7 @@ namespace BForBoss.RingSystem
         private void OnPlayerEnteredTrigger()
         {
             OnRingTriggered?.Invoke(this);
+            _ringAudio.Play();
         }
     }
 }

@@ -1,6 +1,9 @@
+using System;
+using FMODUnity;
 using Perigon.Utility;
 using Perigon.VFX;
 using Perigon.Weapons;
+using PerigonGames;
 using UnityEngine;
 
 namespace BForBoss
@@ -11,6 +14,8 @@ namespace BForBoss
         private TimedVFXEffect[] _launcherVFX;
         private BulletSpawner _bulletSpawner;
         private IGetPlayerTransform _playerTransform;
+
+        [SerializeField] private EventReference _launchAudio;
 
         private bool _canShootMissiles = false;
         private float _shootTimer;
@@ -45,12 +50,14 @@ namespace BForBoss
         {
             var bullet = _bulletSpawner.SpawnBullet(BulletTypes.NoPhysics);
             bullet.SpeedMultiplier = _missileSpeedMultiplier;
-            var closestLauncherIndex = GetClosestLaunchTransformIndex(); 
-            bullet.SetSpawnAndDirection(_launcherLocations[closestLauncherIndex].position,Vector3.up);
+            var closestLauncherIndex = GetClosestLaunchTransformIndex();
+            var launcherTransform = _launcherLocations[closestLauncherIndex];
+            bullet.SetSpawnAndDirection(launcherTransform.position,Vector3.up);
             if (_launcherVFX[closestLauncherIndex] != null)
             {
                 _launcherVFX[closestLauncherIndex].StartEffect();
             }
+            RuntimeManager.PlayOneShot(_launchAudio, launcherTransform.position);
             bullet.HomingTarget = _playerTransform.Value;
         }
 
