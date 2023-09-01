@@ -37,7 +37,6 @@ namespace BForBoss
         {
             _vulnerability = DerekContextManager.Vulnerability.Invulnerable;
             _wipeoutWallsManager.Reset();
-            _animator.SetTrigger(POWER_DOWN_KEY);
             foreach (DerekMissileLauncherBehaviour missileLauncher in _missileLauncherBehaviours)
             {
                 missileLauncher.Reset();
@@ -45,8 +44,7 @@ namespace BForBoss
             _shieldBehaviour.ToggleShield(false);
             _healthBehaviour.Reset();
             _vulnerabilityTimer = 0;
-            _animator.ResetTrigger(POWER_DOWN_KEY);
-            _animator.ResetTrigger(POWER_UP_KEY);
+            _animator.SetTrigger(POWER_DOWN_KEY);
         }
 
         public void Initialize(IGetPlayerTransform playerMovementBehaviour, Action<bool> onVulnerabilityExpired)
