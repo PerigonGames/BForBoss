@@ -73,10 +73,10 @@ RectTransform:
   m_Father: {fileID: 4072317711415475724}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -226, y: 6}
-  m_SizeDelta: {x: 300, y: 300}
+  m_AnchorMin: {x: 0.5268426, y: 0.5}
+  m_AnchorMax: {x: 0.98, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 6}
+  m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3760561579101961477
 CanvasRenderer:
@@ -106,9 +106,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 50564d9f1dd83924881a24ce6bfce0ce, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -381,7 +381,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 561994063247493926, guid: d20414a19a368684f9edabd2e917899c, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.8
+      value: 0.7217783
       objectReference: {fileID: 0}
     - target: {fileID: 561994063247493926, guid: d20414a19a368684f9edabd2e917899c, type: 3}
       propertyPath: m_AnchorMin.x
@@ -389,7 +389,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 561994063247493926, guid: d20414a19a368684f9edabd2e917899c, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.1
+      value: 0.09999929
       objectReference: {fileID: 0}
     - target: {fileID: 561994063247493926, guid: d20414a19a368684f9edabd2e917899c, type: 3}
       propertyPath: m_SizeDelta.x
@@ -397,7 +397,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 561994063247493926, guid: d20414a19a368684f9edabd2e917899c, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 0.000005722046
       objectReference: {fileID: 0}
     - target: {fileID: 561994063247493926, guid: d20414a19a368684f9edabd2e917899c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -449,9 +449,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 561994063247493927, guid: d20414a19a368684f9edabd2e917899c, type: 3}
       propertyPath: m_text
-      value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-        quis nostrud exercitation ullamco '
+      value: 'Energy is a resource that you can lose and gain based on actions you
+        take.
+
+
+
+        You need energy to shoot.
+
+
+
+        You can see how much
+        energy you have in the bottom right blue bar. Keep an eye on this!'
       objectReference: {fileID: 0}
     - target: {fileID: 561994063247493927, guid: d20414a19a368684f9edabd2e917899c, type: 3}
       propertyPath: m_VerticalAlignment

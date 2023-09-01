@@ -73,10 +73,10 @@ RectTransform:
   m_Father: {fileID: 3748161335253162715}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.41}
-  m_AnchorMax: {x: 1, y: 0.78}
+  m_AnchorMin: {x: 0.43850037, y: 0.14599527}
+  m_AnchorMax: {x: 0.9874069, y: 0.7799971}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0.0000009536743}
+  m_SizeDelta: {x: -0.0000052452087, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4086965350597892562
 CanvasRenderer:
@@ -377,11 +377,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 561994063247493926, guid: d20414a19a368684f9edabd2e917899c, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0.42730984
       objectReference: {fileID: 0}
     - target: {fileID: 561994063247493926, guid: d20414a19a368684f9edabd2e917899c, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.29652998
+      value: 0.79999596
       objectReference: {fileID: 0}
     - target: {fileID: 561994063247493926, guid: d20414a19a368684f9edabd2e917899c, type: 3}
       propertyPath: m_AnchorMin.x
@@ -389,7 +389,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 561994063247493926, guid: d20414a19a368684f9edabd2e917899c, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.1
+      value: 0.1459918
       objectReference: {fileID: 0}
     - target: {fileID: 561994063247493926, guid: d20414a19a368684f9edabd2e917899c, type: 3}
       propertyPath: m_SizeDelta.x
@@ -433,7 +433,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 561994063247493926, guid: d20414a19a368684f9edabd2e917899c, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 38
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 561994063247493926, guid: d20414a19a368684f9edabd2e917899c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -449,8 +449,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 561994063247493927, guid: d20414a19a368684f9edabd2e917899c, type: 3}
       propertyPath: m_text
-      value: "Energy is used up by shooting your weapon or slowing down time. Make
-        sure to keep an eye on how much you\u2019re using!"
+      value: 'You can lose energy by:
+
+
+
+        1. Shooting your gun
+
+
+
+        2.
+        Going into Bullet Time'
       objectReference: {fileID: 0}
     - target: {fileID: 561994063247493927, guid: d20414a19a368684f9edabd2e917899c, type: 3}
       propertyPath: m_VerticalAlignment
