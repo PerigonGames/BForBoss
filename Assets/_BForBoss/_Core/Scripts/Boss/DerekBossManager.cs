@@ -83,6 +83,11 @@ namespace BForBoss
                 return;
             }
 
+            if (phase == DerekContextManager.Phase.FirstPhase)
+            {
+                _healthBehaviour.ShowHealthView();
+            }
+
             _healthBehaviour.SetThreshold(phaseData.HealthThreshold, phaseData.HealthBarColor);
             _rotationalMovementBehaviour.SetRotationRate(phaseData.RotationRate);
             _vulnerabilityDuration = phaseData.VulnerabilityDuration;
