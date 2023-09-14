@@ -80,7 +80,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _properties: {fileID: 11400000, guid: d5fd536275d84c94e838f3bc4568d91d, type: 2}
-  _heightOffsetForInitialLaunch: 5
+  _heightOffsetForInitialLaunch: 50
   _towardsApexSpeed: 30
   _towardsApexRotationalSpeed: 100
   _towardsApexSpeedCurve:
@@ -107,7 +107,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _towardsApexTime: 2
+  _towardsApexTime: 3
   _homingTargetSpeed: 20
   _homingTargetRotationalSpeed: 100
   _homingTargetSpeedCurve:
@@ -139,7 +139,7 @@ MonoBehaviour:
   _autoPilotSpeed: 50
   _autoPilotTimeToLive: 2
   _timeTakenToReachMaxSpeedCurve: 2
-  _knockbackMultiplier: 100
+  _knockbackMultiplier: 40
   _missileExplodeAudio:
     Guid:
       Data1: -1744803380
