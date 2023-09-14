@@ -10,7 +10,8 @@ namespace BForBoss
     {
         FirstTutorial,
         WallRun,
-        Slide
+        Slide,
+        Boss
     }
     
     public class TutorialViewsManager : MonoBehaviour
@@ -20,6 +21,7 @@ namespace BForBoss
         [Resolve][SerializeField] private CarouselView _firstTutorial;
         [Resolve][SerializeField] private CarouselView _wallRunTutorial;
         [Resolve][SerializeField] private CarouselView _slideTutorial;
+        [Resolve][SerializeField] private CarouselView _bossTutorial;
 
         private readonly Dictionary<TutorialState, bool> _shownTutorials = new Dictionary<TutorialState, bool>();
         
@@ -49,6 +51,11 @@ namespace BForBoss
             Show(TutorialState.Slide);
         }
 
+        public void ShowBoss()
+        {
+            Show(TutorialState.Boss);
+        }
+
         private void Awake()
         {
             Instance = this;
@@ -60,6 +67,7 @@ namespace BForBoss
             _firstTutorial.Initialize();
             _wallRunTutorial.Initialize();
             _slideTutorial.Initialize();
+            _bossTutorial.Initialize();
         }
         
         private void SetupTutorials()
@@ -72,6 +80,7 @@ namespace BForBoss
             _firstTutorial.OnExitAction = ResumeGame;
             _wallRunTutorial.OnExitAction = ResumeGame;
             _slideTutorial.OnExitAction = ResumeGame;
+            _bossTutorial.OnExitAction = ResumeGame;
         }
 
         private CarouselView MapToView(TutorialState state)
@@ -84,6 +93,8 @@ namespace BForBoss
                     return _wallRunTutorial;
                 case TutorialState.Slide:
                     return _slideTutorial;
+                case TutorialState.Boss:
+                    return _bossTutorial;
             }
             
             PanicHelper.Panic(new Exception("Missing Tutorial State within TutorialViewsManager"));
