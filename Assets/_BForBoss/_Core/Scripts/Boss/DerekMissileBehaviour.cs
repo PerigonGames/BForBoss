@@ -119,12 +119,13 @@ namespace BForBoss
             }
             
             var position = transform.position;
-            var direction = (HomingTarget.position - position).normalized;
             var speed = _homingTargetSpeedCurve.Evaluate(_elapsedHomingTargetTimeToLive / _timeTakenToReachMaxSpeedCurve) * (_homingTargetSpeed * SpeedMultiplier);
-            position = Vector3.MoveTowards(position, position + direction, Time.deltaTime * speed);
-            transform.position = position;
-            var rotation = Quaternion.LookRotation(direction, Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, Time.deltaTime * _homingTargetRotationalSpeed);
+            transform.position = Vector3.MoveTowards(position, HomingTarget.position , Time.deltaTime * speed);
+            
+            var direction = HomingTarget.position - position;
+            var rotation = Quaternion.LookRotation(direction);
+           transform.rotation =
+               Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * _homingTargetRotationalSpeed);
                 
             _elapsedHomingTargetTimeToLive += Time.deltaTime;
         }
