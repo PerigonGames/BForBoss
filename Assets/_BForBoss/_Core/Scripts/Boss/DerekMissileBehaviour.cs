@@ -94,7 +94,7 @@ namespace BForBoss
             {
                 _elapsedTowardsApexTime += Time.deltaTime;
                 var position = transform.position;
-                var direction = (HomingTarget.position - position);
+                var direction = (HomingTarget.position + Vector3.up - position);
                 var highDirection = new Vector3(direction.x, _startPosition.y + _heightOffsetForInitialLaunch, direction.z).normalized;
                 var evaluatedSpeed = _towardsApexSpeedCurve.Evaluate(_elapsedTowardsApexTime / _timeTakenToReachMaxSpeedCurve) * _towardsApexSpeed;
                 transform.position = Vector3.MoveTowards(position, position + highDirection, Time.deltaTime * evaluatedSpeed);
@@ -115,14 +115,14 @@ namespace BForBoss
             if (ShouldSetToAutoPilot())
             {
                 Logger.LogString($"Missile [{name}] set to Auto Drive", color: LoggerColor.Green, key: "DerekBoss");
-                _lastDirection = (HomingTarget.position - transform.position).normalized;
+                _lastDirection = (HomingTarget.position + Vector3.up - transform.position).normalized;
                 _state = State.AutoPilot;
                 return;
             }
             
             var position = transform.position;
             var speed = _homingTargetSpeedCurve.Evaluate(_elapsedHomingTargetTimeToLive / _timeTakenToReachMaxSpeedCurve) * (_homingTargetSpeed * SpeedMultiplier);
-            transform.position = Vector3.MoveTowards(position, HomingTarget.position , Time.deltaTime * speed);
+            transform.position = Vector3.MoveTowards(position, HomingTarget.position + Vector3.up , Time.deltaTime * speed);
             
             var direction = HomingTarget.position - position;
             var rotation = Quaternion.LookRotation(direction);
