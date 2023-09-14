@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Perigon.Utility;
-using Sirenix.OdinInspector;
 using UICore;
 using UnityEngine;
 
@@ -9,16 +8,20 @@ namespace BForBoss
 {
     public enum TutorialState
     {
-        Boss,
-        Energy
+        FirstTutorial,
+        WallRun,
+        Slide,
+        Boss
     }
     
     public class TutorialViewsManager : MonoBehaviour
     {
         public static TutorialViewsManager Instance;
 
-        [SerializeField] private CarouselView _energyTutorialView;
-        [SerializeField] private CarouselView _bossTutorialView;
+        [Resolve][SerializeField] private CarouselView _firstTutorial;
+        [Resolve][SerializeField] private CarouselView _wallRunTutorial;
+        [Resolve][SerializeField] private CarouselView _slideTutorial;
+        [Resolve][SerializeField] private CarouselView _bossTutorial;
 
         private readonly Dictionary<TutorialState, bool> _shownTutorials = new Dictionary<TutorialState, bool>();
         
@@ -38,6 +41,21 @@ namespace BForBoss
             }
         }
 
+        public void ShowWallRun()
+        {
+            Show(TutorialState.WallRun);
+        }
+
+        public void ShowSlide()
+        {
+            Show(TutorialState.Slide);
+        }
+
+        public void ShowBoss()
+        {
+            Show(TutorialState.Boss);
+        }
+
         private void Awake()
         {
             Instance = this;
@@ -46,8 +64,10 @@ namespace BForBoss
         private void Start()
         {
             SetupTutorials();
-            _energyTutorialView.Initialize();
-            _bossTutorialView.Initialize();
+            _firstTutorial.Initialize();
+            _wallRunTutorial.Initialize();
+            _slideTutorial.Initialize();
+            _bossTutorial.Initialize();
         }
         
         private void SetupTutorials()
@@ -57,18 +77,24 @@ namespace BForBoss
                 StateManager.SetState(State.Play);
             }
 
-            _energyTutorialView.OnExitAction = ResumeGame;
-            _bossTutorialView.OnExitAction = ResumeGame;
+            _firstTutorial.OnExitAction = ResumeGame;
+            _wallRunTutorial.OnExitAction = ResumeGame;
+            _slideTutorial.OnExitAction = ResumeGame;
+            _bossTutorial.OnExitAction = ResumeGame;
         }
 
         private CarouselView MapToView(TutorialState state)
         {
             switch (state)
             {
+                case TutorialState.FirstTutorial:
+                    return _firstTutorial;
+                case TutorialState.WallRun:
+                    return _wallRunTutorial;
+                case TutorialState.Slide:
+                    return _slideTutorial;
                 case TutorialState.Boss:
-                    return _bossTutorialView;
-                case TutorialState.Energy:
-                    return _energyTutorialView;
+                    return _bossTutorial;
             }
             
             PanicHelper.Panic(new Exception("Missing Tutorial State within TutorialViewsManager"));

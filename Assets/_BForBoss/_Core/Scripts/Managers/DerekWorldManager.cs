@@ -22,6 +22,7 @@ namespace BForBoss
             base.Start();
             _derekContextManager.Initialize(_playerBehaviour.PlayerMovement);
             StateManager.Instance.SetState(State.PreGame);
+            TutorialViewsManager.Instance.Show(TutorialState.FirstTutorial);
         }
 
         protected override void OnValidate()
