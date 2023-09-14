@@ -43,6 +43,12 @@ namespace BForBoss
         {
             _elapsedHealth = _maxHealth;
             IsVulnerable = false;
+            _healthView.gameObject.SetActive(false);
+        }
+
+        public void ShowHealthView()
+        {
+            _healthView.gameObject.SetActive(true);
         }
 
         private void Awake()
