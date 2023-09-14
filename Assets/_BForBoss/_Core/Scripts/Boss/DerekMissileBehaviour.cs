@@ -98,8 +98,10 @@ namespace BForBoss
                 var highDirection = new Vector3(direction.x, _startPosition.y + _heightOffsetForInitialLaunch, direction.z).normalized;
                 var evaluatedSpeed = _towardsApexSpeedCurve.Evaluate(_elapsedTowardsApexTime / _timeTakenToReachMaxSpeedCurve) * _towardsApexSpeed;
                 transform.position = Vector3.MoveTowards(position, position + highDirection, Time.deltaTime * evaluatedSpeed);
-                var rotation = Quaternion.LookRotation(highDirection, Vector3.up);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, Time.deltaTime * _towardsApexRotationalSpeed);
+                
+                var rotation = Quaternion.LookRotation(highDirection);
+                transform.rotation =
+                    Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * _towardsApexRotationalSpeed);
             }
             else
             {
@@ -119,12 +121,13 @@ namespace BForBoss
             }
             
             var position = transform.position;
-            var direction = (HomingTarget.position - position).normalized;
             var speed = _homingTargetSpeedCurve.Evaluate(_elapsedHomingTargetTimeToLive / _timeTakenToReachMaxSpeedCurve) * (_homingTargetSpeed * SpeedMultiplier);
-            position = Vector3.MoveTowards(position, position + direction, Time.deltaTime * speed);
-            transform.position = position;
-            var rotation = Quaternion.LookRotation(direction, Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, Time.deltaTime * _homingTargetRotationalSpeed);
+            transform.position = Vector3.MoveTowards(position, HomingTarget.position , Time.deltaTime * speed);
+            
+            var direction = HomingTarget.position - position;
+            var rotation = Quaternion.LookRotation(direction);
+           transform.rotation =
+               Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * _homingTargetRotationalSpeed);
                 
             _elapsedHomingTargetTimeToLive += Time.deltaTime;
         }

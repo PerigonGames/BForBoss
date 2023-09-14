@@ -1,3 +1,4 @@
+using System;
 using Perigon.Utility;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,6 +11,14 @@ namespace BForBoss
         private UnityEvent _executableEvent;
      
         private void OnCollisionEnter(Collision collision)
+        {
+            if (collision.gameObject.CompareTag(TagsAndLayers.Tags.Player))
+            {
+                _executableEvent?.Invoke();
+            }
+        }
+
+        private void OnTriggerEnter(Collider collision)
         {
             if (collision.gameObject.CompareTag(TagsAndLayers.Tags.Player))
             {
