@@ -8,7 +8,7 @@ namespace BForBoss
 {
     public enum TutorialState
     {
-        FirstTutorial,
+        Controls,
         WallRun,
         Slide,
         Boss
@@ -56,6 +56,11 @@ namespace BForBoss
             Show(TutorialState.Boss);
         }
 
+        public void ShowControls()
+        {
+            Show(TutorialState.Controls);
+        }
+
         private void Awake()
         {
             Instance = this;
@@ -87,7 +92,7 @@ namespace BForBoss
         {
             switch (state)
             {
-                case TutorialState.FirstTutorial:
+                case TutorialState.Controls:
                     return _firstTutorial;
                 case TutorialState.WallRun:
                     return _wallRunTutorial;

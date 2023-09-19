@@ -155,13 +155,17 @@ namespace BForBoss
         
         private void HandlePausePressed()
         {
-            if (_stateManager.GetState() == State.Play)
+            switch (_stateManager.GetState())
             {
-                _stateManager.SetState(State.Pause);
-            }
-            else if(_stateManager.GetState() == State.Pause)
-            {
-                _stateManager.SetState(State.Play);
+                case State.Play:
+                {
+                    _stateManager.SetState(State.Pause);
+                    break;
+                }
+                case State.Pause:
+                case State.Tutorial:
+                    _stateManager.SetState(State.Play);
+                    break;
             }
         }
 
