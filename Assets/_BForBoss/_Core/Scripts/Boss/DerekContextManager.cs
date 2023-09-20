@@ -27,8 +27,11 @@ namespace BForBoss
         [SerializeField, InlineEditor] private DerekPhaseDataSO _finalPhaseData;
 
         //RingLabors configurations
-        [Header("Ring Configurations")] 
+        [Header("Ring Configurations")]
         
+        [Header("Phase 1 - First Ring Labor")]
+        [SerializeField]
+        private RingGrouping _firstRingLaborConfiguration;
         [Header("Phase 1")]
         [SerializeField]
         private RingGrouping _ringConfigurationsFirstPhase;
@@ -41,6 +44,8 @@ namespace BForBoss
         
         private DerekPhaseDataSO _currentPhaseDataSO = null;
         private Vector3 _originalFloorScale;
+
+        private bool _hasCompletedFirstRingLabor = false;
 
         public enum Phase
         {
@@ -91,8 +96,15 @@ namespace BForBoss
                 Perigon.Utility.Logger.LogError("Labor should not have have been active during the tutorial phase, or when the boss is not invulnerable. Exiting Encounter", LoggerColor.Red, "derekboss");
                 return;
             }
-
+            
             _ringLaborManager.Reset();
+            
+            if (_currentPhase == Phase.FirstPhase && !_hasCompletedFirstRingLabor)
+            {
+                _ringLaborManager.SetRings(_ringConfigurationsFirstPhase);
+                _hasCompletedFirstRingLabor = true;
+            }
+            
             _currentVulnerability = Vulnerability.Vulnerable;
             _bossManager.UpdateVulnerability(_currentVulnerability);
         }
@@ -107,7 +119,7 @@ namespace BForBoss
                         _currentPhase = Phase.FirstPhase;
                         _currentPhaseDataSO = _firstPhaseData;
                         Logger.LogString("Set First Phase Ring system", key:"Labor");
-                        _ringLaborManager.SetRings(_ringConfigurationsFirstPhase);
+                        _ringLaborManager.SetRings(_firstRingLaborConfiguration);
                         break;
                     case Phase.FirstPhase:
                         _currentPhase = Phase.SecondPhase;
@@ -163,10 +175,18 @@ namespace BForBoss
             this.PanicIfNullObject(_secondPhaseData, nameof(_secondPhaseData));
             this.PanicIfNullObject(_finalPhaseData, nameof(_finalPhaseData));
             
+            //Ring Systems
+            this.PanicIfNullObject(_firstRingLaborConfiguration, nameof(_firstRingLaborConfiguration));
             this.PanicIfNullObject(_ringConfigurationsFirstPhase, nameof(_ringConfigurationsFirstPhase));
             this.PanicIfNullObject(_ringConfigurationsSecondPhase, nameof(_ringConfigurationsSecondPhase));
             this.PanicIfNullObject(_ringConfigurationsFinalPhase, nameof(_ringConfigurationsFinalPhase));
             
+            if (_firstRingLaborConfiguration.GroupOfRings == null || _firstRingLaborConfiguration.GroupOfRings.Count != 1)
+            {
+                Exception exception = new Exception($"{nameof(_firstRingLaborConfiguration)} is null or does not have exactly 1 GroupOfRings {typeof(DerekContextManager).ToString()}");
+                PanicHelper.Panic(exception);
+            }
+
             this.PanicIfNullOrEmptyList(_ringConfigurationsFirstPhase.GroupOfRings, nameof(_ringConfigurationsFirstPhase));
             this.PanicIfNullOrEmptyList(_ringConfigurationsSecondPhase.GroupOfRings, nameof(_ringConfigurationsFirstPhase));
             this.PanicIfNullOrEmptyList(_ringConfigurationsFinalPhase.GroupOfRings, nameof(_ringConfigurationsFirstPhase));
