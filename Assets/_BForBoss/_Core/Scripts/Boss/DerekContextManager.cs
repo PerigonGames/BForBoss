@@ -68,6 +68,7 @@ namespace BForBoss
         public void Reset()
         {
             _floorTransform.localScale = _originalFloorScale;
+            _hasCompletedFirstRingLabor = false;
             _ringLaborManager.Reset();
             _currentPhase = Phase.Tutorial;
             _currentVulnerability = Vulnerability.Invulnerable;
