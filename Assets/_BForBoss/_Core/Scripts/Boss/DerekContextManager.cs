@@ -119,7 +119,7 @@ namespace BForBoss
                         _currentPhase = Phase.FirstPhase;
                         _currentPhaseDataSO = _firstPhaseData;
                         Logger.LogString("Set First Phase Ring system", key:"Labor");
-                        _ringLaborManager.SetRings(_firstRingLaborConfiguration);
+                        _ringLaborManager.SetRings(_hasCompletedFirstRingLabor ? _ringConfigurationsFirstPhase : _firstRingLaborConfiguration);
                         break;
                     case Phase.FirstPhase:
                         _currentPhase = Phase.SecondPhase;
