@@ -9,7 +9,6 @@ namespace BForBoss
     public enum TutorialState
     {
         Controls,
-        WallRun,
         Slide,
         Boss
     }
@@ -19,7 +18,6 @@ namespace BForBoss
         public static TutorialViewsManager Instance;
 
         [Resolve][SerializeField] private CarouselView _firstTutorial;
-        [Resolve][SerializeField] private CarouselView _wallRunTutorial;
         [Resolve][SerializeField] private CarouselView _slideTutorial;
         [Resolve][SerializeField] private CarouselView _bossTutorial;
 
@@ -39,11 +37,6 @@ namespace BForBoss
                 StateManager.SetState(State.Tutorial);
                 MapToView(state).Show();
             }
-        }
-
-        public void ShowWallRun()
-        {
-            Show(TutorialState.WallRun);
         }
 
         public void ShowSlide()
@@ -70,7 +63,6 @@ namespace BForBoss
         {
             SetupTutorials();
             _firstTutorial.Initialize();
-            _wallRunTutorial.Initialize();
             _slideTutorial.Initialize();
             _bossTutorial.Initialize();
         }
@@ -83,7 +75,6 @@ namespace BForBoss
             }
 
             _firstTutorial.OnExitAction = ResumeGame;
-            _wallRunTutorial.OnExitAction = ResumeGame;
             _slideTutorial.OnExitAction = ResumeGame;
             _bossTutorial.OnExitAction = ResumeGame;
         }
@@ -94,8 +85,6 @@ namespace BForBoss
             {
                 case TutorialState.Controls:
                     return _firstTutorial;
-                case TutorialState.WallRun:
-                    return _wallRunTutorial;
                 case TutorialState.Slide:
                     return _slideTutorial;
                 case TutorialState.Boss:
