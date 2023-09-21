@@ -16,8 +16,6 @@ namespace BForBoss
 
         [SerializeField] 
         private Image _backgroundArrow;
-        [SerializeField] 
-        private Transform _dangerSign;
         
         private IObjectPool<IndicatorBehaviour> _objectPool;
 
