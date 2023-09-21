@@ -158,12 +158,9 @@ namespace BForBoss
             switch (_stateManager.GetState())
             {
                 case State.Play:
-                {
                     _stateManager.SetState(State.Pause);
                     break;
-                }
                 case State.Pause:
-                case State.Tutorial:
                     _stateManager.SetState(State.Play);
                     break;
             }
