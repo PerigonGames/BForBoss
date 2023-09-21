@@ -108,7 +108,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   _towardsApexTime: 3
-  _homingTargetSpeed: 20
+  _homingTargetSpeed: 1
   _homingTargetRotationalSpeed: 100
   _homingTargetSpeedCurve:
     serializedVersion: 2
@@ -134,12 +134,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _homingTargetDistanceStateChange: 10
+  _homingTargetDistanceStateChange: 20
   _homingTargetTimeToLive: 3
-  _autoPilotSpeed: 50
-  _autoPilotTimeToLive: 2
+  _autoPilotSpeed: 1
+  _autoPilotTimeToLive: 3
   _timeTakenToReachMaxSpeedCurve: 2
-  _knockbackMultiplier: 40
+  _knockbackMultiplier: 30
   _missileExplodeAudio:
     Guid:
       Data1: -1744803380
