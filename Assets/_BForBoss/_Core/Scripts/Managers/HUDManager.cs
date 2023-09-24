@@ -24,8 +24,20 @@ namespace BForBoss
 
         private void HandleOnStateChanged(State gameState)
         {
-            _playerHealthViewBehaviour.gameObject.SetActive(gameState != State.EndGame);
-            _energySystemViewBehaviour.gameObject.SetActive(gameState != State.EndGame);
+            switch (gameState)
+            {
+                case State.Tutorial:
+                case State.EndGame:
+                    _playerHealthViewBehaviour.gameObject.SetActive(false);
+                    _energySystemViewBehaviour.gameObject.SetActive(false);
+                    _incomingAttackIndicatorView.gameObject.SetActive(false);
+                    break;    
+                default:
+                    _playerHealthViewBehaviour.gameObject.SetActive(true);
+                    _energySystemViewBehaviour.gameObject.SetActive(true);
+                    _incomingAttackIndicatorView.gameObject.SetActive(true);
+                    break;
+            }
         }
 
         private void Awake()
