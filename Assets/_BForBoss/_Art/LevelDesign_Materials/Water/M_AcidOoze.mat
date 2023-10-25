@@ -89,6 +89,7 @@ Material:
     - _DstBlend: 10
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
+    - _ExcludeFromTUAndAA: 0
     - _Float: 3.4
     - _Main_Normal_Scale: 0.59
     - _Normal_Strength: 1
@@ -108,10 +109,10 @@ Material:
     - _StencilRefGBuffer: 2
     - _StencilRefMV: 32
     - _StencilWriteMask: 6
-    - _StencilWriteMaskDepth: 8
+    - _StencilWriteMaskDepth: 9
     - _StencilWriteMaskDistortionVec: 4
-    - _StencilWriteMaskGBuffer: 14
-    - _StencilWriteMaskMV: 40
+    - _StencilWriteMaskGBuffer: 15
+    - _StencilWriteMaskMV: 41
     - _Strength: 0.1
     - _SupportDecals: 1
     - _SurfaceType: 1
