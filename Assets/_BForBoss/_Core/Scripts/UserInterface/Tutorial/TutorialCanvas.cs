@@ -3,7 +3,6 @@ using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UICore;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace BForBoss
