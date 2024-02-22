@@ -4,10 +4,6 @@ using UnityEngine;
 
 namespace BForBoss
 {
-    /*
-     * TODO - Change Camera -> Player eye pivot
-     * TODO Debug.Log -> Using Logger
-     */
     public class PlayerHookshotBehaviour : MonoBehaviour
     {
 
@@ -32,6 +28,19 @@ namespace BForBoss
         private float _cooldownElapsedTime = 0;
         
         private bool CanHookShot => _canHookshot && _cooldownElapsedTime <= 0;
+        private Camera MainCamera
+        {
+            get
+            {
+                if (_camera == null)
+                {
+                    _camera = Camera.main;
+                }
+
+                return _camera;
+            }
+        }
+        
         
         public void Initialize(
             PGInputSystem input,
@@ -39,11 +48,6 @@ namespace BForBoss
         {
             input.OnInteractAction += HookShot;
             _playerMovement = playerMovement;
-        }
-
-        private void Awake()
-        {
-            _camera = Camera.main;
         }
 
         private void HookShot(bool didPress)
@@ -78,8 +82,8 @@ namespace BForBoss
             }
 
             if (Physics.Raycast(
-                    _camera.transform.position, 
-                    _camera.transform.forward,
+                    MainCamera.transform.position, 
+                    MainCamera.transform.forward,
                     out RaycastHit raycastHit, 
                     maxDistance: _range, 
                     layerMask: TagsAndLayers.Mask.HookshotTargetMask, 
