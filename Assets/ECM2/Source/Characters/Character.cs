@@ -2253,7 +2253,6 @@ namespace ECM2.Characters
         
         public virtual bool CanJump()
         {
-            Debug.Log("Jump Count: "+ _jumpCount);
             // Can jump while crouching ?
 
             if (IsCrouching() && !crouchedJump)

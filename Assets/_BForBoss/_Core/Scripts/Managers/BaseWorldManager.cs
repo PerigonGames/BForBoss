@@ -75,8 +75,8 @@ namespace BForBoss
             }
         }
 
-        protected abstract Vector3 SpawnLocation { get; }
-        protected abstract Quaternion SpawnLookDirection { get; }
+        protected virtual Vector3 SpawnLocation => _spawnLocation.position;
+        protected virtual Quaternion SpawnLookDirection => _spawnLocation.rotation;
 
         protected virtual void CleanUp()
         {
