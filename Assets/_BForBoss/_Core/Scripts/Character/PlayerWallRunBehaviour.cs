@@ -196,7 +196,7 @@ namespace BForBoss
 
         private void SetNextWallDifferentDataIfNeeded()
         {
-            if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, TagsAndLayers.Layers.ParkourWallMask, _wallMaxDistance))
+            if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, TagsAndLayers.Mask.ParkourWallMask, _wallMaxDistance))
             {
                 if (hit.collider != null
                     && hit.collider.TryGetComponent(out WallRunDataContainer wallRunDataContainer))
@@ -248,10 +248,10 @@ namespace BForBoss
         private bool ShouldStartWallRun(out RaycastHit hit)
         {
             var isRaycastingLastWallFromCenterBodyPosition = ProcessRaycasts(_startWallRunDirections, out hit,
-                                                                 ChildTransform, TagsAndLayers.Layers.ParkourWallMask, _wallMaxDistance)
+                                                                 ChildTransform, TagsAndLayers.Mask.ParkourWallMask, _wallMaxDistance)
                                                              && hit.collider != _lastWall;
             var isRaycastingLastWallFromEyePosition = ProcessRaycasts(_startWallRunDirections, out hit,
-                                                          _fpsCharacter.eyePivot, TagsAndLayers.Layers.ParkourWallMask, _wallMaxDistance)
+                                                          _fpsCharacter.eyePivot, TagsAndLayers.Mask.ParkourWallMask, _wallMaxDistance)
                                                       && hit.collider != _lastWall;
             var shouldStartWallRun = isRaycastingLastWallFromCenterBodyPosition 
                                      && isRaycastingLastWallFromEyePosition
@@ -304,7 +304,7 @@ namespace BForBoss
         
         private bool IsTooFarFromWall()
         {
-            if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, TagsAndLayers.Layers.ParkourWallMask, _wallMaxDistance))
+            if (ProcessRaycasts(_directionsCurrentlyWallRunning, out var hit, ChildTransform, TagsAndLayers.Mask.ParkourWallMask, _wallMaxDistance))
             {
                 PrintWallRunLogs("Distance away from Wall: " + Vector3.Distance(ChildTransform.position, hit.point));
                 _lastWallRunNormal = hit.normal;
