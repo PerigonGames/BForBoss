@@ -138,7 +138,7 @@ namespace BForBoss
         private bool IsPositionValid(Vector3 position)
         {
             const int halfExtentSize = 2;
-            return Physics.OverlapBox(position, halfExtents: Vector3.one * halfExtentSize, Quaternion.identity, TagsAndLayers.Layers.Enemy)
+            return Physics.OverlapBox(position, halfExtents: Vector3.one * halfExtentSize, Quaternion.identity, TagsAndLayers.Mask.EnemyMask)
                 .IsNullOrEmpty();
         }
 
