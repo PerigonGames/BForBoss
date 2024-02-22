@@ -419,8 +419,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4bdf0e434551c4eb7767a5fda63d9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _range: 20
-  _force: 10
+  _range: 15
+  _force: 32
+  _cooldown: 0.5
+  _slowdownMultiplier: 0.4
+  _distanceBeforeSlowdown: 3
 --- !u!1 &1286368760046132259
 GameObject:
   m_ObjectHideFlags: 0
