@@ -55,7 +55,7 @@ namespace BForBoss
                 _canHookshot = false;
                 _isHookshotting = true;
                 _cooldownElapsedTime = _cooldown;
-                Debug.Log("Start Hookshot");
+                Perigon.Utility.Logger.LogString("Hookshot - Start", key: "hookshot");
             }
         }
 
@@ -71,7 +71,7 @@ namespace BForBoss
         {
             if (Vector3.Distance(transform.position, _target) < _distanceBeforeSlowdown && _isHookshotting)
             {
-                Debug.Log("Stop Hookshot Slow Down - within slowdown distance");
+                Perigon.Utility.Logger.LogString("Hookshot - Slow Down within slowdown distance", key: "hookshot");
                 _isHookshotting = false;
                 _playerMovement.SetVelocity(_playerMovement.GetVelocity() * _slowdownMultiplier);
                 return;
@@ -86,7 +86,6 @@ namespace BForBoss
                     queryTriggerInteraction: QueryTriggerInteraction.Collide))
             {
                 _target = raycastHit.transform.position;
-                //Debug.Log("Target Set: "+_target);
                 _canHookshot = true;
                 return;
             }
@@ -95,7 +94,7 @@ namespace BForBoss
 
             if (_isHookshotting && _playerMovement.IsOnGround())
             {
-                Debug.Log("Stop Hookshot - Grounded");
+                Perigon.Utility.Logger.LogString("Hookshot - Stopped Grounded", key: "hookshot");
                 _isHookshotting = false;
             }
         }
