@@ -20,18 +20,13 @@ namespace BForBoss
         public void Reset()
         {
             _incomingAttackIndicatorView.Reset();
+            _countdownViewBehaviour.Reset();
         }
 
         private void HandleOnStateChanged(State gameState)
         {
             switch (gameState)
             {
-                case State.PreGame:
-                    _playerHealthViewBehaviour.gameObject.SetActive(true);
-                    _energySystemViewBehaviour.gameObject.SetActive(true);
-                    _incomingAttackIndicatorView.gameObject.SetActive(false);
-                    _countdownViewBehaviour.gameObject.SetActive(false);
-                    break;
                 case State.Tutorial:
                 case State.EndGame:
                     _playerHealthViewBehaviour.gameObject.SetActive(false);
