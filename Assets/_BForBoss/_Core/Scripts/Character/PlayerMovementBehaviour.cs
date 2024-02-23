@@ -77,6 +77,23 @@ namespace BForBoss
             maxWalkSpeed = _unModifiedPlayerSpeed;
         }
         
+        public void LaunchCharacter(Vector3 target, float force)
+        {
+            var launchVelocity = (target - transform.position).normalized;
+            SetVelocity(Vector3.zero);
+            PauseGroundConstraint();
+            LaunchCharacter(
+                launchVelocity: launchVelocity * force,
+                overrideLateralVelocity: false,
+                overrideVerticalVelocity: true);
+
+        }
+        
+        private void SetCameraCullingMask()
+        {
+            camera.cullingMask = ~TagsAndLayers.Mask.PlayerModelMask;
+        }
+        
         protected override void OnAwake()
         {            
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();
