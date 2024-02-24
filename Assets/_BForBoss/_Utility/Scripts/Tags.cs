@@ -18,8 +18,8 @@ namespace Perigon.Utility
             public static int PlayerModel => LayerMask.NameToLayer("PlayerModel");
             public static int Enemy => LayerMask.NameToLayer("Enemy");
             public static int ParkourWall => LayerMask.NameToLayer("ParkourWall");
-
             public static int HookshotTarget => LayerMask.NameToLayer("HookshotTarget");
+            public static int ClamberWall => LayerMask.NameToLayer("ClamberWall");
         }
 
         /*
@@ -32,6 +32,7 @@ namespace Perigon.Utility
             public static int EnemyMask => 1 << Layers.Enemy;
             public static int ParkourWallMask => 1 << Layers.ParkourWall;
             public static int HookshotTargetMask => 1 << Layers.HookshotTarget;
+            public static int ClamberWallMask => 1 << Layers.ClamberWall;
         }
     }
     
