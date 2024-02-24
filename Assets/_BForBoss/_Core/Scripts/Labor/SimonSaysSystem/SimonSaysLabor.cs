@@ -48,6 +48,14 @@ namespace BForBoss
                 block.OnBlockCompleted += HandleOnBlockTouched;
             }
         }
+        
+        ~SimonSaysLabor()
+        {
+            foreach (var block in _blocks)
+            {
+                block.OnBlockCompleted -= HandleOnBlockTouched;
+            }
+        }
 
         private void HandleOnBlockTouched(ISimonSaysBlock block, SimonSaysColor color)
         {
