@@ -45,7 +45,11 @@ namespace BForBoss
         
         public void Reset()
         {
-            StopCoroutine(coroutine);
+            if (coroutine != null)
+            {
+                StopCoroutine(coroutine);
+            }
+
             _blueIndicator.Reset();
             _redIndicator.Reset();
             _greenIndicator.Reset();
