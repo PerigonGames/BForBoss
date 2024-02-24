@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace BForBoss
         [Resolve] [SerializeField] private SimonSaysIndicatorBehaviour _yellowIndicator;
         [Resolve] [SerializeField] private SimonSaysIndicatorBehaviour _purpleIndicator;
 
+        private IEnumerator coroutine;
         public event Action OnCompletedDisplaySequence;
         private void Awake()
         {
@@ -27,12 +29,15 @@ namespace BForBoss
             this.PanicIfNullObject(_greenIndicator, nameof(_greenIndicator));
             this.PanicIfNullObject(_yellowIndicator, nameof(_yellowIndicator));
             this.PanicIfNullObject(_purpleIndicator, nameof(_purpleIndicator));
-            
-            _blueIndicator.Initialize(Color.blue);
-            _redIndicator.Initialize(Color.red);
-            _greenIndicator.Initialize(Color.green);
-            _yellowIndicator.Initialize(Color.yellow);
-            _purpleIndicator.Initialize(Color.magenta);
+        }
+        
+        public void Initialize(Dictionary<SimonSaysColor, Color> colorMap)
+        {
+            _blueIndicator.Initialize(colorMap[SimonSaysColor.Blue]);
+            _redIndicator.Initialize(colorMap[SimonSaysColor.Red]);
+            _greenIndicator.Initialize(colorMap[SimonSaysColor.Green]);
+            _yellowIndicator.Initialize(colorMap[SimonSaysColor.Yellow]);
+            _purpleIndicator.Initialize(colorMap[SimonSaysColor.Purple]);
         }
 
         [Button]
@@ -41,9 +46,15 @@ namespace BForBoss
             StartDisplaySequence(new[] { SimonSaysColor.Blue, SimonSaysColor.Purple, SimonSaysColor.Yellow });
         }
 
+        public void Reset()
+        {
+            StopCoroutine(coroutine);
+        }
+
         public void StartDisplaySequence(SimonSaysColor[] colors)
         {
-            StartCoroutine(DisplaySequence(colors));
+            coroutine = DisplaySequence(colors);
+            StartCoroutine(coroutine);
         }
 
         private IEnumerator DisplaySequence(SimonSaysColor[] colors)
