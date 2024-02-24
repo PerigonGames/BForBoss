@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 910638780}
   - component: {fileID: 362631962692925180}
   - component: {fileID: 807874563105225349}
+  - component: {fileID: 7779261985724174358}
   m_Layer: 11
   m_Name: First Person Character
   m_TagString: Player
@@ -391,7 +392,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dashEffectBehaviour: {fileID: 0}
   _dashImpulse: 25
-  _dashDuration: 0.5
+  _dashDuration: 0.1
   _dashCoolDown: 0.3
 --- !u!114 &362631962692925180
 MonoBehaviour:
@@ -424,6 +425,19 @@ MonoBehaviour:
   _cooldown: 0.5
   _slowdownMultiplier: 0.4
   _distanceBeforeSlowdown: 3
+--- !u!114 &7779261985724174358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616281459798487496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 884caddb96d9fa042a0bf50c562dc96b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _clamberSpeed: 2
 --- !u!1 &1286368760046132259
 GameObject:
   m_ObjectHideFlags: 0
