@@ -13,6 +13,7 @@ namespace BForBoss
         private readonly int _sequenceLength; 
         private SimonSaysColorData[] _sequenceOfColors;
         private Dictionary<SimonSaysColor, Color> _colorMap;
+        private Queue<SimonSaysColor> _queue = new Queue<SimonSaysColor>();
 
         public SimonSaysColorData[] SequenceOfColors
         {
@@ -37,16 +38,44 @@ namespace BForBoss
             _blocks = blocks;
             _sequenceLength = sequenceLength;
             _colorMap = colorMap;
+            Subscribe();
         }
-        
+
+        private void Subscribe()
+        {
+            foreach (var block in _blocks)
+            {
+                block.OnBlockCompleted += HandleOnBlockTouched;
+            }
+        }
+
+        private void HandleOnBlockTouched(ISimonSaysBlock block, SimonSaysColor color)
+        {
+            var expectedColor = _queue.Dequeue();
+            block.Reset();
+            var didSucceed = expectedColor == color;
+            if (didSucceed && _queue.Count == 0)
+            {
+                OnLaborCompleted?.Invoke(this, new OnLaborCompletedArgs(didSucceed: true));
+            }
+            else if (!didSucceed)
+            {
+                OnLaborCompleted?.Invoke(this, new OnLaborCompletedArgs(didSucceed: false));
+            }
+        }
+
         public void Activate()
         {
             BlockCheck(SequenceOfColors);
+            foreach (var element in _sequenceOfColors)
+            {
+                _queue.Enqueue(element.SimonSaysColor);
+            }
         }
 
         private void BlockCheck(SimonSaysColorData[] sequenceOfColors)
         {
-            if (sequenceOfColors.Length <= _blocks.Length)
+            if (sequenceOfColors.Length > _blocks.Length)
             {
                 PanicHelper.Panic(new Exception($"Number of blocks is less than or equal to the sequence of colors generated.\nBLocks: {_blocks.Length}.\nSequence Generated: {sequenceOfColors.Length}"));
             }
@@ -55,6 +84,7 @@ namespace BForBoss
         public void Reset()
         {
             _sequenceOfColors = BuildRandomSequence();
+            _queue.Clear();
         }
         
         private SimonSaysColorData[] BuildRandomSequence()

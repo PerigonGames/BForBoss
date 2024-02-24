@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using BForBoss.Labor;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 
 namespace BForBoss
@@ -21,6 +24,8 @@ namespace BForBoss
         DisplaySequence,
         ShowColoredIndicators,
         PlayInProgress,
+        FailedSequence,
+        SucceededSequence,
     }
     
     public struct SimonSaysColorData
@@ -44,9 +49,12 @@ namespace BForBoss
         [Title("Components")]
         [SerializeField] private SimonSaysSequenceVisualManager _sequenceVisualManager;
         [SerializeField] private SimonSaysBlocksManager _blocksManager;
+        [SerializeField] private TMP_Text _resultLabel;
 
         private SimonSaysLabor _labor;
         private SimonSaysState _state = SimonSaysState.PrepareToStart;
+
+        public event Action OnSucceededSimonSays;
 
         private void Awake()
         {
@@ -60,7 +68,20 @@ namespace BForBoss
             _labor = new SimonSaysLabor(_blocksManager.Blocks, _colorMap, _sequenceLength);
             _sequenceVisualManager.Initialize(_colorMap);
             _sequenceVisualManager.OnCompletedDisplaySequence += OnCompleteVisualSequence;
+            _labor.OnLaborCompleted += HandleOnLaborCompleted;
             _blocksManager.Initialize(_colorMap);
+        }
+
+        private void HandleOnLaborCompleted(ILabor sender, OnLaborCompletedArgs onCompletedArg)
+        {
+            if (onCompletedArg.DidSucceed)
+            {
+                OnSucceededSequence();
+            }
+            else
+            {
+                OnFailedSequence();
+            }
         }
 
         public void StartSystem()
@@ -74,6 +95,7 @@ namespace BForBoss
             _sequenceVisualManager.Reset();
             _labor.Reset();
             _blocksManager.Reset();
+            _resultLabel.text = string.Empty;
         }
 
         private void OnCompleteVisualSequence()
@@ -81,6 +103,30 @@ namespace BForBoss
             _state = SimonSaysState.ShowColoredIndicators;
             _blocksManager.SetBlockColors(_labor.SequenceOfColors);
             _state = SimonSaysState.PlayInProgress;
+            _labor.Activate();
+        }
+        
+        private void OnFailedSequence()
+        {
+            Debug.Log("Failed Sequence!");
+            _state = SimonSaysState.FailedSequence;
+            Reset();
+            
+            //Placeholder
+            _resultLabel.text = "Failed!";
+            _resultLabel.color = Color.red;
+        }
+
+        private void OnSucceededSequence()
+        {
+            Debug.Log("Succeeded Sequence!");
+            _state = SimonSaysState.SucceededSequence;
+            Reset();
+            //TODO - Probably need animation before calling this at some point
+            OnSucceededSimonSays?.Invoke();
+            //Placeholder
+            _resultLabel.text = "Succeeded!";
+            _resultLabel.color = Color.green;
         }
     }
 }

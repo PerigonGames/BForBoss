@@ -23,6 +23,7 @@ namespace BForBoss
         {
             base.Reset();
             _ringLaborManager.Reset();
+            _simonSaysSystem.Reset();
         }
 
         protected override void Start()
