@@ -53,9 +53,7 @@ namespace BForBoss
 
         private SimonSaysLabor _labor;
         private SimonSaysState _state = SimonSaysState.PrepareToStart;
-
-        public event Action OnSucceededSimonSays;
-
+        
         private void Awake()
         {
             this.PanicIfNullObject(_colorMap, nameof(_colorMap));
@@ -69,7 +67,6 @@ namespace BForBoss
             _sequenceVisualManager.Initialize(_colorMap);
             _sequenceVisualManager.OnCompletedDisplaySequence += OnCompleteVisualSequence;
             _labor.OnLaborCompleted += HandleOnLaborCompleted;
-            _blocksManager.Initialize(_colorMap);
         }
 
         private void HandleOnLaborCompleted(ILabor sender, OnLaborCompletedArgs onCompletedArg)
@@ -101,7 +98,7 @@ namespace BForBoss
         private void OnCompleteVisualSequence()
         {
             _state = SimonSaysState.ShowColoredIndicators;
-            _blocksManager.SetBlockColors(_labor.SequenceOfColors);
+            _labor.SetBlockColors(_labor.SequenceOfColors);
             _state = SimonSaysState.PlayInProgress;
             _labor.Activate();
         }
@@ -122,8 +119,6 @@ namespace BForBoss
             Debug.Log("Succeeded Sequence!");
             _state = SimonSaysState.SucceededSequence;
             Reset();
-            //TODO - Probably need animation before calling this at some point
-            OnSucceededSimonSays?.Invoke();
             //Placeholder
             _resultLabel.text = "Succeeded!";
             _resultLabel.color = Color.green;

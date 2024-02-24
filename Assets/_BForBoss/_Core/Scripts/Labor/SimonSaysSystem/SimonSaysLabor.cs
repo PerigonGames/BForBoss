@@ -72,6 +72,32 @@ namespace BForBoss
                 _queue.Enqueue(element.SimonSaysColor);
             }
         }
+        
+        public void SetBlockColors(SimonSaysColorData[] sequence)
+        {
+            _blocks.ShuffleFisherYates();
+            var blockIndex = 0;
+            for (blockIndex = 0; blockIndex < sequence.Length; blockIndex++)
+            {
+                _blocks[blockIndex].SetColorData(sequence[blockIndex]);
+            }
+
+            var randomizer = new RandomUtility();
+            for (var i = blockIndex; i < _blocks.Length; i++)
+            {
+                if (randomizer.CoinFlip())
+                {
+                    _blocks[i].SetColorData(new SimonSaysColorData(simonSaysColor: SimonSaysColor.None, color: _colorMap[SimonSaysColor.None]));
+                }
+                else
+                {
+                    var colorAmount = Enum.GetValues(typeof(SimonSaysColor)).Length;
+                    var state = (SimonSaysColor) randomizer.NextInt(0, colorAmount - 1);
+                    var data = new SimonSaysColorData(simonSaysColor: state, color: _colorMap[state]);
+                    _blocks[i].SetColorData(data);
+                }
+            }
+        }
 
         private void BlockCheck(SimonSaysColorData[] sequenceOfColors)
         {
