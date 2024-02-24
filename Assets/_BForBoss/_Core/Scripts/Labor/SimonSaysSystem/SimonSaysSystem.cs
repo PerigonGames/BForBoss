@@ -55,18 +55,14 @@ namespace BForBoss
             this.PanicIfNullObject(_blocksManager, nameof(_blocksManager));
         }
 
-        [Button]
         public void Initialize()
         {
             _labor = new SimonSaysLabor(_blocksManager.Blocks, _colorMap, _sequenceLength);
-            
-            _sequenceVisualManager.Initialize(_labor.SequenceOfColors);
+            _sequenceVisualManager.Initialize(_colorMap);
             _sequenceVisualManager.OnCompletedDisplaySequence += OnCompleteVisualSequence;
-            
             _blocksManager.Initialize(_colorMap);
         }
 
-        [Button]
         public void StartSystem()
         {
             _state = SimonSaysState.DisplaySequence;

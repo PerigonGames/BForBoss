@@ -26,6 +26,7 @@ namespace BForBoss
 
         public void Reset()
         {
+            //TODO - set default color using a mapper
             SetColorData(new SimonSaysColorData(color: Color.grey, simonSaysColor: SimonSaysColor.None));
         }
         

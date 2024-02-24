@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -30,29 +31,26 @@ namespace BForBoss
             this.PanicIfNullObject(_purpleIndicator, nameof(_purpleIndicator));
         }
         
-        public void Initialize(SimonSaysColorData[] colorMap)
+        public void Initialize(Dictionary<SimonSaysColor, Color> colorMap)
         {
             foreach (var map in colorMap)
             {
-                var indicator = MapToIndicator(map.SimonSaysColor);
-                indicator.Initialize(map.Color);
+                if (map.Key != SimonSaysColor.None)
+                {
+                    var indicator = MapToIndicator(map.Key);
+                    indicator.Initialize(map.Value);
+                }
             }
         }
-
-        [Button]
-        public void DebugShowSequence()
-        {
-            StartDisplaySequence(new SimonSaysColorData[]
-            {
-                new SimonSaysColorData(SimonSaysColor.Blue, Color.blue),
-                new SimonSaysColorData(SimonSaysColor.Yellow, Color.yellow),
-                new SimonSaysColorData(SimonSaysColor.Purple, Color.magenta),
-            });
-        }
-
+        
         public void Reset()
         {
             StopCoroutine(coroutine);
+            _blueIndicator.Reset();
+            _redIndicator.Reset();
+            _greenIndicator.Reset();
+            _yellowIndicator.Reset();
+            _purpleIndicator.Reset();
         }
 
         public void StartDisplaySequence(SimonSaysColorData[] dataArray)

@@ -42,7 +42,6 @@ namespace BForBoss
         public void Activate()
         {
             BlockCheck(SequenceOfColors);
-            //TODO - Set random blocks to activate and set to sequence of colors
         }
 
         private void BlockCheck(SimonSaysColorData[] sequenceOfColors)
