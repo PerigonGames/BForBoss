@@ -38,7 +38,7 @@ namespace BForBoss
                 if (map.Key != SimonSaysColor.None)
                 {
                     var indicator = MapToIndicator(map.Key);
-                    indicator.Initialize(map.Value);
+                    indicator.Initialize(colorMap, map.Value);
                 }
             }
         }

@@ -1,5 +1,4 @@
 using System;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BForBoss
@@ -9,7 +8,7 @@ namespace BForBoss
     {
         public event Action<ISimonSaysBlock, SimonSaysColor> OnBlockCompleted;
 
-        private SimonSaysColorData _data = new SimonSaysColorData(color: Color.grey, simonSaysColor: SimonSaysColor.None);
+        private SimonSaysColorData _data;
         private MeshRenderer _renderer;
         
         private void Awake()
@@ -26,7 +25,6 @@ namespace BForBoss
 
         public void Reset()
         {
-            //TODO - set default color using a mapper
             SetColorData(new SimonSaysColorData(color: Color.grey, simonSaysColor: SimonSaysColor.None));
         }
         
