@@ -73,7 +73,6 @@ namespace BForBoss
             var isMovingForward = _movementInput().y > 0;
             var isFacingClamberWall = PerformClamberRaycast(out RaycastHit raycastHit);
 
-            Debug.Log($"Facing Clamber Wall: {isFacingClamberWall}\nMoving Forward: {isMovingForward}\nNot Clambering:{_isClambering}");
             if (isFacingClamberWall && isMovingForward && !_isClambering)
             {
                 // Is character below the clamber wall
@@ -82,17 +81,17 @@ namespace BForBoss
                     _isClambering = true;
                     var yPosition = raycastHit.collider.bounds.max.y + 1f;
                     _target = new Vector3(raycastHit.point.x, yPosition, raycastHit.point.z);
-                    Debug.Log("Raycasting Clamber Section");
+                    Perigon.Utility.Logger.LogString("Raycasting Clamber Section", key: "clamber");
                 }
             }
 
             if (_isClambering)
             {
-                Debug.Log("Is Clambering");
+                Perigon.Utility.Logger.LogString("Is Clambering", key: "clamber");
                 MoveUpwards(target: _target);
                 if (Math.Abs(Vector3.Distance(transform.position, _target)) < 0.1)
                 {
-                    Debug.Log("Stop Clambering");
+                    Perigon.Utility.Logger.LogString("Stop Clambering", key: "clamber");
                     _isClambering = false;
                     _movementBehaviour.SetMovementMode(MovementMode.Falling);
                 }
