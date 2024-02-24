@@ -12,9 +12,10 @@ namespace BForBoss
         [Header("Cinemachine")]
         public CinemachineVirtualCamera cmWalkingCamera;
         public CinemachineVirtualCamera cmCrouchedCamera;
-        private PlayerDashBehaviour _dashBehaviour = null;
-        private PlayerWallRunBehaviour _wallRunBehaviour = null;
-        private PlayerSlideBehaviour _slideBehaviour = null;
+        private PlayerDashBehaviour _dashBehaviour;
+        private PlayerWallRunBehaviour _wallRunBehaviour;
+        private PlayerSlideBehaviour _slideBehaviour;
+        private PlayerClamberBehaviour _clamberBehaviour;
 
         private IInputConfiguration _inputConfiguration;
         private PGInputSystem _inputSystem;
@@ -99,10 +100,12 @@ namespace BForBoss
             _dashBehaviour = GetComponent<PlayerDashBehaviour>();
             _wallRunBehaviour = GetComponent<PlayerWallRunBehaviour>();
             _slideBehaviour = GetComponent<PlayerSlideBehaviour>();
+            _clamberBehaviour = GetComponent<PlayerClamberBehaviour>();
 
             this.PanicIfNullObject(_dashBehaviour, nameof(_dashBehaviour));
             this.PanicIfNullObject(_wallRunBehaviour, nameof(_wallRunBehaviour));
             this.PanicIfNullObject(_slideBehaviour, nameof(_slideBehaviour));
+            this.PanicIfNullObject(_clamberBehaviour, nameof(_clamberBehaviour));
             
             base.OnAwake();
         }
@@ -116,6 +119,7 @@ namespace BForBoss
             _slideBehaviour.SlideEventsDelegate = this;
             _wallRunBehaviour.Initialize(this, base.GetMovementInput);
             _wallRunBehaviour.WallRunEventsDelegate = this;
+            _clamberBehaviour.Initialize(this, base.GetMovementInput);
         }
 
         protected override void AnimateEye()
