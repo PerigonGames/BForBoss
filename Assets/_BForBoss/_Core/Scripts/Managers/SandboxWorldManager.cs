@@ -11,6 +11,7 @@ namespace BForBoss
         [SerializeField] private RingLaborManager _ringLaborManager;
         [SerializeField] private BossWipeOutWallsManager _wipeOutWallsManager;
         [SerializeField] private RingGrouping _ringGroupings;
+        [SerializeField] private SimonSaysSystem _simonSaysSystem;
         
         private DerekMissileLauncherBehaviour[] _derekMissileLauncherBehaviours;
         private CountdownViewBehaviour _countdownTimerView;
@@ -22,6 +23,7 @@ namespace BForBoss
         {
             base.Reset();
             _ringLaborManager.Reset();
+            _simonSaysSystem.Reset();
         }
 
         protected override void Start()
@@ -31,6 +33,7 @@ namespace BForBoss
             _ringLaborManager.SetRings(_ringGroupings);
             _wipeOutWallsManager.Initialize(_playerBehaviour.PlayerMovement);
             _derekMissileLauncherBehaviours.ForEach(launcher => launcher.Initialize(_playerBehaviour.PlayerMovement));
+            _simonSaysSystem.Initialize();
             _stateManager.SetState(State.PreGame);
         }
 
