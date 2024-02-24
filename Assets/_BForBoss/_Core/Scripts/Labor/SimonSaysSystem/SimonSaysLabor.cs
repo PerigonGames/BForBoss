@@ -99,8 +99,7 @@ namespace BForBoss
                 }
                 else
                 {
-                    var colorAmount = Enum.GetValues(typeof(SimonSaysColor)).Length;
-                    var state = (SimonSaysColor) randomizer.NextInt(0, colorAmount - 1);
+                    var state = SimonSaysUtility.GetRandomColor();
                     var data = new SimonSaysColorData(simonSaysColor: state, color: _colorMap[state]);
                     _blocks[i].SetColorData(data);
                 }
@@ -123,12 +122,10 @@ namespace BForBoss
         
         private SimonSaysColorData[] BuildRandomSequence()
         {
-            var randomizer = new RandomUtility();
             SimonSaysColorData[] sequence = new SimonSaysColorData[_sequenceLength];
-            var colorAmount = Enum.GetValues(typeof(SimonSaysColor)).Length;
             for (int i = 0; i < _sequenceLength; i++)
             {
-                var state = (SimonSaysColor) randomizer.NextInt(0, colorAmount - 1);
+                var state = SimonSaysUtility.GetRandomColor();
                 sequence[i] = new SimonSaysColorData { 
                     SimonSaysColor = state, 
                     Color = _colorMap[state]

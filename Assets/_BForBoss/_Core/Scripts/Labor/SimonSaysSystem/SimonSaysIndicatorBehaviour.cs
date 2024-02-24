@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BForBoss
@@ -8,21 +7,19 @@ namespace BForBoss
     {
         private MeshRenderer _renderer;
         private Color _color;
-        private Dictionary<SimonSaysColor, Color> _colorMap;
         private void Awake()
         {
             _renderer = GetComponent<MeshRenderer>();
         }
 
-        public void Initialize(Dictionary<SimonSaysColor, Color> colorMap, Color color)
+        public void Initialize(Color color)
         {
-            _colorMap = colorMap;
             _color = color;
         }
 
         public void Reset()
         {
-            _renderer.material.color = _colorMap[SimonSaysColor.None];
+            _renderer.material.color = SimonSaysUtility.DefaultNoneColor;
         }
 
         public void SetColor()

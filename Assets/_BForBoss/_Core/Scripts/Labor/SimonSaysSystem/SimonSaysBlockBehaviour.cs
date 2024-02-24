@@ -25,7 +25,7 @@ namespace BForBoss
 
         public void Reset()
         {
-            SetColorData(new SimonSaysColorData(color: Color.grey, simonSaysColor: SimonSaysColor.None));
+            SetColorData(new SimonSaysColorData(color: SimonSaysUtility.DefaultNoneColor, simonSaysColor: SimonSaysColor.None));
         }
         
         private void OnCollisionEnter(Collision other)

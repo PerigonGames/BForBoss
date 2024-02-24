@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using BForBoss.Labor;
 using Perigon.Utility;
@@ -15,6 +14,7 @@ namespace BForBoss
         Green,
         Yellow,
         Purple,
+        // None Must be the last element in the enum
         None,
     }
 
@@ -59,6 +59,7 @@ namespace BForBoss
             this.PanicIfNullObject(_colorMap, nameof(_colorMap));
             this.PanicIfNullObject(_sequenceVisualManager, nameof(_sequenceVisualManager));
             this.PanicIfNullObject(_blocksManager, nameof(_blocksManager));
+            SimonSaysUtility.DefaultNoneColor = _colorMap[SimonSaysColor.None];
         }
 
         public void Initialize()
