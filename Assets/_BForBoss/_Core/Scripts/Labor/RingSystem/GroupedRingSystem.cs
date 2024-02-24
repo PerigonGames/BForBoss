@@ -8,7 +8,7 @@ namespace BForBoss.RingSystem
 {
     public class GroupedRingSystem : ILabor
     {
-        public event Action<bool> OnLaborCompleted;
+        public event OnLaborCompletedEventHandler OnLaborCompleted;
         
         private readonly RingBehaviour[] _allRings;
         private readonly float _timeToCompleteSystem;
@@ -78,7 +78,7 @@ namespace BForBoss.RingSystem
             Reset();
             _didFailRingSystem = true;
             CountdownTimer.Instance.StopCountdown();
-            OnLaborCompleted?.Invoke(false);
+            OnLaborCompleted?.Invoke(this, new OnLaborCompletedArgs(didSucceed: false));
         }
 
         private void TrySetupNextRing()
@@ -98,7 +98,7 @@ namespace BForBoss.RingSystem
         {
             if(_timeToCompleteSystem > 0f)
                 CountdownTimer.Instance.StopCountdown();
-            OnLaborCompleted?.Invoke(true);
+            OnLaborCompleted?.Invoke(this, new OnLaborCompletedArgs(didSucceed: true));
         }
     }
 }

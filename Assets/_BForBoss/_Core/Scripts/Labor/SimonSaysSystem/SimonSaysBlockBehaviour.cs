@@ -1,4 +1,5 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BForBoss
@@ -8,30 +9,31 @@ namespace BForBoss
     {
         public event Action<ISimonSaysBlock, SimonSaysColor> OnBlockCompleted;
 
-        private SimonSaysColor _simonSaysColor = SimonSaysColor.None;
+        private SimonSaysColorData _data = new SimonSaysColorData(color: Color.grey, simonSaysColor: SimonSaysColor.None);
         private MeshRenderer _renderer;
         
         private void Awake()
         {
             _renderer = GetComponent<MeshRenderer>();
-            _renderer.material.color = Color.grey;
+            _renderer.material.color = _data.Color;
         }
         
-        public void SetColor(SimonSaysColor color)
+        public void SetColorData(SimonSaysColorData data)
         {
-            _simonSaysColor = color;
+            _data = data;
+            _renderer.material.SetColor("_BaseColor", data.Color);
         }
 
         public void Reset()
         {
-            _simonSaysColor = SimonSaysColor.None;
+            SetColorData(new SimonSaysColorData(color: Color.grey, simonSaysColor: SimonSaysColor.None));
         }
         
         private void OnCollisionEnter(Collision other)
         {
-            if (_simonSaysColor != SimonSaysColor.None)
+            if (_data.SimonSaysColor != SimonSaysColor.None)
             {
-                OnBlockCompleted?.Invoke(this, _simonSaysColor);
+                OnBlockCompleted?.Invoke(this, _data.SimonSaysColor);
             }
         }
     }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using Perigon.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -31,19 +30,24 @@ namespace BForBoss
             this.PanicIfNullObject(_purpleIndicator, nameof(_purpleIndicator));
         }
         
-        public void Initialize(Dictionary<SimonSaysColor, Color> colorMap)
+        public void Initialize(SimonSaysColorData[] colorMap)
         {
-            _blueIndicator.Initialize(colorMap[SimonSaysColor.Blue]);
-            _redIndicator.Initialize(colorMap[SimonSaysColor.Red]);
-            _greenIndicator.Initialize(colorMap[SimonSaysColor.Green]);
-            _yellowIndicator.Initialize(colorMap[SimonSaysColor.Yellow]);
-            _purpleIndicator.Initialize(colorMap[SimonSaysColor.Purple]);
+            foreach (var map in colorMap)
+            {
+                var indicator = MapToIndicator(map.SimonSaysColor);
+                indicator.Initialize(map.Color);
+            }
         }
 
         [Button]
         public void DebugShowSequence()
         {
-            StartDisplaySequence(new[] { SimonSaysColor.Blue, SimonSaysColor.Purple, SimonSaysColor.Yellow });
+            StartDisplaySequence(new SimonSaysColorData[]
+            {
+                new SimonSaysColorData(SimonSaysColor.Blue, Color.blue),
+                new SimonSaysColorData(SimonSaysColor.Yellow, Color.yellow),
+                new SimonSaysColorData(SimonSaysColor.Purple, Color.magenta),
+            });
         }
 
         public void Reset()
@@ -51,17 +55,17 @@ namespace BForBoss
             StopCoroutine(coroutine);
         }
 
-        public void StartDisplaySequence(SimonSaysColor[] colors)
+        public void StartDisplaySequence(SimonSaysColorData[] dataArray)
         {
-            coroutine = DisplaySequence(colors);
+            coroutine = DisplaySequence(dataArray);
             StartCoroutine(coroutine);
         }
 
-        private IEnumerator DisplaySequence(SimonSaysColor[] colors)
+        private IEnumerator DisplaySequence(SimonSaysColorData[] dataArray)
         {
-            foreach (var color in colors)
+            foreach (var data in dataArray)
             {
-                var indicator = MapToIndicator(color);
+                var indicator = MapToIndicator(data.SimonSaysColor);
                 indicator.SetColor();
                 yield return new WaitForSeconds(_showColorDuration);
                 indicator.Reset();

@@ -23,6 +23,18 @@ namespace BForBoss
         PlayInProgress,
     }
     
+    public struct SimonSaysColorData
+    {
+        public SimonSaysColor SimonSaysColor;
+        public Color Color;
+        
+        public SimonSaysColorData(SimonSaysColor simonSaysColor, Color color)
+        {
+            SimonSaysColor = simonSaysColor;
+            Color = color;
+        }
+    }
+    
     public class SimonSaysSystem : SerializedMonoBehaviour
     {
         [Title("Configuration")]
@@ -31,44 +43,48 @@ namespace BForBoss
 
         [Title("Components")]
         [SerializeField] private SimonSaysSequenceVisualManager _sequenceVisualManager;
+        [SerializeField] private SimonSaysBlocksManager _blocksManager;
+
+        private SimonSaysLabor _labor;
         private SimonSaysState _state = SimonSaysState.PrepareToStart;
-        private SimonSaysColor[] _sequence;
 
         private void Awake()
         {
             this.PanicIfNullObject(_colorMap, nameof(_colorMap));
+            this.PanicIfNullObject(_sequenceVisualManager, nameof(_sequenceVisualManager));
+            this.PanicIfNullObject(_blocksManager, nameof(_blocksManager));
         }
 
         [Button]
         public void Initialize()
         {
-            _sequenceVisualManager.Initialize(_colorMap);
+            _labor = new SimonSaysLabor(_blocksManager.Blocks, _colorMap, _sequenceLength);
+            
+            _sequenceVisualManager.Initialize(_labor.SequenceOfColors);
             _sequenceVisualManager.OnCompletedDisplaySequence += OnCompleteVisualSequence;
+            
+            _blocksManager.Initialize(_colorMap);
         }
 
         [Button]
         public void StartSystem()
         {
             _state = SimonSaysState.DisplaySequence;
-            _sequence = BuildRandomSequence();
-            _sequenceVisualManager.StartDisplaySequence(_sequence);
+            _sequenceVisualManager.StartDisplaySequence(_labor.SequenceOfColors);
         }
-        
-        private SimonSaysColor[] BuildRandomSequence()
+
+        public void Reset()
         {
-            var sequence = new SimonSaysColor[_sequenceLength];
-            for (int i = 0; i < sequence.Length; i++)
-            {
-                sequence[i] = (SimonSaysColor)UnityEngine.Random.Range(0, 5);
-            }
-            return sequence;
+            _sequenceVisualManager.Reset();
+            _labor.Reset();
+            _blocksManager.Reset();
         }
-        
+
         private void OnCompleteVisualSequence()
         {
             _state = SimonSaysState.ShowColoredIndicators;
+            _blocksManager.SetBlockColors(_labor.SequenceOfColors);
+            _state = SimonSaysState.PlayInProgress;
         }
-
-
     }
 }
