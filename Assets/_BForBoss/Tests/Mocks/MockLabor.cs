@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using BForBoss.Labor;
-using UnityEngine;
 
 namespace Tests
 {
@@ -10,7 +6,7 @@ namespace Tests
     {
         public bool IsActivated { get; private set; }
         
-        public event Action<bool> OnLaborCompleted;
+        public event OnLaborCompletedEventHandler OnLaborCompleted;
         
         public MockLabor()
         {
@@ -26,7 +22,7 @@ namespace Tests
         {
             if (IsActivated)
             {
-                OnLaborCompleted?.Invoke(true);
+                OnLaborCompleted?.Invoke(this, new OnLaborCompletedArgs(true));
             }
         }
         
