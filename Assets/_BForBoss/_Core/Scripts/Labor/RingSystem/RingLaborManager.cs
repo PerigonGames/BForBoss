@@ -40,12 +40,12 @@ namespace BForBoss.RingSystem
         public void SetRings(RingGrouping ringSystemsToBuild)
         {
             _ringSystem = BuildLabor(ringSystemsToBuild);
-            _ringSystem.OnLaborCompleted += RingSystemOnOnLaborCompleted;
+            _ringSystem.OnLaborCompleted += RingSystemOnLaborCompleted;
         }
 
-        private void RingSystemOnOnLaborCompleted(bool didSucceed)
+        private void RingSystemOnLaborCompleted(ILabor sender, OnLaborCompletedArgs onLaborCompleted)
         {
-            if (didSucceed)
+            if (onLaborCompleted.DidSucceed)
             {
                 Logger.LogString("Labor Completed", key: "Labor");
                 OnLaborCompleted?.Invoke();
@@ -55,7 +55,7 @@ namespace BForBoss.RingSystem
                 Logger.LogString("Labor Failed, Retrying", key: "Labor");
                 _ringSystem.Activate();
             }
-            RuntimeManager.PlayOneShot(didSucceed ? _laborCompleteAudio : _laborFailedAudio);
+            RuntimeManager.PlayOneShot(onLaborCompleted.DidSucceed ? _laborCompleteAudio : _laborFailedAudio);
         }
 
         public void ActivateSystem()
@@ -77,7 +77,7 @@ namespace BForBoss.RingSystem
                     color: grouping.RingColor,
                     timeToCompleteSystem: grouping.TimeToComplete,
                     penaltyDelayedStartTime: penaltyDelayedStartTime);
-                ringSystem.OnLaborCompleted += (success) => Logger.LogString($"{(success ? "Completed" : "Failed")} {groupOfRings.Rings.Length} ring system", key:"Labor");
+                ringSystem.OnLaborCompleted += (sender, arg) => Logger.LogString($"{(arg.DidSucceed ? "Completed" : "Failed")} {groupOfRings.Rings.Length} ring system", key:"Labor");
                 return ringSystem;
             }
 

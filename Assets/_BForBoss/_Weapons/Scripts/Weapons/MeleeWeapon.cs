@@ -64,7 +64,7 @@ namespace Perigon.Weapons
                 return -1;
             _currentCooldown += _meleeProperties.AttackCoolDown;
             
-            _hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, TagsAndLayers.Layers.PlayerMask, ref _enemyBuffer);
+            _hits = _meleeProperties.OverlapCapsule(playerPosition, playerForwardDirection, ~TagsAndLayers.Mask.PlayerMask, ref _enemyBuffer);
             return _hits;
         }
 
