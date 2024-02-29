@@ -1671,6 +1671,11 @@ namespace ECM2.Characters
             return _jumpCount;
         }
 
+        public virtual void ResetJumpCount()
+        {
+            _jumpCount = 0;
+        }
+
         /// <summary>
         /// The maximum speed for current movement mode (accounting crouching / sprinting state).
         /// </summary>

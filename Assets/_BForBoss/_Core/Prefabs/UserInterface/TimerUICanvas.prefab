@@ -31,7 +31,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3325193052192062446}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.4, y: 0.85}
   m_AnchorMax: {x: 0.6, y: 1}
@@ -66,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Time\n99:99
+  m_text: Countdown\n99:99
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -93,7 +92,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 95.25
+  m_fontSize: 34
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -147,7 +146,7 @@ GameObject:
   - component: {fileID: 9111593480172328740}
   - component: {fileID: 3955439179658070403}
   - component: {fileID: 5420892669954083229}
-  - component: {fileID: 4674904861711607231}
+  - component: {fileID: 2553006261037771583}
   m_Layer: 5
   m_Name: TimerUICanvas
   m_TagString: Untagged
@@ -169,7 +168,6 @@ RectTransform:
   m_Children:
   - {fileID: 6817134464900924610}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -193,7 +191,9 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -237,7 +237,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 32247
---- !u!114 &4674904861711607231
+--- !u!114 &2553006261037771583
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -246,6 +246,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2242671640600842605}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8617a84869a2c464c92b0ffbbf334009, type: 3}
+  m_Script: {fileID: 11500000, guid: 618d9323b1313fa4faf44d7f50890b5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _countdownLabel: {fileID: 2537205488727862851}

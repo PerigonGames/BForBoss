@@ -333,7 +333,7 @@ namespace Asset_Cleaner {
 				// heavy
 				sceneDetails.Path = path;
 				var alreadyOpened = false;
-				for (var i = 0; i < EditorSceneManager.loadedSceneCount; i++) {
+				for (var i = 0; i < SceneManager.loadedSceneCount; i++) {
 					var cur = SceneManager.GetSceneAt(i);
 					if (!cur.path.Eq(sceneDetails.Path)) continue;
 					alreadyOpened = true;

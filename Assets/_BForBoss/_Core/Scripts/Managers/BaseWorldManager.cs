@@ -75,8 +75,8 @@ namespace BForBoss
             }
         }
 
-        protected abstract Vector3 SpawnLocation { get; }
-        protected abstract Quaternion SpawnLookDirection { get; }
+        protected virtual Vector3 SpawnLocation => _spawnLocation.position;
+        protected virtual Quaternion SpawnLookDirection => _spawnLocation.rotation;
 
         protected virtual void CleanUp()
         {
@@ -158,12 +158,9 @@ namespace BForBoss
             switch (_stateManager.GetState())
             {
                 case State.Play:
-                {
                     _stateManager.SetState(State.Pause);
                     break;
-                }
                 case State.Pause:
-                case State.Tutorial:
                     _stateManager.SetState(State.Play);
                     break;
             }

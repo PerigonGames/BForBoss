@@ -37,6 +37,8 @@ namespace FMODUnity
         [NonSerialized]
         public bool CachedParameters = false;
 
+        public static event System.EventHandler<EventArgs> OnCreatePlayable;
+
         private FMODEventPlayableBehavior behavior;
 
         public GameObject TrackTargetObject { get; set; }
@@ -63,7 +65,7 @@ namespace FMODUnity
 
         public TimelineClip OwningClip { get; set; }
 
-        public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
+        public void LinkParameters(FMOD.Studio.EventDescription eventDescription)
         {
 #if UNITY_EDITOR
             if (!EventReference.IsNull)
@@ -71,8 +73,6 @@ namespace FMODUnity
             if (!CachedParameters && !EventReference.IsNull)
 #endif
             {
-                FMOD.Studio.EventDescription eventDescription = RuntimeManager.GetEventDescription(EventReference);
-
                 for (int i = 0; i < Parameters.Length; i++)
                 {
                     FMOD.Studio.PARAMETER_DESCRIPTION parameterDescription;
@@ -90,6 +90,20 @@ namespace FMODUnity
                 }
 
                 CachedParameters = true;
+            }
+        }
+
+        public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
+        {
+            if (Application.isPlaying)
+            {
+                LinkParameters(RuntimeManager.GetEventDescription(EventReference));
+            }
+            else
+            {
+                // Handled by the editor auditioning system.
+                EventArgs args = new EventArgs();
+                OnCreatePlayable.Invoke(this, args);
             }
 
             var playable = ScriptPlayable<FMODEventPlayableBehavior>.Create(graph, Template);
@@ -190,6 +204,8 @@ namespace FMODUnity
 
         private FMOD.Studio.EventInstance eventInstance;
 
+        public float ClipStartTime { get; private set; } = 0.0f;
+
         public float CurrentVolume { get; private set; }
 
         protected void PlayEvent()
@@ -230,6 +246,7 @@ namespace FMODUnity
                 }
 
                 eventInstance.setVolume(CurrentVolume);
+                eventInstance.setTimelinePosition((int)(ClipStartTime * 1000.0f));
                 eventInstance.start();
             }
         }
@@ -308,6 +325,7 @@ namespace FMODUnity
 
             if ((time >= OwningClip.start) && (time < OwningClip.end))
             {
+                ClipStartTime = time - (float)OwningClip.start;
                 OnEnter();
             }
             else

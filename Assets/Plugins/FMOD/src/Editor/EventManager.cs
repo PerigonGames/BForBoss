@@ -19,8 +19,7 @@ namespace FMODUnity
         private const string AssetsFolderName = "Assets";
 
         private const string CacheAssetName = "FMODStudioCache";
-        public static string CacheAssetFullName =>
-            $"Assets/{RuntimeUtils.PluginBasePath}/Cache/Editor/{CacheAssetName}.asset";
+        public static string CacheAssetFullName = EditorUtils.WritableAssetPath(CacheAssetName);
         private static EventCache eventCache;
 
         private const string StringBankExtension = "strings.bank";
@@ -80,7 +79,7 @@ namespace FMODUnity
                     }
                     return null;
                 }
-                
+
                 if (eventCache == null || eventCache.cacheVersion != FMOD.VERSION.number)
                 {
                     RuntimeUtils.DebugLog("FMOD: Event cache is missing or in an old format; creating a new instance.");
@@ -252,7 +251,7 @@ namespace FMODUnity
                     stringsBankRef.LastModified = stringBankFileInfo.LastWriteTime;
                     stringsBankRef.Exists = true;
                     stringsBankRef.FileSizes.Clear();
-                  
+
                     if (Settings.Instance.HasPlatforms)
                     {
                         for (int i = 0; i < bankPlatforms.Length; i++)
@@ -396,7 +395,7 @@ namespace FMODUnity
             // Clear out any cached events from this bank
             eventCache.EditorEvents.ForEach((x) => x.Banks.Remove(bankRef));
 
-            FMOD.Studio.Bank bank; 
+            FMOD.Studio.Bank bank;
             FMOD.RESULT loadResult = EditorUtils.System.loadBankFile(bankRef.Path, FMOD.Studio.LOAD_BANK_FLAGS.NORMAL, out bank);
 
             if (loadResult == FMOD.RESULT.OK)
@@ -702,7 +701,7 @@ namespace FMODUnity
                 {
                     return false;
                 }
-                
+
                 if (eventReference.Path != editorEventRef.Path)
                 {
                     RuntimeUtils.DebugLogWarningFormat(
@@ -721,7 +720,7 @@ namespace FMODUnity
                 {
                     return false;
                 }
-                
+
                 if (eventReference.Guid != editorEventRef.Guid)
                 {
                     RuntimeUtils.DebugLogWarningFormat(
@@ -810,6 +809,7 @@ namespace FMODUnity
                 }
 
                 // Copy over any files that don't match timestamp or size or don't exist
+                AssetDatabase.StartAssetEditing();
                 foreach (var bankRef in eventCache.EditorBanks)
                 {
                     string sourcePath = bankSourceFolder + "/" + bankRef.Name + ".bank";
@@ -848,12 +848,16 @@ namespace FMODUnity
 
                 RemoveEmptyFMODFolders(bankTargetFolder);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 RuntimeUtils.DebugLogErrorFormat("FMOD Studio: copy banks for platform {0} : copying banks from {1} to {2}",
                     platform.DisplayName, bankSourceFolder, bankTargetFolder);
                 RuntimeUtils.DebugLogException(exception);
                 return;
+            }
+            finally
+            {
+                AssetDatabase.StopAssetEditing();
             }
 
             if (madeChanges)
@@ -882,7 +886,7 @@ namespace FMODUnity
             }
 
             string bankTargetFolder = Application.dataPath;
-            
+
             if (!string.IsNullOrEmpty(Settings.Instance.TargetAssetPath))
             {
                 bankTargetFolder += "/" + Settings.Instance.TargetAssetPath;
@@ -934,6 +938,7 @@ namespace FMODUnity
                 }
 
                 // Create any stubs that don't exist, and ensure any that do exist have the correct data
+                AssetDatabase.StartAssetEditing();
                 foreach (var bankRef in eventCache.EditorBanks)
                 {
                     string sourcePath = bankSourceFolder + "/" + bankRef.Name + ".bank";
@@ -982,15 +987,18 @@ namespace FMODUnity
                         }
                     }
                 }
-
                 RemoveEmptyFMODFolders(bankTargetFolder);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 Debug.LogErrorFormat("FMOD: Updating bank stubs in {0} to match {1}",
                     bankTargetFolder, bankSourceFolder);
                 Debug.LogException(exception);
                 return;
+            }
+            finally
+            {
+                AssetDatabase.StopAssetEditing();
             }
 
             if (madeChanges)
@@ -1134,7 +1142,7 @@ namespace FMODUnity
         }
 
         public static List<EditorBankRef> MasterBanks
-        { 
+        {
             get
             {
                 AffirmEventCache();
@@ -1304,7 +1312,7 @@ namespace FMODUnity
             {
                 return;
             }
-            
+
             if (!Directory.Exists(to))
             {
                 Directory.CreateDirectory(to);
@@ -1353,4 +1361,4 @@ namespace FMODUnity
             }
         }
     }
-} 
+}

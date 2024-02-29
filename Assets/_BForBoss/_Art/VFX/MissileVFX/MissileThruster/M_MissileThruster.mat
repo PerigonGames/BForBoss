@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da692e001514ec24dbc4cca1949ff7e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 12
+  version: 13
   hdPluginSubTargetMaterialVersions:
     m_Keys: []
     m_Values: 
@@ -25,6 +25,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: M_MissileThruster
   m_Shader: {fileID: -6465566751694194690, guid: 8abbdd1313b700e459b93c6dcb625622, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ENABLE_FOG_ON_TRANSPARENT
   - _SURFACE_TYPE_TRANSPARENT
@@ -42,6 +44,7 @@ Material:
   - TransparentDepthPostpass
   - TransparentBackface
   - MOTIONVECTORS
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -49,7 +52,15 @@ Material:
         m_Texture: {fileID: 2800000, guid: 043d49e7b689cc14b8d9ddb50f9d230e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_13d1e2d34b0743a087abebea1e500fa4_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 043d49e7b689cc14b8d9ddb50f9d230e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_271303ef29644b979d3728ef8e718953_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 043d49e7b689cc14b8d9ddb50f9d230e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_271303ef29644b979d3728ef8e718953_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: 043d49e7b689cc14b8d9ddb50f9d230e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -85,20 +96,21 @@ Material:
     - _DstBlend: 10
     - _EnableBlendModePreserveSpecularLighting: 0
     - _EnableFogOnTransparent: 1
+    - _ExcludeFromTUAndAA: 0
     - _Intensity: 5.58
     - _OpaqueCullMode: 2
     - _RenderQueueType: 4
     - _SrcBlend: 1
     - _StencilRef: 0
-    - _StencilRefDepth: 0
+    - _StencilRefDepth: 1
     - _StencilRefDistortionVec: 4
     - _StencilRefGBuffer: 2
-    - _StencilRefMV: 32
+    - _StencilRefMV: 33
     - _StencilWriteMask: 6
-    - _StencilWriteMaskDepth: 8
+    - _StencilWriteMaskDepth: 9
     - _StencilWriteMaskDistortionVec: 4
     - _StencilWriteMaskGBuffer: 14
-    - _StencilWriteMaskMV: 40
+    - _StencilWriteMaskMV: 43
     - _SurfaceType: 1
     - _TransparentBackfaceEnable: 0
     - _TransparentCullMode: 2

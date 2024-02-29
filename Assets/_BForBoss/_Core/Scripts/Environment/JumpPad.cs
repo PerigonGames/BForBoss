@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using ECM2.Characters;
 using FMODUnity;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace BForBoss
 {
@@ -27,6 +24,7 @@ namespace BForBoss
             RuntimeManager.PlayOneShot(_jumpAudio, transform.position);
             character.PauseGroundConstraint();
             character.LaunchCharacter(transform.up * _launchImpulse, _overrideVerticalVelocity, _overrideLateralVelocity);
+            character.ResetJumpCount();
         }
     }
 }
