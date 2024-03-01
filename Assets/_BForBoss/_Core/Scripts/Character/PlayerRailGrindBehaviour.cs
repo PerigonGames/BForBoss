@@ -17,8 +17,9 @@ namespace BForBoss
         private float _elapsedRailProgress;
         private float _timeForFullSpline;
 
+        private Vector3 _currentForwardDirection;
         private float _railGrindThrownOffElapsedCooldownTime;
-        private bool IsRailGrinding => _railGrindData != null;
+        public bool IsRailGrinding => _railGrindData != null;
         private bool CanGrind => _railGrindThrownOffElapsedCooldownTime <= 0;
         
         public void Initialize(PlayerMovementBehaviour movementBehaviour)
@@ -32,6 +33,14 @@ namespace BForBoss
             _timeForFullSpline = 0;
             _railGrindThrownOffElapsedCooldownTime = 0;
             _railGrindData = null;
+        }
+
+        public void OnJumped()
+        {
+            if (IsRailGrinding)
+            {
+                ThrowOffRail();
+            }
         }
         
         private void FixedUpdate()
