@@ -15,7 +15,7 @@ namespace BForBoss
         [SerializeField] private float _railDetectionArea = 1;
         [SerializeField] private float _heightOffset = 1;
         [SerializeField] private float _grindSpeed = 3;
-        
+        private Camera _camera;
         public IPlayerRailGrindEvents RailGrindDelegate;
         private PlayerMovementBehaviour _movementBehaviour;
         private RailGrindData _railGrindData;
@@ -26,6 +26,19 @@ namespace BForBoss
         private float _railGrindThrownOffElapsedCooldownTime;
         public bool IsRailGrinding => _railGrindData != null;
         private bool CanGrind => _railGrindThrownOffElapsedCooldownTime <= 0;
+        
+        private Camera MainCamera
+        {
+            get
+            {
+                if (_camera == null)
+                {
+                    _camera = Camera.main;
+                }
+
+                return _camera;
+            }
+        }
         
         public void Initialize(PlayerMovementBehaviour movementBehaviour)
         {
@@ -117,13 +130,12 @@ namespace BForBoss
         private void SetInitialRailPosition(RailGrindData railGrindData)
         {
             _timeForFullSpline = railGrindData.RailLength / _grindSpeed;
-            Vector3 splinePoint;
-            
-            float normalizedTime = railGrindData.CalculateTargetRailPoint(_movementBehaviour.rootPivot.transform.position, out splinePoint);
+
+            var normalizedTime = railGrindData.CalculateTargetRailPoint(_movementBehaviour.rootPivot.transform.position, out var splinePoint);
             _elapsedRailProgress = _timeForFullSpline * normalizedTime;
 
             var forwardDirection = railGrindData.CalculateForward(normalizedTime);
-            railGrindData.CalculateDirection(forwardDirection, transform.forward);
+            railGrindData.CalculateDirection(forwardDirection, MainCamera.transform.forward);
             _movementBehaviour.SetPosition(splinePoint + (transform.up * _heightOffset));
         }
 
@@ -155,6 +167,8 @@ namespace BForBoss
         {
             if (_movementBehaviour != null)
             {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawRay(transform.position, MainCamera.transform.forward * 3);
                 Gizmos.color = Color.red;
                 Gizmos.DrawWireCube(_movementBehaviour.rootPivot.transform.position, Vector3.one * _railDetectionArea);
             }
