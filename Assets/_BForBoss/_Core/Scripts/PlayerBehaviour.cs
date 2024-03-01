@@ -41,6 +41,8 @@ namespace BForBoss
         public void Reset()
         {
             _playerLifeCycleBehaviour.Reset();
+            _playerRailGrind.Reset();
+            _playerHookshot.Reset();    
         }
 
         public void SpawnAt(Vector3 position, Quaternion facing)

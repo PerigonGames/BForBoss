@@ -28,7 +28,7 @@ namespace BForBoss
             return localPos;
         }
 
-        public Vector3 NextPosition(float progress)
+        public Vector3 CalculateNextPosition(float progress)
         {
             SplineUtility.Evaluate(_splineContainer.Spline, progress, out var position, out var tangent, out var up);
             return LocalToWorldConversion(position);

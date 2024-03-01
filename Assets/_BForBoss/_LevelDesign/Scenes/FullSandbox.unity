@@ -17571,6 +17571,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0400a12b32dcb014484a389f539e515c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  normalDir: 0
 --- !u!1 &575281438
 GameObject:
   m_ObjectHideFlags: 0
@@ -45716,6 +45717,22 @@ PrefabInstance:
     - target: {fileID: 2217804275963747574, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
       propertyPath: m_Name
       value: PlayerRoot
+      objectReference: {fileID: 0}
+    - target: {fileID: 5117867370780281524, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
+      propertyPath: _grindSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5117867370780281524, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
+      propertyPath: _heightOffset
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5117867370780281524, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
+      propertyPath: _railDetectionArea
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5117867370780281524, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
+      propertyPath: _railgrindThrownOffCooldown
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7177967516030943659, guid: 9cef2f6c7c3da6449a278b7a673ecbd2, type: 3}
       propertyPath: _camera
