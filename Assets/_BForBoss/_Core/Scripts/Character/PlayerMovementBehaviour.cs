@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace BForBoss
 {
-    public partial class PlayerMovementBehaviour : FirstPersonCharacter, IPlayerDashEvents, IPlayerSlideEvents, IPlayerWallRunEvents
+    public partial class PlayerMovementBehaviour : FirstPersonCharacter, IPlayerDashEvents, IPlayerSlideEvents, IPlayerWallRunEvents, IPlayerRailGrindEvents
     {
         [Header("Cinemachine")]
         public CinemachineVirtualCamera cmWalkingCamera;
@@ -129,6 +129,7 @@ namespace BForBoss
             _wallRunBehaviour.WallRunEventsDelegate = this;
             _clamberBehaviour.Initialize(this, base.GetMovementInput);
             _playerRailGrind.Initialize(this);
+            _playerRailGrind.RailGrindDelegate = this;
         }
 
         protected override void AnimateEye()
@@ -167,8 +168,8 @@ namespace BForBoss
         protected override void OnJumped()
         {
             Debug.Log("On Jumped");
-            _playerRailGrind.OnJumped();
             base.OnJumped();
+            _playerRailGrind.OnJumped();
             _wallRunBehaviour.OnJumped();
         }
 
@@ -249,6 +250,11 @@ namespace BForBoss
         void IPlayerWallRunEvents.OnWallRunning()
         {
             _energySystem?.Accrue(EnergyAccruementType.WallRun);
+        }
+        
+        void IPlayerRailGrindEvents.OnGrindStarted()
+        {
+            _jumpCount = 0;
         }
         #endregion
     }

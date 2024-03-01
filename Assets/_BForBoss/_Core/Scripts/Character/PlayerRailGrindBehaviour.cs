@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace BForBoss
 {
+    public interface IPlayerRailGrindEvents
+    {
+        void OnGrindStarted();
+    }
     public class PlayerRailGrindBehaviour : MonoBehaviour
     {
         [SerializeField] private float _railgrindThrownOffCooldown = 1;
@@ -12,6 +16,7 @@ namespace BForBoss
         [SerializeField] private float _heightOffset = 1;
         [SerializeField] private float _grindSpeed = 3;
         
+        public IPlayerRailGrindEvents RailGrindDelegate;
         private PlayerMovementBehaviour _movementBehaviour;
         private RailGrindData _railGrindData;
         private float _elapsedRailProgress;
@@ -72,6 +77,7 @@ namespace BForBoss
                 return;
             }
             var worldPosition = _railGrindData.CalculateNextPosition(progress);
+            _currentForwardDirection = (worldPosition - transform.position).normalized;
             _movementBehaviour.SetPosition(worldPosition);
             _movementBehaviour.SetVelocity(Vector3.zero);
             
@@ -95,11 +101,17 @@ namespace BForBoss
                 layerMask: TagsAndLayers.Mask.RailGrindMask);
             if (rails.Length > 0 && CanGrind)
             {
-                Debug.Log("Start Rail Grinding");
-                _movementBehaviour.SetMovementMode(MovementMode.Custom);
-                _railGrindData = GetRailGrindData(rails);
-                SetInitialRailPosition(_railGrindData);
+                StartRailGrind(colliders: rails);
             }
+        }
+
+        private void StartRailGrind(Collider[] colliders)
+        {
+            Debug.Log("Start Rail Grinding");
+            _movementBehaviour.SetMovementMode(MovementMode.Custom);
+            _railGrindData = GetRailGrindData(colliders);
+            SetInitialRailPosition(_railGrindData);
+            RailGrindDelegate?.OnGrindStarted();
         }
 
         private void SetInitialRailPosition(RailGrindData railGrindData)
@@ -136,6 +148,7 @@ namespace BForBoss
             _railGrindThrownOffElapsedCooldownTime = _railgrindThrownOffCooldown;
             _railGrindData = null;
             _movementBehaviour.SetMovementMode(MovementMode.Falling);
+            _movementBehaviour.LaunchCharacter(_currentForwardDirection * _grindSpeed);
         }
         
         private void OnDrawGizmos()
