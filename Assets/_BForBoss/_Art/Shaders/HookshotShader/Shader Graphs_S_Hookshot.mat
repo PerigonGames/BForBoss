@@ -49,7 +49,7 @@ Material:
     - _AlphaCutoffEnable: 0
     - _AlphaDstBlend: 10
     - _AlphaSrcBlend: 1
-    - _Amplitude: 0.03
+    - _Amplitude: 0.02
     - _BlendMode: 0
     - _ConservativeDepthOffsetEnable: 0
     - _CullMode: 2
@@ -63,7 +63,8 @@ Material:
     - _EnableFogOnTransparent: 1
     - _ExcludeFromTUAndAA: 0
     - _Fade: 0.01
-    - _Frequency: 17.84
+    - _Frequency: 3.2
+    - _Hookshot_Distance: 10
     - _OpaqueCullMode: 2
     - _RenderQueueType: 4
     - _SrcBlend: 1
@@ -84,7 +85,7 @@ Material:
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 0
     - _UseShadowThreshold: 0
-    - _Width: 0.05
+    - _Width: 0.03
     - _ZTestDepthEqualForOpaque: 4
     - _ZTestTransparent: 4
     - _ZWrite: 0
@@ -93,7 +94,7 @@ Material:
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
-    - _Velocity: {r: 2.08, g: 0, b: 0, a: 0}
+    - _Velocity: {r: -10, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &3031962908425894550
 MonoBehaviour:
