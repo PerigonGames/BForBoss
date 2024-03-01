@@ -20,6 +20,7 @@ namespace Perigon.Utility
             public static int ParkourWall => LayerMask.NameToLayer("ParkourWall");
             public static int HookshotTarget => LayerMask.NameToLayer("HookshotTarget");
             public static int ClamberWall => LayerMask.NameToLayer("ClamberWall");
+            public static int RailGrind => LayerMask.NameToLayer("RailGrind");
         }
 
         /*
@@ -33,6 +34,7 @@ namespace Perigon.Utility
             public static int ParkourWallMask => 1 << Layers.ParkourWall;
             public static int HookshotTargetMask => 1 << Layers.HookshotTarget;
             public static int ClamberWallMask => 1 << Layers.ClamberWall;
+            public static int RailGrindMask => 1 << Layers.RailGrind;
         }
     }
     

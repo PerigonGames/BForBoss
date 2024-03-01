@@ -12,6 +12,7 @@ namespace BForBoss
         private PlayerLifeCycleBehaviour _playerLifeCycleBehaviour;
         private PlayerSlowMotionBehaviour _playerSlowMotion;
         private PlayerHookshotBehaviour _playerHookshot;
+        private PlayerRailGrindBehaviour _playerRailGrind;
         private PGInputSystem _inputSystem;
 
         public PlayerMovementBehaviour PlayerMovement => _playerMovement;
@@ -31,7 +32,7 @@ namespace BForBoss
                 StateManager.Instance.SetState(State.Death);
             });
             _playerHookshot.Initialize(inputSystem, _playerMovement);
-
+            _playerRailGrind.Initialize(_playerMovement);
             _inputSystem = inputSystem;
             _inputSystem.OnSlowTimeAction += _playerSlowMotion.OnSlowMotion;
             StateManager.Instance.OnStateChanged += HandleOnStateChanged;
@@ -56,9 +57,11 @@ namespace BForBoss
             _playerLifeCycleBehaviour = GetComponent<PlayerLifeCycleBehaviour>();
             _playerSlowMotion = GetComponent<PlayerSlowMotionBehaviour>();
             _playerHookshot = GetComponent<PlayerHookshotBehaviour>();
+            _playerRailGrind = GetComponent<PlayerRailGrindBehaviour>();
             
             this.PanicIfNullObject(_playerSlowMotion, nameof(_playerSlowMotion) );
             this.PanicIfNullObject(_playerHookshot, nameof(_playerHookshot));
+            this.PanicIfNullObject(_playerRailGrind, nameof(_playerRailGrind));
         }
 
         private void HandleOnStateChanged(State state)
