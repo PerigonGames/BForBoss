@@ -2,6 +2,7 @@ using System;
 using ECM2.Characters;
 using Perigon.Utility;
 using UnityEngine;
+using Logger = Perigon.Utility.Logger;
 
 namespace BForBoss
 {
@@ -83,18 +84,19 @@ namespace BForBoss
 
         private void RailGrind()
         {
-            float progress = _elapsedRailProgress / _timeForFullSpline;
-            if (progress <= 0 || progress > 1)
+            var progress = _elapsedRailProgress / _timeForFullSpline;
+            if (progress is <= 0 or > 1)
             {
                 ThrowOffRail();
                 return;
             }
             var worldPosition = _railGrindData.CalculateNextPosition(progress);
             _currentForwardDirection = (worldPosition - transform.position).normalized;
-            _movementBehaviour.SetPosition(worldPosition);
+            var lerpedPosition = Vector3.Lerp(transform.position, worldPosition, Time.deltaTime * _grindSpeed);
+            _movementBehaviour.SetPosition(lerpedPosition);
             _movementBehaviour.SetVelocity(Vector3.zero);
             
-            if (_railGrindData.normalDir)
+            if (_railGrindData.NormalRailDirection)
             {
                 _elapsedRailProgress += Time.fixedDeltaTime;
             }
@@ -120,7 +122,7 @@ namespace BForBoss
 
         private void StartRailGrind(Collider[] colliders)
         {
-            Debug.Log("Start Rail Grinding");
+            DebugLog("Start Rail Grinding");
             _movementBehaviour.SetMovementMode(MovementMode.Custom);
             _railGrindData = GetRailGrindData(colliders);
             SetInitialRailPosition(_railGrindData);
@@ -156,7 +158,7 @@ namespace BForBoss
 
         private void ThrowOffRail()
         {
-            Debug.Log("Thrown Off Rails | Disable Grinding");
+            DebugLog("Thrown Off Rails | Disable Grinding");
             _railGrindThrownOffElapsedCooldownTime = _railgrindThrownOffCooldown;
             _railGrindData = null;
             _movementBehaviour.SetMovementMode(MovementMode.Falling);
@@ -172,6 +174,11 @@ namespace BForBoss
                 Gizmos.color = Color.red;
                 Gizmos.DrawWireCube(_movementBehaviour.rootPivot.transform.position, Vector3.one * _railDetectionArea);
             }
+        }
+
+        private void DebugLog(string message)
+        {
+            Logger.LogString(message, key: "railgrind");
         }
     }
 }

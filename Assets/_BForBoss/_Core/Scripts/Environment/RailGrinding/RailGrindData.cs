@@ -8,7 +8,8 @@ namespace BForBoss
     public class RailGrindData : MonoBehaviour
     {
         private SplineContainer _splineContainer;
-        public bool normalDir;
+        private bool _normalRailDirection;
+        public bool NormalRailDirection => _normalRailDirection;
         public float RailLength => _splineContainer.CalculateLength();
 
         private void Awake()
@@ -18,14 +19,12 @@ namespace BForBoss
         
         private Vector3 LocalToWorldConversion(float3 localPoint)
         {
-            Vector3 worldPos = transform.TransformPoint(localPoint);
-            return worldPos;
+            return transform.TransformPoint(localPoint);
         }
         
         private float3 WorldToLocalConversion(Vector3 worldPoint)
         {
-            float3 localPos = transform.InverseTransformPoint(worldPoint);
-            return localPos;
+            return transform.InverseTransformPoint(worldPoint);
         }
 
         public Vector3 CalculateNextPosition(float progress)
@@ -49,11 +48,7 @@ namespace BForBoss
         
         public void CalculateDirection(float3 railForward, Vector3 playerForward)
         {
-            float angle = Vector3.Angle(railForward, playerForward.normalized);
-            if (angle > 90f)
-                normalDir = false;
-            else
-                normalDir = true;
+            _normalRailDirection = Vector3.Angle(railForward, playerForward.normalized) <= 90f;
         }
     }
 }

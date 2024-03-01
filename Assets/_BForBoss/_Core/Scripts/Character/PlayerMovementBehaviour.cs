@@ -167,7 +167,6 @@ namespace BForBoss
 
         protected override void OnJumped()
         {
-            Debug.Log("On Jumped");
             base.OnJumped();
             _playerRailGrind.OnJumped();
             _wallRunBehaviour.OnJumped();
