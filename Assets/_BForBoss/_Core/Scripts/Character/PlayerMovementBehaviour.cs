@@ -73,7 +73,7 @@ namespace BForBoss
             maxWalkSpeed *= modificationMultiplier;
         }
 
-        public void ResetPlayerSpeed()
+        public void RevertPlayerSpeed()
         {
             maxWalkSpeed = _unModifiedPlayerSpeed;
         }

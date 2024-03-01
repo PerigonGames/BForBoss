@@ -38,6 +38,7 @@ namespace BForBoss
             float progress = _elapsedTime / _timeForFullSpline;
             var worldPosition = _railGrindData.NextPosition(progress);
             _movementBehaviour.SetPosition(worldPosition);
+            _movementBehaviour.SetVelocity(Vector3.zero);
             _elapsedTime += Time.fixedDeltaTime;
         }
 
@@ -50,7 +51,7 @@ namespace BForBoss
                 layerMask: TagsAndLayers.Mask.RailGrindMask);
             if (rails.Length > 0)
             {
-                _movementBehaviour.SetMovementMode(MovementMode.None);
+                _movementBehaviour.SetMovementMode(MovementMode.Custom);
                 _railGrindData = GetRailGrindData(rails);
                 SetInitialRailPosition(_railGrindData);
             }
@@ -66,9 +67,7 @@ namespace BForBoss
 
             var forwardDirection = railGrindData.CalculateForward(normalizedTime);
             railGrindData.CalculateDirection(forwardDirection, transform.forward);
-            //Set player's initial position on the rail before starting the movement code.
             _movementBehaviour.SetPosition(splinePoint + (transform.up * _heightOffset));
-            
         }
 
         private RailGrindData GetRailGrindData(Collider[] collider)
