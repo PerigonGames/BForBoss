@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace BForBoss
 {
-    public partial class PlayerMovementBehaviour : FirstPersonCharacter, IPlayerDashEvents, IPlayerSlideEvents, IPlayerWallRunEvents
+    public partial class PlayerMovementBehaviour : FirstPersonCharacter, IPlayerDashEvents, IPlayerSlideEvents, IPlayerWallRunEvents, IPlayerRailGrindEvents
     {
         [Header("Cinemachine")]
         public CinemachineVirtualCamera cmWalkingCamera;
@@ -16,6 +16,7 @@ namespace BForBoss
         private PlayerWallRunBehaviour _wallRunBehaviour;
         private PlayerSlideBehaviour _slideBehaviour;
         private PlayerClamberBehaviour _clamberBehaviour;
+        private PlayerRailGrindBehaviour _playerRailGrind;
 
         private IInputConfiguration _inputConfiguration;
         private PGInputSystem _inputSystem;
@@ -39,7 +40,7 @@ namespace BForBoss
 
         public override bool CanJump()
         {
-            return _wallRunBehaviour.IsWallRunning || base.CanJump();
+            return _wallRunBehaviour.IsWallRunning || _playerRailGrind.IsRailGrinding || base.CanJump();
         }
         
         public override float GetBrakingDeceleration()
@@ -73,9 +74,14 @@ namespace BForBoss
             maxWalkSpeed *= modificationMultiplier;
         }
 
-        public void ResetPlayerSpeed()
+        public void RevertPlayerSpeed()
         {
             maxWalkSpeed = _unModifiedPlayerSpeed;
+        }
+
+        public void Reset()
+        {
+            _playerRailGrind.Reset();
         }
         
         public void LaunchCharacter(Vector3 target, float force)
@@ -101,12 +107,14 @@ namespace BForBoss
             _wallRunBehaviour = GetComponent<PlayerWallRunBehaviour>();
             _slideBehaviour = GetComponent<PlayerSlideBehaviour>();
             _clamberBehaviour = GetComponent<PlayerClamberBehaviour>();
+            _playerRailGrind = GetComponent<PlayerRailGrindBehaviour>();
 
             this.PanicIfNullObject(_dashBehaviour, nameof(_dashBehaviour));
             this.PanicIfNullObject(_wallRunBehaviour, nameof(_wallRunBehaviour));
             this.PanicIfNullObject(_slideBehaviour, nameof(_slideBehaviour));
             this.PanicIfNullObject(_clamberBehaviour, nameof(_clamberBehaviour));
-            
+            this.PanicIfNullObject(_playerRailGrind, nameof(_playerRailGrind));
+
             base.OnAwake();
         }
 
@@ -120,6 +128,8 @@ namespace BForBoss
             _wallRunBehaviour.Initialize(this, base.GetMovementInput);
             _wallRunBehaviour.WallRunEventsDelegate = this;
             _clamberBehaviour.Initialize(this, base.GetMovementInput);
+            _playerRailGrind.Initialize(this);
+            _playerRailGrind.RailGrindDelegate = this;
         }
 
         protected override void AnimateEye()
@@ -158,6 +168,7 @@ namespace BForBoss
         protected override void OnJumped()
         {
             base.OnJumped();
+            _playerRailGrind.OnJumped();
             _wallRunBehaviour.OnJumped();
         }
 
@@ -238,6 +249,11 @@ namespace BForBoss
         void IPlayerWallRunEvents.OnWallRunning()
         {
             _energySystem?.Accrue(EnergyAccruementType.WallRun);
+        }
+        
+        void IPlayerRailGrindEvents.OnGrindStarted()
+        {
+            _jumpCount = 0;
         }
         #endregion
     }

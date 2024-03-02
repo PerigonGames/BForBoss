@@ -88,7 +88,7 @@ namespace BForBoss
 
         private void ResetPlayerStats()
         {
-            _playerMovementBehaviour.ResetPlayerSpeed();
+            _playerMovementBehaviour.RevertPlayerSpeed();
         }
     }
 }

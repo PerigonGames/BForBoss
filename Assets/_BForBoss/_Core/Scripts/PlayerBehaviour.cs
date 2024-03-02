@@ -31,7 +31,7 @@ namespace BForBoss
                 StateManager.Instance.SetState(State.Death);
             });
             _playerHookshot.Initialize(inputSystem, _playerMovement);
-
+            
             _inputSystem = inputSystem;
             _inputSystem.OnSlowTimeAction += _playerSlowMotion.OnSlowMotion;
             StateManager.Instance.OnStateChanged += HandleOnStateChanged;
@@ -40,6 +40,8 @@ namespace BForBoss
         public void Reset()
         {
             _playerLifeCycleBehaviour.Reset();
+            _playerHookshot.Reset();    
+            _playerMovement.Reset();
         }
 
         public void SpawnAt(Vector3 position, Quaternion facing)

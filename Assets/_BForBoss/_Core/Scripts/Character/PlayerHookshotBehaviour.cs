@@ -41,7 +41,6 @@ namespace BForBoss
             }
         }
         
-        
         public void Initialize(
             PGInputSystem input,
             PlayerMovementBehaviour playerMovement)
@@ -50,6 +49,14 @@ namespace BForBoss
             _playerMovement = playerMovement;
         }
 
+        public void Reset()
+        {
+            _canHookshot = false;
+            _target = Vector3.zero;
+            _isHookshotting = false;
+            _cooldownElapsedTime = 0;
+        }
+        
         private void HookShot(bool didPress)
         {
             if (CanHookShot && didPress)
