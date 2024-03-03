@@ -1,9 +1,12 @@
+using System;
+using Perigon.Utility;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
 
 namespace BForBoss
 {
+    [RequireComponent(typeof(MeshCollider))]
     [RequireComponent(typeof(SplineContainer))]
     public class RailGrindData : MonoBehaviour
     {
@@ -15,6 +18,10 @@ namespace BForBoss
         private void Awake()
         {
             _splineContainer = GetComponent<SplineContainer>();
+            if (gameObject.layer != TagsAndLayers.Layers.RailGrind)
+            {
+                PanicHelper.Panic(new Exception("GameObject Layer is not set to RailGrind: " + gameObject.name));
+            }
         }
         
         private Vector3 LocalToWorldConversion(float3 localPoint)
