@@ -46,10 +46,8 @@ namespace BForBoss
         }
         
         public void Initialize(
-            PGInputSystem input,
             PlayerMovementBehaviour playerMovement)
         {
-            input.OnInteractAction += HookShot;
             _playerMovement = playerMovement;
         }
 
@@ -65,7 +63,7 @@ namespace BForBoss
             _isStartingHookShot = false;
         }
         
-        private void HookShot(bool didPress)
+        public void HookShot(bool didPress)
         {
             if (CanHookShot && didPress)
             {

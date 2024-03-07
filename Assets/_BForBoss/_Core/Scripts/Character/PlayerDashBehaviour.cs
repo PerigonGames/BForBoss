@@ -9,6 +9,7 @@ namespace BForBoss
     public interface IPlayerDashEvents
     {
         void OnDashStopped();
+        void OnDashStarted();
     }
     
     public class PlayerDashBehaviour : MonoBehaviour
@@ -84,6 +85,7 @@ namespace BForBoss
             if (isDashPressed && CanDash)
             {
                 PlayerDashVisuals();
+                DashEventsDelegate?.OnDashStarted();
                 _isDashing = true;
             
                 _baseCharacter.brakingFriction = 0.0f;
