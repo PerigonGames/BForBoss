@@ -16,7 +16,8 @@ namespace BForBoss
         private PlayerWallRunBehaviour _wallRunBehaviour;
         private PlayerSlideBehaviour _slideBehaviour;
         private PlayerClamberBehaviour _clamberBehaviour;
-        private PlayerRailGrindBehaviour _playerRailGrind;
+        private PlayerRailGrindBehaviour _railGrind;
+        private PlayerHookshotBehaviour _hookshot;
 
         private IInputConfiguration _inputConfiguration;
         private PGInputSystem _inputSystem;
@@ -40,7 +41,7 @@ namespace BForBoss
 
         public override bool CanJump()
         {
-            return _wallRunBehaviour.IsWallRunning || _playerRailGrind.IsRailGrinding || base.CanJump();
+            return _wallRunBehaviour.IsWallRunning || _railGrind.IsRailGrinding || base.CanJump();
         }
         
         public override float GetBrakingDeceleration()
@@ -66,6 +67,7 @@ namespace BForBoss
             characterLook.controllerHorizontalSensitivity = _inputConfiguration.ControllerHorizontalSensitivity;
             characterLook.controllerVerticalSensitivity = _inputConfiguration.ControllerVerticalSensitivity;
             _inputSystem.OnDashAction += _dashBehaviour.OnDash;
+            _inputSystem.OnInteractAction += _hookshot.HookShot;
         }
         
         public void ModifyPlayerSpeed(float modificationMultiplier)
@@ -81,7 +83,8 @@ namespace BForBoss
 
         public void Reset()
         {
-            _playerRailGrind.Reset();
+            _railGrind.Reset();
+            _hookshot.Reset();
         }
         
         public void LaunchCharacter(Vector3 target, float force)
@@ -107,13 +110,15 @@ namespace BForBoss
             _wallRunBehaviour = GetComponent<PlayerWallRunBehaviour>();
             _slideBehaviour = GetComponent<PlayerSlideBehaviour>();
             _clamberBehaviour = GetComponent<PlayerClamberBehaviour>();
-            _playerRailGrind = GetComponent<PlayerRailGrindBehaviour>();
+            _railGrind = GetComponent<PlayerRailGrindBehaviour>();
+            _hookshot = GetComponent<PlayerHookshotBehaviour>();
 
             this.PanicIfNullObject(_dashBehaviour, nameof(_dashBehaviour));
             this.PanicIfNullObject(_wallRunBehaviour, nameof(_wallRunBehaviour));
             this.PanicIfNullObject(_slideBehaviour, nameof(_slideBehaviour));
             this.PanicIfNullObject(_clamberBehaviour, nameof(_clamberBehaviour));
-            this.PanicIfNullObject(_playerRailGrind, nameof(_playerRailGrind));
+            this.PanicIfNullObject(_railGrind, nameof(_railGrind));
+            this.PanicIfNullObject(_hookshot, nameof(_hookshot));
 
             base.OnAwake();
         }
@@ -128,8 +133,9 @@ namespace BForBoss
             _wallRunBehaviour.Initialize(this, base.GetMovementInput);
             _wallRunBehaviour.WallRunEventsDelegate = this;
             _clamberBehaviour.Initialize(this, base.GetMovementInput);
-            _playerRailGrind.Initialize(this);
-            _playerRailGrind.RailGrindDelegate = this;
+            _railGrind.Initialize(this);
+            _railGrind.RailGrindDelegate = this;
+            _hookshot.Initialize(this);
         }
 
         protected override void AnimateEye()
@@ -168,7 +174,7 @@ namespace BForBoss
         protected override void OnJumped()
         {
             base.OnJumped();
-            _playerRailGrind.OnJumped();
+            _railGrind.OnJumped();
             _wallRunBehaviour.OnJumped();
         }
 
@@ -232,7 +238,12 @@ namespace BForBoss
         void IPlayerDashEvents.OnDashStopped()
         {
             _energySystem?.Accrue(EnergyAccruementType.Dash);
+        }
+
+        void IPlayerDashEvents.OnDashStarted()
+        {
             OnDashStarted?.Invoke();
+            _hookshot.Reset();
         }
         
         void IPlayerSlideEvents.OnSlideStarted()
