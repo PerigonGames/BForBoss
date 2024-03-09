@@ -41,7 +41,7 @@ Shader "CustomRenderTexture/BirdSkyboxCookie"
                 
                 Unity_Remap_float4(color, _Remap.xy, _Remap.zw, color);
                 
-                return float4(color, color, color, color);
+                return float4(0, 0, 0, color);
             }
             ENDCG
         }
