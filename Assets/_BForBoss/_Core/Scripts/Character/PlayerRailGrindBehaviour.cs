@@ -16,6 +16,7 @@ namespace BForBoss
         [SerializeField] private float _railDetectionArea = 1;
         [SerializeField] private float _heightOffset = 1;
         [SerializeField] private float _grindSpeed = 3;
+        [SerializeField] private float _jumpOffRailSpeed = 3;
         private Camera _camera;
         public IPlayerRailGrindEvents RailGrindDelegate;
         private PlayerMovementBehaviour _movementBehaviour;
@@ -162,7 +163,7 @@ namespace BForBoss
             _railGrindThrownOffElapsedCooldownTime = _railgrindThrownOffCooldown;
             _railGrindData = null;
             _movementBehaviour.SetMovementMode(MovementMode.Falling);
-            _movementBehaviour.LaunchCharacter(_currentForwardDirection * _grindSpeed);
+            _movementBehaviour.LaunchCharacter(_currentForwardDirection * _jumpOffRailSpeed);
         }
         
         private void OnDrawGizmos()
